@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.SettingsView"
+             Title="{x:Static localization:StringResources.Settings}">
+    <VerticalStackLayout>
+        <HorizontalStackLayout Margin="10">
+            <Image Source="{AppThemeBinding Light=Icons/theme_icon_light.svg, Dark=Icons/theme_icon_dark.svg}"
+                   HeightRequest="25"
+                   WidthRequest="50"/>
+            <Label Text="{x:Static localization:StringResources.AppTheme}"
+                   VerticalTextAlignment="Center"/>
+            <Picker ItemsSource="{Binding AppThemeList}"
+                    Title="{x:Static localization:StringResources.SelectYourAppTheme}"
+                    HorizontalTextAlignment="Center"
+                    SelectedItem="{Binding SelectedAppTheme}"
+                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                    Margin="10,0"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
     xmlns:local="clr-namespace:BookCollector"
+    xmlns:views="clr-namespace:BookCollector.Views"
     Shell.FlyoutBehavior="Flyout"
     Title="{x:Static localization:StringResources.ApplicationTitle}">
 
@@ -12,6 +13,9 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+    <ShellContent Title="{x:Static localization:StringResources.Settings}"
+                  ContentTemplate="{DataTemplate views:SettingsView}"/>
 
     <Shell.FlyoutFooter>
         <HorizontalStackLayout HorizontalOptions="Center"
