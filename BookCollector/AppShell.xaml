@@ -8,20 +8,20 @@
     xmlns:views="clr-namespace:BookCollector.Views"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Shell.FlyoutBehavior="Flyout"
-    Title="{x:Static localization:StringResources.ApplicationTitle}">
+    Title="{x:Static localization:AppStringResources.ApplicationTitle}">
 
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
-    <ShellContent Title="{x:Static localization:StringResources.Settings}"
+    <ShellContent Title="{x:Static localization:AppStringResources.Settings}"
                   ContentTemplate="{DataTemplate views:SettingsView}"/>
 
     <Shell.FlyoutFooter>
         <HorizontalStackLayout HorizontalOptions="Center"
                            Margin="10">
-            <Label Text="{x:Static localization:StringResources.ApplicationTitle}"/>
+            <Label Text="{x:Static localization:AppStringResources.ApplicationTitle}"/>
             <Label Text=", "/>
             <Label Text="{Binding Year}"/>
         </HorizontalStackLayout>

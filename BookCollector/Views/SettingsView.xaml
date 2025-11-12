@@ -4,35 +4,135 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.SettingsView"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="{x:Static localization:StringResources.Settings}">
+             Title="{x:Static localization:AppStringResources.Settings}">
 
     <VerticalStackLayout>
+        <!-- App Theme -->
         <HorizontalStackLayout Margin="10">
             <Image Source="{AppThemeBinding Light=Icons/theme_icon_light.svg, Dark=Icons/theme_icon_dark.svg}"
                    HeightRequest="25"
                    WidthRequest="50"/>
-            <Label Text="{x:Static localization:StringResources.AppTheme}"
+            <Label Text="{x:Static localization:AppStringResources.AppTheme}"
                    VerticalTextAlignment="Center"/>
             <Picker ItemsSource="{Binding AppThemeList}"
-                    Title="{x:Static localization:StringResources.SelectYourAppTheme}"
+                    Title="{x:Static localization:AppStringResources.SelectYourAppTheme}"
                     HorizontalTextAlignment="Center"
                     SelectedItem="{Binding SelectedAppTheme}"
                     SelectedIndexChanged="OnAppThemePickerSelectedIndexChanged"
                     Margin="10,0"/>
         </HorizontalStackLayout>
+        <!-- App Theme -->
 
-        <HorizontalStackLayout>
+        <!-- Color -->
+        <HorizontalStackLayout Margin="10">
             <Image Source="{AppThemeBinding Light=Icons/color_icon_light.svg, Dark=Icons/color_icon_dark.svg}"
                    HeightRequest="25"
                    WidthRequest="50"/>
-            <Label Text="{x:Static localization:StringResources.Color}"
+            <Label Text="{x:Static localization:AppStringResources.Color}"
                    VerticalTextAlignment="Center"/>
             <Picker ItemsSource="{Binding ColorList}"
-                    Title="{x:Static localization:StringResources.SelectYourAppColor}"
+                    Title="{x:Static localization:AppStringResources.SelectYourAppColor}"
                     HorizontalTextAlignment="Center"
                     SelectedItem="{Binding SelectedColor}"
                     SelectedIndexChanged="OnColorPickerSelectedIndexChanged"
                     Margin="10,0"/>
         </HorizontalStackLayout>
+        <!-- Color -->
+
+        <!-- Export Location -->
+        <HorizontalStackLayout Margin="10">
+            <Image Source="{AppThemeBinding Light=Icons/export_icon_light.svg, Dark=Icons/export_icon_dark.svg}"
+                   HeightRequest="25"
+                   WidthRequest="50"/>
+            <Label Text="{x:Static localization:AppStringResources.ExportLocation}"
+                   VerticalTextAlignment="Center"/>
+        </HorizontalStackLayout>
+        <!-- Export Location -->
+
+        <!-- Language -->
+        <HorizontalStackLayout Margin="10">
+            <Image Source="{AppThemeBinding Light=Icons/language_icon_light.svg, Dark=Icons/language_icon_dark.svg}"
+                   HeightRequest="25"
+                   WidthRequest="50"/>
+            <Label Text="{x:Static localization:AppStringResources.Language}"
+                   VerticalTextAlignment="Center"/>
+            <Picker ItemsSource="{Binding LanguageList}"
+                    Title="{x:Static localization:AppStringResources.SelectYourAppLanguage}"
+                    HorizontalTextAlignment="Center"
+                    SelectedItem="{Binding SelectedLanguage}"
+                    SelectedIndexChanged="OnLanguagePickerSelectedIndexChanged"
+                    Margin="10,0"/>
+        </HorizontalStackLayout>
+        <!-- Language -->
+
+        <!-- Comments -->
+        <HorizontalStackLayout Margin="25,10">
+            <Label Text="{x:Static localization:AppStringResources.TurnOnComments}"
+                   VerticalTextAlignment="Center"/>
+            <Switch IsToggled="{Binding CommentsOn}"
+                    IsEnabled="True"
+                    Margin="5,-15" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Toggled="OnCommentsToggled">
+            </Switch>
+        </HorizontalStackLayout>
+        <!-- Comments -->
+
+        <!-- Chapters -->
+        <HorizontalStackLayout Margin="25,10">
+            <Label Text="{x:Static localization:AppStringResources.TurnOnChapters}"
+                   VerticalTextAlignment="Center"/>
+            <Switch IsToggled="{Binding ChaptersOn}"
+                    IsEnabled="True"
+                    Margin="5,-15" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Toggled="OnChaptersToggled">
+            </Switch>
+        </HorizontalStackLayout>
+        <!-- Chapters -->
+
+        <!-- Favorites -->
+        <HorizontalStackLayout Margin="25,10">
+            <Label Text="{x:Static localization:AppStringResources.TurnOnFavorites}"
+                   VerticalTextAlignment="Center"/>
+            <Switch IsToggled="{Binding FavoritesOn}"
+                    IsEnabled="True"
+                    Margin="5,-15" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Toggled="OnFavoritesToggled">
+            </Switch>
+        </HorizontalStackLayout>
+        <!-- Favorites -->
+
+        <!-- Ratings -->
+        <HorizontalStackLayout Margin="25,10">
+            <Label Text="{x:Static localization:AppStringResources.TurnOnRatings}"
+                   VerticalTextAlignment="Center"/>
+            <Switch IsToggled="{Binding RatingsOn}"
+                    IsEnabled="True"
+                    Margin="5,-15" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Toggled="OnRatingsToggled">
+            </Switch>
+        </HorizontalStackLayout>
+        <!-- Ratings -->
+
+        <!-- Hidden Books -->
+        <HorizontalStackLayout Margin="25,10">
+            <Label Text="{x:Static localization:AppStringResources.TurnOnHiddenBooks}"
+                   VerticalTextAlignment="Center"/>
+            <Switch IsToggled="{Binding HiddenBooksOn}"
+                    IsEnabled="True"
+                    Margin="5,-15" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Toggled="OnHiddenBooksToggled">
+            </Switch>
+        </HorizontalStackLayout>
+        <!-- Hidden Books -->
     </VerticalStackLayout>
 </ContentPage>

@@ -7,7 +7,7 @@
             InitializeComponent();
             GetAppTheme();
             GetColor();
-            
+
             MainPage = new AppShell();
         }
 

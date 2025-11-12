@@ -135,4 +135,43 @@
   <data name="SelectYourAppColor" xml:space="preserve">
     <value>Select your App Color</value>
   </data>
+  <data name="ExportLocation" xml:space="preserve">
+    <value>Export Location</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="TurnOnComments" xml:space="preserve">
+    <value>Turn on Comments</value>
+  </data>
+  <data name="TurnOnChapters" xml:space="preserve">
+    <value>Turn on Chapters</value>
+  </data>
+  <data name="TurnOnFavorites" xml:space="preserve">
+    <value>Turn on Favorites</value>
+  </data>
+  <data name="TurnOnRatings" xml:space="preserve">
+    <value>Turn on Ratings</value>
+  </data>
+  <data name="TurnOnHiddenBooks" xml:space="preserve">
+    <value>Turn on Hidden Books</value>
+  </data>
+  <data name="SelectYourAppLanguage" xml:space="preserve">
+    <value>Select your App Language</value>
+  </data>
+  <data name="SelectYourExportLocation" xml:space="preserve">
+    <value>Select your Export Location</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="BlueGray" xml:space="preserve">
+    <value>Blue Gray</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
 </root>

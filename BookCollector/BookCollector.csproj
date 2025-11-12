@@ -59,6 +59,10 @@
 	<ItemGroup>
 	  <None Remove="Resources\Icons\color_icon_dark.svg" />
 	  <None Remove="Resources\Icons\color_icon_light.svg" />
+	  <None Remove="Resources\Icons\export_icon_dark.svg" />
+	  <None Remove="Resources\Icons\export_icon_light.svg" />
+	  <None Remove="Resources\Icons\language_icon_dark.svg" />
+	  <None Remove="Resources\Icons\language_icon_light.svg" />
 	  <None Remove="Resources\Icons\theme_icon_dark.svg" />
 	  <None Remove="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
@@ -76,10 +80,10 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>English.resx</DependentUpon>
 	  </Compile>
-	  <Compile Update="Resources\Localization\StringResources.Designer.cs">
+	  <Compile Update="Resources\Localization\AppStringResources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
-	    <DependentUpon>StringResources.resx</DependentUpon>
+	    <DependentUpon>AppStringResources.resx</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -88,9 +92,9 @@
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>English.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\Localization\StringResources.resx">
-	    <Generator>PublicResXFileCodeGenerator</Generator>
-	    <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
+	  <EmbeddedResource Update="Resources\Localization\AppStringResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AppStringResources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 
@@ -107,6 +111,10 @@
 	<ItemGroup>
 	  <MauiImage Include="Resources\Icons\color_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\color_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\export_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\export_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\language_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\language_icon_light.svg" />
 	  <MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
