@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.SettingsView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="{x:Static localization:StringResources.Settings}">
+
     <VerticalStackLayout>
         <HorizontalStackLayout Margin="10">
             <Image Source="{AppThemeBinding Light=Icons/theme_icon_light.svg, Dark=Icons/theme_icon_dark.svg}"
@@ -15,7 +17,21 @@
                     Title="{x:Static localization:StringResources.SelectYourAppTheme}"
                     HorizontalTextAlignment="Center"
                     SelectedItem="{Binding SelectedAppTheme}"
-                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                    SelectedIndexChanged="OnAppThemePickerSelectedIndexChanged"
+                    Margin="10,0"/>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout>
+            <Image Source="{AppThemeBinding Light=Icons/color_icon_light.svg, Dark=Icons/color_icon_dark.svg}"
+                   HeightRequest="25"
+                   WidthRequest="50"/>
+            <Label Text="{x:Static localization:StringResources.Color}"
+                   VerticalTextAlignment="Center"/>
+            <Picker ItemsSource="{Binding ColorList}"
+                    Title="{x:Static localization:StringResources.SelectYourAppColor}"
+                    HorizontalTextAlignment="Center"
+                    SelectedItem="{Binding SelectedColor}"
+                    SelectedIndexChanged="OnColorPickerSelectedIndexChanged"
                     Margin="10,0"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
