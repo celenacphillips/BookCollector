@@ -3,13 +3,23 @@
     x:Class="BookCollector.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
     xmlns:local="clr-namespace:BookCollector"
-    Shell.FlyoutBehavior="Disabled"
-    Title="BookCollector">
+    Shell.FlyoutBehavior="Flyout"
+    Title="{x:Static localization:StringResources.ApplicationTitle}">
 
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
+    <Shell.FlyoutFooter>
+        <HorizontalStackLayout HorizontalOptions="Center"
+                           Margin="10">
+            <Label Text="{x:Static localization:StringResources.ApplicationTitle}"/>
+            <Label Text=", "/>
+            <Label Text="{Binding Year}"/>
+        </HorizontalStackLayout>
+    </Shell.FlyoutFooter>
+    
 </Shell>
