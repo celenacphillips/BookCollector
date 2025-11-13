@@ -40,12 +40,24 @@
         <!-- Color -->
 
         <!-- Export Location -->
-        <HorizontalStackLayout Margin="10">
-            <Image Source="{AppThemeBinding Light=Icons/export_icon_light.svg, Dark=Icons/export_icon_dark.svg}"
-                   HeightRequest="25"
-                   WidthRequest="50"/>
+        <HorizontalStackLayout Margin="20,10">
+            <ImageButton Source="export_icon_dark.png"
+                         HeightRequest="50"
+                         WidthRequest="45"
+                         Padding="10"
+                         Clicked="OnExportLocationButtonClicked">
+            </ImageButton>
             <Label Text="{x:Static localization:AppStringResources.ExportLocation}"
-                   VerticalTextAlignment="Center"/>
+                   VerticalTextAlignment="Center"
+                   Margin="10,0,10,0"/>
+            <Label Text="{Binding SelectedExportLocation}"
+                   VerticalTextAlignment="Center"
+                   Margin="10,0,10,0"
+                   FontAttributes="Italic"
+                   TextColor="{DynamicResource Primary}"
+                   LineBreakMode="WordWrap"
+                   MaxLines="2"
+                   x:Name="SelectedExportLocationLabel"/>
         </HorizontalStackLayout>
         <!-- Export Location -->
 

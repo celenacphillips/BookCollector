@@ -22,7 +22,7 @@ namespace BookCollector.Resources.Localization {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AppStringResources {
+    public class AppStringResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace BookCollector.Resources.Localization {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BookCollector.Resources.Localization.AppStringResources", typeof(AppStringResources).Assembly);
@@ -51,7 +51,7 @@ namespace BookCollector.Resources.Localization {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Book Collector.
         /// </summary>
-        internal static string ApplicationTitle {
+        public static string ApplicationTitle {
             get {
                 return ResourceManager.GetString("ApplicationTitle", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to App Theme.
         /// </summary>
-        internal static string AppTheme {
+        public static string AppTheme {
             get {
                 return ResourceManager.GetString("AppTheme", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Blue Gray.
         /// </summary>
-        internal static string BlueGray {
+        public static string BlueGray {
             get {
                 return ResourceManager.GetString("BlueGray", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
-        internal static string Color {
+        public static string Color {
             get {
                 return ResourceManager.GetString("Color", resourceCulture);
             }
@@ -99,16 +99,25 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
-        internal static string Dark {
+        public static string Dark {
             get {
                 return ResourceManager.GetString("Dark", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Set.
+        /// </summary>
+        public static string DefaultExportLocation {
+            get {
+                return ResourceManager.GetString("DefaultExportLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
-        internal static string English {
+        public static string English {
             get {
                 return ResourceManager.GetString("English", resourceCulture);
             }
@@ -117,7 +126,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Export Location.
         /// </summary>
-        internal static string ExportLocation {
+        public static string ExportLocation {
             get {
                 return ResourceManager.GetString("ExportLocation", resourceCulture);
             }
@@ -126,7 +135,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
-        internal static string Language {
+        public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
             }
@@ -135,7 +144,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Light.
         /// </summary>
-        internal static string Light {
+        public static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
             }
@@ -144,7 +153,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Select your App Color.
         /// </summary>
-        internal static string SelectYourAppColor {
+        public static string SelectYourAppColor {
             get {
                 return ResourceManager.GetString("SelectYourAppColor", resourceCulture);
             }
@@ -153,7 +162,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Select your App Language.
         /// </summary>
-        internal static string SelectYourAppLanguage {
+        public static string SelectYourAppLanguage {
             get {
                 return ResourceManager.GetString("SelectYourAppLanguage", resourceCulture);
             }
@@ -162,7 +171,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Select your App Theme.
         /// </summary>
-        internal static string SelectYourAppTheme {
+        public static string SelectYourAppTheme {
             get {
                 return ResourceManager.GetString("SelectYourAppTheme", resourceCulture);
             }
@@ -171,7 +180,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Select your Export Location.
         /// </summary>
-        internal static string SelectYourExportLocation {
+        public static string SelectYourExportLocation {
             get {
                 return ResourceManager.GetString("SelectYourExportLocation", resourceCulture);
             }
@@ -180,7 +189,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
-        internal static string Settings {
+        public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
             }
@@ -189,7 +198,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Turn on Chapters.
         /// </summary>
-        internal static string TurnOnChapters {
+        public static string TurnOnChapters {
             get {
                 return ResourceManager.GetString("TurnOnChapters", resourceCulture);
             }
@@ -198,7 +207,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Turn on Comments.
         /// </summary>
-        internal static string TurnOnComments {
+        public static string TurnOnComments {
             get {
                 return ResourceManager.GetString("TurnOnComments", resourceCulture);
             }
@@ -207,7 +216,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Turn on Favorites.
         /// </summary>
-        internal static string TurnOnFavorites {
+        public static string TurnOnFavorites {
             get {
                 return ResourceManager.GetString("TurnOnFavorites", resourceCulture);
             }
@@ -216,7 +225,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Turn on Hidden Books.
         /// </summary>
-        internal static string TurnOnHiddenBooks {
+        public static string TurnOnHiddenBooks {
             get {
                 return ResourceManager.GetString("TurnOnHiddenBooks", resourceCulture);
             }
@@ -225,7 +234,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Turn on Ratings.
         /// </summary>
-        internal static string TurnOnRatings {
+        public static string TurnOnRatings {
             get {
                 return ResourceManager.GetString("TurnOnRatings", resourceCulture);
             }
