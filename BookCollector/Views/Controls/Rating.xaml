@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Controls.Rating"
+             x:Name="this">
+    
+    <HorizontalStackLayout BindingContext="{x:Reference this}">
+        <Button Text=""
+                Clicked="stars_Clicked"
+                BackgroundColor="Transparent"
+                Style="{DynamicResource RatingButton}"/>
+        <HorizontalStackLayout x:Name="starLayout">
+
+        </HorizontalStackLayout>
+    </HorizontalStackLayout>
+</ContentView>

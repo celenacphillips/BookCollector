@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Controls.Favorite">
+
+    <VerticalStackLayout>
+        <ImageButton HeightRequest="20"
+                     WidthRequest="20"
+                     x:Name="heart"
+                     Clicked="heart_Clicked"/>
+    </VerticalStackLayout>
+</ContentView>

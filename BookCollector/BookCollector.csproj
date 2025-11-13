@@ -55,12 +55,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Icons\book_add_dark.svg" />
+	  <None Remove="Resources\Icons\book_add_light.svg" />
 	  <None Remove="Resources\Icons\color_icon_dark.svg" />
 	  <None Remove="Resources\Icons\color_icon_light.svg" />
 	  <None Remove="Resources\Icons\export_icon_dark.svg" />
 	  <None Remove="Resources\Icons\export_icon_light.svg" />
+	  <None Remove="Resources\Icons\filter_icon_dark.svg" />
+	  <None Remove="Resources\Icons\filter_icon_light.svg" />
+	  <None Remove="Resources\Icons\heart_icon_empty_dark.svg" />
+	  <None Remove="Resources\Icons\heart_icon_empty_light.svg" />
+	  <None Remove="Resources\Icons\heart_icon_full_dark.svg" />
+	  <None Remove="Resources\Icons\heart_icon_full_light.svg" />
+	  <None Remove="Resources\Icons\info_icon_dark.svg" />
+	  <None Remove="Resources\Icons\info_icon_light.svg" />
 	  <None Remove="Resources\Icons\language_icon_dark.svg" />
 	  <None Remove="Resources\Icons\language_icon_light.svg" />
+	  <None Remove="Resources\Icons\sort_icon_dark.svg" />
+	  <None Remove="Resources\Icons\sort_icon_light.svg" />
+	  <None Remove="Resources\Icons\star_icon_empty_dark.svg" />
+	  <None Remove="Resources\Icons\star_icon_empty_light.svg" />
+	  <None Remove="Resources\Icons\star_icon_full_dark.svg" />
+	  <None Remove="Resources\Icons\star_icon_full_light.svg" />
 	  <None Remove="Resources\Icons\theme_icon_dark.svg" />
 	  <None Remove="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
@@ -71,6 +87,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -98,6 +115,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\BookMainView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Controls\BookCollectionItem.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Controls\BookCollectionList.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Controls\Favorite.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Controls\Rating.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Library\AllBooksView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -116,16 +148,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewModels\" />
-	</ItemGroup>
-
-	<ItemGroup>
+	  <MauiImage Include="Resources\Icons\book_add_dark.svg" />
+	  <MauiImage Include="Resources\Icons\book_add_light.svg" />
 	  <MauiImage Include="Resources\Icons\color_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\color_icon_light.svg" />
 	  <MauiImage Include="Resources\Icons\export_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\export_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\filter_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\filter_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\heart_icon_empty_dark.svg" />
+	  <MauiImage Include="Resources\Icons\heart_icon_empty_light.svg" />
+	  <MauiImage Include="Resources\Icons\heart_icon_full_dark.svg" />
+	  <MauiImage Include="Resources\Icons\heart_icon_full_light.svg" />
+	  <MauiImage Include="Resources\Icons\info_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\info_icon_light.svg" />
 	  <MauiImage Include="Resources\Icons\language_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\language_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\sort_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\sort_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\star_icon_empty_dark.svg" />
+	  <MauiImage Include="Resources\Icons\star_icon_empty_light.svg" />
+	  <MauiImage Include="Resources\Icons\star_icon_full_dark.svg" />
+	  <MauiImage Include="Resources\Icons\star_icon_full_light.svg" />
 	  <MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
 	  <MauiImage Include="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>

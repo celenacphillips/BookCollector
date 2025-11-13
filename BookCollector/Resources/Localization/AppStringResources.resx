@@ -369,4 +369,22 @@
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author?</value>
   </data>
+  <data name="Blank1OfBlank2Books" xml:space="preserve">
+    <value>Blank1 of Blank2 books</value>
+  </data>
+  <data name="ThereAreNoBooks" xml:space="preserve">
+    <value>There are no books.</value>
+  </data>
+  <data name="NoBookCoverSelected" xml:space="preserve">
+    <value>No Book Cover Selected</value>
+  </data>
+  <data name="EditBook" xml:space="preserve">
+    <value>Edit Book</value>
+  </data>
+  <data name="DeleteBook" xml:space="preserve">
+    <value>Delete Book</value>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Text Copied!</value>
+  </data>
 </root>

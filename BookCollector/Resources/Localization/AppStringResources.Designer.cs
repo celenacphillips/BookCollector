@@ -142,6 +142,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blank1 of Blank2 books.
+        /// </summary>
+        internal static string Blank1OfBlank2Books {
+            get {
+                return ResourceManager.GetString("Blank1OfBlank2Books", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue Gray.
         /// </summary>
         internal static string BlueGray {
@@ -349,6 +358,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Book.
+        /// </summary>
+        internal static string DeleteBook {
+            get {
+                return ResourceManager.GetString("DeleteBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to eBook.
         /// </summary>
         internal static string eBook {
@@ -363,6 +381,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Edit {
             get {
                 return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Book.
+        /// </summary>
+        internal static string EditBook {
+            get {
+                return ResourceManager.GetString("EditBook", resourceCulture);
             }
         }
         
@@ -507,6 +534,15 @@ namespace BookCollector.Resources.Localization {
         internal static string NoAuthorsAvailable {
             get {
                 return ResourceManager.GetString("NoAuthorsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Book Cover Selected.
+        /// </summary>
+        internal static string NoBookCoverSelected {
+            get {
+                return ResourceManager.GetString("NoBookCoverSelected", resourceCulture);
             }
         }
         
@@ -741,6 +777,24 @@ namespace BookCollector.Resources.Localization {
         internal static string Statistics {
             get {
                 return ResourceManager.GetString("Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Copied!.
+        /// </summary>
+        internal static string TextCopied {
+            get {
+                return ResourceManager.GetString("TextCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no books..
+        /// </summary>
+        internal static string ThereAreNoBooks {
+            get {
+                return ResourceManager.GetString("ThereAreNoBooks", resourceCulture);
             }
         }
         
