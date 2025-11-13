@@ -1,7 +1,7 @@
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
 
-namespace BookCollector.Views;
+namespace BookCollector.Views.Main;
 
 public partial class SettingsView : ContentPage
 {
@@ -23,6 +23,8 @@ public partial class SettingsView : ContentPage
     // Add secondary and tertiary color - 11/12/2025
     // Add other languages - 11/12/2025
     // Try to add color preview in the picker - 11/12/2025
+    // Add currency option - 11/13/2025
+    // Add Hide Collection, Series, Genre, and Author - 11/13/2025
 
     public SettingsView()
 	{
