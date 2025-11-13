@@ -20,7 +20,7 @@ public partial class SettingsView : ContentPage
 
     // TO DO:
     // Pick more colors - 11/12/2025
-    // Add secondary color - 11/12/2025
+    // Add secondary and tertiary color - 11/12/2025
     // Add other languages - 11/12/2025
     // Try to add color preview in the picker - 11/12/2025
 
