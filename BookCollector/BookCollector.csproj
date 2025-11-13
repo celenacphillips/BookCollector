@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>BookCollector</ApplicationTitle>
+		<ApplicationTitle>Book Collector</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.bookcollector</ApplicationId>
@@ -40,10 +40,10 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" BaseSize="128,128" Color="#336699" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="150,150" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -57,9 +57,67 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Icons\color_icon_dark.svg" />
+	  <None Remove="Resources\Icons\color_icon_light.svg" />
+	  <None Remove="Resources\Icons\export_icon_dark.svg" />
+	  <None Remove="Resources\Icons\export_icon_light.svg" />
+	  <None Remove="Resources\Icons\language_icon_dark.svg" />
+	  <None Remove="Resources\Icons\language_icon_light.svg" />
+	  <None Remove="Resources\Icons\theme_icon_dark.svg" />
+	  <None Remove="Resources\Icons\theme_icon_light.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Localization\English.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>English.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Localization\AppStringResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AppStringResources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Localization\English.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>English.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Localization\AppStringResources.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AppStringResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\SettingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="ViewModels\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Icons\color_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\color_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\export_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\export_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\language_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\language_icon_light.svg" />
+	  <MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
+	  <MauiImage Include="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
 
 </Project>

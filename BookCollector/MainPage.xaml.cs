@@ -6,6 +6,9 @@
 
         public MainPage()
         {
+            var savedColor = Preferences.Get("AppColor", "#336699"  /* Default */);
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(savedColor));
+
             InitializeComponent();
         }
 
