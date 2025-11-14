@@ -45,7 +45,8 @@
                          HeightRequest="50"
                          WidthRequest="45"
                          Padding="10"
-                         Clicked="OnExportLocationButtonClicked">
+                         Clicked="OnExportLocationButtonClicked"
+                         >
             </ImageButton>
             <Label Text="{x:Static localization:AppStringResources.ExportLocation}"
                    VerticalTextAlignment="Center"
@@ -146,5 +147,9 @@
             </Switch>
         </HorizontalStackLayout>
         <!-- Hidden Books -->
+
+        <Label Background="{DynamicResource Primary}"></Label>
+        <Label Background="{DynamicResource Secondary}"></Label>
+        <Label Background="{DynamicResource Tertiary}"></Label>
     </VerticalStackLayout>
 </ContentPage>

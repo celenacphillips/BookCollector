@@ -65,6 +65,7 @@ public partial class Rating : ContentView
         {
             Source = CreateStarLabel(state),
             Command = StarsClicked(index),
+            Background = Colors.Transparent,
         };
     }
 

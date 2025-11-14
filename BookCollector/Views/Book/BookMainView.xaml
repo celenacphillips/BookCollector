@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="BookCollector.Views.BookMainView"
+             x:Class="BookCollector.Views.Book.BookMainView"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Book"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"

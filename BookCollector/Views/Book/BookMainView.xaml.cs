@@ -1,7 +1,7 @@
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Book;
 
-namespace BookCollector.Views;
+namespace BookCollector.Views.Book;
 
 public partial class BookMainView : ContentPage
 {

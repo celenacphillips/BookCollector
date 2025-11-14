@@ -115,7 +115,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\BookMainView.xaml">
+	  <MauiXaml Update="Views\Book\BookMainView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Controls\BookCollectionItem.xaml">

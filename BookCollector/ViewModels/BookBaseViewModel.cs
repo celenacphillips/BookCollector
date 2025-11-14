@@ -1,6 +1,6 @@
 ﻿using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
-using BookCollector.Views;
+using BookCollector.Views.Book;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
