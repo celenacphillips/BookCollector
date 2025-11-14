@@ -459,7 +459,7 @@
     </Style>
 
     <Style x:Key="AddButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource TertiaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="30" />
