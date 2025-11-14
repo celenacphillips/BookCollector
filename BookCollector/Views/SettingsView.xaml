@@ -146,5 +146,9 @@
             </Switch>
         </HorizontalStackLayout>
         <!-- Hidden Books -->
+
+        <Label Background="{DynamicResource Primary}"></Label>
+        <Label Background="{DynamicResource Secondary}"></Label>
+        <Label Background="{DynamicResource Tertiary}"></Label>
     </VerticalStackLayout>
 </ContentPage>
