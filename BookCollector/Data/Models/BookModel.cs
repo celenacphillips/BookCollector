@@ -5,9 +5,6 @@ namespace BookCollector.Data.Models
 {
     public partial class BookModel : ObservableObject
     {
-        //TO DO:
-        // Add Loaned To and Loaned out to - 11/13/2025
-
         [PrimaryKey]
         public Guid? BookGuid { get; set; }
 
@@ -67,6 +64,16 @@ namespace BookCollector.Data.Models
         public string? bookURL;
         [ObservableProperty]
         public string? bookWhereToBuy;
+        [ObservableProperty]
+        public string? loanedTo;
+        [ObservableProperty]
+        public DateTime loanedOutOnValue;
+        [ObservableProperty]
+        public string? bookLoanedOutOn;
+        [ObservableProperty]
+        public bool upNext;
+        [ObservableProperty]
+        public bool hideBook;
 
         public string? ParsedTitle { get; set; }
         public Guid? BookSeriesGuid { get; set; }
@@ -77,7 +84,6 @@ namespace BookCollector.Data.Models
         public string? SelectedAuthorString { get; set; }
         public bool IsFavorite { get; set; }
         public int Rating { get; set; }
-        public bool HideBook { get; set; }
         public string? BookAuthors { get; set; }
         public string? BookSeries { get; set; }
     }

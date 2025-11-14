@@ -9,6 +9,9 @@
              x:DataType="viewModel:BookMainViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
+    
+    <!-- TO DO -->
+    <!-- Add Hide Book, Loaned Out To, Loaned On On, and Up Next to UI - 11/14/2025 -->
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"

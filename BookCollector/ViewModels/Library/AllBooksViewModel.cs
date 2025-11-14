@@ -3,15 +3,15 @@ using BookCollector.Resources.Localization;
 
 namespace BookCollector.ViewModels.Library
 {
-    public partial class ReadingViewModel : BookBaseViewModel
+    public partial class AllBooksViewModel : BookBaseViewModel
     {
-        public ReadingViewModel(ContentPage view)
+        public AllBooksViewModel(ContentPage view)
         {
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
 
             SetIsBusyTrue();
 
-            FullBookList = TestData.GetReadingBooksList();
+            FullBookList = TestData.GetAllBooksList();
             TotalBooksCount = FullBookList.Count;
 
             FilteredBookList = FullBookList;
@@ -21,6 +21,5 @@ namespace BookCollector.ViewModels.Library
 
             SetIsBusyFalse();
         }
-
     }
 }
