@@ -1,9 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BookCollector.Resources.Localization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableObject
+    public partial class BookModel : ObservableObject, ICloneable
     {
         [PrimaryKey]
         public Guid? BookGuid { get; set; }
@@ -86,5 +88,10 @@ namespace BookCollector.Data.Models
         public int Rating { get; set; }
         public string? BookAuthors { get; set; }
         public string? BookSeries { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

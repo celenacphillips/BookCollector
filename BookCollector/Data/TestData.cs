@@ -7,15 +7,18 @@ namespace BookCollector.Data
 {
     public partial class TestData : ObservableObject
     {
+        public static ObservableCollection<BookModel> BookList { get; set; }
+
         public static ObservableCollection<BookModel> AddBooksToList()
         {
             // TO DO:
             // Add Genre, Collection, and Series - 11/13/2025
 
-            return new ObservableCollection<BookModel>()
+            BookList = new ObservableCollection<BookModel>()
             {
                 new BookModel()
                 {
+                    BookGuid = new Guid(),
                     ParsedTitle = "Reading Book",
                     BookTitle = "Reading Book",
                     AuthorListString = "Last, First",
@@ -41,6 +44,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
+                    BookGuid = new Guid(),
                     ParsedTitle = "Read Book",
                     BookTitle = "Read Book",
                     AuthorListString = "Last, First",
@@ -67,6 +71,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
+                    BookGuid = new Guid(),
                     ParsedTitle = "To Be Read Book",
                     BookTitle = "To Be Read Book",
                     AuthorListString = "Last, First",
@@ -90,33 +95,26 @@ namespace BookCollector.Data
                     IsFavorite = true,
                 }
             };
+
+            return BookList;
         }
 
-        public static ObservableCollection<BookModel> GetReadingBooksList()
+        public static void UpdateBook(BookModel book)
         {
-            var list = AddBooksToList();
-            return list.Where(x => (x.BookPageRead != x.BookPageTotal &&
-                                   x.BookPageRead != 0) ||
-                                   (x.UpNext == true)).ToObservableCollection();
+            var oldBook = BookList.Where(x => x.BookGuid == book.BookGuid).ToList().FirstOrDefault();
+            var index = BookList.IndexOf(oldBook);
+            BookList.Remove((BookModel)oldBook);
+            BookList.Insert(index, book);
         }
 
-        public static ObservableCollection<BookModel> GetToBeReadBooksList()
+        public static void InsertBook(BookModel book)
         {
-            var list = AddBooksToList();
-            return list.Where(x => x.BookPageRead == 0).ToObservableCollection();
+            BookList.Add(book);
         }
 
-        public static ObservableCollection<BookModel> GetReadBooksList()
+        public static void DeleteBook(BookModel book)
         {
-            var list = AddBooksToList();
-            return list.Where(x => x.BookPageRead == x.BookPageTotal &&
-                                   x.BookPageRead != 0).ToObservableCollection();
-        }
-
-        public static ObservableCollection<BookModel> GetAllBooksList()
-        {
-            var list = AddBooksToList();
-            return list.ToObservableCollection();
+            BookList.Remove(book);
         }
 
         public static ObservableCollection<ChapterModel> AddChaptersToList()

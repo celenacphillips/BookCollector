@@ -1,120 +1,41 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
+using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
-    public partial class BookMainViewModel: BookBaseViewModel
+    public partial class BookMainViewModel : BookBaseViewModel
     {
-        [ObservableProperty]
-        public bool bookIsRead;
-
-        [ObservableProperty]
-        public string? partOfSeriesString;
-
-        [ObservableProperty]
-        public string? partOfCollectionString;
-
-        [ObservableProperty]
-        public bool readingDataValue;
-
-        [ObservableProperty]
-        public bool readingDataOpen;
-
-        [ObservableProperty]
-        public bool readingDataNotOpen;
-
-        [ObservableProperty]
-        public int half;
-
-        [ObservableProperty]
-        public int fourth;
-
-        [ObservableProperty]
-        public int threeFourth;
-
-        [ObservableProperty]
-        public bool chapterListValue;
-
-        [ObservableProperty]
-        public bool chapterListOpen;
-
-        [ObservableProperty]
-        public bool chapterListNotOpen;
-
-        [ObservableProperty]
-        public bool authorListValue;
-
-        [ObservableProperty]
-        public bool authorListOpen;
-
-        [ObservableProperty]
-        public bool authorListNotOpen;
-
-        [ObservableProperty]
-        public bool showComments;
-
-        [ObservableProperty]
-        public bool showChapters;
-
-        [ObservableProperty]
-        public bool showFavorites;
-
-        [ObservableProperty]
-        public bool showRatings;
-
-        [ObservableProperty]
-        public ObservableCollection<ChapterModel>? chapterList;
-
-        [ObservableProperty]
-        public ObservableCollection<AuthorModel>? authorList;
-
-        [ObservableProperty]
-        public bool bookInfoValue;
-
-        [ObservableProperty]
-        public bool bookInfoOpen;
-
-        [ObservableProperty]
-        public bool bookInfoNotOpen;
-
-        [ObservableProperty]
-        public bool summaryValue;
-
-        [ObservableProperty]
-        public bool summaryOpen;
-
-        [ObservableProperty]
-        public bool summaryNotOpen;
-
-        [ObservableProperty]
-        public bool commentsValue;
-
-        [ObservableProperty]
-        public bool commentsOpen;
-
-        [ObservableProperty]
-        public bool commentsNotOpen;
-
-        [ObservableProperty]
-        public GenreModel? selectedGenre;
+        BookMainView _view;
 
         public BookMainViewModel(BookModel book, ContentPage view)
         {
-            SetIsBusyTrue();
-
-            /* Base ViewModel */
-            ShowComments = Preferences.Get("CommentsOn", true  /* Default */);
-            ShowChapters = Preferences.Get("ChaptersOn", true  /* Default */);
-            ShowFavorites = Preferences.Get("FavoritesOn", true  /* Default */);
-            ShowRatings = Preferences.Get("RatingsOn", true  /* Default */);
+            _view = (BookMainView)view;
 
             SelectedBook = book;
+        }
+
+        public async Task SetViewModelData()
+        {
+            SetIsBusyTrue();
+
+            if (_view.ReceivedObject != null)
+            {
+                SelectedBook = _view.ReceivedObject;
+                ViewTitle = SelectedBook.BookTitle;
+                TestData.UpdateBook(SelectedBook);
+            }
 
             ChapterList = TestData.AddChaptersToList();
             AuthorList = TestData.AddAuthorsToList();
+
+            BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
+            Half = SelectedBook.BookPageTotal / 2;
+            Fourth = SelectedBook.BookPageTotal / 4;
+            ThreeFourth = Half + Fourth;
 
             ReadingDataValue = true;
             ReadingDataChanged();
@@ -131,47 +52,28 @@ namespace BookCollector.ViewModels.Book
 
             SetIsBusyFalse();
         }
+        
 
         [RelayCommand]
-        public void ReadingDataChanged()
+        public async Task EditBook()
         {
-            ReadingDataOpen = ReadingDataValue;
-            ReadingDataNotOpen = !ReadingDataValue;
+            SetIsBusyTrue();
+
+            BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}");
+
+            //var stepper = (Stepper)view.FindByName("PageReadStepper");
+            //stepper.Maximum = SelectedBook.BookPageTotal;
+            //stepper.Value = SelectedBook.BookPageRead;
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public void ChapterListChanged()
+        public async Task DeleteBook()
         {
-            ChapterListOpen = ChapterListValue;
-            ChapterListNotOpen = !ChapterListValue;
-        }
 
-        [RelayCommand]
-        public void AuthorListChanged()
-        {
-            AuthorListOpen = AuthorListValue;
-            AuthorListNotOpen = !AuthorListValue;
-        }
-
-        [RelayCommand]
-        public void BookInfoChanged()
-        {
-            BookInfoOpen = BookInfoValue;
-            BookInfoNotOpen = !BookInfoValue;
-        }
-
-        [RelayCommand]
-        public void SummaryChanged()
-        {
-            SummaryOpen = SummaryValue;
-            SummaryNotOpen = !SummaryValue;
-        }
-
-        [RelayCommand]
-        public void CommentsChanged()
-        {
-            CommentsOpen = CommentsValue;
-            CommentsNotOpen = !CommentsValue;
         }
     }
 }

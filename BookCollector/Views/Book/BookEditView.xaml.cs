@@ -4,17 +4,18 @@ using BookCollector.ViewModels.Book;
 namespace BookCollector.Views.Book;
 
 [QueryProperty(nameof(ReceivedObject), "SelectedObject")]
-public partial class BookMainView : ContentPage
+public partial class BookEditView : ContentPage
 {
-    private BookMainViewModel _viewModel;
     public BookModel? ReceivedObject { get; set; }
+    private BookEditViewModel _viewModel { get; set; }
 
-    public BookMainView(BookModel book, string viewTitle)
+    public BookEditView(BookModel book, string viewTitle)
 	{
-        BookMainViewModel viewModel = new BookMainViewModel(book, this);
+        BookEditViewModel viewModel = new BookEditViewModel(book, this);
         viewModel.ViewTitle = viewTitle;
         _viewModel = viewModel;
         BindingContext = viewModel;
+
         InitializeComponent();
 	}
 
@@ -22,7 +23,6 @@ public partial class BookMainView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-
         _viewModel.SetViewModelData();
     }
 }

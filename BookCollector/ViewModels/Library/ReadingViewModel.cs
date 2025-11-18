@@ -8,19 +8,21 @@ namespace BookCollector.ViewModels.Library
         public ReadingViewModel(ContentPage view)
         {
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
+        }
 
+        public async Task SetViewModelData()
+        {
             SetIsBusyTrue();
 
-            FullBookList = TestData.GetReadingBooksList();
+            FullBookList = FilterLists.GetReadingBooksList(TestData.BookList);
             TotalBooksCount = FullBookList.Count;
 
             FilteredBookList = FullBookList;
             FilteredBooksCount = FilteredBookList.Count;
 
-            TotalBooksString = AppStringResources.Blank1OfBlank2Books.Replace("Blank1", FilteredBooksCount.ToString()).Replace("Blank2", TotalBooksCount.ToString()).Replace("books", TotalBooksCount == 1 ? "book" : "books");
+            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
         }
-
     }
 }

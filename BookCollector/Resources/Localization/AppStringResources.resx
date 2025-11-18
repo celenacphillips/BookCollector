@@ -295,7 +295,7 @@
     <value>Book Loaned Out On</value>
   </data>
   <data name="HideBook_Question" xml:space="preserve">
-    <value>Hide Book?</value>
+    <value>Hide Book when Settings &gt; Turn on Hidden Books is off?</value>
   </data>
   <data name="PartOfCollection" xml:space="preserve">
     <value>Part of blank Collection</value>
@@ -358,16 +358,16 @@
     <value>Add Existing Book</value>
   </data>
   <data name="HideCollection_Question" xml:space="preserve">
-    <value>Hide Collection?</value>
+    <value>Hide Collection when Settings &gt; Turn on Hidden Collections is off?</value>
   </data>
   <data name="HideGenre_Question" xml:space="preserve">
-    <value>Hide Genre?</value>
+    <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
-    <value>Hide Series?</value>
+    <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author?</value>
+    <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
   </data>
   <data name="Blank1OfBlank2Books" xml:space="preserve">
     <value>Blank1 of Blank2 books</value>
@@ -386,5 +386,65 @@
   </data>
   <data name="TextCopied" xml:space="preserve">
     <value>Text Copied!</value>
+  </data>
+  <data name="BookTitle" xml:space="preserve">
+    <value>Book Title</value>
+  </data>
+  <data name="AddOrReplaceCoverPhoto" xml:space="preserve">
+    <value>Add or Replace Cover Photo</value>
+  </data>
+  <data name="BookFormat" xml:space="preserve">
+    <value>Book Format</value>
+  </data>
+  <data name="SelectABookFormat" xml:space="preserve">
+    <value>Select a Book Format</value>
+  </data>
+  <data name="BookSeries" xml:space="preserve">
+    <value>Book Series</value>
+  </data>
+  <data name="SelectASeries" xml:space="preserve">
+    <value>Select a Series</value>
+  </data>
+  <data name="BookNumber" xml:space="preserve">
+    <value>Book Number</value>
+  </data>
+  <data name="BookCollection" xml:space="preserve">
+    <value>Book Collection</value>
+  </data>
+  <data name="SelectACollection" xml:space="preserve">
+    <value>Select a Collection</value>
+  </data>
+  <data name="NoPublisher" xml:space="preserve">
+    <value>No Publisher</value>
+  </data>
+  <data name="NoDate" xml:space="preserve">
+    <value>No Date</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PageRange" xml:space="preserve">
+    <value>Page Range</value>
+  </data>
+  <data name="ChapterName" xml:space="preserve">
+    <value>Chapter Name</value>
+  </data>
+  <data name="ChapterPages" xml:space="preserve">
+    <value>Chapter Pages</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="AuthorFirstName" xml:space="preserve">
+    <value>Author First Name</value>
+  </data>
+  <data name="AuthorLastName" xml:space="preserve">
+    <value>Author Last Name</value>
+  </data>
+  <data name="SelectAGenre" xml:space="preserve">
+    <value>Select a Genre</value>
   </data>
 </root>

@@ -9,9 +9,6 @@
              x:DataType="viewModel:BookMainViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
-    
-    <!-- TO DO -->
-    <!-- Add Hide Book, Loaned Out To, Loaned On On, and Up Next to UI - 11/14/2025 -->
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
@@ -25,6 +22,8 @@
     </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>
+        
+        <!-- Main Content -->
         <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All" >
 
@@ -40,32 +39,38 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
+                            <!-- Rating -->
                             <controls:Rating CurrentValue="{Binding SelectedBook.Rating}"
                                              Grid.Column="0" Grid.Row="0"
                                              HorizontalOptions="Center"
                                              IsEnabled="False"
                                              IsVisible="{Binding ShowRatings}"/>
+                            <!-- Rating -->
 
+                            <!-- Favorite -->
                             <controls:Favorite CurrentValue="{Binding SelectedBook.IsFavorite}"
                                                Grid.Column="1" Grid.Row="0"
                                                HorizontalOptions="Center"
                                                IsEnabled="False"
                                                Margin="0,7,0,0"
                                                IsVisible="{Binding ShowFavorites}"/>
+                            <!-- Favorite -->
 
+                            <!-- Is Book Read -->
                             <VerticalStackLayout HorizontalOptions="End"
                                                  Margin="0,-5,10,-10"
                                                  Grid.Column="2" Grid.Row="0">
                                 <Label Text="{x:Static localization:AppStringResources.Read_Question}"
                                        HorizontalOptions="End"
-                                       Style="{StaticResource Header}"/>
+                                       Style="{DynamicResource Header}"/>
                                 <Switch IsToggled="{Binding BookIsRead}"
                                         IsEnabled="False"
-                                        Margin="-10">
-                                </Switch>
+                                        Margin="-10"/>
                             </VerticalStackLayout>
+                            <!-- Is Book Read -->
                         </Grid>
 
+                        <!-- Book Title -->
                         <Label HorizontalTextAlignment="Center"
                                Margin="0,10,0,0">
                             <Label.FormattedText>
@@ -80,7 +85,9 @@
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
+                        <!-- Book Title -->
 
+                        <!-- Book Cover -->
                         <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=CoverImage}"
                                      HeightRequest="200"
                                      WidthRequest="150"
@@ -91,35 +98,43 @@
                                HeightRequest="200"
                                WidthRequest="150"
                                IsVisible="{Binding SelectedBook.HasNoBookCover}"
-                               Style="{StaticResource NoCover}"/>
+                               Style="{DynamicResource NoCover}"/>
+                        <!-- Book Cover -->
 
+                        <!-- Book Format -->
                         <HorizontalStackLayout HorizontalOptions="Center">
                             <Label Text="{Binding SelectedBook.BookFormat}"
-                                   Style="{StaticResource SubTitle}"/>
+                                   Style="{DynamicResource SubTitle}"/>
                         </HorizontalStackLayout>
+                        <!-- Book Format -->
 
+                        <!-- Book Series -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasSeries}">
                             <Label Text="{Binding PartOfSeriesString}" />
                         </HorizontalStackLayout>
+                        <!-- Book Series -->
 
+                        <!-- Book Collection -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasCollection}">
                             <Label Text="{Binding PartOfCollectionString}" />
                         </HorizontalStackLayout>
+                        <!-- Book Collection -->
 
+                        <!-- Reading Data -->
                         <toolkit:Expander IsExpanded="{Binding ReadingDataValue}"
                                           Command="{Binding ReadingDataChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
+                                <Grid Style="{DynamicResource expanderHeader}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.ReadingData}"
-                                           Style="{StaticResource expanderHeaderLabel}" 
+                                           Style="{DynamicResource expanderHeaderLabel}" 
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -136,26 +151,31 @@
                                 </Grid>
                             </toolkit:Expander.Header>
                             <VerticalStackLayout Margin="0,-10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Reading Start Date -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.ReadingStartDate}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookStartDate}"/>
                                     </VerticalStackLayout>
+                                    <!-- Reading Start Date -->
 
+                                    <!-- Reading End Date -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.ReadingEndDate}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookEndDate}"/>
                                     </VerticalStackLayout>
+                                    <!-- Reading End Date -->
                                 </Grid>
 
                                 <Grid Margin="0,0,0,10">
@@ -164,28 +184,33 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Total Pages -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.TotalPages}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookPageTotal}" />
                                     </VerticalStackLayout>
+                                    <!-- Total Pages -->
 
+                                    <!-- Pages Read -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.PagesRead}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookPageRead}" />
                                     </VerticalStackLayout>
+                                    <!-- Pages Read -->
                                 </Grid>
 
+                                <!-- Reading Progress -->
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.PercentageRead}"
-                                           Style="{StaticResource Header}"
+                                           Style="{DynamicResource Header}"
                                            Margin="0,0,0,20"/>
                                     <ProgressBar Progress="{Binding SelectedBook.Progress}"/>
                                     <Grid>
-                                        
+
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.95*" />
                                             <ColumnDefinition Width="0.7*" />
@@ -216,25 +241,28 @@
                                     <Label Text="{Binding SelectedBook.PageReadPercent}"
                                            HorizontalOptions="Center"/>
                                 </VerticalStackLayout>
+                                <!-- Reading Progress -->
                             </VerticalStackLayout>
                         </toolkit:Expander>
+                        <!-- Reading Data -->
 
-                        <Label Style="{StaticResource ShortSeparator}"/>
+                        <Label Style="{DynamicResource ShortSeparator}"/>
 
+                        <!-- Chapters -->
                         <toolkit:Expander IsExpanded="{Binding ChapterListValue}"
                                           Command="{Binding ChapterListChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowChapters}">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
-                                    
+                                <Grid Style="{DynamicResource expanderHeader}">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.Chapters_Slash}"
-                                           Style="{StaticResource expanderHeaderLabel}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -250,9 +278,9 @@
                                            Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
                             </toolkit:Expander.Header>
-                            
+
                             <VerticalStackLayout Margin="0,-10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <CollectionView ItemsSource="{Binding ChapterList}"
                                                 Margin="10"
                                                 EmptyView="{x:Static localization:AppStringResources.NoChaptersAvailable}">
@@ -269,22 +297,24 @@
                             </VerticalStackLayout>
                         </toolkit:Expander>
 
-                        <Label Style="{StaticResource ShortSeparator}"
+                        <Label Style="{DynamicResource ShortSeparator}"
                                IsVisible="{Binding ShowChapters}"/>
+                        <!-- Chapters -->
 
+                        <!-- Authors -->
                         <toolkit:Expander IsExpanded="{Binding AuthorListValue}"
                                           Command="{Binding AuthorListChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
-                                    
+                                <Grid Style="{DynamicResource expanderHeader}">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.Authors_Slash}"
-                                           Style="{StaticResource expanderHeaderLabel}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -300,9 +330,9 @@
                                            Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
                             </toolkit:Expander.Header>
-                            
+
                             <VerticalStackLayout Margin="0,-10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <CollectionView ItemsSource="{Binding AuthorList}"
                                                 Margin="10"
                                                 EmptyView="{x:Static localization:AppStringResources.NoAuthorsAvailable}">
@@ -327,22 +357,24 @@
                                 </CollectionView>
                             </VerticalStackLayout>
                         </toolkit:Expander>
+                        <!-- Authors -->
 
-                        <Label Style="{StaticResource ShortSeparator}"/>
+                        <Label Style="{DynamicResource ShortSeparator}"/>
 
+                        <!-- Book Information -->
                         <toolkit:Expander IsExpanded="{Binding BookInfoValue}"
                                           Command="{Binding BookInfoChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
-                                    
+                                <Grid Style="{DynamicResource expanderHeader}">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.BookInformation}"
-                                           Style="{StaticResource expanderHeaderLabel}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -358,14 +390,17 @@
                                            Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
                             </toolkit:Expander.Header>
-                            
+
                             <VerticalStackLayout Margin="0,-10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Book Genre -->
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.BookGenre}"
-                                           Style="{StaticResource Header}"/>
+                                           Style="{DynamicResource Header}"/>
                                     <Label Text="{Binding SelectedGenre.GenreName}"/>
                                 </VerticalStackLayout>
+                                <!-- Book Genre -->
 
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -373,32 +408,37 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Book Publisher -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookPublisher}" />
                                     </VerticalStackLayout>
+                                    <!-- Book Publisher -->
 
+                                    <!-- Book Publish Year -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookPublishYear}" />
                                     </VerticalStackLayout>
+                                    <!-- Book Publish Year -->
                                 </Grid>
 
                                 <Grid Margin="0,0,0,10">
-                                    
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Book Identifier -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -412,40 +452,48 @@
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
+                                    <!-- Book Identifier -->
 
+                                    <!-- Book Location -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.BookLocation}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookLocation}" />
                                     </VerticalStackLayout>
+                                    <!-- Book Location -->
                                 </Grid>
 
                                 <Grid Margin="0,0,0,10">
-                                    
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Book Language -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookLanguage}" />
                                     </VerticalStackLayout>
+                                    <!-- Book Language -->
 
+                                    <!-- Book Price -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.BookPrice}"
-                                               Style="{StaticResource Header}"/>
+                                               Style="{DynamicResource Header}"/>
                                         <Label Text="{Binding SelectedBook.BookPrice}" />
                                     </VerticalStackLayout>
+                                    <!-- Book Price -->
                                 </Grid>
 
+                                <!-- Book URL -->
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.BookURL}"
-                                           Style="{StaticResource Header}"/>
+                                           Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
@@ -459,24 +507,65 @@
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
+                                <!-- Book URL -->
+
+                                <Grid Margin="0,0,0,10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Loaned To -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label Text="{Binding SelectedBook.LoanedTo}" />
+                                    </VerticalStackLayout>
+                                    <!-- Book Loaned To -->
+
+                                    <!-- Book Loaned Out On -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label Text="{Binding SelectedBook.BookLoanedOutOn}" />
+                                    </VerticalStackLayout>
+                                    <!-- Book Loaned Out On -->
+                                </Grid>
+
+                                <!-- Hide Book -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.HideBook_Question}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Switch IsToggled="{Binding SelectedBook.HideBook}"
+                                            IsEnabled="False"
+                                            HorizontalOptions="Start"
+                                            Margin="-10"/>
+                                </VerticalStackLayout>
+                                <!-- Hide Book -->
+
                             </VerticalStackLayout>
                         </toolkit:Expander>
-                        
-                        <Label Style="{StaticResource ShortSeparator}"/>
+                        <!-- Book Information -->
 
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Summary -->
                         <toolkit:Expander IsExpanded="{Binding SummaryValue}"
                                           Command="{Binding SummaryChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
-                                    
+                                <Grid Style="{DynamicResource expanderHeader}">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.BookSummary}"
-                                           Style="{StaticResource expanderHeaderLabel}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -492,30 +581,32 @@
                                            Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
                             </toolkit:Expander.Header>
-                            
+
                             <VerticalStackLayout Margin="0,-10"
                                                  Padding="10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <Label Text="{Binding SelectedBook.BookSummary}" />
                             </VerticalStackLayout>
                         </toolkit:Expander>
+                        <!-- Summary -->
 
-                        <Label Style="{StaticResource ShortSeparator}"/>
+                        <Label Style="{DynamicResource ShortSeparator}"/>
 
+                        <!-- Comments -->
                         <toolkit:Expander IsExpanded="{Binding CommentsValue}"
                                           Command="{Binding CommentsChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowComments}">
                             <toolkit:Expander.Header>
-                                <Grid Style="{StaticResource expanderHeader}">
-                                    
+                                <Grid Style="{DynamicResource expanderHeader}">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Text="{x:Static localization:AppStringResources.BookComments}"
-                                           Style="{StaticResource expanderHeaderLabel}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
                                     <Image Source="{FontImage &#709;, Size=18, Color=White}"
@@ -531,22 +622,25 @@
                                            Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
                             </toolkit:Expander.Header>
-                            
+
                             <VerticalStackLayout Margin="0,-10"
                                                  Padding="10"
-                                                 BackgroundColor="{AppThemeBinding Dark={StaticResource SecondaryBackgroundDark}, Light={StaticResource SecondaryBackgroundLight}}">
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <Label Text="{Binding SelectedBook.BookComments}" />
                             </VerticalStackLayout>
                         </toolkit:Expander>
 
-                        <Label Style="{StaticResource ShortSeparator}"
+                        <Label Style="{DynamicResource ShortSeparator}"
                                IsVisible="{Binding ShowComments}"/>
+                        <!-- Comments -->
 
                     </VerticalStackLayout>
                 </ScrollView>
             </RefreshView>
-
         </StackLayout>
+        <!-- Main Content -->
+        
+        <!-- Activity Indicator -->
         <StackLayout IsVisible="{Binding IsBusy}"
                      AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"
@@ -557,5 +651,6 @@
                            HorizontalOptions="CenterAndExpand"
                            VerticalOptions="CenterAndExpand"/>
         </StackLayout>
+        <!-- Activity Indicator -->
     </AbsoluteLayout>
 </ContentPage>

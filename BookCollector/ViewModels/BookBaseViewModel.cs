@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Book;
 using BookCollector.Views.Book;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,8 +32,108 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public BookModel? selectedBook;
 
+        [ObservableProperty]
+        public bool bookIsRead;
+
+        [ObservableProperty]
+        public string? partOfSeriesString;
+
+        [ObservableProperty]
+        public string? partOfCollectionString;
+
+        [ObservableProperty]
+        public bool readingDataValue;
+
+        [ObservableProperty]
+        public bool readingDataOpen;
+
+        [ObservableProperty]
+        public bool readingDataNotOpen;
+
+        [ObservableProperty]
+        public int half;
+
+        [ObservableProperty]
+        public int fourth;
+
+        [ObservableProperty]
+        public int threeFourth;
+
+        [ObservableProperty]
+        public bool chapterListValue;
+
+        [ObservableProperty]
+        public bool chapterListOpen;
+
+        [ObservableProperty]
+        public bool chapterListNotOpen;
+
+        [ObservableProperty]
+        public bool authorListValue;
+
+        [ObservableProperty]
+        public bool authorListOpen;
+
+        [ObservableProperty]
+        public bool authorListNotOpen;
+
+        [ObservableProperty]
+        public bool showComments;
+
+        [ObservableProperty]
+        public bool showChapters;
+
+        [ObservableProperty]
+        public bool showFavorites;
+
+        [ObservableProperty]
+        public bool showRatings;
+
+        [ObservableProperty]
+        public ObservableCollection<ChapterModel>? chapterList;
+
+        [ObservableProperty]
+        public ObservableCollection<AuthorModel>? authorList;
+
+        [ObservableProperty]
+        public bool bookInfoValue;
+
+        [ObservableProperty]
+        public bool bookInfoOpen;
+
+        [ObservableProperty]
+        public bool bookInfoNotOpen;
+
+        [ObservableProperty]
+        public bool summaryValue;
+
+        [ObservableProperty]
+        public bool summaryOpen;
+
+        [ObservableProperty]
+        public bool summaryNotOpen;
+
+        [ObservableProperty]
+        public bool commentsValue;
+
+        [ObservableProperty]
+        public bool commentsOpen;
+
+        [ObservableProperty]
+        public bool commentsNotOpen;
+
+        [ObservableProperty]
+        public GenreModel? selectedGenre;
+
+        [ObservableProperty]
+        public static ObservableCollection<string> bookFormats;
+
         public BookBaseViewModel()
         {
+            ShowComments = Preferences.Get("CommentsOn", true  /* Default */);
+            ShowChapters = Preferences.Get("ChaptersOn", true  /* Default */);
+            ShowFavorites = Preferences.Get("FavoritesOn", true  /* Default */);
+            ShowRatings = Preferences.Get("RatingsOn", true  /* Default */);
         }
 
         [RelayCommand]
@@ -66,19 +167,51 @@ namespace BookCollector.ViewModels
         [RelayCommand]
         public async Task AddBook()
         {
+            BookEditView view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
 
-        }
-        [RelayCommand]
-        public async Task EditBook()
-        {
-
+            await Shell.Current.Navigation.PushAsync(view);
         }
 
         [RelayCommand]
-        public async Task DeleteBook()
+        public void ReadingDataChanged()
         {
-
+            ReadingDataOpen = ReadingDataValue;
+            ReadingDataNotOpen = !ReadingDataValue;
         }
 
+        [RelayCommand]
+        public void ChapterListChanged()
+        {
+            ChapterListOpen = ChapterListValue;
+            ChapterListNotOpen = !ChapterListValue;
+        }
+
+        [RelayCommand]
+        public void AuthorListChanged()
+        {
+            AuthorListOpen = AuthorListValue;
+            AuthorListNotOpen = !AuthorListValue;
+        }
+
+        [RelayCommand]
+        public void BookInfoChanged()
+        {
+            BookInfoOpen = BookInfoValue;
+            BookInfoNotOpen = !BookInfoValue;
+        }
+
+        [RelayCommand]
+        public void SummaryChanged()
+        {
+            SummaryOpen = SummaryValue;
+            SummaryNotOpen = !SummaryValue;
+        }
+
+        [RelayCommand]
+        public void CommentsChanged()
+        {
+            CommentsOpen = CommentsValue;
+            CommentsNotOpen = !CommentsValue;
+        }
     }
 }
