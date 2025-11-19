@@ -709,6 +709,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page Range.
         /// </summary>
         internal static string PageRange {
@@ -768,6 +777,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PercentageRead {
             get {
                 return ResourceManager.GetString("PercentageRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Picking cover canceled..
+        /// </summary>
+        internal static string PickingCoverCanceled {
+            get {
+                return ResourceManager.GetString("PickingCoverCanceled", resourceCulture);
             }
         }
         

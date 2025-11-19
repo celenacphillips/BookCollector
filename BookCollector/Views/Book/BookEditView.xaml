@@ -98,11 +98,12 @@
                                 Command="{Binding AddUploadCoverPhotoCommand}"
                                 HorizontalOptions="Center"/>
 
-                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=CoverImage}"
+                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
                                      IsVisible="{Binding EditedBook.HasBookCover}"
-                                     Command="{Binding ImagePopupCommand}"/>
+                                     Command="{Binding BookCoverPopupCommand}"
+                                     BackgroundColor="Transparent"/>
                         
                         <!-- TO DO -->
                         <!-- Add delete button for book cover - 11/18/2025  -->

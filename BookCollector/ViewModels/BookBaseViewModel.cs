@@ -117,6 +117,9 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public static ObservableCollection<string> bookFormats;
 
+        [ObservableProperty]
+        public ImageSource? bookCover;
+
         public BookBaseViewModel()
         {
             ShowComments = Preferences.Get("CommentsOn", true  /* Default */);

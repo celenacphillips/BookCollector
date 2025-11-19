@@ -88,11 +88,12 @@
                         <!-- Book Title -->
 
                         <!-- Book Cover -->
-                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=CoverImage}"
+                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
                                      IsVisible="{Binding SelectedBook.HasBookCover}"
-                                     Command="{Binding ImagePopupCommand}"/>
+                                     Command="{Binding BookCoverPopupCommand}"
+                                     BackgroundColor="Transparent"/>
 
                         <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
                                HeightRequest="200"

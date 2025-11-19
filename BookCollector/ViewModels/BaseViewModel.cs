@@ -1,7 +1,9 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -15,6 +17,7 @@ namespace BookCollector.ViewModels
         public double CollectionViewHeight { get; set; }
         public double SingleMenuBar { get; set; }
         public double DoubleMenuBar { get; set; }
+        public ContentPage _view { get; set; }
 
         [ObservableProperty]
         public bool isRefreshing;
@@ -73,9 +76,9 @@ namespace BookCollector.ViewModels
         // TO DO:
         // Set up cover image pop up - 11/19/2025
         [RelayCommand]
-        public async Task ImagePopup()
+        public async Task BookCoverPopup()
         {
-
+            _view.ShowPopup(new BookCoverPopup());
         }
 
         // TO DO:

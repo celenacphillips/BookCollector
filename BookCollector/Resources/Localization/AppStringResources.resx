@@ -453,4 +453,10 @@
   <data name="UpNext_Question" xml:space="preserve">
     <value>Queue this book up next for reading?</value>
   </data>
+  <data name="PickingCoverCanceled" xml:space="preserve">
+    <value>Picking cover canceled.</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

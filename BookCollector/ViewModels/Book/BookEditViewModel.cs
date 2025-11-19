@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -42,6 +43,7 @@ namespace BookCollector.ViewModels.Book
         public BookEditViewModel(BookModel book, ContentPage view)
         {
             EditedBook = (BookModel)book.Clone();
+            _view = view;
         }
 
         public async Task SetViewModelData()
@@ -58,6 +60,12 @@ namespace BookCollector.ViewModels.Book
 
             BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal && EditedBook.BookPageTotal != 0;
             ShowUpNext = EditedBook.BookPageRead == 0;
+
+            if (EditedBook.BookCoverBytes != null)
+            {
+                var imageSource = ImageSource.FromStream(() => new MemoryStream(EditedBook.BookCoverBytes));
+                BookCover = imageSource;
+            }
 
             StepperEnabled = EditedBook.BookPageTotal != 0;
             ChapterList = TestData.ChapterList;
@@ -130,12 +138,41 @@ namespace BookCollector.ViewModels.Book
             BookInfo1NotOpen = !BookInfo1Value;
         }
 
-        // TO DO:
-        // Set up Add Upload Cover photo - 11/19/2025
         [RelayCommand]
         public async Task AddUploadCoverPhoto()
         {
+            SetIsBusyTrue();
 
+            PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
+            storageReadStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+
+            if (storageReadStatus == PermissionStatus.Granted)
+            {
+                MediaPickerOptions pickerOptions = new();
+
+                try
+                {
+                    var result = await MediaPicker.PickPhotoAsync(pickerOptions);
+
+                    if (result != null)
+                    {
+                        BookCover = ImageSource.FromFile(result.FullPath);
+                        EditedBook.HasBookCover = true;
+                        EditedBook.HasNoBookCover = false;
+                        EditedBook.BookCoverBytes = await File.ReadAllBytesAsync(result.FullPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SetIsBusyFalse();
+                    await Shell.Current.DisplayAlert(null, AppStringResources.PickingCoverCanceled, AppStringResources.OK);
+                }
+
+                if (EditedBook.HasNoBookCover)
+                    await Shell.Current.DisplayAlert(null, AppStringResources.PickingCoverCanceled, AppStringResources.OK);
+
+                SetIsBusyFalse();
+            }
         }
 
         // TO DO:

@@ -9,11 +9,12 @@ namespace BookCollector.ViewModels.Book
 {
     public partial class BookMainViewModel : BookBaseViewModel
     {
-        BookMainView _view;
+        BookMainView bookMainview;
 
         public BookMainViewModel(BookModel book, ContentPage view)
         {
-            _view = (BookMainView)view;
+            _view = view;
+            bookMainview = (BookMainView)view;
 
             SelectedBook = book;
         }
@@ -28,9 +29,9 @@ namespace BookCollector.ViewModels.Book
 
             SetIsBusyTrue();
 
-            if (_view.ReceivedObject != null)
+            if (bookMainview.ReceivedObject != null)
             {
-                SelectedBook = _view.ReceivedObject;
+                SelectedBook = bookMainview.ReceivedObject;
                 ViewTitle = SelectedBook.BookTitle;
                 TestData.UpdateBook(SelectedBook);
             }
@@ -44,6 +45,12 @@ namespace BookCollector.ViewModels.Book
 
             BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
             ShowUpNext = SelectedBook.BookPageRead == 0;
+
+            if (SelectedBook.BookCoverBytes != null)
+            {
+                var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
+                BookCover = imageSource;
+            }
 
             ChapterList = TestData.ChapterList;
             AuthorList = TestData.AuthorList;
