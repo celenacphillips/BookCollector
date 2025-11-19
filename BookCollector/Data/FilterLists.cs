@@ -15,7 +15,7 @@ namespace BookCollector.Data
 
         public static ObservableCollection<BookModel> GetToBeReadBooksList(ObservableCollection<BookModel> bookList)
         {
-            return bookList.Where(x => x.BookPageRead == 0).ToObservableCollection();
+            return bookList.Where(x => x.BookPageRead == 0 && x.UpNext == false).ToObservableCollection();
         }
 
         public static ObservableCollection<BookModel> GetReadBooksList(ObservableCollection<BookModel> bookList)

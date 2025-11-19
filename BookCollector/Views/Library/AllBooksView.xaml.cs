@@ -4,11 +4,20 @@ namespace BookCollector.Views.Library;
 
 public partial class AllBooksView : ContentPage
 {
+    private AllBooksViewModel _viewModel { get; set; }
 	public AllBooksView()
 	{
         AllBooksViewModel viewModel = new AllBooksViewModel(this);
+        _viewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
 	}
+
+    // Need this to make sure new book info populates when you
+    // navigate back to the view.
+    protected override void OnAppearing()
+    {
+        _viewModel.SetViewModelData();
+    }
 }

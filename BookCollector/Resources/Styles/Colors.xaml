@@ -27,4 +27,22 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
+
+    <!-- Light -->
+    <Color x:Key="SecondaryLight">#4080bf</Color>
+    <Color x:Key="TertiaryLight">#6699cc</Color>
+    <Color x:Key="MenuLight">Black</Color>
+    <Color x:Key="BackgroundLight">#f2f2f2</Color>
+    <Color x:Key="SecondaryBackgroundLight">#e6e6e6</Color>
+    <Color x:Key="TextLight">Black</Color>
+    <Color x:Key="SecondaryTextLight">White</Color>
+
+    <!-- Dark -->
+    <Color x:Key="SecondaryDark">#538cc6</Color>
+    <Color x:Key="TertiaryDark">#8cb3d9</Color>
+    <Color x:Key="MenuDark">#f2f2f2</Color>
+    <Color x:Key="BackgroundDark">#1f1f1f</Color>
+    <Color x:Key="SecondaryBackgroundDark">#333333</Color>
+    <Color x:Key="TextDark">White</Color>
+    <Color x:Key="SecondaryTextDark">Black</Color>
 </ResourceDictionary>

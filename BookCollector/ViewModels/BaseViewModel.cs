@@ -36,39 +36,50 @@ namespace BookCollector.ViewModels
             SingleMenuBar = DeviceHeight * 0.2297;
         }
 
+        // TO DO:
+        // Set up refresh command for all views - 11/19/2025
         [RelayCommand]
         public async Task Refresh()
         {
             IsRefreshing = true;
 
             IsRefreshing = false;
-
         }
 
+        // TO DO:
+        // Set up filter pop up - 11/19/2025
         [RelayCommand]
         public async Task FilterPopup()
         {
 
         }
 
+        // TO DO:
+        // Set up sort pop up - 11/19/2025
         [RelayCommand]
         public async Task SortPopup()
         {
 
         }
 
+        // TO DO:
+        // Set up info pop up - 11/19/2025
         [RelayCommand]
         public async Task InfoPopup()
         {
 
         }
 
+        // TO DO:
+        // Set up cover image pop up - 11/19/2025
         [RelayCommand]
         public async Task ImagePopup()
         {
 
         }
 
+        // TO DO:
+        // Include Tap command on all labels of the BookMainView - 11/19/2025
         [RelayCommand]
         public static async Task Tap(string input)
         {

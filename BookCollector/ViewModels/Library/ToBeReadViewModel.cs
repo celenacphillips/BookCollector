@@ -8,7 +8,10 @@ namespace BookCollector.ViewModels.Library
         public ToBeReadViewModel(ContentPage view)
         {
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
+        }
 
+        public async Task SetViewModelData()
+        {
             SetIsBusyTrue();
 
             FullBookList = FilterLists.GetToBeReadBooksList(TestData.BookList);

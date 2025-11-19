@@ -4,7 +4,7 @@ using SQLite;
 
 namespace BookCollector.Data.Models
 {
-    public partial class SeriesModel : ObservableObject
+    public partial class SeriesModel : ObservableObject, ICloneable
     {
         [PrimaryKey]
         public Guid? SeriesGuid { get; set; }
@@ -20,5 +20,10 @@ namespace BookCollector.Data.Models
         public string? ParsedSeriesName { get; set; }
         public int SeriesTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

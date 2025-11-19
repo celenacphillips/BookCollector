@@ -78,12 +78,12 @@ public partial class Rating : ContentView
     {
         return state switch
         {
-            StarState.Empty => Application.Current.PlatformAppTheme switch
+            StarState.Empty => Application.Current.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_empty_dark.svg"),
                 _ => ImageSource.FromFile("Icons/star_icon_empty_light.svg"),
             },
-            StarState.Full => Application.Current.PlatformAppTheme switch
+            StarState.Full => Application.Current.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_full_dark.svg"),
                 _ => ImageSource.FromFile("Icons/star_icon_full_light.svg"),

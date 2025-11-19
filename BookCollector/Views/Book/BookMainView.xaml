@@ -111,14 +111,14 @@
                         <!-- Book Series -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasSeries}">
-                            <Label Text="{Binding PartOfSeriesString}" />
+                            <Label Text="{Binding SelectedBook.PartOfSeries}" />
                         </HorizontalStackLayout>
                         <!-- Book Series -->
 
                         <!-- Book Collection -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasCollection}">
-                            <Label Text="{Binding PartOfCollectionString}" />
+                            <Label Text="{Binding SelectedBook.PartOfCollection}" />
                         </HorizontalStackLayout>
                         <!-- Book Collection -->
 
@@ -152,7 +152,19 @@
                             </toolkit:Expander.Header>
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
-                                
+
+                                <!-- Up Next -->
+                                <VerticalStackLayout Margin="10"
+                                                     IsVisible="{Binding ShowUpNext}">
+                                    <Label Text="{x:Static localization:AppStringResources.UpNext_Question}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Switch IsToggled="{Binding SelectedBook.UpNext}"
+                                            IsEnabled="False"
+                                            HorizontalOptions="Start"
+                                            Margin="-10"/>
+                                </VerticalStackLayout>
+                                <!-- Up Next -->
+
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -222,15 +234,15 @@
                                         <Label Text="0"
                                                Grid.Row="0" Grid.Column="0" />
 
-                                        <Label Text="{Binding Fourth}"
+                                        <Label Text="{Binding SelectedBook.Fourth}"
                                                Grid.Row="0" Grid.Column="1"
                                                HorizontalTextAlignment="Start"/>
 
-                                        <Label Text="{Binding Half}"
+                                        <Label Text="{Binding SelectedBook.Half}"
                                                Grid.Row="0" Grid.Column="2"
                                                HorizontalTextAlignment="Center" />
 
-                                        <Label Text="{Binding ThreeFourth}"
+                                        <Label Text="{Binding SelectedBook.ThreeFourth}"
                                                HorizontalTextAlignment="End"
                                                Grid.Row="0" Grid.Column="3"/>
 

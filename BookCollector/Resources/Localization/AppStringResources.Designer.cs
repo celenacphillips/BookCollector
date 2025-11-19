@@ -295,6 +295,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book number of total.
+        /// </summary>
+        internal static string BookNumberOfTotal {
+            get {
+                return ResourceManager.GetString("BookNumberOfTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Price.
         /// </summary>
         internal static string BookPrice {
@@ -1038,6 +1047,15 @@ namespace BookCollector.Resources.Localization {
         internal static string TurnOnRatings {
             get {
                 return ResourceManager.GetString("TurnOnRatings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue this book up next for reading?.
+        /// </summary>
+        internal static string UpNext_Question {
+            get {
+                return ResourceManager.GetString("UpNext_Question", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
-﻿using BookCollector.Data.Models;
+﻿using BookCollector.Data;
+using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Book;
 using BookCollector.Views.Book;
@@ -36,10 +37,7 @@ namespace BookCollector.ViewModels
         public bool bookIsRead;
 
         [ObservableProperty]
-        public string? partOfSeriesString;
-
-        [ObservableProperty]
-        public string? partOfCollectionString;
+        public bool showUpNext;
 
         [ObservableProperty]
         public bool readingDataValue;
@@ -49,15 +47,6 @@ namespace BookCollector.ViewModels
 
         [ObservableProperty]
         public bool readingDataNotOpen;
-
-        [ObservableProperty]
-        public int half;
-
-        [ObservableProperty]
-        public int fourth;
-
-        [ObservableProperty]
-        public int threeFourth;
 
         [ObservableProperty]
         public bool chapterListValue;
@@ -164,10 +153,15 @@ namespace BookCollector.ViewModels
             SelectedBook = null;
         }
 
+        // TO DO:
+        // Fix Add Book to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddBook()
         {
-            BookEditView view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
+            BookModel newBook = new BookModel();
+
+            BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
+            TestData.InsertBook(newBook);
 
             await Shell.Current.Navigation.PushAsync(view);
         }

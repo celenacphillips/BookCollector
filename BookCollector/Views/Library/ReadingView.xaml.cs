@@ -4,8 +4,7 @@ namespace BookCollector.Views.Library;
 
 public partial class ReadingView : ContentPage
 {
-    ReadingViewModel _viewModel { get; set; }
-
+    private ReadingViewModel _viewModel { get; set; }
 
     public ReadingView()
 	{

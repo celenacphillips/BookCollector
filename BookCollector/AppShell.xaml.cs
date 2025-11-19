@@ -25,7 +25,8 @@ namespace BookCollector
 
         private void RegisterRoutes()
         {
-            Routing.RegisterRoute("BookEditView", typeof(Views.Book.BookEditView)); ;
+            Routing.RegisterRoute("BookEditView", typeof(Views.Book.BookEditView));
+            Routing.RegisterRoute("BookMainView", typeof(Views.Book.BookMainView));
         }
 
         private void SettingPreferences ()

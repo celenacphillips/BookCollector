@@ -1,7 +1,9 @@
-﻿using BookCollector.Resources.Localization;
+﻿using Android.Health.Connect.DataTypes.Units;
+using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 using System.ComponentModel.DataAnnotations;
+using static Android.Renderscripts.ScriptGroup;
 
 namespace BookCollector.Data.Models
 {
@@ -27,8 +29,6 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string? bookPrice;
         [ObservableProperty]
-        public double? bookPriceValue;
-        [ObservableProperty]
         public string? bookSummary;
         [ObservableProperty]
         public int bookPageRead;
@@ -41,11 +41,7 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string? bookStartDate;
         [ObservableProperty]
-        public DateTime? startDateValue;
-        [ObservableProperty]
         public string? bookEndDate;
-        [ObservableProperty]
-        public DateTime? endDateValue;
         [ObservableProperty]
         public string? bookLocation;
         [ObservableProperty]
@@ -57,8 +53,6 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public bool hasNoBookCover;
         [ObservableProperty]
-        public string publisherPublishDateString;
-        [ObservableProperty]
         public bool hasSeries;
         [ObservableProperty]
         public bool hasCollection;
@@ -69,15 +63,30 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string? loanedTo;
         [ObservableProperty]
-        public DateTime loanedOutOnValue;
-        [ObservableProperty]
         public string? bookLoanedOutOn;
         [ObservableProperty]
         public bool upNext;
         [ObservableProperty]
         public bool hideBook;
+        [ObservableProperty]
+        public int half;
+        [ObservableProperty]
+        public int fourth;
+        [ObservableProperty]
+        public int threeFourth;
+        [ObservableProperty]
+        public string? partOfSeries;
+        [ObservableProperty]
+        public string? partOfCollection;
 
-        public string? ParsedTitle { get; set; }
+        public string PublisherPublishDateString
+        {
+            get => $"{(!string.IsNullOrEmpty(this.BookPublisher) ? this.BookPublisher : AppStringResources.NoPublisher)}, {(!string.IsNullOrEmpty(this.BookPublishYear) ? this.BookPublishYear : AppStringResources.NoDate)}";
+        }
+        public string? ParsedTitle
+        {
+            get => (BookTitle.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)) ? this.BookTitle.Remove(0, this.BookTitle.IndexOf(" ") + 1) : this.BookTitle;
+        }
         public Guid? BookSeriesGuid { get; set; }
         public Guid? BookCollectionGuid { get; set; }
         public Guid? BookGenreGuid { get; set; }
@@ -92,6 +101,86 @@ namespace BookCollector.Data.Models
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public void SetReadingProgress()
+        {
+            this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
+            this.PageReadPercent = $"{Math.Round(this.Progress * 100, 2)}%";
+        }
+
+        public void SetBookCheckpoints()
+        {
+            this.Half = this.BookPageTotal / 2;
+            this.Fourth = this.BookPageTotal / 4;
+            this.ThreeFourth = this.Half + this.Fourth;
+        }
+
+        public void SetDates()
+        {
+            if (!string.IsNullOrEmpty(this.BookStartDate))
+            {
+                this.BookStartDate = DateTime.Parse(this.BookStartDate).Date.ToShortDateString();
+            }
+
+            if (!string.IsNullOrEmpty(this.BookEndDate))
+            {
+                this.BookEndDate = DateTime.Parse(this.BookEndDate).Date.ToShortDateString();
+            }
+
+            if (!string.IsNullOrEmpty(this.BookLoanedOutOn))
+            {
+                this.BookLoanedOutOn = DateTime.Parse(this.BookLoanedOutOn).Date.ToShortDateString();
+            }
+        }
+
+        public void SetPartOfSeries()
+        {
+            this.HasSeries = this.BookSeriesGuid != null;
+            var output = string.Empty;
+
+            if (this.BookSeriesGuid != null)
+            {
+                var series = TestData.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.BookSeriesGuid);
+
+                if (this.BookNumberInSeries != null)
+                {
+                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}, {AppStringResources.BookNumber.Replace("Number", $"{this.BookNumberInSeries}")}";
+                }
+
+                if (this.BookNumberInSeries != null && !string.IsNullOrEmpty(series.TotalBooksInSeries))
+                {
+                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}, {AppStringResources.BookNumberOfTotal.Replace("number", $"{this.BookNumberInSeries}").Replace("total", $"{series.totalBooksInSeries}")}";
+                }
+                
+                if (this.BookNumberInSeries == null)
+                {
+                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}";
+                }
+            }
+
+            this.PartOfSeries = output;
+        }
+
+        public void SetPartOfCollection()
+        {
+            this.HasCollection = this.BookCollectionGuid != null;
+            var output = string.Empty;
+
+            if (this.BookCollectionGuid != null)
+            {
+                var collection = TestData.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.BookCollectionGuid);
+
+                output = $"{AppStringResources.PartOfCollection.Replace("blank", $"{collection.CollectionName}")}";
+            }
+
+            this.PartOfCollection = output;
+        }
+
+        public void SetCoverDisplay()
+        {
+            this.HasBookCover = this.BookCoverBytes != null;
+            this.HasNoBookCover = this.BookCoverBytes == null;
         }
     }
 }

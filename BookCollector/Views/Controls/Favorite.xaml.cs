@@ -46,12 +46,12 @@ public partial class Favorite : ContentView
     {
         return state switch
         {
-            HeartState.Empty => Application.Current.PlatformAppTheme switch
+            HeartState.Empty => Application.Current.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_empty_dark.svg"),
                 _ => ImageSource.FromFile("Icons/heart_icon_empty_light.svg")
             },
-            HeartState.Full => Application.Current.PlatformAppTheme switch
+            HeartState.Full => Application.Current.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_full_dark.svg"),
                 _ => ImageSource.FromFile("Icons/heart_icon_full_light.svg"),

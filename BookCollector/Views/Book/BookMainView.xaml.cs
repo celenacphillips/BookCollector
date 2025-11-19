@@ -22,7 +22,6 @@ public partial class BookMainView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-
         _viewModel.SetViewModelData();
     }
 }

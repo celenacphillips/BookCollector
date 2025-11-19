@@ -447,4 +447,10 @@
   <data name="SelectAGenre" xml:space="preserve">
     <value>Select a Genre</value>
   </data>
+  <data name="BookNumberOfTotal" xml:space="preserve">
+    <value>Book number of total</value>
+  </data>
+  <data name="UpNext_Question" xml:space="preserve">
+    <value>Queue this book up next for reading?</value>
+  </data>
 </root>

@@ -3,7 +3,7 @@ using SQLite;
 
 namespace BookCollector.Data.Models
 {
-    public partial class AuthorModel : ObservableObject
+    public partial class AuthorModel : ObservableObject, ICloneable
     {
         [PrimaryKey]
         public Guid? AuthorGuid { get; set; }
@@ -13,11 +13,23 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string lastName;
         [ObservableProperty]
-        public string fullName;
-        [ObservableProperty]
         public string? totalBooksString;
+
+        public string FullName
+        {
+            get => $"{this.FirstName} {this.LastName}";
+        }
+        public string ReverseFullName
+        {
+            get => $"{this.LastName}, {this.FirstName}";
+        }
 
         public int AuthorTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

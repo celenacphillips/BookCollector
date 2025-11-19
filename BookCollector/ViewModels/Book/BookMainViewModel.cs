@@ -20,6 +20,12 @@ namespace BookCollector.ViewModels.Book
 
         public async Task SetViewModelData()
         {
+            if (ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
+            {
+                BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}");
+                await Shell.Current.Navigation.PushAsync(view);
+            }
+
             SetIsBusyTrue();
 
             if (_view.ReceivedObject != null)
@@ -29,13 +35,17 @@ namespace BookCollector.ViewModels.Book
                 TestData.UpdateBook(SelectedBook);
             }
 
-            ChapterList = TestData.AddChaptersToList();
-            AuthorList = TestData.AddAuthorsToList();
+            SelectedBook.SetDates();
+
+            ChapterList = TestData.ChapterList;
+            AuthorList = TestData.AuthorList;
+            SelectedGenre = TestData.GenreList.FirstOrDefault(x => x.GenreGuid == SelectedBook.BookGenreGuid);
 
             BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
-            Half = SelectedBook.BookPageTotal / 2;
-            Fourth = SelectedBook.BookPageTotal / 4;
-            ThreeFourth = Half + Fourth;
+            ShowUpNext = SelectedBook.BookPageRead == 0;
+            SelectedBook.SetBookCheckpoints();
+            SelectedBook.SetPartOfSeries();
+            SelectedBook.SetPartOfCollection();
 
             ReadingDataValue = true;
             ReadingDataChanged();
@@ -70,10 +80,17 @@ namespace BookCollector.ViewModels.Book
             SetIsBusyFalse();
         }
 
+        // TO DO:
+        // Add checks for deleting book - 11/19/2025
         [RelayCommand]
         public async Task DeleteBook()
         {
+            SetIsBusyTrue();
 
+            TestData.DeleteBook(SelectedBook);
+            await Shell.Current.Navigation.PopAsync();
+
+            SetIsBusyFalse();
         }
     }
 }
