@@ -103,20 +103,20 @@ namespace BookCollector.Data.Models
             return this.MemberwiseClone();
         }
 
-        public void SetReadingProgress()
+        public async Task SetReadingProgress()
         {
             this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
             this.PageReadPercent = $"{Math.Round(this.Progress * 100, 2)}%";
         }
 
-        public void SetBookCheckpoints()
+        public async Task SetBookCheckpoints()
         {
             this.Half = this.BookPageTotal / 2;
             this.Fourth = this.BookPageTotal / 4;
             this.ThreeFourth = this.Half + this.Fourth;
         }
 
-        public void SetDates()
+        public async Task SetDates()
         {
             if (!string.IsNullOrEmpty(this.BookStartDate))
             {
@@ -134,7 +134,7 @@ namespace BookCollector.Data.Models
             }
         }
 
-        public void SetPartOfSeries()
+        public async Task SetPartOfSeries()
         {
             this.HasSeries = this.BookSeriesGuid != null;
             var output = string.Empty;
@@ -162,7 +162,7 @@ namespace BookCollector.Data.Models
             this.PartOfSeries = output;
         }
 
-        public void SetPartOfCollection()
+        public async Task SetPartOfCollection()
         {
             this.HasCollection = this.BookCollectionGuid != null;
             var output = string.Empty;
@@ -177,7 +177,7 @@ namespace BookCollector.Data.Models
             this.PartOfCollection = output;
         }
 
-        public void SetCoverDisplay()
+        public async Task SetCoverDisplay()
         {
             this.HasBookCover = this.BookCoverBytes != null;
             this.HasNoBookCover = this.BookCoverBytes == null;

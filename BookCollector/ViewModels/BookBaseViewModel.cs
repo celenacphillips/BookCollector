@@ -167,42 +167,42 @@ namespace BookCollector.ViewModels
         }
 
         [RelayCommand]
-        public void ReadingDataChanged()
+        public async Task ReadingDataChanged()
         {
             ReadingDataOpen = ReadingDataValue;
             ReadingDataNotOpen = !ReadingDataValue;
         }
 
         [RelayCommand]
-        public void ChapterListChanged()
+        public async Task ChapterListChanged()
         {
             ChapterListOpen = ChapterListValue;
             ChapterListNotOpen = !ChapterListValue;
         }
 
         [RelayCommand]
-        public void AuthorListChanged()
+        public async Task AuthorListChanged()
         {
             AuthorListOpen = AuthorListValue;
             AuthorListNotOpen = !AuthorListValue;
         }
 
         [RelayCommand]
-        public void BookInfoChanged()
+        public async Task BookInfoChanged()
         {
             BookInfoOpen = BookInfoValue;
             BookInfoNotOpen = !BookInfoValue;
         }
 
         [RelayCommand]
-        public void SummaryChanged()
+        public async Task SummaryChanged()
         {
             SummaryOpen = SummaryValue;
             SummaryNotOpen = !SummaryValue;
         }
 
         [RelayCommand]
-        public void CommentsChanged()
+        public async Task CommentsChanged()
         {
             CommentsOpen = CommentsValue;
             CommentsNotOpen = !CommentsValue;

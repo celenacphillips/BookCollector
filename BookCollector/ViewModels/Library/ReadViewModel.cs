@@ -14,7 +14,11 @@ namespace BookCollector.ViewModels.Library
         {
             SetIsBusyTrue();
 
-            FullBookList = FilterLists.GetReadBooksList(TestData.BookList);
+            Task.WaitAll(
+            [
+                Task.Run (async () => FullBookList = await FilterLists.GetReadBooksList(TestData.BookList) ),
+            ]);
+
             TotalBooksCount = FullBookList.Count;
 
             FilteredBookList = FullBookList;

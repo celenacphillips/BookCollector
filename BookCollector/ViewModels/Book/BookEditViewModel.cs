@@ -10,7 +10,7 @@ namespace BookCollector.ViewModels.Book
     public partial class BookEditViewModel : BookBaseViewModel
     {
         [ObservableProperty]
-        public BookModel? editedBook;
+        public BookModel editedBook;
 
         [ObservableProperty]
         public bool bookInfo1Value;
@@ -48,12 +48,17 @@ namespace BookCollector.ViewModels.Book
         {
             SetIsBusyTrue();
 
-            EditedBook.SetCoverDisplay();
+            BookInfo1Value = true;
+            ReadingDataValue = true;
+            ChapterListValue = true;
+            AuthorListValue = true;
+            BookInfoValue = true;
+            SummaryValue = true;
+            CommentsValue = true;
 
             BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal && EditedBook.BookPageTotal != 0;
             ShowUpNext = EditedBook.BookPageRead == 0;
 
-            EditedBook.SetBookCheckpoints();
             StepperEnabled = EditedBook.BookPageTotal != 0;
             ChapterList = TestData.ChapterList;
             AuthorList = TestData.AuthorList;
@@ -65,20 +70,18 @@ namespace BookCollector.ViewModels.Book
             SelectedSeries = SeriesList.FirstOrDefault(x => x.SeriesGuid == EditedBook.BookSeriesGuid);
             SelectedGenre = GenreList.FirstOrDefault(x => x.GenreGuid == EditedBook.BookGenreGuid);
 
-            BookInfo1Value = true;
-            BookInfo1Changed();
-            ReadingDataValue = true;
-            ReadingDataChanged();
-            ChapterListValue = true;
-            ChapterListChanged();
-            AuthorListValue = true;
-            AuthorListChanged();
-            BookInfoValue = true;
-            BookInfoChanged();
-            SummaryValue = true;
-            SummaryChanged();
-            CommentsValue = true;
-            CommentsChanged();
+            Task.WaitAll(
+            [
+                Task.Run (async () => await EditedBook.SetBookCheckpoints() ),
+                Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                Task.Run (async () => await BookInfo1Changed() ),
+                Task.Run (async () => await ReadingDataChanged() ),
+                Task.Run (async () => await ChapterListChanged() ),
+                Task.Run (async () => await AuthorListChanged() ),
+                Task.Run (async () => await BookInfoChanged() ),
+                Task.Run (async () => await SummaryChanged() ),
+                Task.Run (async () => await CommentsChanged() ),
+            ]);
 
             SetIsBusyFalse();
         }
@@ -94,15 +97,18 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task SaveBook()
         {
-            EditedBook.SetDates();
-            
             EditedBook.BookSeriesGuid = SelectedSeries?.SeriesGuid;
             EditedBook.BookCollectionGuid = SelectedCollection?.CollectionGuid;
             EditedBook.BookGenreGuid = SelectedGenre?.GenreGuid;
-            EditedBook.SetReadingProgress();
-            EditedBook.SetPartOfSeries();
-            EditedBook.SetPartOfCollection();
-            EditedBook.SetCoverDisplay();
+
+            Task.WaitAll(
+            [
+                Task.Run (async () => await EditedBook.SetDates() ),
+                Task.Run (async () => await EditedBook.SetReadingProgress() ),
+                Task.Run (async () => await EditedBook.SetPartOfSeries() ),
+                Task.Run (async () => await EditedBook.SetPartOfCollection() ),
+                Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+            ]);
 
 #if ANDROID
             if (Platform.CurrentActivity != null &&
@@ -118,7 +124,7 @@ namespace BookCollector.ViewModels.Book
         }
 
         [RelayCommand]
-        public void BookInfo1Changed()
+        public async Task BookInfo1Changed()
         {
             BookInfo1Open = BookInfo1Value;
             BookInfo1NotOpen = !BookInfo1Value;

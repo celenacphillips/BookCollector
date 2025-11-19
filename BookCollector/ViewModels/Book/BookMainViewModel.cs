@@ -35,30 +35,34 @@ namespace BookCollector.ViewModels.Book
                 TestData.UpdateBook(SelectedBook);
             }
 
-            SelectedBook.SetDates();
+            ReadingDataValue = true;
+            ChapterListValue = true;
+            AuthorListValue = true;
+            BookInfoValue = true;
+            SummaryValue = true;
+            CommentsValue = true;
+
+            BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
+            ShowUpNext = SelectedBook.BookPageRead == 0;
 
             ChapterList = TestData.ChapterList;
             AuthorList = TestData.AuthorList;
             SelectedGenre = TestData.GenreList.FirstOrDefault(x => x.GenreGuid == SelectedBook.BookGenreGuid);
 
-            BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
-            ShowUpNext = SelectedBook.BookPageRead == 0;
-            SelectedBook.SetBookCheckpoints();
-            SelectedBook.SetPartOfSeries();
-            SelectedBook.SetPartOfCollection();
-
-            ReadingDataValue = true;
-            ReadingDataChanged();
-            ChapterListValue = true;
-            ChapterListChanged();
-            AuthorListValue = true;
-            AuthorListChanged();
-            BookInfoValue = true;
-            BookInfoChanged();
-            SummaryValue = true;
-            SummaryChanged();
-            CommentsValue = true;
-            CommentsChanged();
+            Task.WaitAll(
+            [
+                Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
+                Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
+                Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
+                Task.Run (async () => await SelectedBook.SetPartOfCollection() ),
+                Task.Run (async () => await SelectedBook.SetDates() ),
+                Task.Run (async () => await ReadingDataChanged() ),
+                Task.Run (async () => await ChapterListChanged() ),
+                Task.Run (async () => await AuthorListChanged() ),
+                Task.Run (async () => await BookInfoChanged() ),
+                Task.Run (async () => await SummaryChanged() ),
+                Task.Run (async () => await CommentsChanged() ),
+            ]);
 
             SetIsBusyFalse();
         }
