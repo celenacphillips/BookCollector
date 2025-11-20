@@ -78,7 +78,15 @@ namespace BookCollector.ViewModels.Book
 
             SetIsBusyFalse();
         }
-        
+
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            SetRefreshTrue();
+            await SetViewModelData();
+            SetRefreshFalse();
+        }
+
 
         [RelayCommand]
         public async Task EditBook()

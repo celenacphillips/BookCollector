@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data;
 using BookCollector.Resources.Localization;
+using CommunityToolkit.Mvvm.Input;
 
 namespace BookCollector.ViewModels.Library
 {
@@ -29,6 +30,14 @@ namespace BookCollector.ViewModels.Library
             TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
+        }
+
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            SetRefreshTrue();
+            await SetViewModelData();
+            SetRefreshFalse();
         }
     }
 }

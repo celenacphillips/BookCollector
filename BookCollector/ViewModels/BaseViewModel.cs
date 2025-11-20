@@ -43,16 +43,6 @@ namespace BookCollector.ViewModels
         }
 
         // TO DO:
-        // Set up refresh command for all views - 11/19/2025
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            IsRefreshing = true;
-
-            IsRefreshing = false;
-        }
-
-        // TO DO:
         // Set up filter pop up - 11/19/2025
         [RelayCommand]
         public async Task FilterPopup()
@@ -80,25 +70,38 @@ namespace BookCollector.ViewModels
             _view.ShowPopup(new BookCoverPopup());
         }
 
-        // TO DO:
-        // Include Tap command on all labels of the BookMainView - 11/19/2025
         [RelayCommand]
-        public static async Task Tap(string input)
+        public static async Task Tap(object input)
         {
-            await Clipboard.SetTextAsync(input);
-            await Toast.Make($"{AppStringResources.TextCopied}").Show();
+            if (!string.IsNullOrEmpty(input.ToString()))
+            {
+                await Clipboard.SetTextAsync(input.ToString());
+                await Toast.Make($"{AppStringResources.TextCopied}").Show();
+            }    
         }
 
-        public void SetIsBusyTrue()
+        public async void SetIsBusyTrue()
         {
+            GC.Collect();
             IsBusy = true;
             IsVisible = false;
+            await Task.Yield();
         }
 
         public void SetIsBusyFalse()
         {
             IsBusy = false;
             IsVisible = true;
+        }
+
+        public void SetRefreshTrue()
+        {
+            IsRefreshing = true;
+        }
+
+        public void SetRefreshFalse()
+        {
+            IsRefreshing = false;
         }
     }
 }

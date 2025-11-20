@@ -96,6 +96,14 @@ namespace BookCollector.ViewModels.Book
             SetIsBusyFalse();
         }
 
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            SetRefreshTrue();
+            await SetViewModelData();
+            SetRefreshFalse();
+        }
+
         // TO DO:
         // Add Book Search screen - 11/19/2025
         [RelayCommand]
