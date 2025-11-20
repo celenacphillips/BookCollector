@@ -31,6 +31,9 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public string? viewTitle;
 
+        [ObservableProperty]
+        public string infoText;
+
         public BaseViewModel()
         {
             DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
@@ -65,16 +68,12 @@ namespace BookCollector.ViewModels
 
         }
 
-        // TO DO:
-        // Set up info pop up - 11/19/2025
         [RelayCommand]
         public async Task InfoPopup()
         {
-
+            _view.ShowPopup(new InformationPopup());
         }
 
-        // TO DO:
-        // Set up cover image pop up - 11/19/2025
         [RelayCommand]
         public async Task BookCoverPopup()
         {

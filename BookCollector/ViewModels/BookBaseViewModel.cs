@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels
         public bool showUpNext;
 
         [ObservableProperty]
-        public bool readingDataValue;
+        public bool readingDataSectionValue;
 
         [ObservableProperty]
         public bool readingDataOpen;
@@ -49,7 +49,7 @@ namespace BookCollector.ViewModels
         public bool readingDataNotOpen;
 
         [ObservableProperty]
-        public bool chapterListValue;
+        public bool chapterListSectionValue;
 
         [ObservableProperty]
         public bool chapterListOpen;
@@ -58,7 +58,7 @@ namespace BookCollector.ViewModels
         public bool chapterListNotOpen;
 
         [ObservableProperty]
-        public bool authorListValue;
+        public bool authorListSectionValue;
 
         [ObservableProperty]
         public bool authorListOpen;
@@ -85,7 +85,7 @@ namespace BookCollector.ViewModels
         public ObservableCollection<AuthorModel>? authorList;
 
         [ObservableProperty]
-        public bool bookInfoValue;
+        public bool bookInfoSectionValue;
 
         [ObservableProperty]
         public bool bookInfoOpen;
@@ -94,7 +94,7 @@ namespace BookCollector.ViewModels
         public bool bookInfoNotOpen;
 
         [ObservableProperty]
-        public bool summaryValue;
+        public bool summarySectionValue;
 
         [ObservableProperty]
         public bool summaryOpen;
@@ -103,7 +103,7 @@ namespace BookCollector.ViewModels
         public bool summaryNotOpen;
 
         [ObservableProperty]
-        public bool commentsValue;
+        public bool commentsSectionValue;
 
         [ObservableProperty]
         public bool commentsOpen;
@@ -161,54 +161,58 @@ namespace BookCollector.ViewModels
         [RelayCommand]
         public async Task AddBook()
         {
+            SetIsBusyTrue();
+
             BookModel newBook = new BookModel();
 
             BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
             TestData.InsertBook(newBook);
 
             await Shell.Current.Navigation.PushAsync(view);
+
+            //SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task ReadingDataChanged()
         {
-            ReadingDataOpen = ReadingDataValue;
-            ReadingDataNotOpen = !ReadingDataValue;
+            ReadingDataOpen = ReadingDataSectionValue;
+            ReadingDataNotOpen = !ReadingDataSectionValue;
         }
 
         [RelayCommand]
         public async Task ChapterListChanged()
         {
-            ChapterListOpen = ChapterListValue;
-            ChapterListNotOpen = !ChapterListValue;
+            ChapterListOpen = ChapterListSectionValue;
+            ChapterListNotOpen = !ChapterListSectionValue;
         }
 
         [RelayCommand]
         public async Task AuthorListChanged()
         {
-            AuthorListOpen = AuthorListValue;
-            AuthorListNotOpen = !AuthorListValue;
+            AuthorListOpen = AuthorListSectionValue;
+            AuthorListNotOpen = !AuthorListSectionValue;
         }
 
         [RelayCommand]
         public async Task BookInfoChanged()
         {
-            BookInfoOpen = BookInfoValue;
-            BookInfoNotOpen = !BookInfoValue;
+            BookInfoOpen = BookInfoSectionValue;
+            BookInfoNotOpen = !BookInfoSectionValue;
         }
 
         [RelayCommand]
         public async Task SummaryChanged()
         {
-            SummaryOpen = SummaryValue;
-            SummaryNotOpen = !SummaryValue;
+            SummaryOpen = SummarySectionValue;
+            SummaryNotOpen = !SummarySectionValue;
         }
 
         [RelayCommand]
         public async Task CommentsChanged()
         {
-            CommentsOpen = CommentsValue;
-            CommentsNotOpen = !CommentsValue;
+            CommentsOpen = CommentsSectionValue;
+            CommentsNotOpen = !CommentsSectionValue;
         }
     }
 }

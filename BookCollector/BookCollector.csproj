@@ -108,6 +108,9 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>AppStringResources.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Popups\InformationPopup.xaml.cs">
+	    <DependentUpon>InformationPopup.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -156,6 +159,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\BookCoverPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\InformationPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

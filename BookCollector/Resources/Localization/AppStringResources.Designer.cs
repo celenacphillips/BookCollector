@@ -97,6 +97,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is a collective list of all the books you own..
+        /// </summary>
+        internal static string AllBooksView_InfoText {
+            get {
+                return ResourceManager.GetString("AllBooksView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Collector.
         /// </summary>
         internal static string ApplicationTitle {
@@ -214,6 +223,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is where you can add or edit data for book..
+        /// </summary>
+        internal static string BookEditView_InfoText {
+            get {
+                return ResourceManager.GetString("BookEditView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Format.
         /// </summary>
         internal static string BookFormat {
@@ -282,6 +300,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookLocation {
             get {
                 return ResourceManager.GetString("BookLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can view all the information related to book. You can also tap on some of the data to copy..
+        /// </summary>
+        internal static string BookMainView_InfoText {
+            get {
+                return ResourceManager.GetString("BookMainView_InfoText", resourceCulture);
             }
         }
         
@@ -844,6 +871,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next..
+        /// </summary>
+        internal static string ReadingView_InfoText {
+            get {
+                return ResourceManager.GetString("ReadingView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a list of all the books you have read. Books will show up here if you have marked it has 100% read..
+        /// </summary>
+        internal static string ReadView_InfoText {
+            get {
+                return ResourceManager.GetString("ReadView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search authors....
         /// </summary>
         internal static string SearchAuthors {
@@ -1011,6 +1056,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ToBeRead {
             get {
                 return ResourceManager.GetString("ToBeRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven&apos;t queued the book up to read next..
+        /// </summary>
+        internal static string ToBeReadView_InfoText {
+            get {
+                return ResourceManager.GetString("ToBeReadView_InfoText", resourceCulture);
             }
         }
         

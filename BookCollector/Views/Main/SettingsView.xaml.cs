@@ -23,11 +23,12 @@ public partial class SettingsView : ContentPage
     // Try to add color preview in the picker - 11/12/2025
     // Add currency option - 11/13/2025
     // Add Hide Collection, Series, Genre, and Author - 11/13/2025
+    // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
 
     public SettingsView()
 	{
         AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
-        SelectedAppTheme = Application.Current.UserAppTheme == AppTheme.Light ? AppThemeList[0] : AppThemeList[1];
+        SelectedAppTheme = Application.Current.UserAppTheme == AppTheme.Dark ? AppThemeList[1] : AppThemeList[0];
 
         ColorList = [AppStringResources.BlueGray, "Red", "Purple", "Green", "Orange", "Teal", "Magenta"];
         var color = (Color)Application.Current.Resources["Primary"];

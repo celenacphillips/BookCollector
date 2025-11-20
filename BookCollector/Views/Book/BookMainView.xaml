@@ -124,7 +124,7 @@
                         <!-- Book Collection -->
 
                         <!-- Reading Data -->
-                        <toolkit:Expander IsExpanded="{Binding ReadingDataValue}"
+                        <toolkit:Expander IsExpanded="{Binding ReadingDataSectionValue}"
                                           Command="{Binding ReadingDataChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -262,7 +262,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Chapters -->
-                        <toolkit:Expander IsExpanded="{Binding ChapterListValue}"
+                        <toolkit:Expander IsExpanded="{Binding ChapterListSectionValue}"
                                           Command="{Binding ChapterListChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowChapters}">
@@ -315,7 +315,7 @@
                         <!-- Chapters -->
 
                         <!-- Authors -->
-                        <toolkit:Expander IsExpanded="{Binding AuthorListValue}"
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
                                           Command="{Binding AuthorListChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -375,7 +375,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Book Information -->
-                        <toolkit:Expander IsExpanded="{Binding BookInfoValue}"
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
                                           Command="{Binding BookInfoChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -566,7 +566,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Summary -->
-                        <toolkit:Expander IsExpanded="{Binding SummaryValue}"
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
                                           Command="{Binding SummaryChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -606,7 +606,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Comments -->
-                        <toolkit:Expander IsExpanded="{Binding CommentsValue}"
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
                                           Command="{Binding CommentsChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowComments}">

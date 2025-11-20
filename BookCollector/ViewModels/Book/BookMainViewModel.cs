@@ -17,14 +17,19 @@ namespace BookCollector.ViewModels.Book
             bookMainview = (BookMainView)view;
 
             SelectedBook = book;
+            InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book",$"{SelectedBook.BookTitle}")}";
         }
 
         public async Task SetViewModelData()
         {
             if (ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
             {
+                SetIsBusyTrue();
+
                 BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}");
                 await Shell.Current.Navigation.PushAsync(view);
+
+                SetIsBusyFalse();
             }
 
             SetIsBusyTrue();
@@ -36,12 +41,12 @@ namespace BookCollector.ViewModels.Book
                 TestData.UpdateBook(SelectedBook);
             }
 
-            ReadingDataValue = true;
-            ChapterListValue = true;
-            AuthorListValue = true;
-            BookInfoValue = true;
-            SummaryValue = true;
-            CommentsValue = true;
+            ReadingDataSectionValue = true;
+            ChapterListSectionValue = true;
+            AuthorListSectionValue = true;
+            BookInfoSectionValue = true;
+            SummarySectionValue = true;
+            CommentsSectionValue = true;
 
             BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
             ShowUpNext = SelectedBook.BookPageRead == 0;

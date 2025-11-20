@@ -459,4 +459,22 @@
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="AllBooksView_InfoText" xml:space="preserve">
+    <value>This is a collective list of all the books you own.</value>
+  </data>
+  <data name="BookMainView_InfoText" xml:space="preserve">
+    <value>You can view all the information related to book. You can also tap on some of the data to copy.</value>
+  </data>
+  <data name="ToBeReadView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
+  </data>
+  <data name="ReadView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you have read. Books will show up here if you have marked it has 100% read.</value>
+  </data>
+  <data name="ReadingView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next.</value>
+  </data>
+  <data name="BookEditView_InfoText" xml:space="preserve">
+    <value>This is where you can add or edit data for book.</value>
+  </data>
 </root>

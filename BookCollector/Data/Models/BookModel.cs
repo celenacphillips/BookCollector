@@ -1,9 +1,6 @@
-﻿using Android.Health.Connect.DataTypes.Units;
-using BookCollector.Resources.Localization;
+﻿using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
-using System.ComponentModel.DataAnnotations;
-using static Android.Renderscripts.ScriptGroup;
 
 namespace BookCollector.Data.Models
 {

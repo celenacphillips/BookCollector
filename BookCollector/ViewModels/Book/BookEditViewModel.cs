@@ -14,7 +14,7 @@ namespace BookCollector.ViewModels.Book
         public BookModel editedBook;
 
         [ObservableProperty]
-        public bool bookInfo1Value;
+        public bool bookInfo1SectionValue;
 
         [ObservableProperty]
         public bool bookInfo1Open;
@@ -42,21 +42,23 @@ namespace BookCollector.ViewModels.Book
 
         public BookEditViewModel(BookModel book, ContentPage view)
         {
-            EditedBook = (BookModel)book.Clone();
             _view = view;
+
+            EditedBook = (BookModel)book.Clone();
+            InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{EditedBook.BookTitle}")}";
         }
 
         public async Task SetViewModelData()
         {
             SetIsBusyTrue();
 
-            BookInfo1Value = true;
-            ReadingDataValue = true;
-            ChapterListValue = true;
-            AuthorListValue = true;
-            BookInfoValue = true;
-            SummaryValue = true;
-            CommentsValue = true;
+            BookInfo1SectionValue = true;
+            ReadingDataSectionValue = true;
+            ChapterListSectionValue = true;
+            AuthorListSectionValue = true;
+            BookInfoSectionValue = true;
+            SummarySectionValue = true;
+            CommentsSectionValue = true;
 
             BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal && EditedBook.BookPageTotal != 0;
             ShowUpNext = EditedBook.BookPageRead == 0;
@@ -134,8 +136,8 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task BookInfo1Changed()
         {
-            BookInfo1Open = BookInfo1Value;
-            BookInfo1NotOpen = !BookInfo1Value;
+            BookInfo1Open = BookInfo1SectionValue;
+            BookInfo1NotOpen = !BookInfo1SectionValue;
         }
 
         [RelayCommand]

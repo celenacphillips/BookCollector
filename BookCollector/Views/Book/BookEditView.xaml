@@ -15,7 +15,8 @@
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/search_icon_light.svg, Dark=Icons/search_icon_dark.svg}"
-                     Command="{Binding BookSearchCommand}"/>
+                     Command="{Binding BookSearchCommand}"
+                     IsEnabled="False"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
                      Command="{Binding SaveBookCommand}"/>
     </ContentPage.ToolbarItems>
@@ -116,7 +117,7 @@
                         <!-- Book Cover -->
 
                         <!-- Book Info 1 -->
-                        <toolkit:Expander IsExpanded="{Binding BookInfo1Value}"
+                        <toolkit:Expander IsExpanded="{Binding BookInfo1SectionValue}"
                                           Command="{Binding BookInfo1ChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -238,7 +239,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Reading Data -->
-                        <toolkit:Expander IsExpanded="{Binding ReadingDataValue}"
+                        <toolkit:Expander IsExpanded="{Binding ReadingDataSectionValue}"
                                       Command="{Binding ReadingDataChangedCommand}"
                                       Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -420,7 +421,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Chapters -->
-                        <toolkit:Expander IsExpanded="{Binding ChapterListValue}"
+                        <toolkit:Expander IsExpanded="{Binding ChapterListSectionValue}"
                                       Command="{Binding ChapterListChangedCommand}"
                                       Margin="0,0,0,15"
                                       IsVisible="{Binding ShowChapters}">
@@ -519,7 +520,7 @@
                         <!-- Chapters -->
 
                         <!-- Authors -->
-                        <toolkit:Expander IsExpanded="{Binding AuthorListValue}"
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
                                       Command="{Binding AuthorListChangedCommand}"
                                       Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -624,7 +625,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Book Information -->
-                        <toolkit:Expander IsExpanded="{Binding BookInfoValue}"
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
                                       Command="{Binding BookInfoChangedCommand}"
                                       Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -873,7 +874,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Summary -->
-                        <toolkit:Expander IsExpanded="{Binding SummaryValue}"
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
                                       Command="{Binding SummaryChangedCommand}"
                                       Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -925,7 +926,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Comments -->
-                        <toolkit:Expander IsExpanded="{Binding CommentsValue}"
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
                                       Command="{Binding CommentsChangedCommand}"
                                       Margin="0,0,0,15"
                                       IsVisible="{Binding ShowComments}">

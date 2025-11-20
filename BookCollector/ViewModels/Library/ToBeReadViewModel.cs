@@ -7,7 +7,9 @@ namespace BookCollector.ViewModels.Library
     {
         public ToBeReadViewModel(ContentPage view)
         {
+            _view = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
+            InfoText = $"{AppStringResources.ToBeReadView_InfoText}";
         }
 
         public async Task SetViewModelData()
