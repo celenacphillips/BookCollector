@@ -70,6 +70,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add ISBN to Book.
+        /// </summary>
+        internal static string AddISBNToBook {
+            get {
+                return ResourceManager.GetString("AddISBNToBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Book.
         /// </summary>
         internal static string AddNewBook {
@@ -223,6 +232,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Description.
+        /// </summary>
+        internal static string BookDescription {
+            get {
+                return ResourceManager.GetString("BookDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is where you can add or edit data for book..
         /// </summary>
         internal static string BookEditView_InfoText {
@@ -367,11 +385,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Search.
+        /// </summary>
+        internal static string BookSearch {
+            get {
+                return ResourceManager.GetString("BookSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Series.
         /// </summary>
         internal static string BookSeries {
             get {
                 return ResourceManager.GetString("BookSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Sub-Title.
+        /// </summary>
+        internal static string BookSubTitle {
+            get {
+                return ResourceManager.GetString("BookSubTitle", resourceCulture);
             }
         }
         
@@ -426,6 +462,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Chapters_Slash {
             get {
                 return ResourceManager.GetString("Chapters_Slash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to Search.
+        /// </summary>
+        internal static string ClickToSearch {
+            get {
+                return ResourceManager.GetString("ClickToSearch", resourceCulture);
             }
         }
         
@@ -525,6 +570,33 @@ namespace BookCollector.Resources.Localization {
         internal static string English {
             get {
                 return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter only ISBNs.
+        /// </summary>
+        internal static string EnterOnlyISBNs {
+            get {
+                return ResourceManager.GetString("EnterOnlyISBNs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving book!.
+        /// </summary>
+        internal static string ErrorSavingBook {
+            get {
+                return ResourceManager.GetString("ErrorSavingBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error searching for book!.
+        /// </summary>
+        internal static string ErrorSearchingForBook {
+            get {
+                return ResourceManager.GetString("ErrorSearchingForBook", resourceCulture);
             }
         }
         
@@ -700,6 +772,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No books found..
+        /// </summary>
+        internal static string NoBooksFound {
+            get {
+                return ResourceManager.GetString("NoBooksFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Chapters Available..
         /// </summary>
         internal static string NoChaptersAvailable {
@@ -714,6 +795,15 @@ namespace BookCollector.Resources.Localization {
         internal static string NoDate {
             get {
                 return ResourceManager.GetString("NoDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No ISBN Entered!.
+        /// </summary>
+        internal static string NoISBNEntered {
+            get {
+                return ResourceManager.GetString("NoISBNEntered", resourceCulture);
             }
         }
         
@@ -741,6 +831,15 @@ namespace BookCollector.Resources.Localization {
         internal static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page Count.
+        /// </summary>
+        internal static string PageCount {
+            get {
+                return ResourceManager.GetString("PageCount", resourceCulture);
             }
         }
         
@@ -889,6 +988,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan Barcode.
+        /// </summary>
+        internal static string ScanBarcode {
+            get {
+                return ResourceManager.GetString("ScanBarcode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search authors....
         /// </summary>
         internal static string SearchAuthors {
@@ -912,6 +1020,15 @@ namespace BookCollector.Resources.Localization {
         internal static string SearchCollections {
             get {
                 return ResourceManager.GetString("SearchCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search for book by ISBN. Click correct result to add..
+        /// </summary>
+        internal static string SearchForBookByISBNClickCorrectResultToAdd {
+            get {
+                return ResourceManager.GetString("SearchForBookByISBNClickCorrectResultToAdd", resourceCulture);
             }
         }
         
@@ -1065,6 +1182,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ToBeReadView_InfoText {
             get {
                 return ResourceManager.GetString("ToBeReadView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Items.
+        /// </summary>
+        internal static string TotalItems {
+            get {
+                return ResourceManager.GetString("TotalItems", resourceCulture);
             }
         }
         

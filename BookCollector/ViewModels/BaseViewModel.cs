@@ -65,12 +65,6 @@ namespace BookCollector.ViewModels
         }
 
         [RelayCommand]
-        public async Task BookCoverPopup()
-        {
-            _view.ShowPopup(new BookCoverPopup());
-        }
-
-        [RelayCommand]
         public static async Task Tap(object input)
         {
             if (!string.IsNullOrEmpty(input.ToString()))

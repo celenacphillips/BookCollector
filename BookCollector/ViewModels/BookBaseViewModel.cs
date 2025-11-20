@@ -3,7 +3,9 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Book;
 using BookCollector.Views.Book;
+using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -32,6 +34,9 @@ namespace BookCollector.ViewModels
 
         [ObservableProperty]
         public BookModel? selectedBook;
+
+        [ObservableProperty]
+        public BookModel editedBook;
 
         [ObservableProperty]
         public bool bookIsRead;
@@ -213,6 +218,12 @@ namespace BookCollector.ViewModels
         {
             CommentsOpen = CommentsSectionValue;
             CommentsNotOpen = !CommentsSectionValue;
+        }
+
+        [RelayCommand]
+        public async Task BookCoverPopup()
+        {
+            _view.ShowPopup(new BookCoverPopup());
         }
     }
 }

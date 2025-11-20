@@ -477,4 +477,46 @@
   <data name="BookEditView_InfoText" xml:space="preserve">
     <value>This is where you can add or edit data for book.</value>
   </data>
+  <data name="BookSearch" xml:space="preserve">
+    <value>Book Search</value>
+  </data>
+  <data name="TotalItems" xml:space="preserve">
+    <value>Total Items</value>
+  </data>
+  <data name="ScanBarcode" xml:space="preserve">
+    <value>Scan Barcode</value>
+  </data>
+  <data name="SearchForBookByISBNClickCorrectResultToAdd" xml:space="preserve">
+    <value>Search for book by ISBN. Click correct result to add.</value>
+  </data>
+  <data name="EnterOnlyISBNs" xml:space="preserve">
+    <value>Enter only ISBNs</value>
+  </data>
+  <data name="AddISBNToBook" xml:space="preserve">
+    <value>Add ISBN to Book</value>
+  </data>
+  <data name="ClickToSearch" xml:space="preserve">
+    <value>Click to Search</value>
+  </data>
+  <data name="NoBooksFound" xml:space="preserve">
+    <value>No books found.</value>
+  </data>
+  <data name="BookSubTitle" xml:space="preserve">
+    <value>Book Sub-Title</value>
+  </data>
+  <data name="PageCount" xml:space="preserve">
+    <value>Page Count</value>
+  </data>
+  <data name="BookDescription" xml:space="preserve">
+    <value>Book Description</value>
+  </data>
+  <data name="ErrorSearchingForBook" xml:space="preserve">
+    <value>Error searching for book!</value>
+  </data>
+  <data name="NoISBNEntered" xml:space="preserve">
+    <value>No ISBN Entered!</value>
+  </data>
+  <data name="ErrorSavingBook" xml:space="preserve">
+    <value>Error saving book!</value>
+  </data>
 </root>

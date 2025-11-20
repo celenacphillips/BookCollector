@@ -15,8 +15,7 @@
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/search_icon_light.svg, Dark=Icons/search_icon_dark.svg}"
-                     Command="{Binding BookSearchCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding BookSearchCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
                      Command="{Binding SaveBookCommand}"/>
     </ContentPage.ToolbarItems>

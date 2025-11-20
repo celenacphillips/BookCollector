@@ -11,9 +11,6 @@ namespace BookCollector.ViewModels.Book
     public partial class BookEditViewModel : BookBaseViewModel
     {
         [ObservableProperty]
-        public BookModel editedBook;
-
-        [ObservableProperty]
         public bool bookInfo1SectionValue;
 
         [ObservableProperty]
@@ -104,12 +101,20 @@ namespace BookCollector.ViewModels.Book
             SetRefreshFalse();
         }
 
-        // TO DO:
-        // Add Book Search screen - 11/19/2025
         [RelayCommand]
         public async Task BookSearch()
         {
+            SetIsBusyTrue();
 
+            BookSearchView view = new BookSearchView();
+            BookSearchViewModel bindingContext = new BookSearchViewModel(null, view);
+            bindingContext.ViewTitle = $"{AppStringResources.BookSearch}";
+            bindingContext.SelectedBook = EditedBook;
+            view.BindingContext = bindingContext;
+
+            await Shell.Current.Navigation.PushModalAsync(view);
+
+            SetIsBusyFalse();
         }
 
         [RelayCommand]
