@@ -161,8 +161,8 @@ namespace BookCollector.ViewModels.Book
         {
             SetIsBusyTrue();
 
-            PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
-            storageReadStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+            PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.Photos>();
+            storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Photos>();
 
             if (storageReadStatus == PermissionStatus.Granted)
             {
@@ -189,12 +189,24 @@ namespace BookCollector.ViewModels.Book
                 if (EditedBook.HasNoBookCover)
                     await Shell.Current.DisplayAlert(null, AppStringResources.PickingCoverCanceled, AppStringResources.OK);
 
-                SetIsBusyFalse();
+                
             }
+            else
+            {
+                await Shell.Current.DisplayAlert(null, AppStringResources.PleaseAllowPhotoPermissionToAddCover, AppStringResources.OK);
+            }
+
+
+            SetIsBusyFalse();
         }
 
-        // TO DO:
-        // Add remove cover photo - 11/19/2025
+        [RelayCommand]
+        public async Task RemoveCoverPhoto()
+        {
+            EditedBook.HasBookCover = false;
+            EditedBook.HasNoBookCover = true;
+            EditedBook.BookCoverBytes = null;
+        }
 
         // TO DO:
         // Set up Add Series screen - 11/19/2025

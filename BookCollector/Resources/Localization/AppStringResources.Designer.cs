@@ -934,6 +934,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please allow Photo permission to add cover!.
+        /// </summary>
+        internal static string PleaseAllowPhotoPermissionToAddCover {
+            get {
+                return ResourceManager.GetString("PleaseAllowPhotoPermissionToAddCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please scan a book barcode!.
         /// </summary>
         internal static string PleaseScanABookBarcode {

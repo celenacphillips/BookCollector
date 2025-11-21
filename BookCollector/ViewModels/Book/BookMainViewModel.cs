@@ -22,7 +22,7 @@ namespace BookCollector.ViewModels.Book
 
         public async Task SetViewModelData()
         {
-            if (ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
+            if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
             {
                 SetIsBusyTrue();
 

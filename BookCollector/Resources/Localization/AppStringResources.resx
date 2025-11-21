@@ -528,4 +528,7 @@
   <data name="PleaseScanABookBarcode" xml:space="preserve">
     <value>Please scan a book barcode!</value>
   </data>
+  <data name="PleaseAllowPhotoPermissionToAddCover" xml:space="preserve">
+    <value>Please allow Photo permission to add cover!</value>
+  </data>
 </root>
