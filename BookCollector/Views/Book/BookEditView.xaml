@@ -93,7 +93,8 @@
                         <!-- Book Title -->
 
                         <!-- Book Cover -->
-                        <HorizontalStackLayout HorizontalOptions="Center">
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                               Margin="0,0,0,15">
                             <ImageButton Source="Icons/photo_add_dark.svg"
                                      HeightRequest="50"
                                      WidthRequest="45"
@@ -105,16 +106,13 @@
                                      Padding="10"
                                      Command="{Binding RemoveCoverPhotoCommand}"/>
                         </HorizontalStackLayout>
-                        
+
                         <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
                                      IsVisible="{Binding EditedBook.HasBookCover}"
                                      Command="{Binding BookCoverPopupCommand}"
                                      BackgroundColor="Transparent"/>
-                        
-                        <!-- TO DO -->
-                        <!-- Add delete button for book cover - 11/18/2025  -->
 
                         <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
                                HeightRequest="200"

@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookCollector.Views.Controls.BookCollectionList"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Library"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
-             x:DataType="viewModel:ReadingViewModel"><!-- TO DO: Change to BaseViewModel -->
+             x:DataType="viewModel:BookBaseViewModel"><!-- TO DO: Change to BaseViewModel -->
     
     <CollectionView ItemsSource="{Binding FilteredBookList}"
                     SelectionMode="Single"
