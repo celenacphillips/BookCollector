@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-maccatalyst;net8.0-android34.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 
@@ -43,7 +42,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" BaseSize="128,128" Color="#336699" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="150,150" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="100,100" />
 
 		<!-- Images -->
 
@@ -55,149 +54,171 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Icons\book_add_dark.svg" />
-	  <None Remove="Resources\Icons\book_add_light.svg" />
-	  <None Remove="Resources\Icons\calendar_icon_dark.svg" />
-	  <None Remove="Resources\Icons\calendar_icon_light.svg" />
-	  <None Remove="Resources\Icons\color_icon_dark.svg" />
-	  <None Remove="Resources\Icons\color_icon_light.svg" />
-	  <None Remove="Resources\Icons\export_icon_dark.svg" />
-	  <None Remove="Resources\Icons\export_icon_light.svg" />
-	  <None Remove="Resources\Icons\filter_icon_dark.svg" />
-	  <None Remove="Resources\Icons\filter_icon_light.svg" />
-	  <None Remove="Resources\Icons\heart_icon_empty_dark.svg" />
-	  <None Remove="Resources\Icons\heart_icon_empty_light.svg" />
-	  <None Remove="Resources\Icons\heart_icon_full_dark.svg" />
-	  <None Remove="Resources\Icons\heart_icon_full_light.svg" />
-	  <None Remove="Resources\Icons\info_icon_dark.svg" />
-	  <None Remove="Resources\Icons\info_icon_light.svg" />
-	  <None Remove="Resources\Icons\language_icon_dark.svg" />
-	  <None Remove="Resources\Icons\language_icon_light.svg" />
-	  <None Remove="Resources\Icons\save_icon_dark.svg" />
-	  <None Remove="Resources\Icons\save_icon_light.svg" />
-	  <None Remove="Resources\Icons\search_icon_dark.svg" />
-	  <None Remove="Resources\Icons\search_icon_light.svg" />
-	  <None Remove="Resources\Icons\sort_icon_dark.svg" />
-	  <None Remove="Resources\Icons\sort_icon_light.svg" />
-	  <None Remove="Resources\Icons\star_icon_empty_dark.svg" />
-	  <None Remove="Resources\Icons\star_icon_empty_light.svg" />
-	  <None Remove="Resources\Icons\star_icon_full_dark.svg" />
-	  <None Remove="Resources\Icons\star_icon_full_light.svg" />
-	  <None Remove="Resources\Icons\theme_icon_dark.svg" />
-	  <None Remove="Resources\Icons\theme_icon_light.svg" />
+		<None Remove="Resources\Icons\book_add_dark.svg" />
+		<None Remove="Resources\Icons\book_add_light.svg" />
+		<None Remove="Resources\Icons\calendar_icon_dark.svg" />
+		<None Remove="Resources\Icons\calendar_icon_light.svg" />
+		<None Remove="Resources\Icons\color_icon_dark.svg" />
+		<None Remove="Resources\Icons\color_icon_light.svg" />
+		<None Remove="Resources\Icons\export_icon_dark.svg" />
+		<None Remove="Resources\Icons\export_icon_light.svg" />
+		<None Remove="Resources\Icons\filter_icon_dark.svg" />
+		<None Remove="Resources\Icons\filter_icon_light.svg" />
+		<None Remove="Resources\Icons\heart_icon_empty_dark.svg" />
+		<None Remove="Resources\Icons\heart_icon_empty_light.svg" />
+		<None Remove="Resources\Icons\heart_icon_full_dark.svg" />
+		<None Remove="Resources\Icons\heart_icon_full_light.svg" />
+		<None Remove="Resources\Icons\info_icon_dark.svg" />
+		<None Remove="Resources\Icons\info_icon_light.svg" />
+		<None Remove="Resources\Icons\language_icon_dark.svg" />
+		<None Remove="Resources\Icons\language_icon_light.svg" />
+		<None Remove="Resources\Icons\save_icon_dark.svg" />
+		<None Remove="Resources\Icons\save_icon_light.svg" />
+		<None Remove="Resources\Icons\search_icon_dark.svg" />
+		<None Remove="Resources\Icons\search_icon_light.svg" />
+		<None Remove="Resources\Icons\sort_icon_dark.svg" />
+		<None Remove="Resources\Icons\sort_icon_light.svg" />
+		<None Remove="Resources\Icons\star_icon_empty_dark.svg" />
+		<None Remove="Resources\Icons\star_icon_empty_light.svg" />
+		<None Remove="Resources\Icons\star_icon_full_dark.svg" />
+		<None Remove="Resources\Icons\star_icon_full_light.svg" />
+		<None Remove="Resources\Icons\theme_icon_dark.svg" />
+		<None Remove="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="BarcodeScanner.Mobile.Maui" Version="8.0.40.1" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.71" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.71" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Sebarslan.Maui.NullableDateTimePicker" Version="2.3.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Resources\Localization\English.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>English.resx</DependentUpon>
-	  </Compile>
-	  <Compile Update="Resources\Localization\AppStringResources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>AppStringResources.resx</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\Popups\InformationPopup.xaml.cs">
-	    <DependentUpon>InformationPopup.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="Resources\Localization\English.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>English.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\Localization\AppStringResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AppStringResources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Popups\InformationPopup.xaml.cs">
+			<DependentUpon>InformationPopup.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Localization\English.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>English.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\Localization\AppStringResources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>AppStringResources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Resources\Localization\English.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>English.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Localization\AppStringResources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>AppStringResources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\Book\BookEditView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Book\BookMainView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Controls\BookCollectionItem.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Controls\BookCollectionList.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Controls\Favorite.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Controls\Rating.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Library\AllBooksView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Library\ReadingView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Library\ReadView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Library\ToBeReadView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Main\SettingsView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Popups\BookCoverPopup.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Popups\InformationPopup.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Views\Book\BookEditView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Book\BookMainView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\BookCollectionItem.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\BookCollectionList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Favorite.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Rating.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Library\AllBooksView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Library\ReadingView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Library\ReadView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Library\ToBeReadView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Main\SettingsView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\BookCoverPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\InformationPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android34.0'">
+		<PackageReference Include="Xamarin.AndroidX.Activity">
+			<Version>1.9.1</Version>
+		</PackageReference>
+		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx">
+			<Version>1.9.1</Version>
+		</PackageReference>
+		<PackageReference Include="Xamarin.AndroidX.Core">
+			<Version>1.13.1.3</Version>
+		</PackageReference>
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common">
+			<Version>2.8.4</Version>
+		</PackageReference>
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData">
+			<Version>2.8.4</Version>
+		</PackageReference>
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core">
+			<Version>2.8.4</Version>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Icons\book_add_dark.svg" />
-	  <MauiImage Include="Resources\Icons\book_add_light.svg" />
-	  <MauiImage Include="Resources\Icons\calendar_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\calendar_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\color_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\color_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\export_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\export_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\filter_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\filter_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\heart_icon_empty_dark.svg" />
-	  <MauiImage Include="Resources\Icons\heart_icon_empty_light.svg" />
-	  <MauiImage Include="Resources\Icons\heart_icon_full_dark.svg" />
-	  <MauiImage Include="Resources\Icons\heart_icon_full_light.svg" />
-	  <MauiImage Include="Resources\Icons\info_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\info_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\language_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\language_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\save_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\save_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\search_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\search_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\sort_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\sort_icon_light.svg" />
-	  <MauiImage Include="Resources\Icons\star_icon_empty_dark.svg" />
-	  <MauiImage Include="Resources\Icons\star_icon_empty_light.svg" />
-	  <MauiImage Include="Resources\Icons\star_icon_full_dark.svg" />
-	  <MauiImage Include="Resources\Icons\star_icon_full_light.svg" />
-	  <MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
-	  <MauiImage Include="Resources\Icons\theme_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\book_add_dark.svg" />
+		<MauiImage Include="Resources\Icons\book_add_light.svg" />
+		<MauiImage Include="Resources\Icons\calendar_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\calendar_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\color_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\color_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\export_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\export_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\filter_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\filter_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\heart_icon_empty_dark.svg" />
+		<MauiImage Include="Resources\Icons\heart_icon_empty_light.svg" />
+		<MauiImage Include="Resources\Icons\heart_icon_full_dark.svg" />
+		<MauiImage Include="Resources\Icons\heart_icon_full_light.svg" />
+		<MauiImage Include="Resources\Icons\info_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\info_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\language_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\language_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\save_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\save_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\search_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\search_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\sort_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\sort_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\star_icon_empty_dark.svg" />
+		<MauiImage Include="Resources\Icons\star_icon_empty_light.svg" />
+		<MauiImage Include="Resources\Icons\star_icon_full_dark.svg" />
+		<MauiImage Include="Resources\Icons\star_icon_full_light.svg" />
+		<MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\theme_icon_light.svg" />
 	</ItemGroup>
 
 </Project>

@@ -556,4 +556,8 @@
         </Setter>
     </Style>
 
+    <Style TargetType="CollectionView">
+        <Setter Property="EmptyView" Value="" />
+    </Style>
+
 </ResourceDictionary>

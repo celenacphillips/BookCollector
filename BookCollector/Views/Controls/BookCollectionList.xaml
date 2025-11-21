@@ -5,7 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Library"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
-             x:DataType="viewModel:ReadingViewModel"><!-- Change to BaseViewModel -->
+             x:DataType="viewModel:ReadingViewModel"><!-- TO DO: Change to BaseViewModel -->
     
     <CollectionView ItemsSource="{Binding FilteredBookList}"
                     SelectionMode="Single"

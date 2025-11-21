@@ -1,8 +1,9 @@
-﻿//using BarcodeScanner.Mobile;
+﻿using BarcodeScanner.Mobile;
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.Views;
+using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
@@ -37,6 +38,7 @@ namespace BookCollector.ViewModels.Book
             _view = view;
             Input = inputIsbn;
             TotalItemsString = $"{AppStringResources.TotalItems}: ";
+            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
         }
 
         [RelayCommand]
@@ -47,13 +49,15 @@ namespace BookCollector.ViewModels.Book
             SetRefreshFalse();
         }
 
+        // TO DO
+        // Add check for internet connection - 11/20/2025
         [RelayCommand]
         public async Task Search()
         {
             SetIsBusyTrue();
 
-            IsbnItems = null;
             TotalItems = 0;
+            IsbnItems = null;
 
             if (string.IsNullOrEmpty(Input))
             {
@@ -86,7 +90,21 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task Scan()
         {
+#if ANDROID
+            Methods.SetSupportBarcodeFormat(BarcodeFormats.All);
 
+            bool allowed = await Methods.AskForRequiredPermission();
+
+            if (allowed)
+            {
+                BookScanView view = new();
+                view.ReturnViewModel = this;
+
+                await Shell.Current.Navigation.PushModalAsync(view);
+            }
+            else
+                await Shell.Current.DisplayAlert(null, AppStringResources.PleaseAllowCameraPermissionToScanBarcodes, AppStringResources.OK);
+#endif
         }
 
         [RelayCommand]
@@ -167,6 +185,8 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
+                        // TO DO
+                        // Fix Authors - 11/21/2025
                         //SelectedBook.AuthorListString = SetAuthorListString(authorList.ToObservableCollection());
                     }
                 }

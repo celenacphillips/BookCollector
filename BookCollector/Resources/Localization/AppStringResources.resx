@@ -519,4 +519,13 @@
   <data name="ErrorSavingBook" xml:space="preserve">
     <value>Error saving book!</value>
   </data>
+  <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
+    <value>Please allow Camera permission to scan barcodes!</value>
+  </data>
+  <data name="BarcodeScanned" xml:space="preserve">
+    <value>Barcode Scanned!</value>
+  </data>
+  <data name="PleaseScanABookBarcode" xml:space="preserve">
+    <value>Please scan a book barcode!</value>
+  </data>
 </root>

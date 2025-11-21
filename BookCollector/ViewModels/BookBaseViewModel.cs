@@ -36,9 +36,6 @@ namespace BookCollector.ViewModels
         public BookModel? selectedBook;
 
         [ObservableProperty]
-        public BookModel editedBook;
-
-        [ObservableProperty]
         public bool bookIsRead;
 
         [ObservableProperty]

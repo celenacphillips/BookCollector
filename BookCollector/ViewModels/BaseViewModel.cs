@@ -79,7 +79,6 @@ namespace BookCollector.ViewModels
             GC.Collect();
             IsBusy = true;
             IsVisible = false;
-            await Task.Yield();
         }
 
         public void SetIsBusyFalse()

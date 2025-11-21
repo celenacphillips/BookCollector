@@ -187,6 +187,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Barcode Scanned!.
+        /// </summary>
+        internal static string BarcodeScanned {
+            get {
+                return ResourceManager.GetString("BarcodeScanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blank1 of Blank2 books.
         /// </summary>
         internal static string Blank1OfBlank2Books {
@@ -912,6 +921,24 @@ namespace BookCollector.Resources.Localization {
         internal static string PickingCoverCanceled {
             get {
                 return ResourceManager.GetString("PickingCoverCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please allow Camera permission to scan barcodes!.
+        /// </summary>
+        internal static string PleaseAllowCameraPermissionToScanBarcodes {
+            get {
+                return ResourceManager.GetString("PleaseAllowCameraPermissionToScanBarcodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please scan a book barcode!.
+        /// </summary>
+        internal static string PleaseScanABookBarcode {
+            get {
+                return ResourceManager.GetString("PleaseScanABookBarcode", resourceCulture);
             }
         }
         

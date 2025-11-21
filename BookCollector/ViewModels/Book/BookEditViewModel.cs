@@ -11,6 +11,9 @@ namespace BookCollector.ViewModels.Book
     public partial class BookEditViewModel : BookBaseViewModel
     {
         [ObservableProperty]
+        public BookModel editedBook;
+
+        [ObservableProperty]
         public bool bookInfo1SectionValue;
 
         [ObservableProperty]

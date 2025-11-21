@@ -10,49 +10,55 @@
 
     <AbsoluteLayout>
         <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                 AbsoluteLayout.LayoutFlags="All" >
+                     AbsoluteLayout.LayoutFlags="All" >
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshCommand}">
+                         Command="{Binding RefreshCommand}">
 
-                <ScrollView>
+                <VerticalStackLayout>
                     <VerticalStackLayout Margin="10">
+                        
                         <Button Text="{x:Static localization:AppStringResources.ScanBarcode}"
-                            Margin="10"
-                            Command="{Binding ScanCommand}"/>
+                                Margin="10"
+                                Command="{Binding ScanCommand}"/>
 
                         <Label Text="{x:Static localization:AppStringResources.SearchForBookByISBNClickCorrectResultToAdd}"
-                           HorizontalTextAlignment="Center"/>
+                               HorizontalTextAlignment="Center"/>
 
                         <Editor Text="{Binding Input}"
-                            Placeholder="{x:Static localization:AppStringResources.EnterOnlyISBNs}"
-                            HorizontalTextAlignment="Center"
-                            AutoSize="TextChanges"
-                            Margin="10"/>
+                                Placeholder="{x:Static localization:AppStringResources.EnterOnlyISBNs}"
+                                HorizontalTextAlignment="Center"
+                                AutoSize="TextChanges"
+                                Margin="10"/>
 
                         <Button Text="{x:Static localization:AppStringResources.AddISBNToBook}"
-                            Command="{Binding SaveCommand}"
-                            Margin="10"
-                            IsVisible="{Binding ShowAddISBN}"/>
+                                Command="{Binding SaveCommand}"
+                                Margin="10"
+                                IsVisible="{Binding ShowAddISBN}"/>
 
                         <Button Text="{x:Static localization:AppStringResources.ClickToSearch}"
-                            Command="{Binding SearchCommand}"
-                            Margin="10"/>
+                                Command="{Binding SearchCommand}"
+                                Margin="10"/>
 
                         <HorizontalStackLayout HorizontalOptions="Center">
                             <Label Text="{Binding TotalItemsString}" />
                             <Label Text="{Binding TotalItems}" />
                         </HorizontalStackLayout>
 
+                        <Label Style="{DynamicResource LongSeparator}" />
+
                         <CollectionView ItemsSource="{Binding IsbnItems}"
-                                    Margin="10"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedISBNItem}"
-                                    SelectionChangedCommand="{Binding SaveCommand}"
-                                    EmptyView="{x:Static localization:AppStringResources.NoBooksFound}">
+                                        Margin="10"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedISBNItem}"
+                                        HeightRequest="{Binding CollectionViewHeight}"
+                                        SelectionChangedCommand="{Binding SaveCommand}" >
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="object:Item">
+                                    
                                     <VerticalStackLayout>
+                                        
+                                        <!-- Book Cover -->
                                         <ImageButton Source="{Binding VolumeInfo.ImageLinks.ImageSource}"
                                                      HeightRequest="100"
                                                      WidthRequest="75"
@@ -62,87 +68,118 @@
                                                      Background="Transparent"/>
 
                                         <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
-                                           HeightRequest="200"
-                                           WidthRequest="150"
-                                           IsVisible="{Binding VolumeInfo.HasNoBookCover}"
-                                           Style="{StaticResource NoCover}"/>
+                                               HeightRequest="200"
+                                               WidthRequest="150"
+                                               IsVisible="{Binding VolumeInfo.HasNoBookCover}"
+                                               Style="{DynamicResource NoCover}"/>
+                                        <!-- Book Cover -->
 
+                                        <!-- Book Title -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookTitle}" 
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.Title}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Title -->
 
+                                        <!-- Book Subtitle -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookSubTitle}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.Subtitle}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Subtitle -->
 
+                                        <!-- Book Authors -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.Authors}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.AuthorList}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Authors -->
 
+                                        <!-- Book Publisher -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.Publisher}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Publisher -->
 
+                                        <!-- Book Publish Date -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.PublishedDate}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Publish Date -->
 
+                                        <!-- Book Page Count -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.PageCount}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.PageCount}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Page Count -->
 
+                                        <!-- Book Language -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.Language}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Language -->
 
+                                        <!-- Book Description -->
                                         <VerticalStackLayout Margin="0,0,0,10">
                                             <Label Text="{x:Static localization:AppStringResources.BookDescription}"
-                                               Style="{StaticResource Header}"/>
+                                                   Style="{DynamicResource Header}"/>
                                             <Label Text="{Binding VolumeInfo.Description}"
-                                               LineBreakMode="WordWrap"/>
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
+                                        <!-- Book Description -->
 
-                                        <Label Style="{StaticResource LongSeparator}" />
+                                        <Label Style="{DynamicResource LongSeparator}" />
 
                                     </VerticalStackLayout>
+                                    
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
+
+                            <CollectionView.EmptyView>
+                                <Grid>
+                                    <VerticalStackLayout HorizontalOptions="Center"
+                                                         HeightRequest="200"
+                                                         VerticalOptions="Start">
+                                        <Label Text="{x:Static localization:AppStringResources.NoBooksFound}"
+                                               Margin="10,25,10,10"
+                                               HorizontalTextAlignment="Center"
+                                               Style="{DynamicResource SubTitle}"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </CollectionView.EmptyView>
                         </CollectionView>
                     </VerticalStackLayout>
-                </ScrollView>
+                </VerticalStackLayout>
             </RefreshView>
 
         </StackLayout>
         <StackLayout IsVisible="{Binding IsBusy}"
-                 AbsoluteLayout.LayoutBounds="0,0,1,1"
-                 AbsoluteLayout.LayoutFlags="All"
-                 BackgroundColor="Gray" Opacity="0.5">
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           HorizontalOptions="CenterAndExpand"
-                           VerticalOptions="CenterAndExpand"/>
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
         </StackLayout>
     </AbsoluteLayout>
 </ContentPage>
