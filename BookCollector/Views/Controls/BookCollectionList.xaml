@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Controls.BookCollectionList"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:DataType="viewModel:BookBaseViewModel">
+
+    <CollectionView ItemsSource="{Binding FilteredBookList}"
+                    SelectionMode="Single"
+                    SelectedItem="{Binding SelectedBook}"
+                    SelectionChangedCommand="{Binding BookSelectionChangedCommand}"
+                    SelectionChangedCommandParameter="{Binding SelectedBook}"
+                    ItemSizingStrategy="MeasureAllItems"
+                    HeightRequest="{Binding CollectionViewHeight}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <VerticalStackLayout>
+                    <controls:BookCollectionItem/>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical"
+                               SnapPointsType="Mandatory"
+                               SnapPointsAlignment="Start" />
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.EmptyView>
+            <ContentView>
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     HeightRequest="200"
+                                     VerticalOptions="Start">
+                    <Label Text="{x:Static localization:AppStringResources.ThereAreNoBooks}"
+                           Margin="10,25,10,10"
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource SubTitle}"/>
+                </VerticalStackLayout>
+            </ContentView>
+        </CollectionView.EmptyView>
+    </CollectionView>
+</ContentView>

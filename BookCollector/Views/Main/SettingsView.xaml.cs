@@ -1,7 +1,7 @@
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
 
-namespace BookCollector.Views;
+namespace BookCollector.Views.Main;
 
 public partial class SettingsView : ContentPage
 {
@@ -21,11 +21,14 @@ public partial class SettingsView : ContentPage
     // TO DO:
     // Add other languages - 11/12/2025
     // Try to add color preview in the picker - 11/12/2025
+    // Add currency option - 11/13/2025
+    // Add Hide Collection, Series, Genre, and Author - 11/13/2025
+    // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
 
     public SettingsView()
 	{
         AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
-        SelectedAppTheme = Application.Current.UserAppTheme == AppTheme.Light ? AppThemeList[0] : AppThemeList[1];
+        SelectedAppTheme = Application.Current.UserAppTheme == AppTheme.Dark ? AppThemeList[1] : AppThemeList[0];
 
         ColorList = [AppStringResources.BlueGray, "Red", "Purple", "Green", "Orange", "Teal", "Magenta"];
         var color = (Color)Application.Current.Resources["Primary"];
@@ -45,7 +48,7 @@ public partial class SettingsView : ContentPage
         SelectedLanguage = LanguageList[0];
 
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation  /* Default */);
-        SelectedExportLocation = exportLocation.Substring(exportLocation.IndexOf("0") + 2);
+        SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation.Substring(exportLocation.IndexOf("0") + 2);
 
         CommentsOn = Preferences.Get("CommentsOn", true  /* Default */);
         ChaptersOn = Preferences.Get("ChaptersOn", true  /* Default */);

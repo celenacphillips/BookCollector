@@ -1,4 +1,6 @@
-﻿namespace BookCollector
+﻿using BookCollector.Data.Models;
+
+namespace BookCollector
 {
     public partial class App : Application
     {

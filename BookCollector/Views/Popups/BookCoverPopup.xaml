@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
+               x:DataType="viewModel:BookBaseViewModel"
+               x:Class="BookCollector.Views.Popups.BookCoverPopup"
+               CanBeDismissedByTappingOutsideOfPopup="True">
+    <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
+                         Padding="2">
+        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+                         Padding="40">
+            <!-- TO DO -->
+            <!-- Add pick and zoom feature - 11/19/2025 -->
+            <Image Source="{Binding BookCover}" />
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</toolkit:Popup>

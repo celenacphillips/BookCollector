@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApplicationTitle" xml:space="preserve">
-    <value>Book Collector</value>
-  </data>
   <data name="AppTheme" xml:space="preserve">
     <value>App Theme</value>
   </data>
@@ -176,5 +173,362 @@
   </data>
   <data name="DefaultExportLocation" xml:space="preserve">
     <value>Not Set</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="ExportImport" xml:space="preserve">
+    <value>Export/Import</value>
+  </data>
+  <data name="Wishlist" xml:space="preserve">
+    <value>Wishlist</value>
+  </data>
+  <data name="Reading" xml:space="preserve">
+    <value>Reading</value>
+  </data>
+  <data name="ToBeRead" xml:space="preserve">
+    <value>To Be Read</value>
+  </data>
+  <data name="Read" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="AllBooks" xml:space="preserve">
+    <value>All Books</value>
+  </data>
+  <data name="Books" xml:space="preserve">
+    <value>Books</value>
+  </data>
+  <data name="Paperback" xml:space="preserve">
+    <value>Paperback</value>
+  </data>
+  <data name="ApplicationTitle" xml:space="preserve">
+    <value>Book Collector</value>
+  </data>
+  <data name="Hardcover" xml:space="preserve">
+    <value>Hardcover</value>
+  </data>
+  <data name="eBook" xml:space="preserve">
+    <value>eBook</value>
+  </data>
+  <data name="Audiobook" xml:space="preserve">
+    <value>Audiobook</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>Pages</value>
+  </data>
+  <data name="SearchBooks" xml:space="preserve">
+    <value>Search books...</value>
+  </data>
+  <data name="Read_Question" xml:space="preserve">
+    <value>Read?</value>
+  </data>
+  <data name="ReadingData" xml:space="preserve">
+    <value>Reading Data</value>
+  </data>
+  <data name="ReadingStartDate" xml:space="preserve">
+    <value>Reading Start Date</value>
+  </data>
+  <data name="ReadingEndDate" xml:space="preserve">
+    <value>Reading End Date</value>
+  </data>
+  <data name="TotalPages" xml:space="preserve">
+    <value>Total Pages</value>
+  </data>
+  <data name="PagesRead" xml:space="preserve">
+    <value>Pages Read</value>
+  </data>
+  <data name="PercentageRead" xml:space="preserve">
+    <value>Percentage Read</value>
+  </data>
+  <data name="Chapters_Slash" xml:space="preserve">
+    <value>Chapter/s</value>
+  </data>
+  <data name="NoChaptersAvailable" xml:space="preserve">
+    <value>No Chapters Available.</value>
+  </data>
+  <data name="Authors_Slash" xml:space="preserve">
+    <value>Author/s</value>
+  </data>
+  <data name="NoAuthorsAvailable" xml:space="preserve">
+    <value>No Authors Available.</value>
+  </data>
+  <data name="BookInformation" xml:space="preserve">
+    <value>Book Information</value>
+  </data>
+  <data name="BookGenre" xml:space="preserve">
+    <value>Book Genre</value>
+  </data>
+  <data name="BookPublisher" xml:space="preserve">
+    <value>Book Publisher</value>
+  </data>
+  <data name="BookPublishYear" xml:space="preserve">
+    <value>Book Publish Year</value>
+  </data>
+  <data name="BookIdentifier" xml:space="preserve">
+    <value>Book Identifier</value>
+  </data>
+  <data name="BookLocation" xml:space="preserve">
+    <value>Book Location</value>
+  </data>
+  <data name="BookLanguage" xml:space="preserve">
+    <value>Book Language</value>
+  </data>
+  <data name="BookPrice" xml:space="preserve">
+    <value>Book Price</value>
+  </data>
+  <data name="BookURL" xml:space="preserve">
+    <value>Book URL</value>
+  </data>
+  <data name="BookSummary" xml:space="preserve">
+    <value>Book Summary</value>
+  </data>
+  <data name="BookComments" xml:space="preserve">
+    <value>Book Comments</value>
+  </data>
+  <data name="BookLoanedTo" xml:space="preserve">
+    <value>Book Loaned To</value>
+  </data>
+  <data name="BookLoanedOutOn" xml:space="preserve">
+    <value>Book Loaned Out On</value>
+  </data>
+  <data name="HideBook_Question" xml:space="preserve">
+    <value>Hide Book when Settings &gt; Turn on Hidden Books is off?</value>
+  </data>
+  <data name="PartOfCollection" xml:space="preserve">
+    <value>Part of blank Collection</value>
+  </data>
+  <data name="PartofSeries" xml:space="preserve">
+    <value>Part of blank</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>Of</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Collections</value>
+  </data>
+  <data name="Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="Series" xml:space="preserve">
+    <value>Series</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Collection" xml:space="preserve">
+    <value>Collection</value>
+  </data>
+  <data name="Genre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Book" xml:space="preserve">
+    <value>Book</value>
+  </data>
+  <data name="SearchCollections" xml:space="preserve">
+    <value>Search collections...</value>
+  </data>
+  <data name="Groupings" xml:space="preserve">
+    <value>Groupings</value>
+  </data>
+  <data name="SearchGenres" xml:space="preserve">
+    <value>Search genres...</value>
+  </data>
+  <data name="SearchSeries" xml:space="preserve">
+    <value>Search series...</value>
+  </data>
+  <data name="SearchAuthors" xml:space="preserve">
+    <value>Search authors...</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AddNewBook" xml:space="preserve">
+    <value>Add New Book</value>
+  </data>
+  <data name="AddExistingBook" xml:space="preserve">
+    <value>Add Existing Book</value>
+  </data>
+  <data name="HideCollection_Question" xml:space="preserve">
+    <value>Hide Collection when Settings &gt; Turn on Hidden Collections is off?</value>
+  </data>
+  <data name="HideGenre_Question" xml:space="preserve">
+    <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
+  </data>
+  <data name="HideSeries_Question" xml:space="preserve">
+    <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
+  </data>
+  <data name="HideAuthor_Question" xml:space="preserve">
+    <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
+  </data>
+  <data name="Blank1OfBlank2Books" xml:space="preserve">
+    <value>Blank1 of Blank2 books</value>
+  </data>
+  <data name="ThereAreNoBooks" xml:space="preserve">
+    <value>There are no books.</value>
+  </data>
+  <data name="NoBookCoverSelected" xml:space="preserve">
+    <value>No Book Cover Selected</value>
+  </data>
+  <data name="EditBook" xml:space="preserve">
+    <value>Edit Book</value>
+  </data>
+  <data name="DeleteBook" xml:space="preserve">
+    <value>Delete Book</value>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Text Copied!</value>
+  </data>
+  <data name="BookTitle" xml:space="preserve">
+    <value>Book Title</value>
+  </data>
+  <data name="AddOrReplaceCoverPhoto" xml:space="preserve">
+    <value>Add or Replace Cover Photo</value>
+  </data>
+  <data name="BookFormat" xml:space="preserve">
+    <value>Book Format</value>
+  </data>
+  <data name="SelectABookFormat" xml:space="preserve">
+    <value>Select a Book Format</value>
+  </data>
+  <data name="BookSeries" xml:space="preserve">
+    <value>Book Series</value>
+  </data>
+  <data name="SelectASeries" xml:space="preserve">
+    <value>Select a Series</value>
+  </data>
+  <data name="BookNumber" xml:space="preserve">
+    <value>Book Number</value>
+  </data>
+  <data name="BookCollection" xml:space="preserve">
+    <value>Book Collection</value>
+  </data>
+  <data name="SelectACollection" xml:space="preserve">
+    <value>Select a Collection</value>
+  </data>
+  <data name="NoPublisher" xml:space="preserve">
+    <value>No Publisher</value>
+  </data>
+  <data name="NoDate" xml:space="preserve">
+    <value>No Date</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PageRange" xml:space="preserve">
+    <value>Page Range</value>
+  </data>
+  <data name="ChapterName" xml:space="preserve">
+    <value>Chapter Name</value>
+  </data>
+  <data name="ChapterPages" xml:space="preserve">
+    <value>Chapter Pages</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="AuthorFirstName" xml:space="preserve">
+    <value>Author First Name</value>
+  </data>
+  <data name="AuthorLastName" xml:space="preserve">
+    <value>Author Last Name</value>
+  </data>
+  <data name="SelectAGenre" xml:space="preserve">
+    <value>Select a Genre</value>
+  </data>
+  <data name="BookNumberOfTotal" xml:space="preserve">
+    <value>Book number of total</value>
+  </data>
+  <data name="UpNext_Question" xml:space="preserve">
+    <value>Queue this book up next for reading?</value>
+  </data>
+  <data name="PickingCoverCanceled" xml:space="preserve">
+    <value>Picking cover canceled.</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AllBooksView_InfoText" xml:space="preserve">
+    <value>This is a collective list of all the books you own.</value>
+  </data>
+  <data name="BookMainView_InfoText" xml:space="preserve">
+    <value>You can view all the information related to book. You can also tap on some of the data to copy.</value>
+  </data>
+  <data name="ToBeReadView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
+  </data>
+  <data name="ReadView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you have read. Books will show up here if you have marked it has 100% read.</value>
+  </data>
+  <data name="ReadingView_InfoText" xml:space="preserve">
+    <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next.</value>
+  </data>
+  <data name="BookEditView_InfoText" xml:space="preserve">
+    <value>This is where you can add or edit data for book.</value>
+  </data>
+  <data name="BookSearch" xml:space="preserve">
+    <value>Book Search</value>
+  </data>
+  <data name="TotalItems" xml:space="preserve">
+    <value>Total Items</value>
+  </data>
+  <data name="ScanBarcode" xml:space="preserve">
+    <value>Scan Barcode</value>
+  </data>
+  <data name="SearchForBookByISBNClickCorrectResultToAdd" xml:space="preserve">
+    <value>Search for book by ISBN. Click correct result to add.</value>
+  </data>
+  <data name="EnterOnlyISBNs" xml:space="preserve">
+    <value>Enter only ISBNs</value>
+  </data>
+  <data name="AddISBNToBook" xml:space="preserve">
+    <value>Add ISBN to Book</value>
+  </data>
+  <data name="ClickToSearch" xml:space="preserve">
+    <value>Click to Search</value>
+  </data>
+  <data name="NoBooksFound" xml:space="preserve">
+    <value>No books found.</value>
+  </data>
+  <data name="BookSubTitle" xml:space="preserve">
+    <value>Book Sub-Title</value>
+  </data>
+  <data name="PageCount" xml:space="preserve">
+    <value>Page Count</value>
+  </data>
+  <data name="BookDescription" xml:space="preserve">
+    <value>Book Description</value>
+  </data>
+  <data name="ErrorSearchingForBook" xml:space="preserve">
+    <value>Error searching for book!</value>
+  </data>
+  <data name="NoISBNEntered" xml:space="preserve">
+    <value>No ISBN Entered!</value>
+  </data>
+  <data name="ErrorSavingBook" xml:space="preserve">
+    <value>Error saving book!</value>
+  </data>
+  <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
+    <value>Please allow Camera permission to scan barcodes!</value>
+  </data>
+  <data name="BarcodeScanned" xml:space="preserve">
+    <value>Barcode Scanned!</value>
+  </data>
+  <data name="PleaseScanABookBarcode" xml:space="preserve">
+    <value>Please scan a book barcode!</value>
+  </data>
+  <data name="PleaseAllowPhotoPermissionToAddCover" xml:space="preserve">
+    <value>Please allow Photo permission to add cover!</value>
   </data>
 </root>

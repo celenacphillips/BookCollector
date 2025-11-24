@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-             x:Class="BookCollector.Views.SettingsView"
+             x:Class="BookCollector.Views.Main.SettingsView"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="{x:Static localization:AppStringResources.Settings}">
 
@@ -41,7 +41,7 @@
 
         <!-- Export Location -->
         <HorizontalStackLayout Margin="20,10">
-            <ImageButton Source="export_icon_dark.png"
+            <ImageButton Source="Icons/export_icon_dark.svg"
                          HeightRequest="50"
                          WidthRequest="45"
                          Padding="10"

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using BarcodeScanner.Mobile;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace BookCollector
@@ -15,6 +16,11 @@ namespace BookCollector
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                })
+                .ConfigureMauiHandlers(handlers =>
+                {
+                    // Add the handlers
+                    handlers.AddBarcodeScannerHandler();
                 });
 
 #if DEBUG

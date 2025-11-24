@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="BookCollector.Views.Book.BookMainView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Book"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:DataType="viewModel:BookMainViewModel"
+             xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             Title="{Binding ViewTitle}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem Text="{x:Static localization:AppStringResources.EditBook}"
+                     Command="{Binding EditBookCommand}"
+                     Order="Secondary"/>
+        <ToolbarItem Text="{x:Static localization:AppStringResources.DeleteBook}"
+                     Command="{Binding DeleteBookCommand}"
+                     Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+        
+        <!-- Main Content -->
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView IsEnabled="{Binding IsVisible}">
+                    <VerticalStackLayout Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Rating -->
+                            <controls:Rating CurrentValue="{Binding SelectedBook.Rating}"
+                                             Grid.Column="0" Grid.Row="0"
+                                             HorizontalOptions="Center"
+                                             IsEnabled="False"
+                                             IsVisible="{Binding ShowRatings}"/>
+                            <!-- Rating -->
+
+                            <!-- Favorite -->
+                            <controls:Favorite CurrentValue="{Binding SelectedBook.IsFavorite}"
+                                               Grid.Column="1" Grid.Row="0"
+                                               HorizontalOptions="Center"
+                                               IsEnabled="False"
+                                               Margin="0,7,0,0"
+                                               IsVisible="{Binding ShowFavorites}"/>
+                            <!-- Favorite -->
+
+                            <!-- Is Book Read -->
+                            <VerticalStackLayout HorizontalOptions="End"
+                                                 Margin="0,-5,10,-10"
+                                                 Grid.Column="2" Grid.Row="0">
+                                <Label Text="{x:Static localization:AppStringResources.Read_Question}"
+                                       HorizontalOptions="End"
+                                       Style="{DynamicResource Header}"/>
+                                <Switch IsToggled="{Binding BookIsRead}"
+                                        IsEnabled="False"
+                                        Margin="-10"/>
+                            </VerticalStackLayout>
+                            <!-- Is Book Read -->
+                        </Grid>
+
+                        <!-- Book Title -->
+                        <Label HorizontalTextAlignment="Center"
+                               Margin="0,10,0,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding SelectedBook.BookTitle}"
+                                          FontAttributes="Bold">
+                                        <Span.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                  CommandParameter="{Binding SelectedBook.BookTitle}"/>
+                                        </Span.GestureRecognizers>
+                                    </Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <!-- Book Title -->
+
+                        <!-- Book Cover -->
+                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=BookCover}"
+                                     HeightRequest="200"
+                                     WidthRequest="150"
+                                     IsVisible="{Binding SelectedBook.HasBookCover}"
+                                     Command="{Binding BookCoverPopupCommand}"
+                                     BackgroundColor="Transparent"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
+                               HeightRequest="200"
+                               WidthRequest="150"
+                               IsVisible="{Binding SelectedBook.HasNoBookCover}"
+                               Style="{DynamicResource NoCover}"/>
+                        <!-- Book Cover -->
+
+                        <!-- Book Format -->
+                        <HorizontalStackLayout HorizontalOptions="Center">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding SelectedBook.BookFormat}"
+                                              Style="{DynamicResource SubTitle}">
+                                            <Span.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                      CommandParameter="{Binding SelectedBook.BookFormat}"/>
+                                            </Span.GestureRecognizers>
+                                        </Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </HorizontalStackLayout>
+                        <!-- Book Format -->
+
+                        <!-- Book Series -->
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                               IsVisible="{Binding SelectedBook.HasSeries}">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding SelectedBook.PartOfSeries}">
+                                            <Span.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                      CommandParameter="{Binding SelectedBook.PartOfSeries}"/>
+                                            </Span.GestureRecognizers>
+                                        </Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </HorizontalStackLayout>
+                        <!-- Book Series -->
+
+                        <!-- Book Collection -->
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                               IsVisible="{Binding SelectedBook.HasCollection}">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding SelectedBook.PartOfCollection}">
+                                            <Span.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                      CommandParameter="{Binding SelectedBook.PartOfCollection}"/>
+                                            </Span.GestureRecognizers>
+                                        </Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </HorizontalStackLayout>
+                        <!-- Book Collection -->
+
+                        <!-- Reading Data -->
+                        <toolkit:Expander IsExpanded="{Binding ReadingDataSectionValue}"
+                                          Command="{Binding ReadingDataChangedCommand}"
+                                          Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.ReadingData}"
+                                           Style="{DynamicResource expanderHeaderLabel}" 
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding ReadingDataOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding ReadingDataNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+                            <VerticalStackLayout Margin="0,-10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Up Next -->
+                                <VerticalStackLayout Margin="10"
+                                                     IsVisible="{Binding ShowUpNext}">
+                                    <Label Text="{x:Static localization:AppStringResources.UpNext_Question}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Switch IsToggled="{Binding SelectedBook.UpNext}"
+                                            IsEnabled="False"
+                                            HorizontalOptions="Start"
+                                            Margin="-10"/>
+                                </VerticalStackLayout>
+                                <!-- Up Next -->
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Reading Start Date -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.ReadingStartDate}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookStartDate}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookStartDate}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Reading Start Date -->
+
+                                    <!-- Reading End Date -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.ReadingEndDate}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookEndDate}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookEndDate}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Reading End Date -->
+                                </Grid>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Total Pages -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.TotalPages}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPageTotal}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPageTotal}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Total Pages -->
+
+                                    <!-- Pages Read -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.PagesRead}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPageRead}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPageRead}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Pages Read -->
+                                </Grid>
+
+                                <!-- Reading Progress -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.PercentageRead}"
+                                           Style="{DynamicResource Header}"
+                                           Margin="0,0,0,20"/>
+                                    <ProgressBar Progress="{Binding SelectedBook.Progress}"/>
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.95*" />
+                                            <ColumnDefinition Width="0.7*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="0.7*" />
+                                            <ColumnDefinition Width="0.95*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="0"
+                                               Grid.Row="0" Grid.Column="0" />
+
+                                        <Label Text="{Binding SelectedBook.Fourth}"
+                                               Grid.Row="0" Grid.Column="1"
+                                               HorizontalTextAlignment="Start"/>
+
+                                        <Label Text="{Binding SelectedBook.Half}"
+                                               Grid.Row="0" Grid.Column="2"
+                                               HorizontalTextAlignment="Center" />
+
+                                        <Label Text="{Binding SelectedBook.ThreeFourth}"
+                                               HorizontalTextAlignment="End"
+                                               Grid.Row="0" Grid.Column="3"/>
+
+                                        <Label Text="{Binding SelectedBook.BookPageTotal}"
+                                               Grid.Row="0" Grid.Column="4"
+                                               HorizontalTextAlignment="End"/>
+                                    </Grid>
+                                    <Label HorizontalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding SelectedBook.PageReadPercent}">
+                                                    <Span.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                              CommandParameter="{Binding SelectedBook.PageReadPercent}"/>
+                                                    </Span.GestureRecognizers>
+                                                </Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <!-- Reading Progress -->
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Reading Data -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Chapters -->
+                        <toolkit:Expander IsExpanded="{Binding ChapterListSectionValue}"
+                                          Command="{Binding ChapterListChangedCommand}"
+                                          Margin="0,0,0,15"
+                                          IsVisible="{Binding ShowChapters}">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.Chapters_Slash}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding ChapterListOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding ChapterListNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                <CollectionView ItemsSource="{Binding ChapterList}"
+                                                Margin="10"
+                                                EmptyView="{x:Static localization:AppStringResources.NoChaptersAvailable}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="dataModels:ChapterModel">
+                                            <HorizontalStackLayout  Padding="10">
+                                                <Label>
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding ChapterName}">
+                                                                <Span.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=TapCommand}"
+                                                                                          CommandParameter="{Binding ChapterName}"/>
+                                                                </Span.GestureRecognizers>
+                                                            </Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Text=" : " />
+                                                <Label Text="{Binding PageRange}"/>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+
+                        <Label Style="{DynamicResource ShortSeparator}"
+                               IsVisible="{Binding ShowChapters}"/>
+                        <!-- Chapters -->
+
+                        <!-- Authors -->
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
+                                          Command="{Binding AuthorListChangedCommand}"
+                                          Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.Authors_Slash}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding AuthorListOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding AuthorListNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                <CollectionView ItemsSource="{Binding AuthorList}"
+                                                Margin="10"
+                                                EmptyView="{x:Static localization:AppStringResources.NoAuthorsAvailable}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="dataModels:AuthorModel">
+                                            <HorizontalStackLayout Padding="10">
+                                                <Label>
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding FullName}">
+                                                                <Span.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=TapCommand}"
+                                                                                          CommandParameter="{Binding FullName}"/>
+                                                                </Span.GestureRecognizers>
+                                                            </Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Authors -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Book Information -->
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
+                                          Command="{Binding BookInfoChangedCommand}"
+                                          Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookInformation}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding BookInfoOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding BookInfoNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Book Genre -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookGenre}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding SelectedGenre.GenreName}">
+                                                    <Span.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                              CommandParameter="{Binding SelectedGenre.GenreName}"/>
+                                                    </Span.GestureRecognizers>
+                                                </Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <!-- Book Genre -->
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Publisher -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPublisher}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPublisher}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Publisher -->
+
+                                    <!-- Book Publish Year -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPublishYear}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPublishYear}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Publish Year -->
+                                </Grid>
+
+                                <Grid Margin="0,0,0,10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Identifier -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookIdentifier}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookIdentifier}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Identifier -->
+
+                                    <!-- Book Location -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLocation}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookLocation}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookLocation}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Location -->
+                                </Grid>
+
+                                <Grid Margin="0,0,0,10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Language -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookLanguage}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookLanguage}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Language -->
+
+                                    <!-- Book Price -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPrice}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPrice}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Price -->
+                                </Grid>
+
+                                <!-- Book URL -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookURL}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding SelectedBook.BookURL}">
+                                                    <Span.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                              CommandParameter="{Binding SelectedBook.BookURL}"/>
+                                                    </Span.GestureRecognizers>
+                                                </Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <!-- Book URL -->
+
+                                <Grid Margin="0,0,0,10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Loaned To -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.LoanedTo}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.LoanedTo}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Loaned To -->
+
+                                    <!-- Book Loaned Out On -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookLoanedOutOn}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookLoanedOutOn}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Loaned Out On -->
+                                </Grid>
+
+                                <!-- Hide Book -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.HideBook_Question}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Switch IsToggled="{Binding SelectedBook.HideBook}"
+                                            IsEnabled="False"
+                                            HorizontalOptions="Start"
+                                            Margin="-10"/>
+                                </VerticalStackLayout>
+                                <!-- Hide Book -->
+
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Book Information -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Summary -->
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
+                                          Command="{Binding SummaryChangedCommand}"
+                                          Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookSummary}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding SummaryOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding SummaryNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                                 Padding="10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding SelectedBook.BookSummary}">
+                                                <Span.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                          CommandParameter="{Binding SelectedBook.BookSummary}"/>
+                                                </Span.GestureRecognizers>
+                                            </Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Summary -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Comments -->
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
+                                          Command="{Binding CommentsChangedCommand}"
+                                          Margin="0,0,0,15"
+                                          IsVisible="{Binding ShowComments}">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookComments}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding CommentsOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding CommentsNotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                                 Padding="10"
+                                                 BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding SelectedBook.BookComments}">
+                                                <Span.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                          CommandParameter="{Binding SelectedBook.BookComments}"/>
+                                                </Span.GestureRecognizers>
+                                            </Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+
+                        <Label Style="{DynamicResource ShortSeparator}"
+                               IsVisible="{Binding ShowComments}"/>
+                        <!-- Comments -->
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+        </StackLayout>
+        <!-- Main Content -->
+        
+        <!-- Activity Indicator -->
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+        <!-- Activity Indicator -->
+    </AbsoluteLayout>
+</ContentPage>
