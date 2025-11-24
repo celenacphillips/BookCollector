@@ -531,4 +531,10 @@
   <data name="PleaseAllowPhotoPermissionToAddCover" xml:space="preserve">
     <value>Please allow Photo permission to add cover!</value>
   </data>
+  <data name="Locations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
 </root>
