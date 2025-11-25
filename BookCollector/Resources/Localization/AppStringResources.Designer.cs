@@ -1096,6 +1096,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search locations....
+        /// </summary>
+        internal static string SearchLocations {
+            get {
+                return ResourceManager.GetString("SearchLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search series....
         /// </summary>
         internal static string SearchSeries {
@@ -1213,11 +1222,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are no authors..
+        /// </summary>
+        internal static string ThereAreNoAuthors {
+            get {
+                return ResourceManager.GetString("ThereAreNoAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no books..
         /// </summary>
         internal static string ThereAreNoBooks {
             get {
                 return ResourceManager.GetString("ThereAreNoBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no collections..
+        /// </summary>
+        internal static string ThereAreNoCollections {
+            get {
+                return ResourceManager.GetString("ThereAreNoCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no genres..
+        /// </summary>
+        internal static string ThereAreNoGenres {
+            get {
+                return ResourceManager.GetString("ThereAreNoGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no locations..
+        /// </summary>
+        internal static string ThereAreNoLocations {
+            get {
+                return ResourceManager.GetString("ThereAreNoLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no series..
+        /// </summary>
+        internal static string ThereAreNoSeries {
+            get {
+                return ResourceManager.GetString("ThereAreNoSeries", resourceCulture);
             }
         }
         

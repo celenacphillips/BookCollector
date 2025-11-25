@@ -160,17 +160,47 @@
 		<MauiXaml Update="Views\Book\BookMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Author\AuthorCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Author\AuthorCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Book\BookCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Book\BookCollectionList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Favorite.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Genre\GenreCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Genre\GenreCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Location\LocationCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Location\LocationCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Rating.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Series\SeriesCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Series\SeriesCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\AuthorsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -271,11 +301,6 @@
 	  <Folder Include="ViewModels\Location\" />
 	  <Folder Include="ViewModels\Series\" />
 	  <Folder Include="Views\Collection\" />
-	  <Folder Include="Views\Controls\Collection\" />
-	  <Folder Include="Views\Controls\Genre\" />
-	  <Folder Include="Views\Controls\Author\" />
-	  <Folder Include="Views\Controls\Location\" />
-	  <Folder Include="Views\Controls\Series\" />
 	  <Folder Include="Views\Genre\" />
 	  <Folder Include="Views\Author\" />
 	  <Folder Include="Views\Location\" />

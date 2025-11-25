@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace BookCollector.ViewModels.Groupings
 {
     public partial class SeriesViewModel : BaseViewModel
     {
+        [ObservableProperty]
+        public string? totalSeriesString;
+
+        [ObservableProperty]
+        public int totalSeriesCount;
+
         public SeriesViewModel(ContentPage view)
         {
             _view = view;
@@ -33,6 +40,18 @@ namespace BookCollector.ViewModels.Groupings
             //TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
+        }
+
+        [RelayCommand]
+        public async Task SearchOnSeries()
+        {
+
+        }
+
+        [RelayCommand]
+        public async Task PopupMenu()
+        {
+
         }
 
         [RelayCommand]

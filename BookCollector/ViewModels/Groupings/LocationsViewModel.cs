@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace BookCollector.ViewModels.Groupings
 {
     public partial class LocationsViewModel : BaseViewModel
     {
+        [ObservableProperty]
+        public string? totalLocationsString;
+
+        [ObservableProperty]
+        public int totalLocationsCount;
+
         public LocationsViewModel(ContentPage view)
         {
             _view = view;
@@ -33,6 +40,18 @@ namespace BookCollector.ViewModels.Groupings
             //TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
+        }
+
+        [RelayCommand]
+        public async Task SearchOnLocation()
+        {
+
+        }
+
+        [RelayCommand]
+        public async Task PopupMenu()
+        {
+
         }
 
         [RelayCommand]

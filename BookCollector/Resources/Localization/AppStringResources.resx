@@ -342,6 +342,9 @@
   <data name="SearchSeries" xml:space="preserve">
     <value>Search series...</value>
   </data>
+  <data name="SearchLocations" xml:space="preserve">
+    <value>Search locations...</value>
+  </data>
   <data name="SearchAuthors" xml:space="preserve">
     <value>Search authors...</value>
   </data>
@@ -536,5 +539,20 @@
   </data>
   <data name="Location" xml:space="preserve">
     <value>Location</value>
+  </data>
+  <data name="ThereAreNoCollections" xml:space="preserve">
+    <value>There are no collections.</value>
+  </data>
+  <data name="ThereAreNoAuthors" xml:space="preserve">
+    <value>There are no authors.</value>
+  </data>
+  <data name="ThereAreNoGenres" xml:space="preserve">
+    <value>There are no genres.</value>
+  </data>
+  <data name="ThereAreNoSeries" xml:space="preserve">
+    <value>There are no series.</value>
+  </data>
+  <data name="ThereAreNoLocations" xml:space="preserve">
+    <value>There are no locations.</value>
   </data>
 </root>

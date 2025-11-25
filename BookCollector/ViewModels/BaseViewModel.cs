@@ -34,6 +34,9 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public string infoText;
 
+        [ObservableProperty]
+        public string? searchString;
+
         public BaseViewModel()
         {
             DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;

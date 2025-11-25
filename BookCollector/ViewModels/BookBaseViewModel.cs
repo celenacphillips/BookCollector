@@ -24,9 +24,6 @@ namespace BookCollector.ViewModels
         public int filteredBooksCount;
 
         [ObservableProperty]
-        public string? searchString;
-
-        [ObservableProperty]
         public static ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
