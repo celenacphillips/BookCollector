@@ -41,8 +41,9 @@
                              HeightRequest="20"
                              HorizontalOptions="End"
                              Margin="10"
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CollectionsViewModel}}, Path=PopupMenuCommand}"
-                             CommandParameter="{Binding CollectionGuid}"/>
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CollectionsViewModel}}, Path=PopupMenuCollectionCommand}"
+                             CommandParameter="{Binding CollectionGuid}"
+                             BackgroundColor="Transparent"/>
             </HorizontalStackLayout>
         </Grid>
 

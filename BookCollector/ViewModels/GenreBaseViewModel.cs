@@ -13,6 +13,12 @@ namespace BookCollector.ViewModels
     public partial class GenreBaseViewModel : BaseViewModel
     {
         [ObservableProperty]
+        public int totalGenresCount;
+
+        [ObservableProperty]
+        public int filteredGenresCount;
+
+        [ObservableProperty]
         public static ObservableCollection<GenreModel>? fullGenreList;
 
         [ObservableProperty]
@@ -21,6 +27,7 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public GenreModel? selectedGenre;
 
+        // TO DO
         [RelayCommand]
         public async Task GenreSelectionChanged()
         {

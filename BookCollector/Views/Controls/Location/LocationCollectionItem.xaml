@@ -41,8 +41,9 @@
                              HeightRequest="20"
                              HorizontalOptions="End"
                              Margin="10"
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:LocationsViewModel}}, Path=PopupMenuCommand}"
-                             CommandParameter="{Binding LocationGuid}"/>
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:LocationsViewModel}}, Path=PopupMenuLocationCommand}"
+                             CommandParameter="{Binding LocationGuid}"
+                             BackgroundColor="Transparent"/>
             </HorizontalStackLayout>
         </Grid>
 

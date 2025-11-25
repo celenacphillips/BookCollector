@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BookCollector.Data;
+using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
+using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -8,50 +12,76 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
-    public partial class LocationsViewModel : BaseViewModel
+    public partial class LocationsViewModel : LocationBaseViewModel
     {
         [ObservableProperty]
         public string? totalLocationsString;
-
-        [ObservableProperty]
-        public int totalLocationsCount;
 
         public LocationsViewModel(ContentPage view)
         {
             _view = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            //InfoText = $"{AppStringResources.AllBooksView_InfoText}";
+            InfoText = $"{AppStringResources.LocationView_InfoText}";
         }
 
         public async Task SetViewModelData()
         {
             SetIsBusyTrue();
 
-            //Task.WaitAll(
-            //[
-            //    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksList(TestData.BookList) ),
-            //]);
+            Task.WaitAll(
+            [
+                Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(TestData.LocationList) ),
+            ]);
 
-            //TotalBooksCount = FullBookList.Count;
+            TotalLocationsCount = FullLocationList.Count;
 
-            //FilteredBookList = FullBookList;
-            //FilteredBooksCount = FilteredBookList.Count;
+            FilteredLocationList = FullLocationList;
+            FilteredLocationsCount = FilteredLocationList.Count;
 
-            //TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+            TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
 
             SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public async Task SearchOnLocation()
+        public async Task SearchOnLocation(string? input)
         {
+            SetIsBusyTrue();
 
+            SearchString = input;
+
+            if (!string.IsNullOrEmpty(SearchString))
+                FilteredLocationList = FilteredLocationList.Where(x => x.LocationName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            else
+                FilteredLocationList = FullLocationList;
+
+            FilteredLocationsCount = FilteredLocationList.Count;
+
+            TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+
+            SetIsBusyFalse();
         }
 
-        [RelayCommand]
-        public async Task PopupMenu()
-        {
 
+        [RelayCommand]
+        public async Task PopupMenuLocation(Guid? input)
+        {
+            var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
+            string? action = await PopupMenu(selected.LocationName);
+
+            switch (action)
+            {
+                case "Edit":
+                    await EditLocation(selected);
+                    break;
+
+                case "Delete":
+                    await DeleteLocation(selected);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         [RelayCommand]
@@ -62,8 +92,23 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
+        // TO DO
         [RelayCommand]
         public async Task AddLocation()
+        {
+
+        }
+
+        // TO DO
+        [RelayCommand]
+        public async Task EditLocation(LocationModel selected)
+        {
+
+        }
+
+        // TO DO
+        [RelayCommand]
+        public async Task DeleteLocation(LocationModel selected)
         {
 
         }

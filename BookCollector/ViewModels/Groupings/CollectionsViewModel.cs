@@ -1,5 +1,7 @@
 ﻿using BookCollector.Data;
+using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,50 +12,75 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
-    public partial class CollectionsViewModel : BaseViewModel
+    public partial class CollectionsViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
         public string? totalCollectionsString;
-
-        [ObservableProperty]
-        public int totalCollectionsCount;
 
         public CollectionsViewModel(ContentPage view)
         {
             _view = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            //InfoText = $"{AppStringResources.AllBooksView_InfoText}";
+            InfoText = $"{AppStringResources.CollectionView_InfoText}";
         }
 
         public async Task SetViewModelData()
         {
             SetIsBusyTrue();
 
-            //Task.WaitAll(
-            //[
-            //    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksList(TestData.BookList) ),
-            //]);
+            Task.WaitAll(
+            [
+                Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(TestData.CollectionList) ),
+            ]);
 
-            //TotalBooksCount = FullBookList.Count;
+            TotalCollectionsCount = FullCollectionList.Count;
 
-            //FilteredBookList = FullBookList;
-            //FilteredBooksCount = FilteredBookList.Count;
+            FilteredCollectionList = FullCollectionList;
+            FilteredCollectionsCount = FilteredCollectionList.Count;
 
-            //TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+            TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
 
             SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public async Task SearchOnCollection()
+        public async Task SearchOnCollection(string? input)
         {
-            
+            SetIsBusyTrue();
+
+            SearchString = input;
+
+            if (!string.IsNullOrEmpty(SearchString))
+                FilteredCollectionList = FilteredCollectionList.Where(x => x.CollectionName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            else
+                FilteredCollectionList = FullCollectionList;
+
+            FilteredCollectionsCount = FilteredCollectionList.Count;
+
+            TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
+
+            SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public async Task PopupMenu()
+        public async Task PopupMenuCollection(Guid? input)
         {
+            var selected = FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
+            string? action = await PopupMenu(selected.CollectionName);
 
+            switch (action)
+            {
+                case "Edit":
+                    await EditCollection(selected);
+                    break;
+
+                case "Delete":
+                    await DeleteCollection(selected);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         [RelayCommand]
@@ -64,10 +91,51 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
+        // TO DO:
+        // Fix Add Collection to not add to main list without save - 11/25/2025
         [RelayCommand]
         public async Task AddCollection()
         {
+            SetIsBusyTrue();
 
+            CollectionModel newCollection = new CollectionModel();
+
+            //BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
+            TestData.InsertCollection(newCollection);
+
+            //await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
+        }
+
+        // TO DO
+        [RelayCommand]
+        public async Task EditCollection(CollectionModel selected)
+        {
+            SetIsBusyTrue();
+
+            //CollectionEditView view = new CollectionEditView();
+            //CollectionEditViewModel bindingContext = new CollectionEditViewModel(selected, view);
+            //bindingContext.ViewTitle = $"{AppResources.EditCollection}";
+            //view.BindingContext = bindingContext;
+
+            //await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
+        }
+
+        // TO DO
+        // Add checks for deleting collection - 11/25/2025
+        [RelayCommand]
+        public async Task DeleteCollection(CollectionModel selected)
+        {
+            SetIsBusyTrue();
+
+            TestData.DeleteCollection(selected);
+
+            await SetViewModelData();
+
+            SetIsBusyFalse();
         }
     }
 }

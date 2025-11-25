@@ -13,6 +13,12 @@ namespace BookCollector.ViewModels
     public partial class AuthorBaseViewModel : BaseViewModel
     {
         [ObservableProperty]
+        public int totalAuthorsCount;
+
+        [ObservableProperty]
+        public int filteredAuthorsCount;
+
+        [ObservableProperty]
         public static ObservableCollection<AuthorModel>? fullAuthorList;
 
         [ObservableProperty]
@@ -21,6 +27,7 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public AuthorModel? selectedAuthor;
 
+        // TO DO
         [RelayCommand]
         public async Task AuthorSelectionChanged()
         {

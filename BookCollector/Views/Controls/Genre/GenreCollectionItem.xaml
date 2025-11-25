@@ -39,8 +39,9 @@
                              HeightRequest="20"
                              HorizontalOptions="End"
                              Margin="10"
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:GenresViewModel}}, Path=PopupMenuCommand}"
-                             CommandParameter="{Binding GenreGuid}"/>
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:GenresViewModel}}, Path=PopupMenuGenreCommand}"
+                             CommandParameter="{Binding GenreGuid}"
+                             BackgroundColor="Transparent"/>
             </HorizontalStackLayout>
         </Grid>
 

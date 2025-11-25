@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BookCollector.Data;
+using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
+using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -8,50 +12,75 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
-    public partial class GenresViewModel : BaseViewModel
+    public partial class GenresViewModel : GenreBaseViewModel
     {
         [ObservableProperty]
         public string? totalGenresString;
-
-        [ObservableProperty]
-        public int totalGenresCount;
 
         public GenresViewModel(ContentPage view)
         {
             _view = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            //InfoText = $"{AppStringResources.AllBooksView_InfoText}";
+            InfoText = $"{AppStringResources.GenreView_InfoText}";
         }
 
         public async Task SetViewModelData()
         {
             SetIsBusyTrue();
 
-            //Task.WaitAll(
-            //[
-            //    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksList(TestData.BookList) ),
-            //]);
+            Task.WaitAll(
+            [
+                Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(TestData.GenreList) ),
+            ]);
 
-            //TotalBooksCount = FullBookList.Count;
+            TotalGenresCount = FullGenreList.Count;
 
-            //FilteredBookList = FullBookList;
-            //FilteredBooksCount = FilteredBookList.Count;
+            FilteredGenreList = FullGenreList;
+            FilteredGenresCount = FilteredGenreList.Count;
 
-            //TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+            TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
 
             SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public async Task SearchOnGenre()
+        public async Task SearchOnGenre(string? input)
         {
+            SetIsBusyTrue();
 
+            SearchString = input;
+
+            if (!string.IsNullOrEmpty(SearchString))
+                FilteredGenreList = FilteredGenreList.Where(x => x.GenreName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            else
+                FilteredGenreList = FullGenreList;
+
+            FilteredGenresCount = FilteredGenreList.Count;
+
+            TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
+
+            SetIsBusyFalse();
         }
 
         [RelayCommand]
-        public async Task PopupMenu()
+        public async Task PopupMenuGenre(Guid? input)
         {
+            var selected = FilteredGenreList.FirstOrDefault(x => x.GenreGuid == input);
+            string? action = await PopupMenu(selected.GenreName);
 
+            switch (action)
+            {
+                case "Edit":
+                    await EditGenre(selected);
+                    break;
+
+                case "Delete":
+                    await DeleteGenre(selected);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         [RelayCommand]
@@ -62,11 +91,25 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
+        // TO DO
         [RelayCommand]
         public async Task AddGenre()
         {
 
         }
 
+        // TO DO
+        [RelayCommand]
+        public async Task EditGenre(GenreModel selected)
+        {
+
+        }
+
+        // TO DO
+        [RelayCommand]
+        public async Task DeleteGenre(GenreModel selected)
+        {
+
+        }
     }
 }

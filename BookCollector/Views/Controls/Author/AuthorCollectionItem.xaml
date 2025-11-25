@@ -39,8 +39,9 @@
                              HeightRequest="20"
                              HorizontalOptions="End"
                              Margin="10"
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:AuthorsViewModel}}, Path=PopupMenuCommand}"
-                             CommandParameter="{Binding AuthorGuid}"/>
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:AuthorsViewModel}}, Path=PopupMenuAuthorCommand}"
+                             CommandParameter="{Binding AuthorGuid}"
+                             BackgroundColor="Transparent"/>
             </HorizontalStackLayout>
 
 

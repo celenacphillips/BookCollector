@@ -13,6 +13,12 @@ namespace BookCollector.ViewModels
     public partial class LocationBaseViewModel : BaseViewModel
     {
         [ObservableProperty]
+        public int totalLocationsCount;
+
+        [ObservableProperty]
+        public int filteredLocationsCount;
+
+        [ObservableProperty]
         public static ObservableCollection<LocationModel>? fullLocationList;
 
         [ObservableProperty]
@@ -21,6 +27,7 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public LocationModel? selectedLocation;
 
+        // TO DO
         [RelayCommand]
         public async Task LocationSelectionChanged()
         {

@@ -372,8 +372,8 @@
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
   </data>
-  <data name="Blank1OfBlank2Books" xml:space="preserve">
-    <value>Blank1 of Blank2 books</value>
+  <data name="Blank1OfBlank2Items" xml:space="preserve">
+    <value>Blank1 of Blank2 items</value>
   </data>
   <data name="ThereAreNoBooks" xml:space="preserve">
     <value>There are no books.</value>
@@ -554,5 +554,23 @@
   </data>
   <data name="ThereAreNoLocations" xml:space="preserve">
     <value>There are no locations.</value>
+  </data>
+  <data name="AuthorView_InfoText" xml:space="preserve">
+    <value>An author is the person who created the book. You can add an author here or in the book.</value>
+  </data>
+  <data name="CollectionView_InfoText" xml:space="preserve">
+    <value>Collections are a unique way to group your books that don't fall into the other categories like if you are reading it or if it is in a specific series. You can add a collection here or in the book.</value>
+  </data>
+  <data name="GenreView_InfoText" xml:space="preserve">
+    <value>Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book.</value>
+  </data>
+  <data name="SeriesView_InfoText" xml:space="preserve">
+    <value>A series of books are books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book.</value>
+  </data>
+  <data name="LocationView_InfoText" xml:space="preserve">
+    <value>Locations are a way to group and see where your books physically are. You can add a location here or in the book.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
 </root>

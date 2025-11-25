@@ -28,5 +28,30 @@ namespace BookCollector.Data
         {
             return bookList.ToObservableCollection();
         }
+
+        public static async Task<ObservableCollection<CollectionModel>> GetAllCollectionsList(ObservableCollection<CollectionModel> collectionList)
+        {
+            return collectionList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<GenreModel>> GetAllGenresList(ObservableCollection<GenreModel> genreList)
+        {
+            return genreList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<SeriesModel>> GetAllSeriesList(ObservableCollection<SeriesModel> seriesList)
+        {
+            return seriesList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<LocationModel>> GetAllLocationsList(ObservableCollection<LocationModel> locationList)
+        {
+            return locationList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<AuthorModel>> GetAllAuthorsList(ObservableCollection<AuthorModel> authorList)
+        {
+            return authorList.ToObservableCollection();
+        }
     }
 }

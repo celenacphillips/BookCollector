@@ -17,11 +17,9 @@
                      Command="{Binding SortPopupCommand}"
                      IsEnabled="False"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"
-                     IsEnabled="False"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/plus_icon_light.svg, Dark=Icons/plus_icon_light.svg}"
-                     Command="{Binding AddCollectionCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/plus_icon_light.svg, Dark=Icons/plus_icon_dark.svg}"
+                     Command="{Binding AddCollectionCommand}"/>
     </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>

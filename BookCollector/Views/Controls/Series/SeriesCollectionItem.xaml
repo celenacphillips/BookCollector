@@ -39,8 +39,9 @@
                              HeightRequest="20"
                              HorizontalOptions="End"
                              Margin="10"
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:SeriesViewModel}}, Path=PopupMenuCommand}"
-                             CommandParameter="{Binding SeriesGuid}"/>
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:SeriesViewModel}}, Path=PopupMenuSeriesCommand}"
+                             CommandParameter="{Binding SeriesGuid}"
+                             BackgroundColor="Transparent"/>
             </HorizontalStackLayout>
         </Grid>
 
