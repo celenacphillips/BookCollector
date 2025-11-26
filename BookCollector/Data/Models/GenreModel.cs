@@ -12,6 +12,8 @@ namespace BookCollector.Data.Models
         public string genreName;
         [ObservableProperty]
         public string totalBooksString;
+        [ObservableProperty]
+        public bool hideGenre;
 
         public string? ParsedGenreName { get; set; }
         public int GenreTotalBooks { get; set; }

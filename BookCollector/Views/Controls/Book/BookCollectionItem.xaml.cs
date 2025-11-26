@@ -1,4 +1,4 @@
-namespace BookCollector.Views.Controls;
+namespace BookCollector.Views.Controls.Book;
 
 public partial class BookCollectionItem : ContentView
 {

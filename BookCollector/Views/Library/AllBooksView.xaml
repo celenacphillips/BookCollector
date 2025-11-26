@@ -5,7 +5,7 @@
              x:Class="BookCollector.Views.Library.AllBooksView"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Library"
-             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
              x:DataType="viewModel:AllBooksViewModel"
              Title="{x:Static localization:AppStringResources.AllBooks}">
 

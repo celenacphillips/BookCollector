@@ -1,16 +1,20 @@
 ﻿using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableObject, ICloneable
+    public partial class BookModel : ObservableValidator, ICloneable
     {
         [PrimaryKey]
         public Guid? BookGuid { get; set; }
 
         [ObservableProperty]
-        public string bookTitle;
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Field is required.")]
+        [MinLength(2)]
+        public string? bookTitle;
         [ObservableProperty]
         public double? bookNumberInSeries;
         [ObservableProperty]
@@ -138,6 +142,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookSeriesGuid != null)
             {
+                // Unit test data
                 var series = TestData.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.BookSeriesGuid);
 
                 if (this.BookNumberInSeries != null)
@@ -166,6 +171,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookCollectionGuid != null)
             {
+                // Unit test data
                 var collection = TestData.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.BookCollectionGuid);
 
                 output = $"{AppStringResources.PartOfCollection.Replace("blank", $"{collection.CollectionName}")}";

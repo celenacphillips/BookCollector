@@ -40,8 +40,20 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" BaseSize="128,128" Color="#336699" />
+		<MauiImage Include="Resources\Icons\collection_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\collection_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\genre_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\genre_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\person_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\person_icon_light.svg" />
 		<MauiImage Include="Resources\Icons\photo_add_dark.svg" />
 		<MauiImage Include="Resources\Icons\photo_remove_dark.svg" />
+		<MauiImage Include="Resources\Icons\plus_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\plus_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\series_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\series_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\vertical_dots_dark.svg" />
+		<MauiImage Include="Resources\Icons\vertical_dots_light.svg" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="100,100" />
@@ -60,12 +72,16 @@
 		<None Remove="Resources\Icons\book_add_light.svg" />
 		<None Remove="Resources\Icons\calendar_icon_dark.svg" />
 		<None Remove="Resources\Icons\calendar_icon_light.svg" />
+		<None Remove="Resources\Icons\collection_icon_dark.svg" />
+		<None Remove="Resources\Icons\collection_icon_light.svg" />
 		<None Remove="Resources\Icons\color_icon_dark.svg" />
 		<None Remove="Resources\Icons\color_icon_light.svg" />
 		<None Remove="Resources\Icons\export_icon_dark.svg" />
 		<None Remove="Resources\Icons\export_icon_light.svg" />
 		<None Remove="Resources\Icons\filter_icon_dark.svg" />
 		<None Remove="Resources\Icons\filter_icon_light.svg" />
+		<None Remove="Resources\Icons\genre_icon_dark.svg" />
+		<None Remove="Resources\Icons\genre_icon_light.svg" />
 		<None Remove="Resources\Icons\heart_icon_empty_dark.svg" />
 		<None Remove="Resources\Icons\heart_icon_empty_light.svg" />
 		<None Remove="Resources\Icons\heart_icon_full_dark.svg" />
@@ -74,12 +90,18 @@
 		<None Remove="Resources\Icons\info_icon_light.svg" />
 		<None Remove="Resources\Icons\language_icon_dark.svg" />
 		<None Remove="Resources\Icons\language_icon_light.svg" />
+		<None Remove="Resources\Icons\person_icon_dark.svg" />
+		<None Remove="Resources\Icons\person_icon_light.svg" />
 		<None Remove="Resources\Icons\photo_add_dark.svg" />
 		<None Remove="Resources\Icons\photo_remove_dark.svg" />
+		<None Remove="Resources\Icons\plus_icon_dark.svg" />
+		<None Remove="Resources\Icons\plus_icon_light.svg" />
 		<None Remove="Resources\Icons\save_icon_dark.svg" />
 		<None Remove="Resources\Icons\save_icon_light.svg" />
 		<None Remove="Resources\Icons\search_icon_dark.svg" />
 		<None Remove="Resources\Icons\search_icon_light.svg" />
+		<None Remove="Resources\Icons\series_icon_dark.svg" />
+		<None Remove="Resources\Icons\series_icon_light.svg" />
 		<None Remove="Resources\Icons\sort_icon_dark.svg" />
 		<None Remove="Resources\Icons\sort_icon_light.svg" />
 		<None Remove="Resources\Icons\star_icon_empty_dark.svg" />
@@ -88,6 +110,8 @@
 		<None Remove="Resources\Icons\star_icon_full_light.svg" />
 		<None Remove="Resources\Icons\theme_icon_dark.svg" />
 		<None Remove="Resources\Icons\theme_icon_light.svg" />
+		<None Remove="Resources\Icons\vertical_dots_dark.svg" />
+		<None Remove="Resources\Icons\vertical_dots_light.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -130,23 +154,86 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="Views\Author\AuthorEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Author\AuthorMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookEditView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Views\Controls\BookCollectionItem.xaml">
+		<MauiXaml Update="Views\Collection\CollectionEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Collection\CollectionMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Author\AuthorCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Author\AuthorCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Book\BookCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Views\Controls\BookCollectionList.xaml">
+		<MauiXaml Update="Views\Controls\Book\BookCollectionList.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Favorite.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Genre\GenreCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Genre\GenreCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Location\LocationCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Location\LocationCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Rating.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Series\SeriesCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Series\SeriesCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\AuthorsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\CollectionsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\GenresView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\LocationsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\SeriesView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Library\AllBooksView.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -160,6 +247,12 @@
 		<MauiXaml Update="Views\Library\ToBeReadView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Main\SettingsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -168,6 +261,12 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\InformationPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>
 

@@ -342,6 +342,9 @@
   <data name="SearchSeries" xml:space="preserve">
     <value>Search series...</value>
   </data>
+  <data name="SearchLocations" xml:space="preserve">
+    <value>Search locations...</value>
+  </data>
   <data name="SearchAuthors" xml:space="preserve">
     <value>Search authors...</value>
   </data>
@@ -364,13 +367,16 @@
     <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
+    <value>Hide Location when Settings &gt; Turn on Hidden Location is off?</value>
+  </data>
+  <data name="HideLocation_Question" xml:space="preserve">
     <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
   </data>
-  <data name="Blank1OfBlank2Books" xml:space="preserve">
-    <value>Blank1 of Blank2 books</value>
+  <data name="Blank1OfBlank2Items" xml:space="preserve">
+    <value>Blank1 of Blank2 items</value>
   </data>
   <data name="ThereAreNoBooks" xml:space="preserve">
     <value>There are no books.</value>
@@ -530,5 +536,86 @@
   </data>
   <data name="PleaseAllowPhotoPermissionToAddCover" xml:space="preserve">
     <value>Please allow Photo permission to add cover!</value>
+  </data>
+  <data name="Locations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="ThereAreNoCollections" xml:space="preserve">
+    <value>There are no collections.</value>
+  </data>
+  <data name="ThereAreNoAuthors" xml:space="preserve">
+    <value>There are no authors.</value>
+  </data>
+  <data name="ThereAreNoGenres" xml:space="preserve">
+    <value>There are no genres.</value>
+  </data>
+  <data name="ThereAreNoSeries" xml:space="preserve">
+    <value>There are no series.</value>
+  </data>
+  <data name="ThereAreNoLocations" xml:space="preserve">
+    <value>There are no locations.</value>
+  </data>
+  <data name="AuthorView_InfoText" xml:space="preserve">
+    <value>An author is the person who created the book. You can add an author here or in the book.</value>
+  </data>
+  <data name="CollectionView_InfoText" xml:space="preserve">
+    <value>Collections are a unique way to group your books that don't fall into the other categories like if you are reading it or if it is in a specific series. You can add a collection here or in the book.</value>
+  </data>
+  <data name="GenreView_InfoText" xml:space="preserve">
+    <value>Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book.</value>
+  </data>
+  <data name="SeriesView_InfoText" xml:space="preserve">
+    <value>A series of books are books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book.</value>
+  </data>
+  <data name="LocationView_InfoText" xml:space="preserve">
+    <value>Locations are a way to group and see where your books physically are. You can add a location here or in the book.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CollectionName" xml:space="preserve">
+    <value>Collection Name</value>
+  </data>
+  <data name="EditCollection" xml:space="preserve">
+    <value>Edit Collection</value>
+  </data>
+  <data name="AddNewCollection" xml:space="preserve">
+    <value>Add New Collection</value>
+  </data>
+  <data name="AddNewSeries" xml:space="preserve">
+    <value>Add New Series</value>
+  </data>
+  <data name="AddNewAuthor" xml:space="preserve">
+    <value>Add New Author</value>
+  </data>
+  <data name="AddNewGenre" xml:space="preserve">
+    <value>Add New Genre</value>
+  </data>
+  <data name="AddNewLocation" xml:space="preserve">
+    <value>Add New Location</value>
+  </data>
+  <data name="EditSeries" xml:space="preserve">
+    <value>Edit Series</value>
+  </data>
+  <data name="EditGenre" xml:space="preserve">
+    <value>Edit Genre</value>
+  </data>
+  <data name="EditAuthor" xml:space="preserve">
+    <value>Edit Author</value>
+  </data>
+  <data name="EditLocation" xml:space="preserve">
+    <value>Edit Location</value>
+  </data>
+  <data name="SeriesName" xml:space="preserve">
+    <value>Series Name</value>
+  </data>
+  <data name="LocationName" xml:space="preserve">
+    <value>Location Name</value>
+  </data>
+  <data name="GenreName" xml:space="preserve">
+    <value>Genre Name</value>
   </data>
 </root>

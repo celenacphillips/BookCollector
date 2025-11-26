@@ -34,6 +34,9 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public string infoText;
 
+        [ObservableProperty]
+        public string? searchString;
+
         public BaseViewModel()
         {
             DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
@@ -95,6 +98,17 @@ namespace BookCollector.ViewModels
         public void SetRefreshFalse()
         {
             IsRefreshing = false;
+        }
+
+        public async Task<string?> PopupMenu(string title)
+        {
+            var edit = $"{AppStringResources.Edit}";
+            var delete = $"{AppStringResources.Delete}";
+
+            string cancel = $"{AppStringResources.Cancel}";
+            string? destruction = null;
+            string[] buttons = [edit, delete];
+            return await Shell.Current.DisplayActionSheet(title, cancel, destruction, buttons);
         }
     }
 }

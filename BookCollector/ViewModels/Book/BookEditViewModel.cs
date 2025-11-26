@@ -14,6 +14,12 @@ namespace BookCollector.ViewModels.Book
         public BookModel editedBook;
 
         [ObservableProperty]
+        public bool bookTitleValid;
+
+        [ObservableProperty]
+        public bool bookFormatNotValid;
+
+        [ObservableProperty]
         public bool bookInfo1SectionValue;
 
         [ObservableProperty]
@@ -52,6 +58,8 @@ namespace BookCollector.ViewModels.Book
         {
             SetIsBusyTrue();
 
+            ValidateEntry();
+
             BookInfo1SectionValue = true;
             ReadingDataSectionValue = true;
             ChapterListSectionValue = true;
@@ -70,6 +78,8 @@ namespace BookCollector.ViewModels.Book
             }
 
             StepperEnabled = EditedBook.BookPageTotal != 0;
+
+            // Unit test data
             ChapterList = TestData.ChapterList;
             AuthorList = TestData.AuthorList;
             SeriesList = TestData.SeriesList;
@@ -123,30 +133,50 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task SaveBook()
         {
-            EditedBook.BookSeriesGuid = SelectedSeries?.SeriesGuid;
-            EditedBook.BookCollectionGuid = SelectedCollection?.CollectionGuid;
-            EditedBook.BookGenreGuid = SelectedGenre?.GenreGuid;
+            if (BookTitleValid && !BookFormatNotValid)
+            {
+                EditedBook.BookSeriesGuid = SelectedSeries?.SeriesGuid;
+                EditedBook.BookCollectionGuid = SelectedCollection?.CollectionGuid;
+                EditedBook.BookGenreGuid = SelectedGenre?.GenreGuid;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => await EditedBook.SetDates() ),
-                Task.Run (async () => await EditedBook.SetReadingProgress() ),
-                Task.Run (async () => await EditedBook.SetPartOfSeries() ),
-                Task.Run (async () => await EditedBook.SetPartOfCollection() ),
-                Task.Run (async () => await EditedBook.SetCoverDisplay() ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => await EditedBook.SetDates() ),
+                    Task.Run (async () => await EditedBook.SetReadingProgress() ),
+                    Task.Run (async () => await EditedBook.SetPartOfSeries() ),
+                    Task.Run (async () => await EditedBook.SetPartOfCollection() ),
+                    Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                ]);
 
 #if ANDROID
-            if (Platform.CurrentActivity != null &&
-                Platform.CurrentActivity.Window != null)
-                Platform.CurrentActivity.Window.DecorView.ClearFocus();
-            #endif
+                if (Platform.CurrentActivity != null &&
+                    Platform.CurrentActivity.Window != null)
+                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
+#endif
 
-            var parameters = new Dictionary<string, object>
+                if (ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
+                {
+                    // Unit test data
+                    TestData.InsertBook(EditedBook);
+                }
+                else
+                {
+                    // Unit test data
+                    TestData.UpdateBook(EditedBook);
+                }
+
+                BookMainView view = new BookMainView(EditedBook, $"{EditedBook.BookTitle}");
+                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                await Shell.Current.Navigation.PopAsync();
+            }
+            else
             {
-                { "SelectedObject", EditedBook }
-            };
-            await Shell.Current.GoToAsync("..", parameters);
+                if (!BookTitleValid)
+                    await Shell.Current.DisplayAlert("Book Title not valid", "Book Title not valid", $"{AppStringResources.OK}");
+
+                if (BookFormatNotValid)
+                    await Shell.Current.DisplayAlert("Book Format not valid", "Book Format not valid", $"{AppStringResources.OK}");
+            }
         }
 
         [RelayCommand]
@@ -312,6 +342,26 @@ namespace BookCollector.ViewModels.Book
         public async Task UpNextToggle(bool value)
         {
             EditedBook.UpNext = value;
+        }
+
+
+        [RelayCommand]
+        public async Task ValidateBookFormat()
+        {
+            ValidateEntry();
+        }
+
+        private void ValidateEntry()
+        {
+            if (string.IsNullOrEmpty(EditedBook.BookTitle))
+                BookTitleValid = false;
+            else
+                BookTitleValid = true;
+
+            if (string.IsNullOrEmpty(EditedBook.BookFormat))
+                BookFormatNotValid = true;
+            else
+                BookFormatNotValid = false;
         }
     }
 }

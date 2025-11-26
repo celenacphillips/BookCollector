@@ -13,6 +13,7 @@ namespace BookCollector.Data
         public static ObservableCollection<SeriesModel> SeriesList { get; set; }
         public static ObservableCollection<GenreModel> GenreList { get; set; }
         public static ObservableCollection<CollectionModel> CollectionList { get; set; }
+        public static ObservableCollection<LocationModel> LocationList { get; set; }
 
         public static void AddBooksToList()
         {
@@ -21,6 +22,7 @@ namespace BookCollector.Data
             AddSeriesToList();
             AddGenresToList();
             AddCollectionsToList();
+            AddLocationsToList();
 
             BookList = new ObservableCollection<BookModel>()
             {
@@ -221,12 +223,12 @@ namespace BookCollector.Data
             SeriesList.Insert(index, series);
         }
 
-        public static void InsertAuthor(SeriesModel series)
+        public static void InsertSeries(SeriesModel series)
         {
             SeriesList.Add(series);
         }
 
-        public static void DeleteAuthor(SeriesModel series)
+        public static void DeleteSeries(SeriesModel series)
         {
             SeriesList.Remove(series);
         }
@@ -248,7 +250,7 @@ namespace BookCollector.Data
             };
         }
 
-        public static void UpdateAuthor(GenreModel genre)
+        public static void UpdateGenre(GenreModel genre)
         {
             var oldGenre = GenreList.Where(x => x.GenreGuid == genre.GenreGuid).ToList().FirstOrDefault();
             var index = GenreList.IndexOf(oldGenre);
@@ -256,12 +258,12 @@ namespace BookCollector.Data
             GenreList.Insert(index, genre);
         }
 
-        public static void InsertAuthor(GenreModel genre)
+        public static void InsertGenre(GenreModel genre)
         {
             GenreList.Add(genre);
         }
 
-        public static void DeleteAuthor(GenreModel genre)
+        public static void DeleteGenre(GenreModel genre)
         {
             GenreList.Remove(genre);
         }
@@ -283,7 +285,7 @@ namespace BookCollector.Data
             };
         }
 
-        public static void UpdateAuthor(CollectionModel collection)
+        public static void UpdateCollection(CollectionModel collection)
         {
             var oldCollection = CollectionList.Where(x => x.CollectionGuid == collection.CollectionGuid).ToList().FirstOrDefault();
             var index = CollectionList.IndexOf(oldCollection);
@@ -291,14 +293,49 @@ namespace BookCollector.Data
             CollectionList.Insert(index, collection);
         }
 
-        public static void InsertAuthor(CollectionModel collection)
+        public static void InsertCollection(CollectionModel collection)
         {
             CollectionList.Add(collection);
         }
 
-        public static void DeleteAuthor(CollectionModel collection)
+        public static void DeleteCollection(CollectionModel collection)
         {
             CollectionList.Remove(collection);
+        }
+
+        public static void AddLocationsToList()
+        {
+            LocationList = new ObservableCollection<LocationModel>()
+            {
+                new LocationModel()
+                {
+                    LocationGuid = Guid.NewGuid(),
+                    LocationName = "Room 1"
+                },
+                new LocationModel()
+                {
+                    LocationGuid = Guid.NewGuid(),
+                    LocationName = "Room 2"
+                }
+            };
+        }
+
+        public static void UpdateLocation(LocationModel location)
+        {
+            var oldLocation = LocationList.Where(x => x.LocationGuid == location.LocationGuid).ToList().FirstOrDefault();
+            var index = LocationList.IndexOf(oldLocation);
+            LocationList.Remove(oldLocation);
+            LocationList.Insert(index, location);
+        }
+
+        public static void InsertLocation(LocationModel location)
+        {
+            LocationList.Add(location);
+        }
+
+        public static void DeleteLocation(LocationModel location)
+        {
+            LocationList.Remove(location);
         }
     }
 }

@@ -28,5 +28,57 @@ namespace BookCollector.Data
         {
             return bookList.ToObservableCollection();
         }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInCollectionList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInGenreList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookGenreGuid == inputGuid).ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInSeriesList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookSeriesGuid == inputGuid).ToObservableCollection();
+        }
+
+        // TO DO
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInAuthorList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
+        // TO DO
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInLocationList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<CollectionModel>> GetAllCollectionsList(ObservableCollection<CollectionModel> collectionList)
+        {
+            return collectionList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<GenreModel>> GetAllGenresList(ObservableCollection<GenreModel> genreList)
+        {
+            return genreList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<SeriesModel>> GetAllSeriesList(ObservableCollection<SeriesModel> seriesList)
+        {
+            return seriesList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<LocationModel>> GetAllLocationsList(ObservableCollection<LocationModel> locationList)
+        {
+            return locationList.ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<AuthorModel>> GetAllAuthorsList(ObservableCollection<AuthorModel> authorList)
+        {
+            return authorList.ToObservableCollection();
+        }
     }
 }

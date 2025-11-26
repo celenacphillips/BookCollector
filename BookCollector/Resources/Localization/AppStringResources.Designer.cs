@@ -79,11 +79,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Author.
+        /// </summary>
+        internal static string AddNewAuthor {
+            get {
+                return ResourceManager.GetString("AddNewAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Book.
         /// </summary>
         internal static string AddNewBook {
             get {
                 return ResourceManager.GetString("AddNewBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Collection.
+        /// </summary>
+        internal static string AddNewCollection {
+            get {
+                return ResourceManager.GetString("AddNewCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Genre.
+        /// </summary>
+        internal static string AddNewGenre {
+            get {
+                return ResourceManager.GetString("AddNewGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Location.
+        /// </summary>
+        internal static string AddNewLocation {
+            get {
+                return ResourceManager.GetString("AddNewLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Series.
+        /// </summary>
+        internal static string AddNewSeries {
+            get {
+                return ResourceManager.GetString("AddNewSeries", resourceCulture);
             }
         }
         
@@ -187,6 +232,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An author is the person who created the book. You can add an author here or in the book..
+        /// </summary>
+        internal static string AuthorView_InfoText {
+            get {
+                return ResourceManager.GetString("AuthorView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Barcode Scanned!.
         /// </summary>
         internal static string BarcodeScanned {
@@ -196,11 +250,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blank1 of Blank2 books.
+        ///   Looks up a localized string similar to Blank1 of Blank2 items.
         /// </summary>
-        internal static string Blank1OfBlank2Books {
+        internal static string Blank1OfBlank2Items {
             get {
-                return ResourceManager.GetString("Blank1OfBlank2Books", resourceCulture);
+                return ResourceManager.GetString("Blank1OfBlank2Items", resourceCulture);
             }
         }
         
@@ -448,6 +502,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapter Name.
         /// </summary>
         internal static string ChapterName {
@@ -493,11 +556,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection Name.
+        /// </summary>
+        internal static string CollectionName {
+            get {
+                return ResourceManager.GetString("CollectionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collections.
         /// </summary>
         internal static string Collections {
             get {
                 return ResourceManager.GetString("Collections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collections are a unique way to group your books that don&apos;t fall into the other categories like if you are reading it or if it is in a specific series. You can add a collection here or in the book..
+        /// </summary>
+        internal static string CollectionView_InfoText {
+            get {
+                return ResourceManager.GetString("CollectionView_InfoText", resourceCulture);
             }
         }
         
@@ -565,11 +646,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Author.
+        /// </summary>
+        internal static string EditAuthor {
+            get {
+                return ResourceManager.GetString("EditAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Book.
         /// </summary>
         internal static string EditBook {
             get {
                 return ResourceManager.GetString("EditBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Collection.
+        /// </summary>
+        internal static string EditCollection {
+            get {
+                return ResourceManager.GetString("EditCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Genre.
+        /// </summary>
+        internal static string EditGenre {
+            get {
+                return ResourceManager.GetString("EditGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Location.
+        /// </summary>
+        internal static string EditLocation {
+            get {
+                return ResourceManager.GetString("EditLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Series.
+        /// </summary>
+        internal static string EditSeries {
+            get {
+                return ResourceManager.GetString("EditSeries", resourceCulture);
             }
         }
         
@@ -646,11 +772,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Genre Name.
+        /// </summary>
+        internal static string GenreName {
+            get {
+                return ResourceManager.GetString("GenreName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genres.
         /// </summary>
         internal static string Genres {
             get {
                 return ResourceManager.GetString("Genres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book..
+        /// </summary>
+        internal static string GenreView_InfoText {
+            get {
+                return ResourceManager.GetString("GenreView_InfoText", resourceCulture);
             }
         }
         
@@ -711,6 +855,15 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Hide Series when Settings &gt; Turn on Hidden Series is off?.
         /// </summary>
+        internal static string HideLocation_Question {
+            get {
+                return ResourceManager.GetString("HideLocation_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Location when Settings &gt; Turn on Hidden Location is off?.
+        /// </summary>
         internal static string HideSeries_Question {
             get {
                 return ResourceManager.GetString("HideSeries_Question", resourceCulture);
@@ -750,6 +903,42 @@ namespace BookCollector.Resources.Localization {
         internal static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location.
+        /// </summary>
+        internal static string Location {
+            get {
+                return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Name.
+        /// </summary>
+        internal static string LocationName {
+            get {
+                return ResourceManager.GetString("LocationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locations.
+        /// </summary>
+        internal static string Locations {
+            get {
+                return ResourceManager.GetString("Locations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locations are a way to group and see where your books physically are. You can add a location here or in the book..
+        /// </summary>
+        internal static string LocationView_InfoText {
+            get {
+                return ResourceManager.GetString("LocationView_InfoText", resourceCulture);
             }
         }
         
@@ -1078,6 +1267,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search locations....
+        /// </summary>
+        internal static string SearchLocations {
+            get {
+                return ResourceManager.GetString("SearchLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search series....
         /// </summary>
         internal static string SearchSeries {
@@ -1168,6 +1366,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series Name.
+        /// </summary>
+        internal static string SeriesName {
+            get {
+                return ResourceManager.GetString("SeriesName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A series of books are books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book..
+        /// </summary>
+        internal static string SeriesView_InfoText {
+            get {
+                return ResourceManager.GetString("SeriesView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
@@ -1195,11 +1411,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are no authors..
+        /// </summary>
+        internal static string ThereAreNoAuthors {
+            get {
+                return ResourceManager.GetString("ThereAreNoAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no books..
         /// </summary>
         internal static string ThereAreNoBooks {
             get {
                 return ResourceManager.GetString("ThereAreNoBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no collections..
+        /// </summary>
+        internal static string ThereAreNoCollections {
+            get {
+                return ResourceManager.GetString("ThereAreNoCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no genres..
+        /// </summary>
+        internal static string ThereAreNoGenres {
+            get {
+                return ResourceManager.GetString("ThereAreNoGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no locations..
+        /// </summary>
+        internal static string ThereAreNoLocations {
+            get {
+                return ResourceManager.GetString("ThereAreNoLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no series..
+        /// </summary>
+        internal static string ThereAreNoSeries {
+            get {
+                return ResourceManager.GetString("ThereAreNoSeries", resourceCulture);
             }
         }
         

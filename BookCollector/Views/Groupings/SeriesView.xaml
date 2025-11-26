@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="BookCollector.Views.Groupings.SeriesView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Groupings"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls.Series"
+             x:DataType="viewModel:SeriesViewModel"
+             Title="{x:Static localization:AppStringResources.Series}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/filter_icon_light.svg, Dark=Icons/filter_icon_dark.svg}"
+                     Command="{Binding FilterPopupCommand}"
+                     IsEnabled="False"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/sort_icon_light.svg, Dark=Icons/sort_icon_dark.svg}"
+                     Command="{Binding SortPopupCommand}"
+                     IsEnabled="False"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/plus_icon_light.svg, Dark=Icons/plus_icon_dark.svg}"
+                     Command="{Binding AddSeriesCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                    <Label Text="{Binding TotalSeriesString}"
+                           HorizontalOptions="End"
+                           Margin="0,0,20,0"
+                           TextColor="{DynamicResource Primary}"
+                           Style="{StaticResource SubTitle}"/>
+
+                    <ScrollView>
+                        <!-- This is needed to allow the refresh view to work. -->
+
+                        <VerticalStackLayout Padding="10">
+                            <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchSeries}"
+                                       Text="{Binding SearchString}">
+                                <SearchBar.Behaviors>
+                                    <toolkit:EventToCommandBehavior Command="{Binding SearchOnSeriesCommand}"
+                                                                    CommandParameter="{Binding SearchString}"
+                                                                    EventName="TextChanged" />
+                                </SearchBar.Behaviors>
+                            </SearchBar>
+
+                            <controls:SeriesCollectionList/>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </RefreshView>
+        </StackLayout>
+
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+    </AbsoluteLayout>
+    
+</ContentPage>

@@ -24,9 +24,6 @@ namespace BookCollector.ViewModels
         public int filteredBooksCount;
 
         [ObservableProperty]
-        public string? searchString;
-
-        [ObservableProperty]
         public static ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
@@ -144,7 +141,7 @@ namespace BookCollector.ViewModels
 
             FilteredBooksCount = FilteredBookList.Count;
 
-            TotalBooksString = AppStringResources.Blank1OfBlank2Books.Replace("Blank1", FilteredBooksCount.ToString()).Replace("Blank2", TotalBooksCount.ToString()).Replace("books", TotalBooksCount == 1 ? "book" : "book");
+            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
         }
@@ -158,21 +155,16 @@ namespace BookCollector.ViewModels
             SelectedBook = null;
         }
 
-        // TO DO:
-        // Fix Add Book to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddBook()
         {
             SetIsBusyTrue();
 
-            BookModel newBook = new BookModel();
-
-            BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
-            TestData.InsertBook(newBook);
+            BookEditView view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            //SetIsBusyFalse();
+            SetIsBusyFalse();
         }
 
         [RelayCommand]

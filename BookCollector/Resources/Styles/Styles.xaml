@@ -420,6 +420,11 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
     </Style>
 
+    <Style x:Key="Header_Warning" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Warning}, Dark={DynamicResource Warning}}" />
+    </Style>
+
     <Style x:Key="SubTitle" TargetType="Span">
         <Setter Property="FontAttributes" Value="Italic" />
     </Style>

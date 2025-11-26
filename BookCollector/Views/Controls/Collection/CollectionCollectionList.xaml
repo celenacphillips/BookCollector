@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BookCollector.Views.Controls.BookCollectionList"
+             x:Class="BookCollector.Views.Controls.Collection.CollectionCollectionList"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
-             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
-             x:DataType="viewModel:BookBaseViewModel">
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls.Collection"
+             x:DataType="viewModel:CollectionBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredBookList}"
+    <CollectionView ItemsSource="{Binding FilteredCollectionList}"
                     SelectionMode="Single"
-                    SelectedItem="{Binding SelectedBook}"
-                    SelectionChangedCommand="{Binding BookSelectionChangedCommand}"
-                    SelectionChangedCommandParameter="{Binding SelectedBook}"
+                    SelectedItem="{Binding SelectedCollection}"
+                    SelectionChangedCommand="{Binding CollectionSelectionChangedCommand}"
                     ItemSizingStrategy="MeasureAllItems"
                     HeightRequest="{Binding CollectionViewHeight}">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <VerticalStackLayout>
-                    <controls:BookCollectionItem/>
+                    <controls:CollectionCollectionItem/>
                 </VerticalStackLayout>
             </DataTemplate>
         </CollectionView.ItemTemplate>
@@ -33,7 +32,7 @@
                 <VerticalStackLayout HorizontalOptions="Center"
                                      HeightRequest="200"
                                      VerticalOptions="Start">
-                    <Label Text="{x:Static localization:AppStringResources.ThereAreNoBooks}"
+                    <Label Text="{x:Static localization:AppStringResources.ThereAreNoCollections}"
                            Margin="10,25,10,10"
                            HorizontalTextAlignment="Center"
                            Style="{StaticResource SubTitle}"/>
@@ -41,4 +40,5 @@
             </ContentView>
         </CollectionView.EmptyView>
     </CollectionView>
+    
 </ContentView>
