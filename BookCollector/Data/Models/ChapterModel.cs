@@ -16,6 +16,11 @@ namespace BookCollector.Data.Models
         public int ChapterOrder { get; set; }
         public Guid BookGuid { get; set; }
 
+        public ChapterModel()
+        {
+            ChapterGuid = Guid.NewGuid();
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();

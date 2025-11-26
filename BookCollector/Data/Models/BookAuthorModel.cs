@@ -10,9 +10,9 @@ namespace BookCollector.Data.Models
         public Guid AuthorGuid { get; set; }
         public Guid BookGuid { get; set; }
 
-    public object Clone()
-    {
-        return this.MemberwiseClone();
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
-}
 }

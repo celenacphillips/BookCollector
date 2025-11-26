@@ -20,6 +20,11 @@ namespace BookCollector.Data.Models
         public double TotalCostOfBooks { get; set; }
         public int? ID { get; set; }
 
+        public GenreModel()
+        {
+            GenreGuid = Guid.NewGuid();
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();

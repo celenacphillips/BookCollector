@@ -25,6 +25,11 @@ namespace BookCollector.Data.Models
         public double TotalCostOfBooks { get; set; }
         public int? ID { get; set; }
 
+        public LocationModel()
+        {
+            LocationGuid = Guid.NewGuid();
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();

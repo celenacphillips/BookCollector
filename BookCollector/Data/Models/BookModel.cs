@@ -1,19 +1,15 @@
 ﻿using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
-using System.ComponentModel.DataAnnotations;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableValidator, ICloneable
+    public partial class BookModel : ObservableObject, ICloneable
     {
         [PrimaryKey]
         public Guid? BookGuid { get; set; }
 
         [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Field is required.")]
-        [MinLength(2)]
         public string? bookTitle;
         [ObservableProperty]
         public double? bookNumberInSeries;
@@ -79,6 +75,11 @@ namespace BookCollector.Data.Models
         public string? partOfSeries;
         [ObservableProperty]
         public string? partOfCollection;
+
+        public BookModel()
+        {
+            BookGuid = Guid.NewGuid();
+        }
 
         public string PublisherPublishDateString
         {

@@ -23,6 +23,11 @@ namespace BookCollector.Data.Models
         public int SeriesTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
 
+        public SeriesModel()
+        {
+            SeriesGuid = Guid.NewGuid();
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();
