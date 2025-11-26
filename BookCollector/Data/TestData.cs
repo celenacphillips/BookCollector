@@ -15,6 +15,8 @@ namespace BookCollector.Data
         public static ObservableCollection<CollectionModel> CollectionList { get; set; }
         public static ObservableCollection<LocationModel> LocationList { get; set; }
 
+        public static ObservableCollection<BookAuthorModel> BookAuthorList { get; set; }
+
         public static void AddBooksToList()
         {
             AddChaptersToList();
@@ -28,9 +30,7 @@ namespace BookCollector.Data
             {
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "Reading Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookStartDate = "11/13/2025",
@@ -38,7 +38,6 @@ namespace BookCollector.Data
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -52,9 +51,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "A Read Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookStartDate = "11/13/2025",
@@ -63,7 +60,6 @@ namespace BookCollector.Data
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -74,16 +70,13 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "To Be Read Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookPageRead = 0,
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -94,12 +87,26 @@ namespace BookCollector.Data
                 }
             };
 
+            foreach (var chapter in ChapterList)
+            {
+                chapter.BookGuid = (Guid)BookList[0].BookGuid;
+            }
+
+            BookAuthorList =
+            [
+                new BookAuthorModel()
+                {
+                    BookGuid = (Guid)BookList[0].BookGuid,
+                    AuthorGuid = (Guid)AuthorList[0].AuthorGuid
+                },
+            ];
+
             foreach (var book in BookList)
             {
                 book.SetReadingProgress();
                 book.SetCoverDisplay();
+                book.SetAuthorListString(BookAuthorList, AuthorList);
             }
-
         }
 
         public static void UpdateBook(BookModel book)
@@ -126,14 +133,12 @@ namespace BookCollector.Data
             {
                 new ChapterModel()
                 {
-                    ChapterGuid = Guid.NewGuid(),
                     ChapterName = "Chapter One",
                     PageRange = "1-5",
                     ChapterOrder = 0,
                 },
                 new ChapterModel()
                 {
-                    ChapterGuid = Guid.NewGuid(),
                     ChapterName = "Chapter Two",
                     PageRange = "5-10",
                     ChapterOrder = 1,
@@ -165,13 +170,11 @@ namespace BookCollector.Data
             {
                 new AuthorModel()
                 {
-                    AuthorGuid = Guid.NewGuid(),
                     FirstName = "First1",
                     LastName = "Last1"
                 },
                 new AuthorModel()
                 {
-                    AuthorGuid= Guid.NewGuid(),
                     FirstName = "First2",
                     LastName = "Last2",
                 }
@@ -202,14 +205,12 @@ namespace BookCollector.Data
             {
                 new SeriesModel()
                 {
-                    SeriesGuid = Guid.NewGuid(),
                     SeriesName = "Series 1",
                     TotalBooksInSeries = "5"
 
                 },
                 new SeriesModel()
                 {
-                    SeriesGuid = Guid.NewGuid(),
                     SeriesName = "Series 2",
                 }
             };
@@ -239,12 +240,10 @@ namespace BookCollector.Data
             {
                 new GenreModel()
                 {
-                    GenreGuid = Guid.NewGuid(),
                     GenreName = "Genre 1"
                 },
                 new GenreModel()
                 {
-                    GenreGuid = Guid.NewGuid(),
                     GenreName = "Genre 2"
                 }
             };
@@ -274,12 +273,10 @@ namespace BookCollector.Data
             {
                 new CollectionModel()
                 {
-                    CollectionGuid = Guid.NewGuid(),
                     CollectionName = "Collection 1"
                 },
                 new CollectionModel()
                 {
-                    CollectionGuid = Guid.NewGuid(),
                     CollectionName = "Collection 2"
                 }
             };
@@ -309,12 +306,10 @@ namespace BookCollector.Data
             {
                 new LocationModel()
                 {
-                    LocationGuid = Guid.NewGuid(),
                     LocationName = "Room 1"
                 },
                 new LocationModel()
                 {
-                    LocationGuid = Guid.NewGuid(),
                     LocationName = "Room 2"
                 }
             };

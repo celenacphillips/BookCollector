@@ -103,7 +103,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
+            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -116,10 +116,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(selected, selected.CollectionName);
-            CollectionEditViewModel bindingContext = new CollectionEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditCollection}";
-            view.BindingContext = bindingContext;
+            CollectionEditView view = new CollectionEditView(selected, $"{AppStringResources.EditCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 

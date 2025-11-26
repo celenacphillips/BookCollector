@@ -4,6 +4,7 @@ using BookCollector.Resources.Localization;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -38,12 +39,19 @@ namespace BookCollector.ViewModels.Book
             }
 
             // Unit test data
-            ChapterList = TestData.ChapterList;
-            AuthorList = TestData.AuthorList;
-            SelectedGenre = TestData.GenreList.FirstOrDefault(x => x.GenreGuid == SelectedBook.BookGenreGuid);
+            var chapterList = TestData.ChapterList;
+            var authorList = TestData.AuthorList;
+            var genreList = TestData.GenreList;
+            var locationList = TestData.LocationList;
+            var bookAuthorList = TestData.BookAuthorList;
 
             Task.WaitAll(
             [
+                Task.Run (async () => bookAuthorList  = await FilterLists.GetAllBookAuthorsForBook(bookAuthorList, SelectedBook.BookGuid) ),
+                Task.Run (async () => AuthorList = await FilterLists.GetAllAuthorsForBook(bookAuthorList, authorList, SelectedBook.BookGuid) ),
+                Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, SelectedBook.BookGuid) ),
+                Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, SelectedBook.BookGenreGuid) ),
+                Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, SelectedBook.BookLocationGuid) ),
                 Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
                 Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
                 Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
@@ -74,7 +82,7 @@ namespace BookCollector.ViewModels.Book
         {
             SetIsBusyTrue();
 
-            BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}");
+            BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)_view);
 
             await Shell.Current.Navigation.PushAsync(view);
 

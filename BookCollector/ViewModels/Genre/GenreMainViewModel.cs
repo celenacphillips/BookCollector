@@ -13,15 +13,13 @@ namespace BookCollector.ViewModels.Genre
 {
     public partial class GenreMainViewModel : GenreBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public GenreMainViewModel(GenreModel genre, ContentPage view)
         {
             _view = view;
 
             SelectedGenre = genre;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{SelectedGenre.GenreName}")}";
         }
 
         public async Task SetViewModelData()

@@ -13,15 +13,13 @@ namespace BookCollector.ViewModels.Author
 {
     public partial class AuthorMainViewModel : AuthorBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public AuthorMainViewModel(AuthorModel author, ContentPage view)
         {
             _view = view;
 
             SelectedAuthor = author;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.AuthorMainView_InfoText.Replace("author", $"{SelectedAuthor.FullName}")}";
         }
 
         public async Task SetViewModelData()
@@ -30,10 +28,12 @@ namespace BookCollector.ViewModels.Author
 
             // Unit test data
             var bookList = TestData.BookList;
+            var bookAuthorList = TestData.BookAuthorList;
 
             Task.WaitAll(
             [
-                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookList, SelectedAuthor.AuthorGuid) ),
+                Task.Run (async () => bookAuthorList  = await FilterLists.GetAllBookAuthorsForAuthor(bookAuthorList, SelectedAuthor.AuthorGuid) ),
+                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
             ]);
 
             TotalBooksCount = FullBookList.Count;

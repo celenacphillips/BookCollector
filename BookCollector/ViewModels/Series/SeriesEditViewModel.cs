@@ -20,14 +20,13 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         public bool seriesNameValid;
 
-        // TO DO
-        // Set InfoText string - 11/26/2025
+        public bool InsertMainViewBefore {  get; set; }
+
         public SeriesEditViewModel(SeriesModel series, ContentPage view)
         {
             _view = view;
 
             EditedSeries = (SeriesModel)series.Clone();
-            //InfoText = string.Empty;
         }
 
         public async Task SetViewModelData()
@@ -60,9 +59,12 @@ namespace BookCollector.ViewModels.Series
                     // Unit test data
                     TestData.UpdateSeries(EditedSeries);
                 }
-
-                SeriesMainView view = new SeriesMainView(EditedSeries, $"{EditedSeries.SeriesName}");
-                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                if (InsertMainViewBefore)
+                {
+                    SeriesMainView view = new SeriesMainView(EditedSeries, $"{EditedSeries.SeriesName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                }
+                
                 await Shell.Current.Navigation.PopAsync();
             }
         }

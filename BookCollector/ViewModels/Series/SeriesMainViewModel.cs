@@ -13,15 +13,13 @@ namespace BookCollector.ViewModels.Series
 {
     public partial class SeriesMainViewModel : SeriesBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public SeriesMainViewModel(SeriesModel series, ContentPage view)
         {
             _view = view;
 
             SelectedSeries = series;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{SelectedSeries.SeriesName}")}";
         }
 
         public async Task SetViewModelData()

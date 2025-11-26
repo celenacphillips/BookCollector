@@ -101,7 +101,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
+            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -113,10 +113,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(selected, selected.SeriesName);
-            SeriesEditViewModel bindingContext = new SeriesEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditSeries}";
-            view.BindingContext = bindingContext;
+            SeriesEditView view = new SeriesEditView(selected, $"{AppStringResources.EditSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 

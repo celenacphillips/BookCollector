@@ -20,14 +20,13 @@ namespace BookCollector.ViewModels.Location
         [ObservableProperty]
         public bool locationNameValid;
 
-        // TO DO
-        // Set InfoText string - 11/26/2025
+        public bool InsertMainViewBefore { get; set; }
+
         public LocationEditViewModel(LocationModel location, ContentPage view)
         {
             _view = view;
 
             EditedLocation = (LocationModel)location.Clone();
-            //InfoText = string.Empty;
         }
 
         public async Task SetViewModelData()
@@ -61,8 +60,13 @@ namespace BookCollector.ViewModels.Location
                     TestData.UpdateLocation(EditedLocation);
                 }
 
-                LocationMainView view = new LocationMainView(EditedLocation, $"{EditedLocation.LocationName}");
-                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                if (InsertMainViewBefore)
+                {
+                    LocationMainView view = new LocationMainView(EditedLocation, $"{EditedLocation.LocationName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+
+                }
+
                 await Shell.Current.Navigation.PopAsync();
             }
         }

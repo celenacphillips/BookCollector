@@ -1,6 +1,7 @@
 ﻿using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.Data.Models
 {
@@ -39,8 +40,6 @@ namespace BookCollector.Data.Models
         public string? bookStartDate;
         [ObservableProperty]
         public string? bookEndDate;
-        [ObservableProperty]
-        public string? bookLocation;
         [ObservableProperty]
         public string? bookComments;
         [ObservableProperty]
@@ -92,6 +91,7 @@ namespace BookCollector.Data.Models
         public Guid? BookSeriesGuid { get; set; }
         public Guid? BookCollectionGuid { get; set; }
         public Guid? BookGenreGuid { get; set; }
+        public Guid? BookLocationGuid { get; set; }
         public string? BookImageBase64String { get; set; }
         public string? AuthorListString { get; set; }
         public string? SelectedAuthorString { get; set; }
@@ -185,6 +185,22 @@ namespace BookCollector.Data.Models
         {
             this.HasBookCover = this.BookCoverBytes != null;
             this.HasNoBookCover = this.BookCoverBytes == null;
+        }
+
+        public async Task SetAuthorListString(ObservableCollection<BookAuthorModel> bookAuthorList, ObservableCollection<AuthorModel> authorList)
+        {
+            if (bookAuthorList.Any(x => x.BookGuid == this.BookGuid))
+            {
+                for (int i = 0; i < bookAuthorList.Count; i++)
+                {
+                    var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
+
+                    if (i == bookAuthorList.Count - 1)
+                        this.AuthorListString += author.ReverseFullName;
+                    else
+                        this.AuthorListString += $"{author.ReverseFullName}; ";
+                }
+            }
         }
     }
 }

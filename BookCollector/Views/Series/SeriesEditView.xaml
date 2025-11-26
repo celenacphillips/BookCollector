@@ -57,6 +57,18 @@
                     </Editor>
                     <!-- Series Name -->
 
+                    <!-- Total Books in Series -->
+                    <Label Text="{x:Static localization:AppStringResources.TotalBooksInSeries}"
+                           Style="{StaticResource Header}"
+                           HorizontalOptions="Center"/>
+                    <Editor Text="{Binding EditedSeries.TotalBooksInSeries}"
+                            Placeholder="{x:Static localization:AppStringResources.TotalBooksInSeries}"
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric">
+                    </Editor>
+                    <!-- Total Books in Series -->
+
                     <!-- Hide Series -->
                     <VerticalStackLayout Margin="10">
                         <Label Text="{x:Static localization:AppStringResources.HideSeries_Question}"

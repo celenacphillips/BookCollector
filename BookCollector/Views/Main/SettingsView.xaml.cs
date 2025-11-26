@@ -22,7 +22,7 @@ public partial class SettingsView : ContentPage
     // Add other languages - 11/12/2025
     // Try to add color preview in the picker - 11/12/2025
     // Add currency option - 11/13/2025
-    // Add Hide Collection, Series, Genre, and Author - 11/13/2025
+    // Add Hide Collection, Series, Genre, Author, Location - 11/13/2025
     // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
 
     public SettingsView()

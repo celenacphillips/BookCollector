@@ -102,7 +102,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
+            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -114,10 +114,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(selected, selected.LocationName);
-            LocationEditViewModel bindingContext = new LocationEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditLocation}";
-            view.BindingContext = bindingContext;
+            LocationEditView view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 

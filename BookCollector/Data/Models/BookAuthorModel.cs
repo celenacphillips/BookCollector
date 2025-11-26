@@ -10,6 +10,11 @@ namespace BookCollector.Data.Models
         public Guid AuthorGuid { get; set; }
         public Guid BookGuid { get; set; }
 
+        public BookAuthorModel()
+        {
+            BookAuthorGuid = Guid.NewGuid();
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();

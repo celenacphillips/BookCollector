@@ -101,7 +101,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
+            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -113,10 +113,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(selected, selected.GenreName);
-            GenreEditViewModel bindingContext = new GenreEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditGenre}";
-            view.BindingContext = bindingContext;
+            GenreEditView view = new GenreEditView(selected, $"{AppStringResources.EditGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 

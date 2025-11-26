@@ -367,10 +367,10 @@
     <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
-    <value>Hide Location when Settings &gt; Turn on Hidden Location is off?</value>
+    <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
   </data>
   <data name="HideLocation_Question" xml:space="preserve">
-    <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
+    <value>Hide Location when Settings &gt; Turn on Hidden Location is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
@@ -469,7 +469,7 @@
     <value>This is a collective list of all the books you own.</value>
   </data>
   <data name="BookMainView_InfoText" xml:space="preserve">
-    <value>You can view all the information related to book. You can also tap on some of the data to copy.</value>
+    <value>You can view all the information related to 'book'. You can also tap on some of the data to copy.</value>
   </data>
   <data name="ToBeReadView_InfoText" xml:space="preserve">
     <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
@@ -617,5 +617,26 @@
   </data>
   <data name="GenreName" xml:space="preserve">
     <value>Genre Name</value>
+  </data>
+  <data name="SelectALocation" xml:space="preserve">
+    <value>Select a Location</value>
+  </data>
+  <data name="TotalBooksInSeries" xml:space="preserve">
+    <value>Total Books in Series</value>
+  </data>
+  <data name="CollectionMainView_InfoText" xml:space="preserve">
+    <value>This is a list of books you have in 'collection'. You can click from here to add a new or existing book.</value>
+  </data>
+  <data name="AuthorMainView_InfoText" xml:space="preserve">
+    <value>This is a list of books you have for 'author'. You can click from here to add a new or existing book.</value>
+  </data>
+  <data name="GenreMainView_InfoText" xml:space="preserve">
+    <value>This is a list of books you have in 'genre'. You can click from here to add a new or existing book.</value>
+  </data>
+  <data name="SeriesMainView_InfoText" xml:space="preserve">
+    <value>This is a list of books you have in 'series'. You can click from here to add a new or existing book.</value>
+  </data>
+  <data name="LocationMainView_InfoText" xml:space="preserve">
+    <value>This is a list of books you have in 'location'. You can click from here to add a new or existing book.</value>
   </data>
 </root>

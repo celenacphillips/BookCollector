@@ -7,10 +7,12 @@ public partial class BookEditView : ContentPage
 {
     private BookEditViewModel _viewModel { get; set; }
 
-    public BookEditView(BookModel book, string viewTitle)
+    public BookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, BookMainView? mainViewBefore = null)
 	{
         BookEditViewModel viewModel = new BookEditViewModel(book, this);
         viewModel.ViewTitle = viewTitle;
+        viewModel.RemoveMainViewBefore = removeMainViewBefore;
+        viewModel.MainViewBefore = mainViewBefore;
         _viewModel = viewModel;
         BindingContext = viewModel;
 

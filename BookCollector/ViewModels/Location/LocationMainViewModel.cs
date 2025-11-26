@@ -13,15 +13,13 @@ namespace BookCollector.ViewModels.Location
 {
     public partial class LocationMainViewModel : LocationBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public LocationMainViewModel(LocationModel location, ContentPage view)
         {
             _view = view;
 
             SelectedLocation = location;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.LocationMainView_InfoText.Replace("location", $"{SelectedLocation.LocationName}")}";
         }
 
         public async Task SetViewModelData()
@@ -54,21 +52,19 @@ namespace BookCollector.ViewModels.Location
             SetRefreshFalse();
         }
 
-        // TO DO
-        // Set up AddNewBook - 11/26/2025
         [RelayCommand]
         public async Task AddNewBook()
         {
             SetIsBusyTrue();
 
-            //BookModel newBook = new BookModel()
-            //{
-            //    BookCollectionGuid = SelectedCollection.CollectionGuid,
-            //};
+            BookModel newBook = new BookModel()
+            {
+                BookLocationGuid = SelectedLocation.LocationGuid,
+            };
 
-            //BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
+            BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
 
-            //await Shell.Current.Navigation.PushAsync(view);
+            await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }

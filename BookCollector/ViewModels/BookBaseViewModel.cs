@@ -114,7 +114,10 @@ namespace BookCollector.ViewModels
         public GenreModel? selectedGenre;
 
         [ObservableProperty]
-        public static ObservableCollection<string> bookFormats;
+        public LocationModel? selectedLocation;
+
+        [ObservableProperty]
+        public static ObservableCollection<string>? bookFormats;
 
         [ObservableProperty]
         public ImageSource? bookCover;
