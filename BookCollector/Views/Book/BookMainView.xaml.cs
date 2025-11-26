@@ -3,11 +3,9 @@ using BookCollector.ViewModels.Book;
 
 namespace BookCollector.Views.Book;
 
-[QueryProperty(nameof(ReceivedObject), "SelectedObject")]
 public partial class BookMainView : ContentPage
 {
     private BookMainViewModel _viewModel;
-    public BookModel? ReceivedObject { get; set; }
 
     public BookMainView(BookModel book, string viewTitle)
 	{
@@ -15,10 +13,11 @@ public partial class BookMainView : ContentPage
         viewModel.ViewTitle = viewTitle;
         _viewModel = viewModel;
         BindingContext = viewModel;
+
         InitializeComponent();
 	}
 
-    // Need this to make sure new book info populates when you
+    // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {

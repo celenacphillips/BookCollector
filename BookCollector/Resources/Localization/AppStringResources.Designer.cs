@@ -79,11 +79,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Author.
+        /// </summary>
+        internal static string AddNewAuthor {
+            get {
+                return ResourceManager.GetString("AddNewAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Book.
         /// </summary>
         internal static string AddNewBook {
             get {
                 return ResourceManager.GetString("AddNewBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Collection.
+        /// </summary>
+        internal static string AddNewCollection {
+            get {
+                return ResourceManager.GetString("AddNewCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Genre.
+        /// </summary>
+        internal static string AddNewGenre {
+            get {
+                return ResourceManager.GetString("AddNewGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Location.
+        /// </summary>
+        internal static string AddNewLocation {
+            get {
+                return ResourceManager.GetString("AddNewLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Series.
+        /// </summary>
+        internal static string AddNewSeries {
+            get {
+                return ResourceManager.GetString("AddNewSeries", resourceCulture);
             }
         }
         
@@ -511,6 +556,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection Name.
+        /// </summary>
+        internal static string CollectionName {
+            get {
+                return ResourceManager.GetString("CollectionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collections.
         /// </summary>
         internal static string Collections {
@@ -592,11 +646,56 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Author.
+        /// </summary>
+        internal static string EditAuthor {
+            get {
+                return ResourceManager.GetString("EditAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Book.
         /// </summary>
         internal static string EditBook {
             get {
                 return ResourceManager.GetString("EditBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Collection.
+        /// </summary>
+        internal static string EditCollection {
+            get {
+                return ResourceManager.GetString("EditCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Genre.
+        /// </summary>
+        internal static string EditGenre {
+            get {
+                return ResourceManager.GetString("EditGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Location.
+        /// </summary>
+        internal static string EditLocation {
+            get {
+                return ResourceManager.GetString("EditLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Series.
+        /// </summary>
+        internal static string EditSeries {
+            get {
+                return ResourceManager.GetString("EditSeries", resourceCulture);
             }
         }
         
@@ -669,6 +768,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Genre {
             get {
                 return ResourceManager.GetString("Genre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genre Name.
+        /// </summary>
+        internal static string GenreName {
+            get {
+                return ResourceManager.GetString("GenreName", resourceCulture);
             }
         }
         
@@ -747,6 +855,15 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Hide Series when Settings &gt; Turn on Hidden Series is off?.
         /// </summary>
+        internal static string HideLocation_Question {
+            get {
+                return ResourceManager.GetString("HideLocation_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Location when Settings &gt; Turn on Hidden Location is off?.
+        /// </summary>
         internal static string HideSeries_Question {
             get {
                 return ResourceManager.GetString("HideSeries_Question", resourceCulture);
@@ -795,6 +912,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Name.
+        /// </summary>
+        internal static string LocationName {
+            get {
+                return ResourceManager.GetString("LocationName", resourceCulture);
             }
         }
         
@@ -1236,6 +1362,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Series {
             get {
                 return ResourceManager.GetString("Series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series Name.
+        /// </summary>
+        internal static string SeriesName {
+            get {
+                return ResourceManager.GetString("SeriesName", resourceCulture);
             }
         }
         

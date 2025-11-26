@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data.Models;
+using BookCollector.Views.Author;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels
 {
-    public partial class AuthorBaseViewModel : BaseViewModel
+    public partial class AuthorBaseViewModel : BookBaseViewModel
     {
         [ObservableProperty]
         public int totalAuthorsCount;
@@ -27,11 +28,16 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public AuthorModel? selectedAuthor;
 
-        // TO DO
         [RelayCommand]
         public async Task AuthorSelectionChanged()
         {
+            if (SelectedAuthor != null)
+            {
+                AuthorMainView view = new AuthorMainView(SelectedAuthor, SelectedAuthor.FullName);
 
+                await Shell.Current.Navigation.PushAsync(view);
+                SelectedAuthor = null;
+            }
         }
     }
 }

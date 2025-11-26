@@ -15,7 +15,7 @@ public partial class SeriesView : ContentPage
         InitializeComponent();
 	}
 
-    // Need this to make sure new book info populates when you
+    // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {

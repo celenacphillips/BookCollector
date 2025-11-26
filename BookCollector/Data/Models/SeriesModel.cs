@@ -15,6 +15,8 @@ namespace BookCollector.Data.Models
         public string totalBooksString;
         [ObservableProperty]
         public string? totalBooksInSeries;
+        [ObservableProperty]
+        public bool hideSeries;
 
         public int? ID { get; set; }
         public string? ParsedSeriesName { get; set; }

@@ -367,6 +367,9 @@
     <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
+    <value>Hide Location when Settings &gt; Turn on Hidden Location is off?</value>
+  </data>
+  <data name="HideLocation_Question" xml:space="preserve">
     <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
@@ -572,5 +575,47 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="CollectionName" xml:space="preserve">
+    <value>Collection Name</value>
+  </data>
+  <data name="EditCollection" xml:space="preserve">
+    <value>Edit Collection</value>
+  </data>
+  <data name="AddNewCollection" xml:space="preserve">
+    <value>Add New Collection</value>
+  </data>
+  <data name="AddNewSeries" xml:space="preserve">
+    <value>Add New Series</value>
+  </data>
+  <data name="AddNewAuthor" xml:space="preserve">
+    <value>Add New Author</value>
+  </data>
+  <data name="AddNewGenre" xml:space="preserve">
+    <value>Add New Genre</value>
+  </data>
+  <data name="AddNewLocation" xml:space="preserve">
+    <value>Add New Location</value>
+  </data>
+  <data name="EditSeries" xml:space="preserve">
+    <value>Edit Series</value>
+  </data>
+  <data name="EditGenre" xml:space="preserve">
+    <value>Edit Genre</value>
+  </data>
+  <data name="EditAuthor" xml:space="preserve">
+    <value>Edit Author</value>
+  </data>
+  <data name="EditLocation" xml:space="preserve">
+    <value>Edit Location</value>
+  </data>
+  <data name="SeriesName" xml:space="preserve">
+    <value>Series Name</value>
+  </data>
+  <data name="LocationName" xml:space="preserve">
+    <value>Location Name</value>
+  </data>
+  <data name="GenreName" xml:space="preserve">
+    <value>Genre Name</value>
   </data>
 </root>

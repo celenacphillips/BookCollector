@@ -14,6 +14,8 @@ namespace BookCollector.Data.Models
         public string lastName;
         [ObservableProperty]
         public string? totalBooksString;
+        [ObservableProperty]
+        public bool hideAuthor;
 
         public string FullName
         {

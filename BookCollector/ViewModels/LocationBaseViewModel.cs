@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data.Models;
+using BookCollector.Views.Location;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels
 {
-    public partial class LocationBaseViewModel : BaseViewModel
+    public partial class LocationBaseViewModel : BookBaseViewModel
     {
         [ObservableProperty]
         public int totalLocationsCount;
@@ -27,11 +28,16 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public LocationModel? selectedLocation;
 
-        // TO DO
         [RelayCommand]
         public async Task LocationSelectionChanged()
         {
+            if (SelectedLocation != null)
+            {
+                LocationMainView view = new LocationMainView(SelectedLocation, SelectedLocation.LocationName);
 
+                await Shell.Current.Navigation.PushAsync(view);
+                SelectedLocation = null;
+            }
         }
     }
 }

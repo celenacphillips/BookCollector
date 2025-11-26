@@ -11,6 +11,14 @@
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
 
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
+            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
+        </Style>
+    </ContentPage.Resources>
+
+
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
@@ -81,6 +89,7 @@
                                     FontAttributes="Bold"
                                     HorizontalTextAlignment="Center"
                                     AutoSize="TextChanges">
+                                
                                 <Editor.Keyboard>
                                     <Keyboard x:FactoryMethod="Create">
                                         <x:Arguments>
@@ -88,6 +97,15 @@
                                         </x:Arguments>
                                     </Keyboard>
                                 </Editor.Keyboard>
+
+                                <Editor.Behaviors>
+                                    <toolkit:TextValidationBehavior x:Name="BookTitleValidator"
+                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                                    MinimumLength="2"
+                                                                    Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                                                    IsValid="{Binding BookTitleValid}"/>
+                                </Editor.Behaviors>
+                                
                             </Editor>
                         </VerticalStackLayout>
                         <!-- Book Title -->

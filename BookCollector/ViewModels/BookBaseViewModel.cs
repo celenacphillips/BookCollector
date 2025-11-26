@@ -155,21 +155,16 @@ namespace BookCollector.ViewModels
             SelectedBook = null;
         }
 
-        // TO DO:
-        // Fix Add Book to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddBook()
         {
             SetIsBusyTrue();
 
-            BookModel newBook = new BookModel();
-
-            BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
-            TestData.InsertBook(newBook);
+            BookEditView view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            //SetIsBusyFalse();
+            SetIsBusyFalse();
         }
 
         [RelayCommand]

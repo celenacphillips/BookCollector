@@ -1,6 +1,8 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
+using BookCollector.Views.Author;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Android.Renderscripts.ScriptGroup;
 
 namespace BookCollector.ViewModels.Groupings
 {
@@ -29,9 +30,12 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var authorList = TestData.AuthorList;
+
             Task.WaitAll(
             [
-                Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(TestData.AuthorList) ),
+                Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList) ),
             ]);
 
             TotalAuthorsCount = FullAuthorList.Count;
@@ -92,25 +96,46 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task AddAuthor()
         {
+            SetIsBusyTrue();
 
+            AuthorEditView view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task EditAuthor(AuthorModel selected)
         {
+            SetIsBusyTrue();
 
+            AuthorEditView view = new AuthorEditView(selected, selected.FullName);
+            AuthorEditViewModel bindingContext = new AuthorEditViewModel(selected, view);
+            bindingContext.ViewTitle = $"{AppStringResources.EditAuthor}";
+            view.BindingContext = bindingContext;
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         // TO DO
+        // Add checks for deleting author - 11/26/2025
         [RelayCommand]
         public async Task DeleteAuthor(AuthorModel selected)
         {
+            SetIsBusyTrue();
 
+            // Unit test data
+            TestData.DeleteAuthor(selected);
+
+            await SetViewModelData();
+
+            SetIsBusyFalse();
         }
     }
 }

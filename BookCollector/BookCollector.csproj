@@ -154,11 +154,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="Views\Author\AuthorEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Author\AuthorMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookEditView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Collection\CollectionEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Collection\CollectionMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Author\AuthorCollectionItem.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -202,6 +214,12 @@
 		<MauiXaml Update="Views\Controls\Series\SeriesCollectionList.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\AuthorsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -229,6 +247,12 @@
 		<MauiXaml Update="Views\Library\ToBeReadView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Main\SettingsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -237,6 +261,12 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\InformationPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesMainView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>
 
@@ -292,19 +322,6 @@
 		<MauiImage Include="Resources\Icons\star_icon_full_light.svg" />
 		<MauiImage Include="Resources\Icons\theme_icon_dark.svg" />
 		<MauiImage Include="Resources\Icons\theme_icon_light.svg" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="ViewModels\Collection\" />
-	  <Folder Include="ViewModels\Genre\" />
-	  <Folder Include="ViewModels\Author\" />
-	  <Folder Include="ViewModels\Location\" />
-	  <Folder Include="ViewModels\Series\" />
-	  <Folder Include="Views\Collection\" />
-	  <Folder Include="Views\Genre\" />
-	  <Folder Include="Views\Author\" />
-	  <Folder Include="Views\Location\" />
-	  <Folder Include="Views\Series\" />
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.Author.AuthorEditView"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Author"
+             x:DataType="viewModel:AuthorEditViewModel"
+             Title="{Binding ViewTitle}">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
+            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
+                     Command="{Binding SaveAuthorCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <VerticalStackLayout Padding="10">
+
+                    <!-- Author First Name -->
+                    <Label Text="{x:Static localization:AppStringResources.AuthorFirstName}"
+                           Style="{StaticResource Header}"
+                           HorizontalOptions="Center"/>
+                    <Editor Text="{Binding EditedAuthor.FirstName}"
+                            Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="Center">
+
+                        <Editor.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Editor.Keyboard>
+
+                        <Editor.Behaviors>
+                            <toolkit:TextValidationBehavior x:Name="AuthorFirstNameValidator"
+                                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                            MinimumLength="2"
+                                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                                            IsValid="{Binding AuthorNameValid}"/>
+                        </Editor.Behaviors>
+
+                    </Editor>
+                    <!-- Author First Name -->
+
+                    <!-- Author Last Name -->
+                    <Label Text="{x:Static localization:AppStringResources.AuthorLastName}"
+                           Style="{StaticResource Header}"
+                           HorizontalOptions="Center"/>
+                    <Editor Text="{Binding EditedAuthor.LastName}"
+                            Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="Center">
+
+                        <Editor.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Editor.Keyboard>
+
+                        <Editor.Behaviors>
+                            <toolkit:TextValidationBehavior x:Name="AuthorLastNameValidator"
+                                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                            MinimumLength="2"
+                                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                                            IsValid="{Binding AuthorNameValid}"/>
+                        </Editor.Behaviors>
+
+                    </Editor>
+                    <!-- Author Last Name -->
+
+                    <!-- Hide Author -->
+                    <VerticalStackLayout Margin="10">
+                        <Label Text="{x:Static localization:AppStringResources.HideAuthor_Question}"
+                               Style="{DynamicResource Header}"/>
+                        <Switch IsToggled="{Binding EditedAuthor.HideAuthor}"
+                                HorizontalOptions="Start"
+                                Margin="-10"/>
+                    </VerticalStackLayout>
+                    <!-- Hide Author -->
+
+                </VerticalStackLayout>
+            </RefreshView>
+        </StackLayout>
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+    </AbsoluteLayout>
+
+</ContentPage>

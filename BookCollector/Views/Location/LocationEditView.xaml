@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.Location.LocationEditView"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Location"
+             x:DataType="viewModel:LocationEditViewModel"
+             Title="{Binding ViewTitle}">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
+            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
+                     Command="{Binding SaveLocationCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <VerticalStackLayout Padding="10">
+
+                    <!-- Location Name -->
+                    <Label Text="{x:Static localization:AppStringResources.LocationName}"
+                           Style="{StaticResource Header}"
+                           HorizontalOptions="Center"/>
+                    <Editor Text="{Binding EditedLocation.LocationName}"
+                            Placeholder="{x:Static localization:AppStringResources.LocationName}"
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="Center">
+
+                        <Editor.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Editor.Keyboard>
+
+                        <Editor.Behaviors>
+                            <toolkit:TextValidationBehavior x:Name="LocationNameValidator"
+                                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                            MinimumLength="2"
+                                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                                            IsValid="{Binding LocationNameValid}"/>
+                        </Editor.Behaviors>
+
+                    </Editor>
+                    <!-- Location Name -->
+
+                    <!-- Hide Location -->
+                    <VerticalStackLayout Margin="10">
+                        <Label Text="{x:Static localization:AppStringResources.HideLocation_Question}"
+                               Style="{DynamicResource Header}"/>
+                        <Switch IsToggled="{Binding EditedLocation.HideLocation}"
+                                HorizontalOptions="Start"
+                                Margin="-10"/>
+                    </VerticalStackLayout>
+                    <!-- Hide Location -->
+
+                </VerticalStackLayout>
+            </RefreshView>
+        </StackLayout>
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+    </AbsoluteLayout>
+
+</ContentPage>

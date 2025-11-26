@@ -1,6 +1,8 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Genre;
+using BookCollector.Views.Genre;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,9 +30,12 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var genreList = TestData.GenreList;
+
             Task.WaitAll(
             [
-                Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(TestData.GenreList) ),
+                Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList) ),
             ]);
 
             TotalGenresCount = FullGenreList.Count;
@@ -91,25 +96,46 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task AddGenre()
         {
+            SetIsBusyTrue();
 
+            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task EditGenre(GenreModel selected)
         {
+            SetIsBusyTrue();
 
+            GenreEditView view = new GenreEditView(selected, selected.GenreName);
+            GenreEditViewModel bindingContext = new GenreEditViewModel(selected, view);
+            bindingContext.ViewTitle = $"{AppStringResources.EditGenre}";
+            view.BindingContext = bindingContext;
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         // TO DO
+        // Add checks for deleting genre - 11/26/2025
         [RelayCommand]
         public async Task DeleteGenre(GenreModel selected)
         {
+            SetIsBusyTrue();
 
+            // Unit test data
+            TestData.DeleteGenre(selected);
+
+            await SetViewModelData();
+
+            SetIsBusyFalse();
         }
     }
 }

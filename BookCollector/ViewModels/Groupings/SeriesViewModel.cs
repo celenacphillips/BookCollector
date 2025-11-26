@@ -1,6 +1,8 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Series;
+using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,9 +30,12 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var seriesList = TestData.SeriesList;
+
             Task.WaitAll(
             [
-                Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(TestData.SeriesList) ),
+                Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList) ),
             ]);
 
             TotalSeriesCount = FullSeriesList.Count;
@@ -91,25 +96,46 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task AddSeries()
         {
+            SetIsBusyTrue();
 
+            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task EditSeries(SeriesModel selected)
         {
+            SetIsBusyTrue();
 
+            SeriesEditView view = new SeriesEditView(selected, selected.SeriesName);
+            SeriesEditViewModel bindingContext = new SeriesEditViewModel(selected, view);
+            bindingContext.ViewTitle = $"{AppStringResources.EditSeries}";
+            view.BindingContext = bindingContext;
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         // TO DO
+        // Add checks for deleting series - 11/26/2025
         [RelayCommand]
         public async Task DeleteSeries(SeriesModel selected)
         {
+            SetIsBusyTrue();
 
+            // Unit test data
+            TestData.DeleteSeries(selected);
+
+            await SetViewModelData();
+
+            SetIsBusyFalse();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Location;
+using BookCollector.Views.Location;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,9 +30,12 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var locationList = TestData.LocationList;
+
             Task.WaitAll(
             [
-                Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(TestData.LocationList) ),
+                Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList) ),
             ]);
 
             TotalLocationsCount = FullLocationList.Count;
@@ -92,25 +97,46 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task AddLocation()
         {
+            SetIsBusyTrue();
 
+            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
-        // TO DO
         [RelayCommand]
         public async Task EditLocation(LocationModel selected)
         {
+            SetIsBusyTrue();
 
+            LocationEditView view = new LocationEditView(selected, selected.LocationName);
+            LocationEditViewModel bindingContext = new LocationEditViewModel(selected, view);
+            bindingContext.ViewTitle = $"{AppStringResources.EditLocation}";
+            view.BindingContext = bindingContext;
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         // TO DO
+        // Add checks for deleting location - 11/26/2025
         [RelayCommand]
         public async Task DeleteLocation(LocationModel selected)
         {
+            SetIsBusyTrue();
 
+            // Unit test data
+            TestData.DeleteLocation(selected);
+
+            await SetViewModelData();
+
+            SetIsBusyFalse();
         }
     }
 }

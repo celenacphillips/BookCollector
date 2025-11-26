@@ -1,6 +1,9 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Collection;
+using BookCollector.Views.Collection;
+using BookCollector.Views.Groupings;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -20,6 +23,7 @@ namespace BookCollector.ViewModels.Groupings
         public CollectionsViewModel(ContentPage view)
         {
             _view = view;
+
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
             InfoText = $"{AppStringResources.CollectionView_InfoText}";
         }
@@ -28,9 +32,12 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var collectionList = TestData.CollectionList;
+
             Task.WaitAll(
             [
-                Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(TestData.CollectionList) ),
+                Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList) ),
             ]);
 
             TotalCollectionsCount = FullCollectionList.Count;
@@ -91,35 +98,30 @@ namespace BookCollector.ViewModels.Groupings
             SetRefreshFalse();
         }
 
-        // TO DO:
-        // Fix Add Collection to not add to main list without save - 11/25/2025
         [RelayCommand]
         public async Task AddCollection()
         {
             SetIsBusyTrue();
 
-            CollectionModel newCollection = new CollectionModel();
+            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
 
-            //BookMainView view = new BookMainView(newBook, $"{AppStringResources.AddNewBook}");
-            TestData.InsertCollection(newCollection);
-
-            //await Shell.Current.Navigation.PushAsync(view);
+            await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
 
-        // TO DO
+
         [RelayCommand]
         public async Task EditCollection(CollectionModel selected)
         {
             SetIsBusyTrue();
 
-            //CollectionEditView view = new CollectionEditView();
-            //CollectionEditViewModel bindingContext = new CollectionEditViewModel(selected, view);
-            //bindingContext.ViewTitle = $"{AppResources.EditCollection}";
-            //view.BindingContext = bindingContext;
+            CollectionEditView view = new CollectionEditView(selected, selected.CollectionName);
+            CollectionEditViewModel bindingContext = new CollectionEditViewModel(selected, view);
+            bindingContext.ViewTitle = $"{AppStringResources.EditCollection}";
+            view.BindingContext = bindingContext;
 
-            //await Shell.Current.Navigation.PushAsync(view);
+            await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
@@ -131,6 +133,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
+            // Unit test data
             TestData.DeleteCollection(selected);
 
             await SetViewModelData();

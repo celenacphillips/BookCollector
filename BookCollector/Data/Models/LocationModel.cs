@@ -17,6 +17,8 @@ namespace BookCollector.Data.Models
         public string locationName;
         [ObservableProperty]
         public string totalBooksString;
+        [ObservableProperty]
+        public bool hideLocation;
 
         public string? ParsedLocationName { get; set; }
         public int LocationTotalBooks { get; set; }

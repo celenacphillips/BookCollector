@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data.Models;
+using BookCollector.Views.Genre;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels
 {
-    public partial class GenreBaseViewModel : BaseViewModel
+    public partial class GenreBaseViewModel : BookBaseViewModel
     {
         [ObservableProperty]
         public int totalGenresCount;
@@ -27,11 +28,16 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public GenreModel? selectedGenre;
 
-        // TO DO
         [RelayCommand]
         public async Task GenreSelectionChanged()
         {
+            if (SelectedGenre != null)
+            {
+                GenreMainView view = new GenreMainView(SelectedGenre, SelectedGenre.GenreName);
 
+                await Shell.Current.Navigation.PushAsync(view);
+                SelectedGenre = null;
+            }
         }
     }
 }

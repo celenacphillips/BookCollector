@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data.Models;
+using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels
 {
-    public partial class CollectionBaseViewModel : BaseViewModel
+    public partial class CollectionBaseViewModel : BookBaseViewModel
     {
         [ObservableProperty]
         public int totalCollectionsCount;
@@ -27,15 +28,14 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public CollectionModel? selectedCollection;
 
-        // TO DO
         [RelayCommand]
         public async Task CollectionSelectionChanged()
         {
             if (SelectedCollection != null)
             {
-                //CollectionView view = new CollectionView(SelectedCollection);
+                CollectionMainView view = new CollectionMainView(SelectedCollection, SelectedCollection.CollectionName);
 
-                //await Shell.Current.Navigation.PushAsync(view);
+                await Shell.Current.Navigation.PushAsync(view);
                 SelectedCollection = null;
             }
         }
