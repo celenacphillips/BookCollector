@@ -21,8 +21,7 @@
                      IsEnabled="False"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.AddNewBook}"
                      Order="Secondary"
-                     Command="{Binding AddNewBookCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding AddNewBookCommand}"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.AddExistingBook}"
                      Order="Secondary"
                      Command="{Binding AddExistingBookCommand}"

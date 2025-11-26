@@ -17,6 +17,9 @@ namespace BookCollector.ViewModels.Book
         public bool bookTitleValid;
 
         [ObservableProperty]
+        public bool bookFormatNotValid;
+
+        [ObservableProperty]
         public bool bookInfo1SectionValue;
 
         [ObservableProperty]
@@ -130,7 +133,7 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task SaveBook()
         {
-            if (BookTitleValid)
+            if (BookTitleValid && !BookFormatNotValid)
             {
                 EditedBook.BookSeriesGuid = SelectedSeries?.SeriesGuid;
                 EditedBook.BookCollectionGuid = SelectedCollection?.CollectionGuid;
@@ -165,6 +168,14 @@ namespace BookCollector.ViewModels.Book
                 BookMainView view = new BookMainView(EditedBook, $"{EditedBook.BookTitle}");
                 Shell.Current.Navigation.InsertPageBefore(view, _view);
                 await Shell.Current.Navigation.PopAsync();
+            }
+            else
+            {
+                if (!BookTitleValid)
+                    await Shell.Current.DisplayAlert("Book Title not valid", "Book Title not valid", $"{AppStringResources.OK}");
+
+                if (BookFormatNotValid)
+                    await Shell.Current.DisplayAlert("Book Format not valid", "Book Format not valid", $"{AppStringResources.OK}");
             }
         }
 
@@ -333,12 +344,24 @@ namespace BookCollector.ViewModels.Book
             EditedBook.UpNext = value;
         }
 
+
+        [RelayCommand]
+        public async Task ValidateBookFormat()
+        {
+            ValidateEntry();
+        }
+
         private void ValidateEntry()
         {
             if (string.IsNullOrEmpty(EditedBook.BookTitle))
                 BookTitleValid = false;
             else
                 BookTitleValid = true;
+
+            if (string.IsNullOrEmpty(EditedBook.BookFormat))
+                BookFormatNotValid = true;
+            else
+                BookFormatNotValid = false;
         }
     }
 }

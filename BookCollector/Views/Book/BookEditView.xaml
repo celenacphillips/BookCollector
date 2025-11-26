@@ -173,12 +173,22 @@
 
                                 <!-- Book Format -->
                                 <VerticalStackLayout Margin="10">
-                                    <Label Text="{x:Static localization:AppStringResources.BookFormat}"
-                                           Style="{DynamicResource Header}"/>
+                                    <HorizontalStackLayout>
+                                        <Label Text="{x:Static localization:AppStringResources.BookFormat}"
+                                               Style="{DynamicResource Header}"/>
+                                    <Label Text=" *"
+                                           Style="{DynamicResource Header_Warning}"
+                                           IsVisible="{Binding BookFormatNotValid}"/>
+                                    </HorizontalStackLayout>
                                     <Picker ItemsSource="{Binding BookFormats}"
                                             Title="{x:Static localization:AppStringResources.SelectABookFormat}"
                                             HorizontalTextAlignment="Center"
-                                            SelectedItem="{Binding EditedBook.BookFormat}"/>
+                                            SelectedItem="{Binding EditedBook.BookFormat}">
+                                        <Picker.Behaviors>
+                                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                                            Command="{Binding ValidateBookFormatCommand}"/>
+                                        </Picker.Behaviors>
+                                    </Picker>
                                 </VerticalStackLayout>
                                 <!-- Book Format -->
 

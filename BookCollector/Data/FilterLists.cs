@@ -29,6 +29,33 @@ namespace BookCollector.Data
             return bookList.ToObservableCollection();
         }
 
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInCollectionList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInGenreList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookGenreGuid == inputGuid).ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInSeriesList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookSeriesGuid == inputGuid).ToObservableCollection();
+        }
+
+        // TO DO
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInAuthorList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
+        // TO DO
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInLocationList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == inputGuid).ToObservableCollection();
+        }
+
         public static async Task<ObservableCollection<CollectionModel>> GetAllCollectionsList(ObservableCollection<CollectionModel> collectionList)
         {
             return collectionList.ToObservableCollection();

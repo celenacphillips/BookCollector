@@ -1,6 +1,7 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.Views.Book;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -20,6 +21,7 @@ namespace BookCollector.ViewModels.Collection
             _view = view;
 
             SelectedCollection = collection;
+            CollectionViewHeight = DeviceHeight - SingleMenuBar;
             //InfoText = string.Empty;
         }
 
@@ -27,6 +29,20 @@ namespace BookCollector.ViewModels.Collection
         {
             SetIsBusyTrue();
 
+            // Unit test data
+            var bookList = TestData.BookList;
+
+            Task.WaitAll(
+            [
+                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInCollectionList(bookList, SelectedCollection.CollectionGuid) ),
+            ]);
+
+            TotalBooksCount = FullBookList.Count;
+
+            FilteredBookList = FullBookList;
+            FilteredBooksCount = FilteredBookList.Count;
+
+            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
             SetIsBusyFalse();
         }
@@ -39,12 +55,21 @@ namespace BookCollector.ViewModels.Collection
             SetRefreshFalse();
         }
 
-        // TO DO
-        // Set up AddNewBook - 11/25/2025
         [RelayCommand]
         public async Task AddNewBook ()
         {
+            SetIsBusyTrue();
 
+            BookModel newBook = new BookModel()
+            {
+                BookCollectionGuid = SelectedCollection.CollectionGuid,
+            };
+
+            BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            SetIsBusyFalse();
         }
 
         // TO DO
