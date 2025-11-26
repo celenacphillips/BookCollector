@@ -166,7 +166,7 @@ namespace BookCollector.ViewModels.Book
                         SelectedBook.BookTitle += $": {SelectedISBNItem.VolumeInfo.Subtitle}";
                 }
 
-                if (!string.IsNullOrEmpty(SelectedBook.AuthorListString))
+                if (string.IsNullOrEmpty(SelectedBook.AuthorListString))
                 {
                     if (SelectedISBNItem.VolumeInfo.Authors != null)
                     {
@@ -185,9 +185,7 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
-                        // TO DO
-                        // Fix Authors - 11/21/2025
-                        //SelectedBook.AuthorListString = SetAuthorListString(authorList.ToObservableCollection());
+                        SelectedBook.SetAuthorListString(authorList.ToObservableCollection());
                     }
                 }
 

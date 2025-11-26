@@ -191,16 +191,72 @@ namespace BookCollector.Data.Models
         {
             if (bookAuthorList.Any(x => x.BookGuid == this.BookGuid))
             {
+                this.AuthorListString = string.Empty;
+
                 for (int i = 0; i < bookAuthorList.Count; i++)
                 {
                     var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
 
-                    if (i == bookAuthorList.Count - 1)
-                        this.AuthorListString += author.ReverseFullName;
-                    else
-                        this.AuthorListString += $"{author.ReverseFullName}; ";
+                    this.AuthorListString += authorList[i].ReverseFullName;
+
+                    if (i != bookAuthorList.Count - 1)
+                        this.AuthorListString += "; ";
                 }
             }
+        }
+
+        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel> authorList)
+        {
+            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
+
+            this.AuthorListString = string.Empty;
+
+            for (int i = 0; i < authorList.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
+                    !string.IsNullOrEmpty(authorList[i].LastName))
+                {
+                    bookAuthorList.Add(new BookAuthorModel()
+                    {
+                        BookGuid = (Guid)this.BookGuid,
+                        AuthorGuid = (Guid)authorList[i].AuthorGuid,
+                    });
+
+                    this.AuthorListString += authorList[i].ReverseFullName;
+
+                    if (i != authorList.Count - 1)
+                        this.AuthorListString += "; ";
+                }
+                else
+                {
+                    this.AuthorListString = this.AuthorListString.Substring(0, this.AuthorListString.LastIndexOf("; ") - 1);
+                }
+            }
+
+            return bookAuthorList;
+        }
+
+        public async Task SetBookChapters(ObservableCollection<ChapterModel> chaptersList)
+        {
+            var chapters = new ObservableCollection<ChapterModel>();
+
+            foreach (var chapter in chaptersList)
+            {
+                if (!string.IsNullOrEmpty(chapter.ChapterName))
+                {
+                    chapters.Add(new ChapterModel()
+                    {
+                        ChapterGuid = (Guid)chapter.ChapterGuid,
+                        ChapterName = chapter.ChapterName,
+                        ChapterOrder = chapter.ChapterOrder,
+                        PageRange = chapter.PageRange,
+                        BookGuid = (Guid)this.BookGuid,
+                    });
+                }
+            }
+
+            // Unit test data
+            TestData.ChapterList = chapters;
         }
     }
 }

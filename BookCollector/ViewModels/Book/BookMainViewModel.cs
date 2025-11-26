@@ -40,15 +40,13 @@ namespace BookCollector.ViewModels.Book
 
             // Unit test data
             var chapterList = TestData.ChapterList;
-            var authorList = TestData.AuthorList;
             var genreList = TestData.GenreList;
             var locationList = TestData.LocationList;
-            var bookAuthorList = TestData.BookAuthorList;
+
+            AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
 
             Task.WaitAll(
             [
-                Task.Run (async () => bookAuthorList  = await FilterLists.GetAllBookAuthorsForBook(bookAuthorList, SelectedBook.BookGuid) ),
-                Task.Run (async () => AuthorList = await FilterLists.GetAllAuthorsForBook(bookAuthorList, authorList, SelectedBook.BookGuid) ),
                 Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, SelectedBook.BookGuid) ),
                 Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, SelectedBook.BookGenreGuid) ),
                 Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, SelectedBook.BookLocationGuid) ),

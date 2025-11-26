@@ -217,5 +217,30 @@ namespace BookCollector.ViewModels
         {
             _view.ShowPopup(new BookCoverPopup());
         }
+
+        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromString(string inputString)
+        {
+            var authorList = new ObservableCollection<AuthorModel>();
+
+            string[] authorNames = inputString.Split(";");
+
+            foreach (var authorName in authorNames)
+            {
+                if (!string.IsNullOrEmpty(authorName.Trim()))
+                {
+                    string[] name = authorName.Split(",");
+
+                    AuthorModel author = new()
+                    {
+                        FirstName = name[1].Trim(),
+                        LastName = name[0].Trim()
+                    };
+
+                    authorList.Add(author);
+                }
+            }
+
+            return authorList;
+        }
     }
 }

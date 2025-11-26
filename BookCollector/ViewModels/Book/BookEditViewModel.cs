@@ -93,14 +93,12 @@ namespace BookCollector.ViewModels.Book
 
             // Unit test data
             var chapterList = TestData.ChapterList;
-            var authorList = TestData.AuthorList;
             var genreList = TestData.GenreList;
             var seriesList = TestData.SeriesList;
             var collectionList = TestData.CollectionList;
             var locationList = TestData.LocationList;
-            var bookAuthorList = TestData.BookAuthorList;
 
-            AuthorList = authorList;
+            AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : null;
             SeriesList = seriesList;
             CollectionList = collectionList;
             GenreList = genreList;
@@ -108,8 +106,6 @@ namespace BookCollector.ViewModels.Book
 
             Task.WaitAll(
             [
-                Task.Run (async () => bookAuthorList  = await FilterLists.GetAllBookAuthorsForBook(bookAuthorList, EditedBook.BookGuid) ),
-                Task.Run (async () => AuthorList = await FilterLists.GetAllAuthorsForBook(bookAuthorList, authorList, EditedBook.BookGuid) ),
                 Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, EditedBook.BookGuid) ),
                 Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, EditedBook.BookGenreGuid) ),
                 Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, EditedBook.BookLocationGuid) ),
@@ -153,8 +149,6 @@ namespace BookCollector.ViewModels.Book
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add Saving of Chapters and Authors - 11/26/2025
         [RelayCommand]
         public async Task SaveBook()
         {
@@ -172,6 +166,8 @@ namespace BookCollector.ViewModels.Book
                     Task.Run (async () => await EditedBook.SetPartOfSeries() ),
                     Task.Run (async () => await EditedBook.SetPartOfCollection() ),
                     Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                    Task.Run (async () => await EditedBook.SetAuthorListString(AuthorList) ),
+                    Task.Run (async () => await EditedBook.SetBookChapters(ChapterList) ),
                 ]);
 
 #if ANDROID
@@ -347,8 +343,6 @@ namespace BookCollector.ViewModels.Book
             BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal;
         }
 
-        // TO DO:
-        // Fix Add Chapter and Add Author to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddChapter()
         {
@@ -361,8 +355,6 @@ namespace BookCollector.ViewModels.Book
             ChapterList.Remove(chapter);
         }
 
-        // TO DO:
-        // Fix Add Chapter and Add Author to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddAuthor()
         {

@@ -1,11 +1,12 @@
 ﻿
+using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.Data
 {
     internal class StringManipulation
     {
-
         public static string SetTotalBooksString(int filteredCount, int totalCount)
         {
             return AppStringResources.Blank1OfBlank2Items.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower() );

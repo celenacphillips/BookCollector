@@ -54,21 +54,19 @@ namespace BookCollector.ViewModels.Author
             SetRefreshFalse();
         }
 
-        // TO DO
-        // Set up AddNewBook - 11/26/2025
         [RelayCommand]
         public async Task AddNewBook()
         {
             SetIsBusyTrue();
 
-            //BookModel newBook = new BookModel()
-            //{
-            //    BookCollectionGuid = SelectedCollection.CollectionGuid,
-            //};
+            BookModel newBook = new BookModel()
+            {
+                AuthorListString = SelectedAuthor.ReverseFullName,
+            };
 
-            //BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
+            BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
 
-            //await Shell.Current.Navigation.PushAsync(view);
+            await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
