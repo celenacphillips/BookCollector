@@ -30,12 +30,14 @@ namespace BookCollector.ViewModels.Series
             {
                 SetIsBusyTrue();
 
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
                 // Unit test data
                 var bookList = TestData.BookList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInSeriesList(bookList, SelectedSeries.SeriesGuid) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInSeriesList(bookList, SelectedSeries.SeriesGuid, showHiddenBooks) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;

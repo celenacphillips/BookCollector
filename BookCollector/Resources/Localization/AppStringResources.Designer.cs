@@ -565,6 +565,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Both.
+        /// </summary>
+        internal static string Both {
+            get {
+                return ResourceManager.GetString("Both", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
@@ -660,6 +669,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Color {
             get {
                 return ResourceManager.GetString("Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        internal static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
             }
         }
         
@@ -772,6 +790,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End of List.
+        /// </summary>
+        internal static string EndOfList {
+            get {
+                return ResourceManager.GetString("EndOfList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         internal static string English {
@@ -831,6 +858,33 @@ namespace BookCollector.Resources.Localization {
         internal static string ExportLocation {
             get {
                 return ResourceManager.GetString("ExportLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite.
+        /// </summary>
+        internal static string Favorite {
+            get {
+                return ResourceManager.GetString("Favorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorites.
+        /// </summary>
+        internal static string Favorites {
+            get {
+                return ResourceManager.GetString("Favorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter By.
+        /// </summary>
+        internal static string FilterBy {
+            get {
+                return ResourceManager.GetString("FilterBy", resourceCulture);
             }
         }
         
@@ -907,7 +961,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Author when Settings &gt; Turn on Hidden Authors is off?.
+        ///   Looks up a localized string similar to Hide Author when Settings &gt; ShowHidden Authors is off?.
         /// </summary>
         internal static string HideAuthor_Question {
             get {
@@ -916,7 +970,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Book when Settings &gt; Turn on Hidden Books is off?.
+        ///   Looks up a localized string similar to Hide Book when Settings &gt; Show Hidden Books is off?.
         /// </summary>
         internal static string HideBook_Question {
             get {
@@ -925,7 +979,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Collection when Settings &gt; Turn on Hidden Collections is off?.
+        ///   Looks up a localized string similar to Hide Collection when Settings &gt; Show Hidden Collections is off?.
         /// </summary>
         internal static string HideCollection_Question {
             get {
@@ -934,7 +988,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Genre when Settings &gt; Turn on Hidden Genres is off?.
+        ///   Looks up a localized string similar to Hide Genre when Settings &gt; Show Hidden Genres is off?.
         /// </summary>
         internal static string HideGenre_Question {
             get {
@@ -943,7 +997,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Location when Settings &gt; Turn on Hidden Location is off?.
+        ///   Looks up a localized string similar to Hide Location when Settings &gt; Show Hidden Location is off?.
         /// </summary>
         internal static string HideLocation_Question {
             get {
@@ -952,7 +1006,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Series when Settings &gt; Turn on Hidden Series is off?.
+        ///   Looks up a localized string similar to Hide Series when Settings &gt; Show Hidden Series is off?.
         /// </summary>
         internal static string HideSeries_Question {
             get {
@@ -1128,6 +1182,15 @@ namespace BookCollector.Resources.Localization {
         internal static string NoISBNEntered {
             get {
                 return ResourceManager.GetString("NoISBNEntered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Non-Favorites.
+        /// </summary>
+        internal static string NonFavorites {
+            get {
+                return ResourceManager.GetString("NonFavorites", resourceCulture);
             }
         }
         
@@ -1474,6 +1537,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select your app currency.
+        /// </summary>
+        internal static string SelectYourAppCurrency {
+            get {
+                return ResourceManager.GetString("SelectYourAppCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select your App Language.
         /// </summary>
         internal static string SelectYourAppLanguage {
@@ -1542,6 +1614,96 @@ namespace BookCollector.Resources.Localization {
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Chapters in books.
+        /// </summary>
+        internal static string ShowChapters {
+            get {
+                return ResourceManager.GetString("ShowChapters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Comments in books.
+        /// </summary>
+        internal static string ShowComments {
+            get {
+                return ResourceManager.GetString("ShowComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Favorite option in books.
+        /// </summary>
+        internal static string ShowFavorites {
+            get {
+                return ResourceManager.GetString("ShowFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Authors in list.
+        /// </summary>
+        internal static string ShowHiddenAuthors {
+            get {
+                return ResourceManager.GetString("ShowHiddenAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Books in lists.
+        /// </summary>
+        internal static string ShowHiddenBooks {
+            get {
+                return ResourceManager.GetString("ShowHiddenBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Collections in lists.
+        /// </summary>
+        internal static string ShowHiddenCollections {
+            get {
+                return ResourceManager.GetString("ShowHiddenCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Genres in lists.
+        /// </summary>
+        internal static string ShowHiddenGenres {
+            get {
+                return ResourceManager.GetString("ShowHiddenGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Locations in lists.
+        /// </summary>
+        internal static string ShowHiddenLocations {
+            get {
+                return ResourceManager.GetString("ShowHiddenLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Series in lists.
+        /// </summary>
+        internal static string ShowHiddenSeries {
+            get {
+                return ResourceManager.GetString("ShowHiddenSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Rating option in books.
+        /// </summary>
+        internal static string ShowRatings {
+            get {
+                return ResourceManager.GetString("ShowRatings", resourceCulture);
             }
         }
         
@@ -1659,51 +1821,6 @@ namespace BookCollector.Resources.Localization {
         internal static string TotalPages {
             get {
                 return ResourceManager.GetString("TotalPages", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Turn on Chapters.
-        /// </summary>
-        internal static string TurnOnChapters {
-            get {
-                return ResourceManager.GetString("TurnOnChapters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Turn on Comments.
-        /// </summary>
-        internal static string TurnOnComments {
-            get {
-                return ResourceManager.GetString("TurnOnComments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Turn on Favorites.
-        /// </summary>
-        internal static string TurnOnFavorites {
-            get {
-                return ResourceManager.GetString("TurnOnFavorites", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Turn on Hidden Books.
-        /// </summary>
-        internal static string TurnOnHiddenBooks {
-            get {
-                return ResourceManager.GetString("TurnOnHiddenBooks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Turn on Ratings.
-        /// </summary>
-        internal static string TurnOnRatings {
-            get {
-                return ResourceManager.GetString("TurnOnRatings", resourceCulture);
             }
         }
         

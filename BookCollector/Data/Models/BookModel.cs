@@ -255,6 +255,8 @@ namespace BookCollector.Data.Models
         // Add ability to change currency type - 11/27/2025
         public async Task SetBookPrice()
         {
+            var currency = Preferences.Get("Currency", true  /* Default */);
+
             var cultureInfo = new CultureInfo("en-US");
 
             if (this.BookPrice == null || !this.BookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))

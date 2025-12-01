@@ -33,12 +33,14 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
+                var showHiddenGenres = Preferences.Get("HiddenGenresOn", true  /* Default */);
+
                 // Unit test data
                 var genreList = TestData.GenreList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList) ),
+                    Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList, showHiddenGenres) ),
                 ]);
 
                 TotalGenresCount = FullGenreList.Count;

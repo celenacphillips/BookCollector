@@ -33,12 +33,14 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
+                var showHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
+
                 // Unit test data
                 var authorList = TestData.AuthorList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList) ),
+                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList, showHiddenAuthors) ),
                 ]);
 
                 TotalAuthorsCount = FullAuthorList.Count;

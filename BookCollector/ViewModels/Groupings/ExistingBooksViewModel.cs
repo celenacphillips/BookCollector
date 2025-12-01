@@ -39,6 +39,8 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
                 // Unit test data
                 var bookList = TestData.BookList;
 
@@ -47,7 +49,7 @@ namespace BookCollector.ViewModels.Groupings
                     case "Collection":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(bookList) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(bookList, showHiddenBooks) ),
                         ]);
                         break;
 

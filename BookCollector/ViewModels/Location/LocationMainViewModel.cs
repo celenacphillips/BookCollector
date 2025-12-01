@@ -30,12 +30,14 @@ namespace BookCollector.ViewModels.Location
             {
                 SetIsBusyTrue();
 
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
                 // Unit test data
                 var bookList = TestData.BookList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(bookList, SelectedLocation.LocationGuid) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(bookList, SelectedLocation.LocationGuid, showHiddenBooks) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;

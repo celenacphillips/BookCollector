@@ -33,12 +33,14 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
+                var showHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
+
                 // Unit test data
                 var locationList = TestData.LocationList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList) ),
+                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList, showHiddenLocations) ),
                 ]);
 
                 TotalLocationsCount = FullLocationList.Count;

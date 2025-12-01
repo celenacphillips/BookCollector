@@ -138,20 +138,20 @@
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="TurnOnComments" xml:space="preserve">
-    <value>Turn on Comments</value>
+  <data name="ShowComments" xml:space="preserve">
+    <value>Show Comments in books</value>
   </data>
-  <data name="TurnOnChapters" xml:space="preserve">
-    <value>Turn on Chapters</value>
+  <data name="ShowChapters" xml:space="preserve">
+    <value>Show Chapters in books</value>
   </data>
-  <data name="TurnOnFavorites" xml:space="preserve">
-    <value>Turn on Favorites</value>
+  <data name="ShowFavorites" xml:space="preserve">
+    <value>Show Favorite option in books</value>
   </data>
-  <data name="TurnOnRatings" xml:space="preserve">
-    <value>Turn on Ratings</value>
+  <data name="ShowRatings" xml:space="preserve">
+    <value>Show Rating option in books</value>
   </data>
-  <data name="TurnOnHiddenBooks" xml:space="preserve">
-    <value>Turn on Hidden Books</value>
+  <data name="ShowHiddenBooks" xml:space="preserve">
+    <value>Show Hidden Books in lists</value>
   </data>
   <data name="SelectYourAppLanguage" xml:space="preserve">
     <value>Select your App Language</value>
@@ -295,7 +295,7 @@
     <value>Book Loaned Out On</value>
   </data>
   <data name="HideBook_Question" xml:space="preserve">
-    <value>Hide Book when Settings &gt; Turn on Hidden Books is off?</value>
+    <value>Hide Book when Settings &gt; Show Hidden Books is off?</value>
   </data>
   <data name="PartOfCollection" xml:space="preserve">
     <value>Part of blank Collection</value>
@@ -361,19 +361,19 @@
     <value>Add Existing Book</value>
   </data>
   <data name="HideCollection_Question" xml:space="preserve">
-    <value>Hide Collection when Settings &gt; Turn on Hidden Collections is off?</value>
+    <value>Hide Collection when Settings &gt; Show Hidden Collections is off?</value>
   </data>
   <data name="HideGenre_Question" xml:space="preserve">
-    <value>Hide Genre when Settings &gt; Turn on Hidden Genres is off?</value>
+    <value>Hide Genre when Settings &gt; Show Hidden Genres is off?</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
-    <value>Hide Series when Settings &gt; Turn on Hidden Series is off?</value>
+    <value>Hide Series when Settings &gt; Show Hidden Series is off?</value>
   </data>
   <data name="HideLocation_Question" xml:space="preserve">
-    <value>Hide Location when Settings &gt; Turn on Hidden Location is off?</value>
+    <value>Hide Location when Settings &gt; Show Hidden Location is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author when Settings &gt; Turn on Hidden Authors is off?</value>
+    <value>Hide Author when Settings &gt; ShowHidden Authors is off?</value>
   </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
@@ -674,5 +674,44 @@
   </data>
   <data name="ExistingBooksView_InfoText" xml:space="preserve">
     <value>This is a list of books that aren't associated to 'grouping.' Click a book to add it.</value>
+  </data>
+  <data name="ShowHiddenCollections" xml:space="preserve">
+    <value>Show Hidden Collections in lists</value>
+  </data>
+  <data name="ShowHiddenSeries" xml:space="preserve">
+    <value>Show Hidden Series in lists</value>
+  </data>
+  <data name="ShowHiddenGenres" xml:space="preserve">
+    <value>Show Hidden Genres in lists</value>
+  </data>
+  <data name="ShowHiddenAuthors" xml:space="preserve">
+    <value>Show Hidden Authors in list</value>
+  </data>
+  <data name="ShowHiddenLocations" xml:space="preserve">
+    <value>Show Hidden Locations in lists</value>
+  </data>
+  <data name="EndOfList" xml:space="preserve">
+    <value>End of List</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="SelectYourAppCurrency" xml:space="preserve">
+    <value>Select your app currency</value>
+  </data>
+  <data name="FilterBy" xml:space="preserve">
+    <value>Filter By</value>
+  </data>
+  <data name="Favorite" xml:space="preserve">
+    <value>Favorite</value>
+  </data>
+  <data name="Favorites" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="NonFavorites" xml:space="preserve">
+    <value>Non-Favorites</value>
+  </data>
+  <data name="Both" xml:space="preserve">
+    <value>Both</value>
   </data>
 </root>
