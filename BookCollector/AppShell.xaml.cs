@@ -20,8 +20,8 @@ namespace BookCollector
             //SettingPreferences();
 
             // Unit test data
-            var testData = new TestData();
-            //TestData.AddBooksToList();
+            //var testData = new TestData();
+            TestData.AddBooksToList();
 
             BindingContext = this;
         }

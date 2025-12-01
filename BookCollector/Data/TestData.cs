@@ -208,9 +208,14 @@ namespace BookCollector.Data
         public static void InsertAuthor(AuthorModel author, Guid? bookGuid)
         {
             AuthorList.Add(author);
+            AddAuthorToBook(author.AuthorGuid, bookGuid);
+        }
+
+        public static void AddAuthorToBook(Guid? authorGuid, Guid? bookGuid)
+        {
             BookAuthorList.Add(new BookAuthorModel()
             {
-                AuthorGuid = (Guid)author.AuthorGuid,
+                AuthorGuid = (Guid)authorGuid,
                 BookGuid = (Guid)bookGuid,
             });
         }

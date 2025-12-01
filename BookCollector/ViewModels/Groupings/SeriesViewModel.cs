@@ -79,7 +79,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuSeries(Guid? input)
         {
             var selected = FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
-            string? action = await BaseViewModel.PopupMenu(selected.SeriesName);
+            string? action = await PopupMenu(selected.SeriesName);
 
             switch (action)
             {

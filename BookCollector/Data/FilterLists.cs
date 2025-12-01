@@ -97,6 +97,13 @@ namespace BookCollector.Data
                            .ToObservableCollection();
         }
 
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksWithoutACollectionList(ObservableCollection<BookModel> bookList)
+        {
+            return bookList.Where(x => x.BookCollectionGuid == null)
+                           .OrderBy(x => x.ParsedTitle)
+                           .ToObservableCollection();
+        }
+
         public static async Task<ObservableCollection<BookModel>> GetAllBooksInGenreList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
         {
             return bookList.Where(x => x.BookGenreGuid == inputGuid)
@@ -104,9 +111,23 @@ namespace BookCollector.Data
                            .ToObservableCollection();
         }
 
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksWithoutAGenreList(ObservableCollection<BookModel> bookList)
+        {
+            return bookList.Where(x => x.BookGenreGuid == null)
+                           .OrderBy(x => x.ParsedTitle)
+                           .ToObservableCollection();
+        }
+
         public static async Task<ObservableCollection<BookModel>> GetAllBooksInSeriesList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
         {
             return bookList.Where(x => x.BookSeriesGuid == inputGuid)
+                           .OrderBy(x => x.ParsedTitle)
+                           .ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksWithoutASeriesList(ObservableCollection<BookModel> bookList)
+        {
+            return bookList.Where(x => x.BookSeriesGuid == null)
                            .OrderBy(x => x.ParsedTitle)
                            .ToObservableCollection();
         }
@@ -124,9 +145,23 @@ namespace BookCollector.Data
                                  .ToObservableCollection();
         }
 
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksWithoutAuthorList(ObservableCollection<BookModel> bookList, string reverseAuthorName)
+        {
+            return bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString) || !x.AuthorListString.Contains(reverseAuthorName))
+                           .OrderBy(x => x.ParsedTitle)
+                           .ToObservableCollection();
+        }
+
         public static async Task<ObservableCollection<BookModel>> GetAllBooksInLocationList(ObservableCollection<BookModel> bookList, Guid? inputGuid)
         {
             return bookList.Where(x => x.BookLocationGuid == inputGuid)
+                           .OrderBy(x => x.ParsedTitle)
+                           .ToObservableCollection();
+        }
+
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksWithoutALocationList(ObservableCollection<BookModel> bookList)
+        {
+            return bookList.Where(x => x.BookLocationGuid == null)
                            .OrderBy(x => x.ParsedTitle)
                            .ToObservableCollection();
         }

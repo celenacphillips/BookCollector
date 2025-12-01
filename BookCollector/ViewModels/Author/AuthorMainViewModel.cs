@@ -3,6 +3,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Book;
+using BookCollector.Views.Groupings;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -84,12 +85,12 @@ namespace BookCollector.ViewModels.Author
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Set up AddExistingBook - 11/26/2025
         [RelayCommand]
         public async Task AddExistingBook()
         {
+            ExistingBooksView view = new ExistingBooksView(SelectedAuthor, ViewTitle);
 
+            await Shell.Current.Navigation.PushAsync(view);
         }
     }
 }

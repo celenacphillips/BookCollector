@@ -184,6 +184,9 @@
 		<MauiXaml Update="Views\Controls\Book\BookCollectionList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\Book\ExistingBookCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionItem.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -224,6 +227,9 @@
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\CollectionsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Groupings\ExistingBooksView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\GenresView.xaml">

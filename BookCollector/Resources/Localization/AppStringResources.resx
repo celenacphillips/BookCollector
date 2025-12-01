@@ -663,4 +663,16 @@
   <data name="ItemDeleted" xml:space="preserve">
     <value>Item Deleted</value>
   </data>
+  <data name="AddBook" xml:space="preserve">
+    <value>Add Book</value>
+  </data>
+  <data name="BookHasBeenAddedToGrouping" xml:space="preserve">
+    <value>Book has been added to grouping.</value>
+  </data>
+  <data name="AddBookToGrouping_Question" xml:space="preserve">
+    <value>Add book to grouping?</value>
+  </data>
+  <data name="ExistingBooksView_InfoText" xml:space="preserve">
+    <value>This is a list of books that aren't associated to 'grouping.' Click a book to add it.</value>
+  </data>
 </root>

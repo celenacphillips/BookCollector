@@ -23,8 +23,7 @@
                      Command="{Binding AddNewBookCommand}"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.AddExistingBook}"
                      Order="Secondary"
-                     Command="{Binding AddExistingBookCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding AddExistingBookCommand}"/>
     </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>

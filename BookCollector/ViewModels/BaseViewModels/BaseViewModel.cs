@@ -130,20 +130,19 @@ namespace BookCollector.ViewModels.BaseViewModels
             return action;
         }
 
-        public static async Task DisplayMessage(string inputTitle, string? inputMessage = null, string? inputConfirm = null)
+        public static async Task DisplayMessage(string inputTitle, string? inputMessage = null)
         {
-            if (inputConfirm == null)
-                inputConfirm = $"{AppStringResources.OK}";
-
             if (inputMessage == null)
-                inputMessage = $"{AppStringResources.ActionCanceled}";
+                inputMessage = inputTitle;
+
+            var inputConfirm = $"{AppStringResources.OK}";
 
             await Shell.Current.DisplayAlert(inputTitle, inputMessage, inputConfirm);
         }
 
         public static async Task CanceledAction()
         {
-            await DisplayMessage($"{AppStringResources.ActionCanceled}", null, null);
+            await DisplayMessage($"{AppStringResources.ActionCanceled}", null);
         }
 
         public static async Task ConfirmDelete(string item)
@@ -151,7 +150,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var title = $"{AppStringResources.ItemDeleted.Replace("Item", item)}.";
             var message = $"{AppStringResources.ItemWasDeleted.Replace("Item", item)}";
 
-            await DisplayMessage(title, message, null);
+            await DisplayMessage(title, message);
         }
     }
 }

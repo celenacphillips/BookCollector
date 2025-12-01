@@ -80,7 +80,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuLocation(Guid? input)
         {
             var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
-            string? action = await BaseViewModel.PopupMenu(selected.LocationName);
+            string? action = await PopupMenu(selected.LocationName);
 
             switch (action)
             {

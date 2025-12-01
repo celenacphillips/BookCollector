@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="BookCollector.Views.Groupings.ExistingBooksView"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-             x:Class="BookCollector.Views.Author.AuthorMainView"
-             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Author"
-             x:DataType="viewModel:AuthorMainViewModel"
-             xmlns:bookControls="clr-namespace:BookCollector.Views.Controls.Book"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Groupings"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
+             x:DataType="viewModel:ExistingBooksViewModel"
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
@@ -18,12 +18,6 @@
                      IsEnabled="False"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
-        <ToolbarItem Text="{x:Static localization:AppStringResources.AddNewBook}"
-                     Order="Secondary"
-                     Command="{Binding AddNewBookCommand}"/>
-        <ToolbarItem Text="{x:Static localization:AppStringResources.AddExistingBook}"
-                     Order="Secondary"
-                     Command="{Binding AddExistingBookCommand}"/>
     </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>
@@ -33,16 +27,28 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout>
-                    <Label Text="{Binding TotalBooksString}"
-                           HorizontalOptions="End"
-                           Margin="0,0,20,0"
-                           TextColor="{StaticResource Primary}"
-                           Style="{StaticResource SubTitle}"/>
+                <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="{x:Static localization:AppStringResources.AddExistingBook}"
+                               TextColor="{DynamicResource Primary}"
+                               Style="{DynamicResource SubTitle}"
+                               Margin="20,0,0,0"
+                               Grid.Column="0" Grid.Row="0"/>
+                        <Label Text="{Binding TotalBooksString}"
+                               HorizontalOptions="End"
+                               Margin="0,0,20,0"
+                               TextColor="{DynamicResource Primary}"
+                               Style="{DynamicResource SubTitle}"
+                               Grid.Column="1" Grid.Row="0"/>
+                    </Grid>
 
                     <ScrollView>
-                        <!-- This is needed to allow the refresh view to work. -->
-                        <VerticalStackLayout  Padding="10">
+                        <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
                                        Text="{Binding SearchString}">
                                 <SearchBar.Behaviors>
@@ -52,7 +58,7 @@
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
-                            <bookControls:BookCollectionList/>
+                            <controls:ExistingBookCollectionList/>
 
                         </VerticalStackLayout>
                     </ScrollView>
@@ -71,5 +77,5 @@
                                VerticalOptions="CenterAndExpand"/>
         </StackLayout>
     </AbsoluteLayout>
-    
+
 </ContentPage>

@@ -70,6 +70,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Book.
+        /// </summary>
+        internal static string AddBook {
+            get {
+                return ResourceManager.GetString("AddBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add book to grouping?.
+        /// </summary>
+        internal static string AddBookToGrouping_Question {
+            get {
+                return ResourceManager.GetString("AddBookToGrouping_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Existing Book.
         /// </summary>
         internal static string AddExistingBook {
@@ -363,6 +381,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookGenre {
             get {
                 return ResourceManager.GetString("BookGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book has been added to grouping..
+        /// </summary>
+        internal static string BookHasBeenAddedToGrouping {
+            get {
+                return ResourceManager.GetString("BookHasBeenAddedToGrouping", resourceCulture);
             }
         }
         
@@ -777,6 +804,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ErrorSearchingForBook {
             get {
                 return ResourceManager.GetString("ErrorSearchingForBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a list of books that aren&apos;t associated to &apos;grouping.&apos; Click a book to add it..
+        /// </summary>
+        internal static string ExistingBooksView_InfoText {
+            get {
+                return ResourceManager.GetString("ExistingBooksView_InfoText", resourceCulture);
             }
         }
         
