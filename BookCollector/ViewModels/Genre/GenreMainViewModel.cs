@@ -13,37 +13,42 @@ namespace BookCollector.ViewModels.Genre
 {
     public partial class GenreMainViewModel : GenreBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public GenreMainViewModel(GenreModel genre, ContentPage view)
         {
             _view = view;
 
             SelectedGenre = genre;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{SelectedGenre.GenreName}")}";
         }
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var bookList = TestData.BookList;
+                // Unit test data
+                var bookList = TestData.BookList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInGenreList(bookList, SelectedGenre.GenreGuid) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInGenreList(bookList, SelectedGenre.GenreGuid) ),
+                ]);
 
-            TotalBooksCount = FullBookList.Count;
+                TotalBooksCount = FullBookList.Count;
 
-            FilteredBookList = FullBookList;
-            FilteredBooksCount = FilteredBookList.Count;
+                FilteredBookList = FullBookList;
+                FilteredBooksCount = FilteredBookList.Count;
 
-            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+                TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]

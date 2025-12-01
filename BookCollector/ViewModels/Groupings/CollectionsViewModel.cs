@@ -30,24 +30,31 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var collectionList = TestData.CollectionList;
+                // Unit test data
+                var collectionList = TestData.CollectionList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList) ),
+                ]);
 
-            TotalCollectionsCount = FullCollectionList.Count;
+                TotalCollectionsCount = FullCollectionList.Count;
 
-            FilteredCollectionList = FullCollectionList;
-            FilteredCollectionsCount = FilteredCollectionList.Count;
+                FilteredCollectionList = FullCollectionList;
+                FilteredCollectionsCount = FilteredCollectionList.Count;
 
-            TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
+                TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -73,7 +80,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuCollection(Guid? input)
         {
             var selected = FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
-            string? action = await PopupMenu(selected.CollectionName);
+            string? action = await BaseViewModel.PopupMenu(selected.CollectionName);
 
             switch (action)
             {
@@ -103,7 +110,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
+            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -116,29 +123,42 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(selected, selected.CollectionName);
-            CollectionEditViewModel bindingContext = new CollectionEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditCollection}";
-            view.BindingContext = bindingContext;
+            CollectionEditView view = new CollectionEditView(selected, $"{AppStringResources.EditCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add checks for deleting collection - 11/25/2025
         [RelayCommand]
         public async Task DeleteCollection(CollectionModel selected)
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(selected.CollectionName);
 
-            // Unit test data
-            TestData.DeleteCollection(selected);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await SetViewModelData();
+                    // Unit test data
+                    TestData.DeleteCollection(selected);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(selected.CollectionName);
+
+                    await SetViewModelData();
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
         }
     }
 }

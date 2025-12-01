@@ -1,19 +1,17 @@
 ﻿using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableValidator, ICloneable
+    public partial class BookModel : ObservableObject, ICloneable
     {
         [PrimaryKey]
         public Guid? BookGuid { get; set; }
 
         [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Field is required.")]
-        [MinLength(2)]
         public string? bookTitle;
         [ObservableProperty]
         public double? bookNumberInSeries;
@@ -43,8 +41,6 @@ namespace BookCollector.Data.Models
         public string? bookStartDate;
         [ObservableProperty]
         public string? bookEndDate;
-        [ObservableProperty]
-        public string? bookLocation;
         [ObservableProperty]
         public string? bookComments;
         [ObservableProperty]
@@ -80,6 +76,11 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string? partOfCollection;
 
+        public BookModel()
+        {
+            BookGuid = Guid.NewGuid();
+        }
+
         public string PublisherPublishDateString
         {
             get => $"{(!string.IsNullOrEmpty(this.BookPublisher) ? this.BookPublisher : AppStringResources.NoPublisher)}, {(!string.IsNullOrEmpty(this.BookPublishYear) ? this.BookPublishYear : AppStringResources.NoDate)}";
@@ -91,6 +92,7 @@ namespace BookCollector.Data.Models
         public Guid? BookSeriesGuid { get; set; }
         public Guid? BookCollectionGuid { get; set; }
         public Guid? BookGenreGuid { get; set; }
+        public Guid? BookLocationGuid { get; set; }
         public string? BookImageBase64String { get; set; }
         public string? AuthorListString { get; set; }
         public string? SelectedAuthorString { get; set; }
@@ -184,6 +186,83 @@ namespace BookCollector.Data.Models
         {
             this.HasBookCover = this.BookCoverBytes != null;
             this.HasNoBookCover = this.BookCoverBytes == null;
+        }
+
+        public async Task SetAuthorListString(ObservableCollection<BookAuthorModel> bookAuthorList, ObservableCollection<AuthorModel> authorList)
+        {
+            if (bookAuthorList.Any(x => x.BookGuid == this.BookGuid))
+            {
+                this.AuthorListString = string.Empty;
+
+                for (int i = 0; i < bookAuthorList.Count; i++)
+                {
+                    var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
+
+                    this.AuthorListString += authorList[i].ReverseFullName;
+
+                    if (i != bookAuthorList.Count - 1)
+                        this.AuthorListString += "; ";
+                }
+            }
+        }
+
+        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel> authorList)
+        {
+            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
+
+            this.AuthorListString = string.Empty;
+
+            for (int i = 0; i < authorList.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
+                    !string.IsNullOrEmpty(authorList[i].LastName))
+                {
+                    bookAuthorList.Add(new BookAuthorModel()
+                    {
+                        BookGuid = (Guid)this.BookGuid,
+                        AuthorGuid = (Guid)authorList[i].AuthorGuid,
+                    });
+
+                    this.AuthorListString += authorList[i].ReverseFullName;
+
+                    if (i != authorList.Count - 1)
+                        this.AuthorListString += "; ";
+                }
+                else
+                {
+                    this.AuthorListString = this.AuthorListString.Substring(0, this.AuthorListString.LastIndexOf("; ") - 1);
+                }
+            }
+
+            return bookAuthorList;
+        }
+
+        public async Task SetBookChapters(ObservableCollection<ChapterModel> chaptersList)
+        {
+            foreach (var chapter in chaptersList)
+            {
+                if (!string.IsNullOrEmpty(chapter.ChapterName))
+                {
+                    chapter.BookGuid = (Guid)this.BookGuid;
+
+                    // Unit test data
+                    TestData.InsertChapter(chapter);
+                }
+            }
+        }
+
+        // TO DO
+        // Add ability to change currency type - 11/27/2025
+        public async Task SetBookPrice()
+        {
+            var cultureInfo = new CultureInfo("en-US");
+
+            if (this.BookPrice == null || !this.BookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))
+            {
+                double.TryParse(this.BookPrice, out double price);
+
+                this.BookPrice = string.Format("{0:C}", price);
+            }
         }
     }
 }

@@ -14,15 +14,13 @@ namespace BookCollector.ViewModels.Collection
 {
     public partial class CollectionMainViewModel : CollectionBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/25/2025
         public CollectionMainViewModel(CollectionModel collection, ContentPage view)
         {
             _view = view;
 
             SelectedCollection = collection;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.CollectionMainView_InfoText.Replace("collection", $"{SelectedCollection.CollectionName}")}";
         }
 
         public async Task SetViewModelData()

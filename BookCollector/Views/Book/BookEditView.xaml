@@ -47,18 +47,18 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Rating -->
-                            <controls:Rating CurrentValue="{Binding EditedBook.Rating}"
+                            <controls:Rating CurrentValue="{Binding EditedBook.Rating, Mode=TwoWay}"
                                              Grid.Column="0" Grid.Row="0"
                                              HorizontalOptions="Center"
                                              IsVisible="{Binding ShowRatings}"/>
                             <!-- Rating -->
 
                             <!-- Favorite -->
-                            <controls:Favorite CurrentValue="{Binding EditedBook.IsFavorite}"
-                                           Grid.Column="1" Grid.Row="0"
-                                           HorizontalOptions="Center"
-                                           Margin="0,7,0,0"
-                                           IsVisible="{Binding ShowFavorites}"/>
+                            <controls:Favorite CurrentValue="{Binding EditedBook.IsFavorite, Mode=TwoWay}"
+                                               Grid.Column="1" Grid.Row="0"
+                                               HorizontalOptions="Center"
+                                               Margin="0,7,0,0"
+                                               IsVisible="{Binding ShowFavorites}"/>
                             <!-- Favorite -->
 
                             <!-- Is Book Read -->
@@ -722,6 +722,38 @@
                                 </Grid>
                                 <!-- Book Genre -->
 
+                                <!-- Book Location -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <HorizontalStackLayout>
+                                            <Label Text="{x:Static localization:AppStringResources.BookLocation}"
+                                                   Style="{DynamicResource Header}"/>
+                                            <Button Text="+"
+                                                    Style="{DynamicResource AddButton}"
+                                                    Margin="5,-20"
+                                                    Command="{Binding AddLocationCommand}"/>
+                                        </HorizontalStackLayout>
+
+                                        <Picker ItemsSource="{Binding LocationList}"
+                                                ItemDisplayBinding="{Binding LocationName}"
+                                                Title="{x:Static localization:AppStringResources.SelectALocation}"
+                                                HorizontalTextAlignment="Center"
+                                                SelectedItem="{Binding SelectedLocation}"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Text="-"
+                                            Style="{DynamicResource MinusButton}" 
+                                            Grid.Row="0" Grid.Column="1"
+                                            Command="{Binding RemoveLocationCommand}"/>
+                                </Grid>
+                                <!-- Book Location -->
+
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -763,46 +795,17 @@
                                     <!-- Book Publish Year -->
                                 </Grid>
 
-                                <Grid Margin="0,0,0,10">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- Book Identifier -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookIdentifier}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookIdentifier}"
-                                                HorizontalTextAlignment="Center"
-                                                Keyboard="Numeric"
-                                                AutoSize="TextChanges"/>
-                                    </VerticalStackLayout>
-                                    <!-- Book Identifier -->
-
-                                    <!-- Book Location -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookLocation}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookLocation}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookLocation}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges">
-                                            <Editor.Keyboard>
-                                                <Keyboard x:FactoryMethod="Create">
-                                                    <x:Arguments>
-                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                    </x:Arguments>
-                                                </Keyboard>
-                                            </Editor.Keyboard>
-                                        </Editor>
-                                    </VerticalStackLayout>
-                                    <!-- Book Location -->
-                                </Grid>
+                                <!-- Book Identifier -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookIdentifier}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookIdentifier}"
+                                            HorizontalTextAlignment="Center"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"/>
+                                </VerticalStackLayout>
+                                <!-- Book Identifier -->
 
                                 <Grid Margin="0,0,0,10">
 

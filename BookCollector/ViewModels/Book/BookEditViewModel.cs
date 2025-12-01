@@ -1,7 +1,12 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Series;
 using BookCollector.Views.Book;
+using BookCollector.Views.Collection;
+using BookCollector.Views.Genre;
+using BookCollector.Views.Location;
+using BookCollector.Views.Series;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -46,6 +51,13 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public ObservableCollection<GenreModel> genreList;
 
+        [ObservableProperty]
+        public ObservableCollection<LocationModel> locationList;
+
+        public bool RemoveMainViewBefore { get; set; }
+
+        public BookMainView? MainViewBefore { get; set; }
+
         public BookEditViewModel(BookModel book, ContentPage view)
         {
             _view = view;
@@ -56,54 +68,70 @@ namespace BookCollector.ViewModels.Book
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
-
-            ValidateEntry();
-
-            BookInfo1SectionValue = true;
-            ReadingDataSectionValue = true;
-            ChapterListSectionValue = true;
-            AuthorListSectionValue = true;
-            BookInfoSectionValue = true;
-            SummarySectionValue = true;
-            CommentsSectionValue = true;
-
-            BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal && EditedBook.BookPageTotal != 0;
-            ShowUpNext = EditedBook.BookPageRead == 0;
-
-            if (EditedBook.BookCoverBytes != null)
+            try
             {
-                var imageSource = ImageSource.FromStream(() => new MemoryStream(EditedBook.BookCoverBytes));
-                BookCover = imageSource;
+                SetIsBusyTrue();
+
+                ValidateEntry();
+
+                BookInfo1SectionValue = true;
+                ReadingDataSectionValue = true;
+                ChapterListSectionValue = true;
+                AuthorListSectionValue = true;
+                BookInfoSectionValue = true;
+                SummarySectionValue = true;
+                CommentsSectionValue = true;
+
+                BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal && EditedBook.BookPageTotal != 0;
+                ShowUpNext = EditedBook.BookPageRead == 0;
+
+                if (EditedBook.BookCoverBytes != null)
+                {
+                    var imageSource = ImageSource.FromStream(() => new MemoryStream(EditedBook.BookCoverBytes));
+                    BookCover = imageSource;
+                }
+
+                StepperEnabled = EditedBook.BookPageTotal != 0;
+
+                // Unit test data
+                var chapterList = TestData.ChapterList;
+                var genreList = TestData.GenreList;
+                var seriesList = TestData.SeriesList;
+                var collectionList = TestData.CollectionList;
+                var locationList = TestData.LocationList;
+
+                AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : new ObservableCollection<AuthorModel>();
+                SeriesList = seriesList;
+                CollectionList = collectionList;
+                GenreList = genreList;
+                LocationList = locationList;
+                ChapterList = new ObservableCollection<ChapterModel>();
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, EditedBook.BookGuid) ),
+                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, EditedBook.BookGenreGuid) ),
+                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, EditedBook.BookLocationGuid) ),
+                    Task.Run (async () => SelectedCollection = await FilterLists.GetCollectionForBook(collectionList, EditedBook.BookCollectionGuid) ),
+                    Task.Run (async () => SelectedSeries = await FilterLists.GetSeriesForBook(seriesList, EditedBook.BookSeriesGuid) ),
+                    Task.Run (async () => await EditedBook.SetBookCheckpoints() ),
+                    Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                    Task.Run (async () => await EditedBook.SetBookPrice() ),
+                    Task.Run (async () => await BookInfo1Changed() ),
+                    Task.Run (async () => await ReadingDataChanged() ),
+                    Task.Run (async () => await ChapterListChanged() ),
+                    Task.Run (async () => await AuthorListChanged() ),
+                    Task.Run (async () => await BookInfoChanged() ),
+                    Task.Run (async () => await SummaryChanged() ),
+                    Task.Run (async () => await CommentsChanged() ),
+                ]);
+
+                SetIsBusyFalse();
             }
-
-            StepperEnabled = EditedBook.BookPageTotal != 0;
-
-            // Unit test data
-            ChapterList = TestData.ChapterList;
-            AuthorList = TestData.AuthorList;
-            SeriesList = TestData.SeriesList;
-            CollectionList = TestData.CollectionList;
-            GenreList = TestData.GenreList;
-
-            SelectedCollection = CollectionList.FirstOrDefault(x => x.CollectionGuid == EditedBook.BookCollectionGuid);
-            SelectedSeries = SeriesList.FirstOrDefault(x => x.SeriesGuid == EditedBook.BookSeriesGuid);
-            SelectedGenre = GenreList.FirstOrDefault(x => x.GenreGuid == EditedBook.BookGenreGuid);
-
-            Task.WaitAll(
-            [
-                Task.Run (async () => await EditedBook.SetBookCheckpoints() ),
-                Task.Run (async () => await EditedBook.SetCoverDisplay() ),
-                Task.Run (async () => await BookInfo1Changed() ),
-                Task.Run (async () => await ReadingDataChanged() ),
-                Task.Run (async () => await ChapterListChanged() ),
-                Task.Run (async () => await AuthorListChanged() ),
-                Task.Run (async () => await BookInfoChanged() ),
-                Task.Run (async () => await SummaryChanged() ),
-                Task.Run (async () => await CommentsChanged() ),
-            ]);
-
-            SetIsBusyFalse();
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -138,6 +166,16 @@ namespace BookCollector.ViewModels.Book
                 EditedBook.BookSeriesGuid = SelectedSeries?.SeriesGuid;
                 EditedBook.BookCollectionGuid = SelectedCollection?.CollectionGuid;
                 EditedBook.BookGenreGuid = SelectedGenre?.GenreGuid;
+                EditedBook.BookLocationGuid = SelectedLocation?.LocationGuid;
+
+                foreach (var author in AuthorList)
+                {
+                    // Unit test data
+                    if (!TestData.AuthorList.Contains(author))
+                    {
+                        TestData.InsertAuthor(author, EditedBook.BookGuid);
+                    }
+                }
 
                 Task.WaitAll(
                 [
@@ -146,6 +184,9 @@ namespace BookCollector.ViewModels.Book
                     Task.Run (async () => await EditedBook.SetPartOfSeries() ),
                     Task.Run (async () => await EditedBook.SetPartOfCollection() ),
                     Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                    Task.Run (async () => await EditedBook.SetBookPrice() ),
+                    Task.Run (async () => await EditedBook.SetAuthorListString(AuthorList) ),
+                    Task.Run (async () => await EditedBook.SetBookChapters(ChapterList) ),
                 ]);
 
 #if ANDROID
@@ -165,8 +206,14 @@ namespace BookCollector.ViewModels.Book
                     TestData.UpdateBook(EditedBook);
                 }
 
+                if (RemoveMainViewBefore)
+                {
+                    Shell.Current.Navigation.RemovePage(MainViewBefore);
+                }
+
                 BookMainView view = new BookMainView(EditedBook, $"{EditedBook.BookTitle}");
                 Shell.Current.Navigation.InsertPageBefore(view, _view);
+
                 await Shell.Current.Navigation.PopAsync();
             }
             else
@@ -238,28 +285,32 @@ namespace BookCollector.ViewModels.Book
             EditedBook.BookCoverBytes = null;
         }
 
-        // TO DO:
-        // Set up Add Series screen - 11/19/2025
         [RelayCommand]
         public async Task AddSeries()
         {
-
+            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
+            await Shell.Current.Navigation.PushAsync(view);
         }
 
-        // TO DO:
-        // Set up Add Collection screen - 11/19/2025
         [RelayCommand]
         public async Task AddCollection()
         {
-
+            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
+            await Shell.Current.Navigation.PushAsync(view);
         }
 
-        // TO DO:
-        // Set up Add Genre screen - 11/19/2025
         [RelayCommand]
         public async Task AddGenre()
         {
+            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
+            await Shell.Current.Navigation.PushAsync(view);
+        }
 
+        [RelayCommand]
+        public async Task AddLocation()
+        {
+            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
+            await Shell.Current.Navigation.PushAsync(view);
         }
 
         [RelayCommand]
@@ -281,6 +332,12 @@ namespace BookCollector.ViewModels.Book
         }
 
         [RelayCommand]
+        public async Task RemoveLocation()
+        {
+            SelectedLocation = null;
+        }
+
+        [RelayCommand]
         public async Task UpdateProgress()
         {
             StepperEnabled = EditedBook.BookPageTotal != 0;
@@ -288,6 +345,9 @@ namespace BookCollector.ViewModels.Book
             EditedBook.SetBookCheckpoints();
         }
 
+        // TO DO
+        // Set up Pages Read Popup - 11/26/25
+        // Preferably a number spinner
         [RelayCommand]
         public async Task PagesReadPopup()
         {
@@ -302,8 +362,6 @@ namespace BookCollector.ViewModels.Book
             BookIsRead = EditedBook.BookPageRead == EditedBook.BookPageTotal;
         }
 
-        // TO DO:
-        // Fix Add Chapter and Add Author to not add to main list without save - 11/19/2025
         [RelayCommand]
         public async Task AddChapter()
         {

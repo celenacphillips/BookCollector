@@ -13,37 +13,49 @@ namespace BookCollector.ViewModels.Author
 {
     public partial class AuthorMainViewModel : AuthorBaseViewModel
     {
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public AuthorMainViewModel(AuthorModel author, ContentPage view)
         {
             _view = view;
 
             SelectedAuthor = author;
             CollectionViewHeight = DeviceHeight - SingleMenuBar;
-            //InfoText = string.Empty;
+            InfoText = $"{AppStringResources.AuthorMainView_InfoText.Replace("author", $"{SelectedAuthor.FullName}")}";
         }
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var bookList = TestData.BookList;
+                // Unit test data
+                var bookList = TestData.BookList;
+                var bookAuthorList = TestData.BookAuthorList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookList, SelectedAuthor.AuthorGuid) ),
-            ]);
+                // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
+                Task.WaitAll(
+                [
+                    Task.Run (async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(bookAuthorList, SelectedAuthor.AuthorGuid) ),
+                ]);
 
-            TotalBooksCount = FullBookList.Count;
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
+                ]);
 
-            FilteredBookList = FullBookList;
-            FilteredBooksCount = FilteredBookList.Count;
+                TotalBooksCount = FullBookList.Count;
 
-            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+                FilteredBookList = FullBookList;
+                FilteredBooksCount = FilteredBookList.Count;
 
-            SetIsBusyFalse();
+                TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -54,21 +66,19 @@ namespace BookCollector.ViewModels.Author
             SetRefreshFalse();
         }
 
-        // TO DO
-        // Set up AddNewBook - 11/26/2025
         [RelayCommand]
         public async Task AddNewBook()
         {
             SetIsBusyTrue();
 
-            //BookModel newBook = new BookModel()
-            //{
-            //    BookCollectionGuid = SelectedCollection.CollectionGuid,
-            //};
+            BookModel newBook = new BookModel()
+            {
+                AuthorListString = SelectedAuthor.ReverseFullName,
+            };
 
-            //BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
+            BookEditView view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
 
-            //await Shell.Current.Navigation.PushAsync(view);
+            await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }

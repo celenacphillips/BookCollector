@@ -7,10 +7,11 @@ public partial class GenreEditView : ContentPage
 {
     private GenreEditViewModel _viewModel { get; set; }
 
-    public GenreEditView(GenreModel genre, string viewTitle)
+    public GenreEditView(GenreModel genre, string viewTitle, bool insertMainViewBefore = false)
 	{
         GenreEditViewModel viewModel = new GenreEditViewModel(genre, this);
         viewModel.ViewTitle = viewTitle;
+        viewModel.InsertMainViewBefore = insertMainViewBefore;
         _viewModel = viewModel;
         BindingContext = viewModel;
 

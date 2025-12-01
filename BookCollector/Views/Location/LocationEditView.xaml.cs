@@ -7,10 +7,11 @@ public partial class LocationEditView : ContentPage
 {
     private LocationEditViewModel _viewModel { get; set; }
 
-    public LocationEditView(LocationModel location, string viewTitle)
+    public LocationEditView(LocationModel location, string viewTitle, bool insertMainViewBefore = false)
 	{
         LocationEditViewModel viewModel = new LocationEditViewModel(location, this);
         viewModel.ViewTitle = viewTitle;
+        viewModel.InsertMainViewBefore = insertMainViewBefore;
         _viewModel = viewModel;
         BindingContext = viewModel;
 

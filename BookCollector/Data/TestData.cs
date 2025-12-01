@@ -14,6 +14,19 @@ namespace BookCollector.Data
         public static ObservableCollection<GenreModel> GenreList { get; set; }
         public static ObservableCollection<CollectionModel> CollectionList { get; set; }
         public static ObservableCollection<LocationModel> LocationList { get; set; }
+        public static ObservableCollection<BookAuthorModel> BookAuthorList { get; set; }
+
+        public TestData()
+        {
+            BookList = new ObservableCollection<BookModel>();
+            ChapterList = new ObservableCollection<ChapterModel>();
+            AuthorList = new ObservableCollection<AuthorModel>();
+            SeriesList = new ObservableCollection<SeriesModel>();
+            GenreList = new ObservableCollection<GenreModel>();
+            CollectionList = new ObservableCollection<CollectionModel>();
+            LocationList = new ObservableCollection<LocationModel>();
+            BookAuthorList = new ObservableCollection<BookAuthorModel>();
+        }
 
         public static void AddBooksToList()
         {
@@ -28,9 +41,7 @@ namespace BookCollector.Data
             {
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "Reading Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookStartDate = "11/13/2025",
@@ -38,7 +49,6 @@ namespace BookCollector.Data
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -52,9 +62,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "A Read Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookStartDate = "11/13/2025",
@@ -63,7 +71,6 @@ namespace BookCollector.Data
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -74,16 +81,13 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookGuid = Guid.NewGuid(),
                     BookTitle = "To Be Read Book",
-                    AuthorListString = "Last, First",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookPageRead = 0,
                     BookPublisher = "Publisher",
                     BookPublishYear = "yyyy",
                     BookIdentifier = "1234",
-                    BookLocation = "Shelf",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
                     BookURL = "test.com",
@@ -94,12 +98,26 @@ namespace BookCollector.Data
                 }
             };
 
+            foreach (var chapter in ChapterList)
+            {
+                chapter.BookGuid = (Guid)BookList[0].BookGuid;
+            }
+
+            BookAuthorList =
+            [
+                new BookAuthorModel()
+                {
+                    BookGuid = (Guid)BookList[0].BookGuid,
+                    AuthorGuid = (Guid)AuthorList[0].AuthorGuid
+                },
+            ];
+
             foreach (var book in BookList)
             {
                 book.SetReadingProgress();
                 book.SetCoverDisplay();
+                book.SetAuthorListString(BookAuthorList, AuthorList);
             }
-
         }
 
         public static void UpdateBook(BookModel book)
@@ -126,14 +144,12 @@ namespace BookCollector.Data
             {
                 new ChapterModel()
                 {
-                    ChapterGuid = Guid.NewGuid(),
                     ChapterName = "Chapter One",
                     PageRange = "1-5",
                     ChapterOrder = 0,
                 },
                 new ChapterModel()
                 {
-                    ChapterGuid = Guid.NewGuid(),
                     ChapterName = "Chapter Two",
                     PageRange = "5-10",
                     ChapterOrder = 1,
@@ -165,13 +181,11 @@ namespace BookCollector.Data
             {
                 new AuthorModel()
                 {
-                    AuthorGuid = Guid.NewGuid(),
                     FirstName = "First1",
                     LastName = "Last1"
                 },
                 new AuthorModel()
                 {
-                    AuthorGuid= Guid.NewGuid(),
                     FirstName = "First2",
                     LastName = "Last2",
                 }
@@ -191,9 +205,29 @@ namespace BookCollector.Data
             AuthorList.Add(author);
         }
 
+        public static void InsertAuthor(AuthorModel author, Guid? bookGuid)
+        {
+            AuthorList.Add(author);
+            BookAuthorList.Add(new BookAuthorModel()
+            {
+                AuthorGuid = (Guid)author.AuthorGuid,
+                BookGuid = (Guid)bookGuid,
+            });
+        }
+
         public static void DeleteAuthor(AuthorModel author)
         {
             AuthorList.Remove(author);
+            var bookAuthorList = BookAuthorList.Where(x => x.AuthorGuid == author.AuthorGuid).ToList();
+
+            foreach (var bookAuthor in bookAuthorList)
+            {
+                BookAuthorList.Remove(bookAuthor);
+
+                var book = BookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                book.AuthorListString = book.AuthorListString.Replace(author.ReverseFullName, string.Empty);
+            }
         }
 
         public static void AddSeriesToList()
@@ -202,14 +236,12 @@ namespace BookCollector.Data
             {
                 new SeriesModel()
                 {
-                    SeriesGuid = Guid.NewGuid(),
                     SeriesName = "Series 1",
                     TotalBooksInSeries = "5"
 
                 },
                 new SeriesModel()
                 {
-                    SeriesGuid = Guid.NewGuid(),
                     SeriesName = "Series 2",
                 }
             };
@@ -231,6 +263,12 @@ namespace BookCollector.Data
         public static void DeleteSeries(SeriesModel series)
         {
             SeriesList.Remove(series);
+            var bookList = BookList.Where(x => x.BookSeriesGuid == series.SeriesGuid);
+
+            foreach (var book in bookList)
+            {
+                book.BookSeriesGuid = null;
+            }
         }
 
         public static void AddGenresToList()
@@ -239,12 +277,10 @@ namespace BookCollector.Data
             {
                 new GenreModel()
                 {
-                    GenreGuid = Guid.NewGuid(),
                     GenreName = "Genre 1"
                 },
                 new GenreModel()
                 {
-                    GenreGuid = Guid.NewGuid(),
                     GenreName = "Genre 2"
                 }
             };
@@ -266,6 +302,12 @@ namespace BookCollector.Data
         public static void DeleteGenre(GenreModel genre)
         {
             GenreList.Remove(genre);
+            var bookList = BookList.Where(x => x.BookGenreGuid == genre.GenreGuid);
+
+            foreach (var book in bookList)
+            {
+                book.BookGenreGuid = null;
+            }
         }
 
         public static void AddCollectionsToList()
@@ -274,12 +316,10 @@ namespace BookCollector.Data
             {
                 new CollectionModel()
                 {
-                    CollectionGuid = Guid.NewGuid(),
                     CollectionName = "Collection 1"
                 },
                 new CollectionModel()
                 {
-                    CollectionGuid = Guid.NewGuid(),
                     CollectionName = "Collection 2"
                 }
             };
@@ -301,6 +341,13 @@ namespace BookCollector.Data
         public static void DeleteCollection(CollectionModel collection)
         {
             CollectionList.Remove(collection);
+
+            var bookList = BookList.Where(x => x.BookCollectionGuid == collection.CollectionGuid);
+
+            foreach (var book in bookList)
+            {
+                book.BookCollectionGuid = null;
+            }
         }
 
         public static void AddLocationsToList()
@@ -309,12 +356,10 @@ namespace BookCollector.Data
             {
                 new LocationModel()
                 {
-                    LocationGuid = Guid.NewGuid(),
                     LocationName = "Room 1"
                 },
                 new LocationModel()
                 {
-                    LocationGuid = Guid.NewGuid(),
                     LocationName = "Room 2"
                 }
             };
@@ -336,6 +381,12 @@ namespace BookCollector.Data
         public static void DeleteLocation(LocationModel location)
         {
             LocationList.Remove(location);
+            var bookList = BookList.Where(x => x.BookLocationGuid == location.LocationGuid);
+
+            foreach (var book in bookList)
+            {
+                book.BookLocationGuid = null;
+            }
         }
     }
 }

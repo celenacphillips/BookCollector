@@ -28,24 +28,31 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var locationList = TestData.LocationList;
+                // Unit test data
+                var locationList = TestData.LocationList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList) ),
+                ]);
 
-            TotalLocationsCount = FullLocationList.Count;
+                TotalLocationsCount = FullLocationList.Count;
 
-            FilteredLocationList = FullLocationList;
-            FilteredLocationsCount = FilteredLocationList.Count;
+                FilteredLocationList = FullLocationList;
+                FilteredLocationsCount = FilteredLocationList.Count;
 
-            TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+                TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -72,7 +79,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuLocation(Guid? input)
         {
             var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
-            string? action = await PopupMenu(selected.LocationName);
+            string? action = await BaseViewModel.PopupMenu(selected.LocationName);
 
             switch (action)
             {
@@ -102,7 +109,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
+            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -114,29 +121,43 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(selected, selected.LocationName);
-            LocationEditViewModel bindingContext = new LocationEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditLocation}";
-            view.BindingContext = bindingContext;
+            LocationEditView view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add checks for deleting location - 11/26/2025
         [RelayCommand]
         public async Task DeleteLocation(LocationModel selected)
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(selected.LocationName);
 
-            // Unit test data
-            TestData.DeleteLocation(selected);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await SetViewModelData();
+                    // Unit test data
+                    TestData.DeleteLocation(selected);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(selected.LocationName);
+
+                    await SetViewModelData();
+
+                    SetIsBusyFalse();
+
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
         }
     }
 }

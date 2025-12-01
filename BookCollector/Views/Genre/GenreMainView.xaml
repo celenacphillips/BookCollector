@@ -17,8 +17,7 @@
                      Command="{Binding SortPopupCommand}"
                      IsEnabled="False"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding InfoPopupCommand}"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.AddNewBook}"
                      Order="Secondary"
                      Command="{Binding AddNewBookCommand}"/>

@@ -21,23 +21,29 @@ namespace BookCollector.ViewModels.Collection
         [ObservableProperty]
         public bool collectionNameValid;
 
-        // TO DO
-        // Set InfoText string - 11/25/2025
+        public bool InsertMainViewBefore { get; set; }
+
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
         {
             _view = view;
 
             EditedCollection = (CollectionModel)collection.Clone();
-            //InfoText = string.Empty;
         }
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            ValidateEntry();
+                ValidateEntry();
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -62,8 +68,12 @@ namespace BookCollector.ViewModels.Collection
                     TestData.UpdateCollection(EditedCollection);
                 }
 
-                CollectionMainView view = new CollectionMainView(EditedCollection, $"{EditedCollection.CollectionName}");
-                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                if (InsertMainViewBefore)
+                {
+                    CollectionMainView view = new CollectionMainView(EditedCollection, $"{EditedCollection.CollectionName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                }
+
                 await Shell.Current.Navigation.PopAsync();
             }
         }

@@ -7,10 +7,11 @@ public partial class CollectionEditView : ContentPage
 {
 	private CollectionEditViewModel _viewModel {  get; set; }
 
-    public CollectionEditView(CollectionModel collection, string viewTitle)
+    public CollectionEditView(CollectionModel collection, string viewTitle, bool insertMainViewBefore = false)
 	{
         CollectionEditViewModel viewModel = new CollectionEditViewModel(collection, this);
         viewModel.ViewTitle = viewTitle;
+        viewModel.InsertMainViewBefore = insertMainViewBefore;
         _viewModel = viewModel;
         BindingContext = viewModel;
 

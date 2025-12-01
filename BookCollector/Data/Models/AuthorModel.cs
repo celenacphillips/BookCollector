@@ -17,6 +17,11 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public bool hideAuthor;
 
+        public AuthorModel()
+        {
+            AuthorGuid = Guid.NewGuid();
+        }
+
         public string FullName
         {
             get => $"{this.FirstName} {this.LastName}";

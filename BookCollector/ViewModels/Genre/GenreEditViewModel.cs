@@ -20,23 +20,29 @@ namespace BookCollector.ViewModels.Genre
         [ObservableProperty]
         public bool genreNameValid;
 
-        // TO DO
-        // Set InfoText string - 11/26/2025
+        public bool InsertMainViewBefore { get; set; }
+
         public GenreEditViewModel(GenreModel genre, ContentPage view)
         {
             _view = view;
 
             EditedGenre = (GenreModel)genre.Clone();
-            //InfoText = string.Empty;
         }
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            ValidateEntry();
+                ValidateEntry();
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -61,8 +67,12 @@ namespace BookCollector.ViewModels.Genre
                     TestData.UpdateGenre(EditedGenre);
                 }
 
-                GenreMainView view = new GenreMainView(EditedGenre, $"{EditedGenre.GenreName}");
-                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                if (InsertMainViewBefore)
+                {
+                    GenreMainView view = new GenreMainView(EditedGenre, $"{EditedGenre.GenreName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                }
+
                 await Shell.Current.Navigation.PopAsync();
             }
         }

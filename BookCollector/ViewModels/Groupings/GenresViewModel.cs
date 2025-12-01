@@ -28,24 +28,31 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var genreList = TestData.GenreList;
+                // Unit test data
+                var genreList = TestData.GenreList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList) ),
+                ]);
 
-            TotalGenresCount = FullGenreList.Count;
+                TotalGenresCount = FullGenreList.Count;
 
-            FilteredGenreList = FullGenreList;
-            FilteredGenresCount = FilteredGenreList.Count;
+                FilteredGenreList = FullGenreList;
+                FilteredGenresCount = FilteredGenreList.Count;
 
-            TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
+                TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -71,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuGenre(Guid? input)
         {
             var selected = FilteredGenreList.FirstOrDefault(x => x.GenreGuid == input);
-            string? action = await PopupMenu(selected.GenreName);
+            string? action = await BaseViewModel.PopupMenu(selected.GenreName);
 
             switch (action)
             {
@@ -101,7 +108,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
+            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -113,29 +120,42 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(selected, selected.GenreName);
-            GenreEditViewModel bindingContext = new GenreEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditGenre}";
-            view.BindingContext = bindingContext;
+            GenreEditView view = new GenreEditView(selected, $"{AppStringResources.EditGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add checks for deleting genre - 11/26/2025
         [RelayCommand]
         public async Task DeleteGenre(GenreModel selected)
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(selected.GenreName);
 
-            // Unit test data
-            TestData.DeleteGenre(selected);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await SetViewModelData();
+                    // Unit test data
+                    TestData.DeleteGenre(selected);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(selected.GenreName);
+
+                    await SetViewModelData();
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
         }
     }
 }

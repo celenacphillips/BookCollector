@@ -20,23 +20,27 @@ namespace BookCollector.ViewModels.Author
         [ObservableProperty]
         public bool authorNameValid;
 
-        // TO DO
-        // Set InfoText string - 11/26/2025
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
         {
             _view = view;
 
             EditedAuthor = (AuthorModel)author.Clone();
-            //InfoText = string.Empty;
         }
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            ValidateEntry();
+                ValidateEntry();
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]

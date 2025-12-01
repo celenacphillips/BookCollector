@@ -28,24 +28,31 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var authorList = TestData.AuthorList;
+                // Unit test data
+                var authorList = TestData.AuthorList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList) ),
+                ]);
 
-            TotalAuthorsCount = FullAuthorList.Count;
+                TotalAuthorsCount = FullAuthorList.Count;
 
-            FilteredAuthorList = FullAuthorList;
-            FilteredAuthorsCount = FilteredAuthorList.Count;
+                FilteredAuthorList = FullAuthorList;
+                FilteredAuthorsCount = FilteredAuthorList.Count;
 
-            TotalAuthorsString = StringManipulation.SetTotalAuthorsString(FilteredAuthorsCount, TotalAuthorsCount);
+                TotalAuthorsString = StringManipulation.SetTotalAuthorsString(FilteredAuthorsCount, TotalAuthorsCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -71,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuAuthor(Guid? input)
         {
             var selected = FilteredAuthorList.FirstOrDefault(x => x.AuthorGuid == input);
-            string? action = await PopupMenu(selected.FullName);
+            string? action = await BaseViewModel.PopupMenu(selected.FullName);
 
             switch (action)
             {
@@ -123,19 +130,35 @@ namespace BookCollector.ViewModels.Groupings
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add checks for deleting author - 11/26/2025
         [RelayCommand]
         public async Task DeleteAuthor(AuthorModel selected)
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(selected.FullName);
 
-            // Unit test data
-            TestData.DeleteAuthor(selected);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await SetViewModelData();
+                    // Unit test data
+                    TestData.DeleteAuthor(selected);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(selected.FullName);
+
+                    await SetViewModelData();
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
         }
     }
 }

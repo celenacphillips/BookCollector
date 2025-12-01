@@ -28,24 +28,31 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var seriesList = TestData.SeriesList;
+                // Unit test data
+                var seriesList = TestData.SeriesList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList) ),
+                ]);
 
-            TotalSeriesCount = FullSeriesList.Count;
+                TotalSeriesCount = FullSeriesList.Count;
 
-            FilteredSeriesList = FullSeriesList;
-            FilteredSeriesCount = FilteredSeriesList.Count;
+                FilteredSeriesList = FullSeriesList;
+                FilteredSeriesCount = FilteredSeriesList.Count;
 
-            TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
+                TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -71,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuSeries(Guid? input)
         {
             var selected = FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
-            string? action = await PopupMenu(selected.SeriesName);
+            string? action = await BaseViewModel.PopupMenu(selected.SeriesName);
 
             switch (action)
             {
@@ -101,7 +108,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
+            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -113,29 +120,43 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(selected, selected.SeriesName);
-            SeriesEditViewModel bindingContext = new SeriesEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditSeries}";
-            view.BindingContext = bindingContext;
+            SeriesEditView view = new SeriesEditView(selected, $"{AppStringResources.EditSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
             SetIsBusyFalse();
         }
 
-        // TO DO
-        // Add checks for deleting series - 11/26/2025
         [RelayCommand]
         public async Task DeleteSeries(SeriesModel selected)
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(selected.SeriesName);
 
-            // Unit test data
-            TestData.DeleteSeries(selected);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await SetViewModelData();
+                    // Unit test data
+                    TestData.DeleteSeries(selected);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(selected.SeriesName);
+
+                    await SetViewModelData();
+
+                    SetIsBusyFalse();
+
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
         }
     }
 }
