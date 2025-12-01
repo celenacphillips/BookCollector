@@ -49,8 +49,6 @@ namespace BookCollector.ViewModels.Book
             SetRefreshFalse();
         }
 
-        // TO DO
-        // Add check for internet connection - 11/20/2025
         [RelayCommand]
         public async Task Search()
         {
@@ -62,28 +60,44 @@ namespace BookCollector.ViewModels.Book
             if (string.IsNullOrEmpty(Input))
             {
                 SetIsBusyFalse();
-                await Shell.Current.DisplayAlert(null, AppStringResources.NoISBNEntered, AppStringResources.OK);
+                await DisplayMessage($"{AppStringResources.NoISBNEntered}", $"{AppStringResources.NoISBNEntered}", null);
 
                 return;
             }
 
             Input = Input.Trim().Replace("-", "").Replace(" ", "");
 
-            var (items, totalItems) = await GoogleBooksAPI.SearchAsync(Input);
-
-            SetIsBusyFalse();
-
-            if (items == null ||
-                items.Count == 0 ||
-                totalItems == 0)
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
             {
-                await Shell.Current.DisplayAlert(null, AppStringResources.ErrorSearchingForBook, AppStringResources.OK);
-                ShowAddISBN = true;
+                try
+                {
+                    var (items, totalItems) = await GoogleBooksAPI.SearchAsync(Input);
+
+                    SetIsBusyFalse();
+
+                    if (items == null ||
+                        items.Count == 0 ||
+                        totalItems == 0)
+                    {
+                        throw new Exception();
+                    }
+                    else
+                    {
+                        IsbnItems = items;
+                        TotalItems = totalItems;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", $"{AppStringResources.ErrorSearchingForBook}", null);
+                    SetIsBusyFalse();
+                    ShowAddISBN = true;
+                }
             }
             else
             {
-                IsbnItems = items;
-                TotalItems = totalItems;
+                await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", $"{AppStringResources.PleaseConnectToInternetToSearch}", null);
+                SetIsBusyFalse();
             }
         }
 
@@ -103,7 +117,9 @@ namespace BookCollector.ViewModels.Book
                 await Shell.Current.Navigation.PushModalAsync(view);
             }
             else
-                await Shell.Current.DisplayAlert(null, AppStringResources.PleaseAllowCameraPermissionToScanBarcodes, AppStringResources.OK);
+            {
+                await DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}", null);
+            }
 #endif
         }
 
@@ -117,7 +133,7 @@ namespace BookCollector.ViewModels.Book
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert(null, AppStringResources.ErrorSavingBook, AppStringResources.OK);
+                await DisplayMessage($"{AppStringResources.ErrorSavingBook}", $"{AppStringResources.ErrorSavingBook}", null);
             }
         }
 

@@ -24,24 +24,31 @@ namespace BookCollector.ViewModels.Genre
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var bookList = TestData.BookList;
+                // Unit test data
+                var bookList = TestData.BookList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInGenreList(bookList, SelectedGenre.GenreGuid) ),
-            ]);
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInGenreList(bookList, SelectedGenre.GenreGuid) ),
+                ]);
 
-            TotalBooksCount = FullBookList.Count;
+                TotalBooksCount = FullBookList.Count;
 
-            FilteredBookList = FullBookList;
-            FilteredBooksCount = FilteredBookList.Count;
+                FilteredBookList = FullBookList;
+                FilteredBooksCount = FilteredBookList.Count;
 
-            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+                TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]

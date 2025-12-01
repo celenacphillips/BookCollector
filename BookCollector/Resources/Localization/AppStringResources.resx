@@ -528,6 +528,9 @@
   <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
     <value>Please allow Camera permission to scan barcodes!</value>
   </data>
+  <data name="PleaseConnectToInternetToSearch" xml:space="preserve">
+    <value>Please connect to Internet to search!</value>
+  </data>
   <data name="BarcodeScanned" xml:space="preserve">
     <value>Barcode Scanned!</value>
   </data>
@@ -638,5 +641,26 @@
   </data>
   <data name="LocationMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have in 'location'. You can click from here to add a new or existing book.</value>
+  </data>
+  <data name="AreYouSureYouWantToDeleteItem_Question" xml:space="preserve">
+    <value>Are you sure you want to delete item?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="AreYouSure_Question" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="ActionCanceled" xml:space="preserve">
+    <value>Action Canceled</value>
+  </data>
+  <data name="ItemWasDeleted" xml:space="preserve">
+    <value>Item was deleted.</value>
+  </data>
+  <data name="ItemDeleted" xml:space="preserve">
+    <value>Item Deleted</value>
   </data>
 </root>

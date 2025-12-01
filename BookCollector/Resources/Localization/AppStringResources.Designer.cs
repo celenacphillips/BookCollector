@@ -61,6 +61,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action Canceled.
+        /// </summary>
+        internal static string ActionCanceled {
+            get {
+                return ResourceManager.GetString("ActionCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Existing Book.
         /// </summary>
         internal static string AddExistingBook {
@@ -174,6 +183,24 @@ namespace BookCollector.Resources.Localization {
         internal static string AppTheme {
             get {
                 return ResourceManager.GetString("AppTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure?.
+        /// </summary>
+        internal static string AreYouSure_Question {
+            get {
+                return ResourceManager.GetString("AreYouSure_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete item?.
+        /// </summary>
+        internal static string AreYouSureYouWantToDeleteItem_Question {
+            get {
+                return ResourceManager.GetString("AreYouSureYouWantToDeleteItem_Question", resourceCulture);
             }
         }
         
@@ -898,6 +925,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Item Deleted.
+        /// </summary>
+        internal static string ItemDeleted {
+            get {
+                return ResourceManager.GetString("ItemDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item was deleted..
+        /// </summary>
+        internal static string ItemWasDeleted {
+            get {
+                return ResourceManager.GetString("ItemWasDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Language {
@@ -984,6 +1029,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
             }
         }
         
@@ -1164,6 +1218,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PleaseAllowPhotoPermissionToAddCover {
             get {
                 return ResourceManager.GetString("PleaseAllowPhotoPermissionToAddCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please connect to Internet to search!.
+        /// </summary>
+        internal static string PleaseConnectToInternetToSearch {
+            get {
+                return ResourceManager.GetString("PleaseConnectToInternetToSearch", resourceCulture);
             }
         }
         
@@ -1623,6 +1686,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Wishlist {
             get {
                 return ResourceManager.GetString("Wishlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
     }

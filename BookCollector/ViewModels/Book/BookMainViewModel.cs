@@ -20,50 +20,58 @@ namespace BookCollector.ViewModels.Book
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
-
-            ReadingDataSectionValue = true;
-            ChapterListSectionValue = true;
-            AuthorListSectionValue = true;
-            BookInfoSectionValue = true;
-            SummarySectionValue = true;
-            CommentsSectionValue = true;
-
-            BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
-            ShowUpNext = SelectedBook.BookPageRead == 0;
-
-            if (SelectedBook.BookCoverBytes != null)
+            try
             {
-                var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
-                BookCover = imageSource;
+                SetIsBusyTrue();
+
+                ReadingDataSectionValue = true;
+                ChapterListSectionValue = true;
+                AuthorListSectionValue = true;
+                BookInfoSectionValue = true;
+                SummarySectionValue = true;
+                CommentsSectionValue = true;
+
+                BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
+                ShowUpNext = SelectedBook.BookPageRead == 0;
+
+                if (SelectedBook.BookCoverBytes != null)
+                {
+                    var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
+                    BookCover = imageSource;
+                }
+
+                // Unit test data
+                var chapterList = TestData.ChapterList;
+                var genreList = TestData.GenreList;
+                var locationList = TestData.LocationList;
+
+                AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, SelectedBook.BookGuid) ),
+                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, SelectedBook.BookGenreGuid) ),
+                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, SelectedBook.BookLocationGuid) ),
+                    Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
+                    Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
+                    Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
+                    Task.Run (async () => await SelectedBook.SetPartOfCollection() ),
+                    Task.Run (async () => await SelectedBook.SetDates() ),
+                    Task.Run (async () => await SelectedBook.SetBookPrice() ),
+                    Task.Run (async () => await ReadingDataChanged() ),
+                    Task.Run (async () => await ChapterListChanged() ),
+                    Task.Run (async () => await AuthorListChanged() ),
+                    Task.Run (async () => await BookInfoChanged() ),
+                    Task.Run (async () => await SummaryChanged() ),
+                    Task.Run (async () => await CommentsChanged() ),
+                ]);
+
+                SetIsBusyFalse();
             }
-
-            // Unit test data
-            var chapterList = TestData.ChapterList;
-            var genreList = TestData.GenreList;
-            var locationList = TestData.LocationList;
-
-            AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
-
-            Task.WaitAll(
-            [
-                Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, SelectedBook.BookGuid) ),
-                Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, SelectedBook.BookGenreGuid) ),
-                Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, SelectedBook.BookLocationGuid) ),
-                Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
-                Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
-                Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
-                Task.Run (async () => await SelectedBook.SetPartOfCollection() ),
-                Task.Run (async () => await SelectedBook.SetDates() ),
-                Task.Run (async () => await ReadingDataChanged() ),
-                Task.Run (async () => await ChapterListChanged() ),
-                Task.Run (async () => await AuthorListChanged() ),
-                Task.Run (async () => await BookInfoChanged() ),
-                Task.Run (async () => await SummaryChanged() ),
-                Task.Run (async () => await CommentsChanged() ),
-            ]);
-
-            SetIsBusyFalse();
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
@@ -87,19 +95,36 @@ namespace BookCollector.ViewModels.Book
             SetIsBusyFalse();
         }
 
-        // TO DO:
-        // Add checks for deleting book - 11/19/2025
         [RelayCommand]
         public async Task DeleteBook()
         {
-            SetIsBusyTrue();
+            bool answer = await DeleteCheck(SelectedBook.BookTitle);
 
-            // Unit test data
-            TestData.DeleteBook(SelectedBook);
+            if (answer)
+            {
+                try
+                {
+                    SetIsBusyTrue();
 
-            await Shell.Current.Navigation.PopAsync();
+                    // Unit test data
+                    TestData.DeleteBook(SelectedBook);
 
-            SetIsBusyFalse();
+                    await ConfirmDelete(SelectedBook.BookTitle);
+
+                    await Shell.Current.Navigation.PopAsync();
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    await CanceledAction();
+                }
+            }
+            else
+            {
+                await CanceledAction();
+            }
+            
         }
     }
 }

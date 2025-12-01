@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace BookCollector.Data.Models
 {
@@ -238,25 +239,30 @@ namespace BookCollector.Data.Models
 
         public async Task SetBookChapters(ObservableCollection<ChapterModel> chaptersList)
         {
-            var chapters = new ObservableCollection<ChapterModel>();
-
             foreach (var chapter in chaptersList)
             {
                 if (!string.IsNullOrEmpty(chapter.ChapterName))
                 {
-                    chapters.Add(new ChapterModel()
-                    {
-                        ChapterGuid = (Guid)chapter.ChapterGuid,
-                        ChapterName = chapter.ChapterName,
-                        ChapterOrder = chapter.ChapterOrder,
-                        PageRange = chapter.PageRange,
-                        BookGuid = (Guid)this.BookGuid,
-                    });
+                    chapter.BookGuid = (Guid)this.BookGuid;
+
+                    // Unit test data
+                    TestData.InsertChapter(chapter);
                 }
             }
+        }
 
-            // Unit test data
-            TestData.ChapterList = chapters;
+        // TO DO
+        // Add ability to change currency type - 11/27/2025
+        public async Task SetBookPrice()
+        {
+            var cultureInfo = new CultureInfo("en-US");
+
+            if (this.BookPrice == null || !this.BookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))
+            {
+                double.TryParse(this.BookPrice, out double price);
+
+                this.BookPrice = string.Format("{0:C}", price);
+            }
         }
     }
 }

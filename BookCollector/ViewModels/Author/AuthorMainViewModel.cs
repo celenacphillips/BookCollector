@@ -24,26 +24,38 @@ namespace BookCollector.ViewModels.Author
 
         public async Task SetViewModelData()
         {
-            SetIsBusyTrue();
+            try
+            {
+                SetIsBusyTrue();
 
-            // Unit test data
-            var bookList = TestData.BookList;
-            var bookAuthorList = TestData.BookAuthorList;
+                // Unit test data
+                var bookList = TestData.BookList;
+                var bookAuthorList = TestData.BookAuthorList;
 
-            Task.WaitAll(
-            [
-                Task.Run (async () => bookAuthorList  = await FilterLists.GetAllBookAuthorsForAuthor(bookAuthorList, SelectedAuthor.AuthorGuid) ),
-                Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
-            ]);
+                // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
+                Task.WaitAll(
+                [
+                    Task.Run (async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(bookAuthorList, SelectedAuthor.AuthorGuid) ),
+                ]);
 
-            TotalBooksCount = FullBookList.Count;
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
+                ]);
 
-            FilteredBookList = FullBookList;
-            FilteredBooksCount = FilteredBookList.Count;
+                TotalBooksCount = FullBookList.Count;
 
-            TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+                FilteredBookList = FullBookList;
+                FilteredBooksCount = FilteredBookList.Count;
 
-            SetIsBusyFalse();
+                TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+
+                SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
