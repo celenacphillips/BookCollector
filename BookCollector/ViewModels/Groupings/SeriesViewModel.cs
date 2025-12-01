@@ -1,6 +1,7 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Series;
 using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Core.Extensions;

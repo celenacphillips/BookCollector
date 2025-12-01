@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.Input;
 
 namespace BookCollector.ViewModels.Library

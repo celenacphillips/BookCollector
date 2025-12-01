@@ -1,6 +1,7 @@
 ﻿using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels;
+using BookCollector.ViewModels.BaseViewModels;
 
 namespace BookCollector
 {

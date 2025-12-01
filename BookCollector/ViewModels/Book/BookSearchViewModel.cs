@@ -2,6 +2,7 @@
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;

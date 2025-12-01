@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCollector.ViewModels
+namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class LocationBaseViewModel : BookBaseViewModel
     {

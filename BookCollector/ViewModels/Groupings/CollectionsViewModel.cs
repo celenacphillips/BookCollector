@@ -1,6 +1,7 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Collection;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Groupings;

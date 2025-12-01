@@ -2,6 +2,7 @@
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Author;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
