@@ -55,11 +55,10 @@ namespace BookCollector.ViewModels.Author
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList, ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;
-                FilteredBookList = FullBookList;
 
                 Task.WaitAll(
                 [
@@ -67,7 +66,6 @@ namespace BookCollector.ViewModels.Author
                     Task.Run (async () => BookLanguageList = await FilterLists.GetAllLanguagesInBookList(FullBookList) ),
                     Task.Run (async () => BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(FullBookList) ),
                     Task.Run (async () => FilteredBookList = await FilterLists.FilterBookList(FullBookList,
-                                                                                              ShowHiddenBook,
                                                                                               FavoriteBooksOption,
                                                                                               BookFormatOption,
                                                                                               BookPublisherOption,

@@ -30,8 +30,6 @@ namespace BookCollector.ViewModels.Groupings
             ViewTitle = AppStringResources.Series;
         }
 
-        // TO DO
-        // Get the amount of books in grouping - 12/1/2025
         public async Task SetViewModelData()
         {
             try
@@ -39,6 +37,7 @@ namespace BookCollector.ViewModels.Groupings
                 SetIsBusyTrue();
 
                 var showHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
 
                 // Unit test data
                 var seriesList = TestData.SeriesList;
@@ -56,6 +55,11 @@ namespace BookCollector.ViewModels.Groupings
                 TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
 
                 ShowCollectionViewFooter = FilteredSeriesCount > 0;
+
+                foreach (var series in fullSeriesList)
+                {
+                    series.SetTotalBooks(showHiddenBooks);
+                }
 
                 SetIsBusyFalse();
             }

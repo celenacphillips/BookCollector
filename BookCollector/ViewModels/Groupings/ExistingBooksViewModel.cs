@@ -60,21 +60,21 @@ namespace BookCollector.ViewModels.Groupings
                     case "Collection":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(bookList) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(bookList, ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Genre":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAGenreList(bookList) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAGenreList(bookList, ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Series":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutASeriesList(bookList) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutASeriesList(bookList, ShowHiddenBook) ),
                         ]);
                         break;
 
@@ -82,14 +82,14 @@ namespace BookCollector.ViewModels.Groupings
                         var author = (AuthorModel)SelectedObject;
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAuthorList(bookList, author.ReverseFullName) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAuthorList(bookList, author.ReverseFullName ,ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Location":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutALocationList(bookList) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutALocationList(bookList, ShowHiddenBook) ),
                         ]);
                         break;
 
@@ -106,7 +106,6 @@ namespace BookCollector.ViewModels.Groupings
                     Task.Run (async () => BookLanguageList = await FilterLists.GetAllLanguagesInBookList(FullBookList) ),
                     Task.Run (async () => BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(FullBookList) ),
                     Task.Run (async () => FilteredBookList = await FilterLists.FilterBookList(FullBookList,
-                                                                                              ShowHiddenBook,
                                                                                               FavoriteBooksOption,
                                                                                               BookFormatOption,
                                                                                               BookPublisherOption,

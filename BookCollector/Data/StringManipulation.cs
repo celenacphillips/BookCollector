@@ -12,6 +12,11 @@ namespace BookCollector.Data
             return AppStringResources.Blank1OfBlank2Items.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower() );
         }
 
+        public static string SetTotalBooksString(int totalCount)
+        {
+            return AppStringResources.BlankItems.Replace("Blank", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+        }
+
         public static string SetTotalCollectionsString(int filteredCount, int totalCount)
         {
             return AppStringResources.Blank1OfBlank2Items.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Collection.ToLower() : AppStringResources.Collections.ToLower() );

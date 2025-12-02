@@ -6,14 +6,15 @@
                xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
                x:DataType="viewModel:BookBaseViewModel"
                x:Class="BookCollector.Views.Popups.BookCoverPopup"
+               xmlns:controls="clr-namespace:BookCollector.Views.Controls"
                CanBeDismissedByTappingOutsideOfPopup="True">
     <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
                          Padding="2">
         <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                          Padding="40">
-            <!-- TO DO -->
-            <!-- Add pick and zoom feature - 11/19/2025 -->
-            <Image Source="{Binding BookCover}" />
+            <controls:PinchandPanContainer>
+                <Image Source="{Binding BookCover}" />
+            </controls:PinchandPanContainer>
         </VerticalStackLayout>
     </VerticalStackLayout>
 </toolkit:Popup>

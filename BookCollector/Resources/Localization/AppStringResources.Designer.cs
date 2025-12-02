@@ -385,6 +385,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blank items.
+        /// </summary>
+        internal static string BlankItems {
+            get {
+                return ResourceManager.GetString("BlankItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue Gray.
         /// </summary>
         internal static string BlueGray {

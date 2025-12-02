@@ -172,9 +172,13 @@ namespace BookCollector.ViewModels.Book
                 foreach (var author in AuthorList)
                 {
                     // Unit test data
-                    if (!TestData.AuthorList.Contains(author))
+                    if (TestData.AuthorList.Where(x => x.AuthorGuid == author.AuthorGuid).ToList().Count == 0)
                     {
                         TestData.InsertAuthor(author, EditedBook.BookGuid);
+                    }
+                    else
+                    {
+                        TestData.UpdateAuthor(author);
                     }
                 }
 

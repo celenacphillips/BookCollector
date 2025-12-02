@@ -208,6 +208,9 @@
 		<MauiXaml Update="Views\Controls\Location\LocationCollectionList.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\PagesReadPicker.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Rating.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

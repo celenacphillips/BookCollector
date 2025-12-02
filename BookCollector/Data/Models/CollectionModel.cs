@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookCollector.Data.Models
@@ -25,10 +26,19 @@ namespace BookCollector.Data.Models
         {
             CollectionGuid = Guid.NewGuid();
         }
-
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public async Task SetTotalBooks(bool showHiddenBooks)
+        {
+            // Unit test data
+            var bookList = TestData.BookList;
+
+            var list = await FilterLists.GetAllBooksInCollectionList(bookList, this.CollectionGuid, showHiddenBooks);
+
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
         }
     }
 }

@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,16 @@ namespace BookCollector.Data.Models
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public async Task SetTotalBooks(bool showHiddenBooks)
+        {
+            // Unit test data
+            var bookList = TestData.BookList;
+
+            var list = await FilterLists.GetAllBooksInLocationList(bookList, this.LocationGuid, showHiddenBooks);
+
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
         }
     }
 }

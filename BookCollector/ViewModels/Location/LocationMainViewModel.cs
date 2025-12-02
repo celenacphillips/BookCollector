@@ -49,11 +49,10 @@ namespace BookCollector.ViewModels.Location
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(bookList, SelectedLocation.LocationGuid) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(bookList, SelectedLocation.LocationGuid, ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;
-                FilteredBookList = FullBookList;
 
                 Task.WaitAll(
                 [
@@ -61,7 +60,6 @@ namespace BookCollector.ViewModels.Location
                     Task.Run (async () => BookLanguageList = await FilterLists.GetAllLanguagesInBookList(FullBookList) ),
                     Task.Run (async () => BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(FullBookList) ),
                     Task.Run (async () => FilteredBookList = await FilterLists.FilterBookList(FullBookList,
-                                                                                              ShowHiddenBook,
                                                                                               FavoriteBooksOption,
                                                                                               BookFormatOption,
                                                                                               BookPublisherOption,

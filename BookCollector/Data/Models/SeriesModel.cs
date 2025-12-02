@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
+using System.Collections.ObjectModel;
 
 
 namespace BookCollector.Data.Models
@@ -31,6 +32,16 @@ namespace BookCollector.Data.Models
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public async Task SetTotalBooks(bool showHiddenBooks)
+        {
+            // Unit test data
+            var bookList = TestData.BookList;
+
+            var list = await FilterLists.GetAllBooksInSeriesList(bookList, this.SeriesGuid, showHiddenBooks);
+
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
         }
     }
 }

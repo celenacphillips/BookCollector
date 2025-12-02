@@ -84,6 +84,7 @@ public partial class SettingsView : ContentPage
         Preferences.Set("AppTheme", picker.SelectedItem.ToString());
         // TO DO:
         // Add ability to convert AppStringResources string to English string for the Preferences set
+        // If not, when someone changes the language, the default preference will be a different string.
     }
 
     void OnColorPickerSelectedIndexChanged(object sender, EventArgs e)
@@ -122,6 +123,7 @@ public partial class SettingsView : ContentPage
         Preferences.Set("Language", picker.SelectedItem.ToString());
         // TO DO:
         // Add ability to convert AppStringResources string to English string for the Preferences set
+        // If not, when someone changes the language, the default preference will be a different string.
     }
 
     void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)

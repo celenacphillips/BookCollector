@@ -11,9 +11,7 @@
                          Padding="2"
                          WidthRequest="{Binding PopupWidth}">
         <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
-            <!-- TO DO -->
-            <!-- Set up filter pop up - 11/27/2025 -->
-
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />

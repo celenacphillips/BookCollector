@@ -192,8 +192,6 @@ namespace BookCollector.Data
             };
         }
 
-        // TO DO
-        // Bug where removing and re-inserting isn't working - 12/1/2025
         public static void UpdateAuthor(AuthorModel author)
         {
             var oldAuthor = AuthorList.Where(x => x.AuthorGuid == author.AuthorGuid).ToList().FirstOrDefault();

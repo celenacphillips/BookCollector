@@ -30,8 +30,6 @@ namespace BookCollector.ViewModels.Groupings
             ViewTitle = AppStringResources.Locations;
         }
 
-        // TO DO
-        // Get the amount of books in grouping - 12/1/2025
         public async Task SetViewModelData()
         {
             try
@@ -39,6 +37,7 @@ namespace BookCollector.ViewModels.Groupings
                 SetIsBusyTrue();
 
                 var showHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
 
                 // Unit test data
                 var locationList = TestData.LocationList;
@@ -56,6 +55,11 @@ namespace BookCollector.ViewModels.Groupings
                 TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
 
                 ShowCollectionViewFooter = FilteredLocationsCount > 0;
+
+                foreach (var location in FullLocationList)
+                {
+                    location.SetTotalBooks(showHiddenBooks);
+                }
 
                 SetIsBusyFalse();
             }
