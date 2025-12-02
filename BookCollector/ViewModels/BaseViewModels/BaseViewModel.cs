@@ -12,11 +12,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
-        public static double DeviceHeight { get; set; }
-        public static double DeviceWidth { get; set; }
-        public static double CollectionViewHeight { get; set; }
-        public static double SingleMenuBar { get; set; }
-        public static double DoubleMenuBar { get; set; }
+        public double DeviceHeight { get; set; }
+        public double DeviceWidth { get; set; }
+        public double CollectionViewHeight { get; set; }
+        public double SingleMenuBar { get; set; }
+        public double DoubleMenuBar { get; set; }
         public ContentPage _view { get; set; }
 
         [ObservableProperty]
@@ -46,12 +46,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             DoubleMenuBar = DeviceHeight * 0.2899;
             SingleMenuBar = DeviceHeight * 0.2297;
-        }
-
-        [RelayCommand]
-        public async Task FilterPopup(string viewTitle)
-        {
-            _view.ShowPopup(new FilterPopup(viewTitle));
         }
 
         [RelayCommand]

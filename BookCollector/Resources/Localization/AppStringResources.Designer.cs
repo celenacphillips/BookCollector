@@ -169,6 +169,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Authors.
+        /// </summary>
+        internal static string AllAuthors {
+            get {
+                return ResourceManager.GetString("AllAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Books.
         /// </summary>
         internal static string AllBooks {
@@ -183,6 +192,69 @@ namespace BookCollector.Resources.Localization {
         internal static string AllBooksView_InfoText {
             get {
                 return ResourceManager.GetString("AllBooksView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Formats.
+        /// </summary>
+        internal static string AllFormats {
+            get {
+                return ResourceManager.GetString("AllFormats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Languages.
+        /// </summary>
+        internal static string AllLanguages {
+            get {
+                return ResourceManager.GetString("AllLanguages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Locations.
+        /// </summary>
+        internal static string AllLocations {
+            get {
+                return ResourceManager.GetString("AllLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Publishers.
+        /// </summary>
+        internal static string AllPublishers {
+            get {
+                return ResourceManager.GetString("AllPublishers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Publish Years.
+        /// </summary>
+        internal static string AllPublishYears {
+            get {
+                return ResourceManager.GetString("AllPublishYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Ratings.
+        /// </summary>
+        internal static string AllRatings {
+            get {
+                return ResourceManager.GetString("AllRatings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Series.
+        /// </summary>
+        internal static string AllSeries {
+            get {
+                return ResourceManager.GetString("AllSeries", resourceCulture);
             }
         }
         
@@ -498,6 +570,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookPublishYear {
             get {
                 return ResourceManager.GetString("BookPublishYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Rating.
+        /// </summary>
+        internal static string BookRating {
+            get {
+                return ResourceManager.GetString("BookRating", resourceCulture);
             }
         }
         
@@ -1132,6 +1213,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Author.
+        /// </summary>
+        internal static string NoAuthor {
+            get {
+                return ResourceManager.GetString("NoAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Authors Available..
         /// </summary>
         internal static string NoAuthorsAvailable {
@@ -1186,6 +1276,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Language.
+        /// </summary>
+        internal static string NoLanguage {
+            get {
+                return ResourceManager.GetString("NoLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Location.
+        /// </summary>
+        internal static string NoLocation {
+            get {
+                return ResourceManager.GetString("NoLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Non-Favorites.
         /// </summary>
         internal static string NonFavorites {
@@ -1200,6 +1308,24 @@ namespace BookCollector.Resources.Localization {
         internal static string NoPublisher {
             get {
                 return ResourceManager.GetString("NoPublisher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Publish Year.
+        /// </summary>
+        internal static string NoPublishYear {
+            get {
+                return ResourceManager.GetString("NoPublishYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Series.
+        /// </summary>
+        internal static string NoSeries {
+            get {
+                return ResourceManager.GetString("NoSeries", resourceCulture);
             }
         }
         

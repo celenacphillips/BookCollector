@@ -714,4 +714,46 @@
   <data name="Both" xml:space="preserve">
     <value>Both</value>
   </data>
+  <data name="AllFormats" xml:space="preserve">
+    <value>All Formats</value>
+  </data>
+  <data name="BookRating" xml:space="preserve">
+    <value>Book Rating</value>
+  </data>
+  <data name="AllAuthors" xml:space="preserve">
+    <value>All Authors</value>
+  </data>
+  <data name="AllPublishers" xml:space="preserve">
+    <value>All Publishers</value>
+  </data>
+  <data name="AllPublishYears" xml:space="preserve">
+    <value>All Publish Years</value>
+  </data>
+  <data name="AllLanguages" xml:space="preserve">
+    <value>All Languages</value>
+  </data>
+  <data name="AllRatings" xml:space="preserve">
+    <value>All Ratings</value>
+  </data>
+  <data name="AllLocations" xml:space="preserve">
+    <value>All Locations</value>
+  </data>
+  <data name="NoAuthor" xml:space="preserve">
+    <value>No Author</value>
+  </data>
+  <data name="NoPublishYear" xml:space="preserve">
+    <value>No Publish Year</value>
+  </data>
+  <data name="NoLanguage" xml:space="preserve">
+    <value>No Language</value>
+  </data>
+  <data name="NoLocation" xml:space="preserve">
+    <value>No Location</value>
+  </data>
+  <data name="AllSeries" xml:space="preserve">
+    <value>All Series</value>
+  </data>
+  <data name="NoSeries" xml:space="preserve">
+    <value>No Series</value>
+  </data>
 </root>

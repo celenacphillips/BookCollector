@@ -14,6 +14,20 @@ namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BookBaseViewModel: BaseViewModel
     {
+        public bool ShowHiddenBook { get; set; }
+        public bool ShowFavoriteBooks { get; set; }
+        public bool ShowBookRatings { get; set; }
+        public string FavoriteBooksOption { get; set; }
+        public string BookFormatOption { get; set; }
+        public string BookAuthorOption { get; set; }
+        public string BookPublisherOption { get; set; }
+        public string BookPublishYearOption { get; set; }
+        public string BookLanguageOption { get; set; }
+        public string BookRatingOption { get; set; }
+        public string BookLocationOption { get; set; }
+        public string BookSeriesOption { get; set; }
+
+
         [ObservableProperty]
         public string? totalBooksString;
 
@@ -121,6 +135,21 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         [ObservableProperty]
         public ImageSource? bookCover;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookPublisherList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookPublishYearList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookLanguageList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookAuthorList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookLocationList;
 
         public BookBaseViewModel()
         {

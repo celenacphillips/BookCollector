@@ -10,9 +10,6 @@
              Title="{x:Static localization:AppStringResources.Authors}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/filter_icon_light.svg, Dark=Icons/filter_icon_dark.svg}"
-                     Command="{Binding FilterPopupCommand}"
-                     IsEnabled="False"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/sort_icon_light.svg, Dark=Icons/sort_icon_dark.svg}"
                      Command="{Binding SortPopupCommand}"
                      IsEnabled="False"/>

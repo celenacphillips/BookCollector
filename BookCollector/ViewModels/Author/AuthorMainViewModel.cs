@@ -2,8 +2,11 @@
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Book;
 using BookCollector.Views.Groupings;
+using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -30,7 +33,15 @@ namespace BookCollector.ViewModels.Author
             {
                 SetIsBusyTrue();
 
-                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                ShowFavoriteBooks = Preferences.Get("FavoritesOn", true  /* Default */);
+                ShowBookRatings = Preferences.Get("RatingsOn", true  /* Default */);
+                FavoriteBooksOption = Preferences.Get($"{ViewTitle}_FavoriteSelection", AppStringResources.Both  /* Default */);
+                BookFormatOption = Preferences.Get($"{ViewTitle}_FormatSelection", AppStringResources.AllFormats  /* Default */);
+                BookPublisherOption = Preferences.Get($"{ViewTitle}_PublisherSelection", AppStringResources.AllPublishers  /* Default */);
+                BookPublishYearOption = Preferences.Get($"{ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears  /* Default */);
+                BookLanguageOption = Preferences.Get($"{ViewTitle}_LanguageSelection", AppStringResources.AllLanguages  /* Default */);
+                BookRatingOption = Preferences.Get($"{ViewTitle}_RatingSelection", AppStringResources.AllRatings  /* Default */);
 
                 // Unit test data
                 var bookList = TestData.BookList;
@@ -44,15 +55,32 @@ namespace BookCollector.ViewModels.Author
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList, showHiddenBooks) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;
-
                 FilteredBookList = FullBookList;
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => BookPublisherList = await FilterLists.GetAllPublishersInBookList(FullBookList) ),
+                    Task.Run (async () => BookLanguageList = await FilterLists.GetAllLanguagesInBookList(FullBookList) ),
+                    Task.Run (async () => BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(FullBookList) ),
+                    Task.Run (async () => FilteredBookList = await FilterLists.FilterBookList(FullBookList,
+                                                                                              ShowHiddenBook,
+                                                                                              FavoriteBooksOption,
+                                                                                              BookFormatOption,
+                                                                                              BookPublisherOption,
+                                                                                              BookLanguageOption,
+                                                                                              BookRatingOption,
+                                                                                              BookPublishYearOption) ),
+                ]);
+
                 FilteredBooksCount = FilteredBookList.Count;
 
                 TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+
+                ShowCollectionViewFooter = FilteredBooksCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -93,6 +121,38 @@ namespace BookCollector.ViewModels.Author
             ExistingBooksView view = new ExistingBooksView(SelectedAuthor, ViewTitle);
 
             await Shell.Current.Navigation.PushAsync(view);
+        }
+
+        [RelayCommand]
+        public async Task FilterPopup()
+        {
+            var popup = new FilterPopup();
+            FilterPopupViewModel viewModel = new FilterPopupViewModel(popup, ViewTitle)
+            {
+                FavoriteVisible = ShowFavoriteBooks,
+                FavoriteOption = FavoriteBooksOption,
+                FormatVisible = true,
+                FormatOption = BookFormatOption,
+                PublisherVisible = true,
+                PublisherOption = BookPublisherOption,
+                PublishYearVisible = true,
+                PublishYearOption = BookPublishYearOption,
+                LanguageVisible = true,
+                LanguageOption = BookLanguageOption,
+                RatingVisible = ShowBookRatings,
+                RatingOption = BookRatingOption,
+            };
+            viewModel.SetFavoritePicker();
+            viewModel.SetFormatPicker(BookFormats);
+            viewModel.SetPublisherPicker(BookPublisherList);
+            viewModel.SetPublishYearPicker(BookPublishYearList);
+            viewModel.SetLanguagePicker(BookLanguageList);
+            viewModel.SetRatingPicker();
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
         }
     }
 }

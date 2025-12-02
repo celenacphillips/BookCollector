@@ -5,7 +5,9 @@ using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Collection;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Groupings;
+using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -26,9 +28,11 @@ namespace BookCollector.ViewModels.Groupings
             _view = view;
 
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            InfoText = $"{AppStringResources.CollectionView_InfoText}";
+            InfoText = $"{AppStringResources.Collections}";
         }
 
+        // TO DO
+        // Get the amount of books in grouping - 12/1/2025
         public async Task SetViewModelData()
         {
             try
@@ -51,6 +55,8 @@ namespace BookCollector.ViewModels.Groupings
                 FilteredCollectionsCount = FilteredCollectionList.Count;
 
                 TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
+
+                ShowCollectionViewFooter = FilteredCollectionsCount > 0;
 
                 SetIsBusyFalse();
             }
