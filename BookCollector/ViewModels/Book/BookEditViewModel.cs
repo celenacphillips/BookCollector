@@ -7,7 +7,9 @@ using BookCollector.Views.Book;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Genre;
 using BookCollector.Views.Location;
+using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -59,12 +61,18 @@ namespace BookCollector.ViewModels.Book
 
         public BookMainView? MainViewBefore { get; set; }
 
+        private Popup _pagesReadPopup;
+
+        public double PopupWidth { get; set; }
+
         public BookEditViewModel(BookModel book, ContentPage view)
         {
             _view = view;
 
             EditedBook = (BookModel)book.Clone();
             InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{EditedBook.BookTitle}")}";
+
+            PopupWidth = DeviceWidth - 50;
         }
 
         public async Task SetViewModelData()
@@ -350,13 +358,19 @@ namespace BookCollector.ViewModels.Book
             EditedBook.SetBookCheckpoints();
         }
 
-        // TO DO
-        // Set up Pages Read Popup - 11/26/25
-        // Preferably a number spinner
         [RelayCommand]
         public async Task PagesReadPopup()
         {
+            try
+            {
+                _pagesReadPopup = new PagesReadPopup(PopupWidth, EditedBook.BookPageRead, EditedBook.BookPageTotal);
+                var result = await _view.ShowPopupAsync(_pagesReadPopup);
+                EditedBook.BookPageRead = (int)result;
+            }
+            catch (Exception ex)
+            {
 
+            }
         }
 
         [RelayCommand]
