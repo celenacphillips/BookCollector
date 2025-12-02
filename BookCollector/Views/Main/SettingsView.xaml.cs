@@ -31,6 +31,7 @@ public partial class SettingsView : ContentPage
     // Try to add color preview in the picker - 11/12/2025
     // Add more currency options - 12/1/2025
     // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
+    // Get stored Language and Currency defaults - 12/1/2025
 
     public SettingsView()
 	{

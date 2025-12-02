@@ -3,16 +3,45 @@
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-               xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
-               x:DataType="viewModel:BookBaseViewModel"
                x:Class="BookCollector.Views.Popups.FilterPopup"
                CanBeDismissedByTappingOutsideOfPopup="True">
     <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
-                         Padding="2">
-        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-                         Padding="40">
+                         Padding="2"
+                         WidthRequest="{Binding PopupWidth}">
+        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
             <!-- TO DO -->
             <!-- Set up filter pop up - 11/27/2025 -->
+            <Button Text="X" 
+                    HorizontalOptions="End"
+                    Margin="10,10,15,0"
+                    Clicked="OnCloseButtonClicked"/>
+
+            <VerticalStackLayout Margin="20,10">
+                
+                <Label Text="{x:Static localization:AppStringResources.FilterBy}"
+                       TextDecorations="Underline"
+                       FontAttributes="Bold"/>
+                
+                <!-- Favorite -->
+                <Grid IsVisible="{Binding FavoriteVisible}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="{x:Static localization:AppStringResources.Favorite}"
+                           VerticalTextAlignment="Center"
+                           Grid.Row="0" Grid.Column="0"/>
+                    <Picker ItemsSource="{Binding FavoritePicker}"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            SelectedItem="{Binding FavoriteOption}"
+                            Grid.Row="0" Grid.Column="1"/>
+                </Grid>
+                <!-- Favorite -->
+                
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </VerticalStackLayout>
+    
 </toolkit:Popup>

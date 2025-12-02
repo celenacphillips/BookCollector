@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Core.Extensions;
 using System.Collections.ObjectModel;
@@ -7,7 +8,9 @@ namespace BookCollector.Data
 {
     public partial class FilterLists : BaseViewModel
     {
-        public static async Task<ObservableCollection<BookModel>> GetReadingBooksList(ObservableCollection<BookModel> bookList, bool showHiddenBooks = true)
+        public static async Task<ObservableCollection<BookModel>> GetReadingBooksList(ObservableCollection<BookModel> bookList,
+                                                                                      bool showHiddenBooks,
+                                                                                      string favoritesOption)
         {
             var filteredList = bookList.Where(x => (x.BookPageRead != x.BookPageTotal &&
                                                     x.BookPageRead != 0) ||
@@ -18,6 +21,22 @@ namespace BookCollector.Data
             if (!showHiddenBooks)
                 filteredList = filteredList.Where(x => !x.HideBook)
                                            .ToObservableCollection();
+
+            switch (favoritesOption)
+            {
+                case "Favorites":
+                    filteredList = filteredList.Where(x => x.IsFavorite)
+                                               .ToObservableCollection();
+                    break;
+
+                case "Non-Favorites":
+                    filteredList = filteredList.Where(x => !x.IsFavorite)
+                                               .ToObservableCollection();
+                    break;
+
+                default:
+                    break;
+            }
 
             return filteredList;
         }

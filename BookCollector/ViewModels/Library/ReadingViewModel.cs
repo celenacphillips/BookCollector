@@ -1,6 +1,8 @@
 ﻿using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
 
 namespace BookCollector.ViewModels.Library
@@ -21,14 +23,19 @@ namespace BookCollector.ViewModels.Library
                 SetIsBusyTrue();
 
                 var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                var favoriteBooksOption = Preferences.Get("Reading_FavoriteSelection", AppStringResources.Both  /* Default */);
 
                 // Unit test data
                 var bookList = TestData.BookList;
 
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FullBookList = await FilterLists.GetReadingBooksList(bookList, showHiddenBooks) ),
-                ]);
+                FullBookList = new System.Collections.ObjectModel.ObservableCollection<Data.Models.BookModel>();
+
+                //Task.WaitAll(
+                //[
+                //    Task.Run (async () => FullBookList = await FilterLists.GetReadingBooksList(bookList,
+                //                                                                               showHiddenBooks,
+                //                                                                               favoriteBooksOption) ),
+                //]);
 
                 TotalBooksCount = FullBookList.Count;
 
@@ -36,6 +43,8 @@ namespace BookCollector.ViewModels.Library
                 FilteredBooksCount = FilteredBookList.Count;
 
                 TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
+
+                ShowCollectionViewFooter = FilteredBooksCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -51,6 +60,13 @@ namespace BookCollector.ViewModels.Library
             SetRefreshTrue();
             await SetViewModelData();
             SetRefreshFalse();
+        }
+
+        [RelayCommand]
+        public async Task FilterPopup1()
+        {
+            var result = await _view.ShowPopupAsync(new FilterPopup(AppStringResources.Reading));
+            await SetViewModelData();
         }
     }
 }

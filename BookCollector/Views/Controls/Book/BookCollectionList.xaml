@@ -41,12 +41,13 @@
             </ContentView>
         </CollectionView.EmptyView>
 
-        <CollectionView.Footer>
+        <!--<CollectionView.Footer>
             <Label Margin="0,5,0,0"
                    Text="{x:Static localization:AppStringResources.EndOfList}"
                    HorizontalTextAlignment="Center"
-                   Style="{StaticResource SubTitle}" />
-        </CollectionView.Footer>
+                   Style="{StaticResource SubTitle}" 
+                   IsVisible="{Binding ShowCollectionViewFooter}"/>
+        </CollectionView.Footer>-->
         
     </CollectionView>
     
