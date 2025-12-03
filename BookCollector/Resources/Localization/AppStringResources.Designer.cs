@@ -682,6 +682,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Books Read This Year: yyyy.
+        /// </summary>
+        internal static string BooksReadThisYear {
+            get {
+                return ResourceManager.GetString("BooksReadThisYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Sub-Title.
         /// </summary>
         internal static string BookSubTitle {
@@ -1060,6 +1069,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Favorite Status.
+        /// </summary>
+        internal static string FavoriteStatus {
+            get {
+                return ResourceManager.GetString("FavoriteStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter By.
         /// </summary>
         internal static string FilterBy {
@@ -1074,6 +1092,24 @@ namespace BookCollector.Resources.Localization {
         internal static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Five Stars.
+        /// </summary>
+        internal static string FiveStars {
+            get {
+                return ResourceManager.GetString("FiveStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Four Stars.
+        /// </summary>
+        internal static string FourStars {
+            get {
+                return ResourceManager.GetString("FourStars", resourceCulture);
             }
         }
         
@@ -1393,6 +1429,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non-Favorite.
+        /// </summary>
+        internal static string NonFavorite {
+            get {
+                return ResourceManager.GetString("NonFavorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Non-Favorites.
         /// </summary>
         internal static string NonFavorites {
@@ -1429,6 +1474,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of Books.
+        /// </summary>
+        internal static string NumberOfBooks {
+            get {
+                return ResourceManager.GetString("NumberOfBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Of.
         /// </summary>
         internal static string Of {
@@ -1443,6 +1497,15 @@ namespace BookCollector.Resources.Localization {
         internal static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One Star.
+        /// </summary>
+        internal static string OneStar {
+            get {
+                return ResourceManager.GetString("OneStar", resourceCulture);
             }
         }
         
@@ -1479,6 +1542,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PagesRead {
             get {
                 return ResourceManager.GetString("PagesRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pages Read This Year: yyyy.
+        /// </summary>
+        internal static string PagesReadThisYear {
+            get {
+                return ResourceManager.GetString("PagesReadThisYear", resourceCulture);
             }
         }
         
@@ -1564,6 +1636,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rating Status.
+        /// </summary>
+        internal static string RatingStatus {
+            get {
+                return ResourceManager.GetString("RatingStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read.
         /// </summary>
         internal static string Read {
@@ -1614,6 +1695,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ReadingStartDate {
             get {
                 return ResourceManager.GetString("ReadingStartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading Status.
+        /// </summary>
+        internal static string ReadingStatus {
+            get {
+                return ResourceManager.GetString("ReadingStatus", resourceCulture);
             }
         }
         
@@ -2032,6 +2122,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Three Stars.
+        /// </summary>
+        internal static string ThreeStars {
+            get {
+                return ResourceManager.GetString("ThreeStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To Be Read.
         /// </summary>
         internal static string ToBeRead {
@@ -2046,6 +2145,51 @@ namespace BookCollector.Resources.Localization {
         internal static string ToBeReadView_InfoText {
             get {
                 return ResourceManager.GetString("ToBeReadView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Authors.
+        /// </summary>
+        internal static string TopAuthors {
+            get {
+                return ResourceManager.GetString("TopAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Collections.
+        /// </summary>
+        internal static string TopCollections {
+            get {
+                return ResourceManager.GetString("TopCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Genres.
+        /// </summary>
+        internal static string TopGenres {
+            get {
+                return ResourceManager.GetString("TopGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Locations.
+        /// </summary>
+        internal static string TopLocations {
+            get {
+                return ResourceManager.GetString("TopLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Series.
+        /// </summary>
+        internal static string TopSeries {
+            get {
+                return ResourceManager.GetString("TopSeries", resourceCulture);
             }
         }
         
@@ -2095,6 +2239,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Value.
+        /// </summary>
+        internal static string TotalValue {
+            get {
+                return ResourceManager.GetString("TotalValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two Stars.
+        /// </summary>
+        internal static string TwoStars {
+            get {
+                return ResourceManager.GetString("TwoStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue this book up next for reading?.
         /// </summary>
         internal static string UpNext_Question {
@@ -2136,6 +2298,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Yes {
             get {
                 return ResourceManager.GetString("Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zero Stars.
+        /// </summary>
+        internal static string ZeroStars {
+            get {
+                return ResourceManager.GetString("ZeroStars", resourceCulture);
             }
         }
     }

@@ -810,4 +810,61 @@
   <data name="BookWasAddedToLibrary" xml:space="preserve">
     <value>Book was added to library and the wish list item was deleted.</value>
   </data>
+  <data name="NumberOfBooks" xml:space="preserve">
+    <value>Number of Books</value>
+  </data>
+  <data name="TotalValue" xml:space="preserve">
+    <value>Total Value</value>
+  </data>
+  <data name="ReadingStatus" xml:space="preserve">
+    <value>Reading Status</value>
+  </data>
+  <data name="FavoriteStatus" xml:space="preserve">
+    <value>Favorite Status</value>
+  </data>
+  <data name="RatingStatus" xml:space="preserve">
+    <value>Rating Status</value>
+  </data>
+  <data name="TopCollections" xml:space="preserve">
+    <value>Top Collections</value>
+  </data>
+  <data name="TopGenres" xml:space="preserve">
+    <value>Top Genres</value>
+  </data>
+  <data name="TopSeries" xml:space="preserve">
+    <value>Top Series</value>
+  </data>
+  <data name="TopAuthors" xml:space="preserve">
+    <value>Top Authors</value>
+  </data>
+  <data name="TopLocations" xml:space="preserve">
+    <value>Top Locations</value>
+  </data>
+  <data name="BooksReadThisYear" xml:space="preserve">
+    <value>Books Read This Year: yyyy</value>
+  </data>
+  <data name="PagesReadThisYear" xml:space="preserve">
+    <value>Pages Read This Year: yyyy</value>
+  </data>
+  <data name="ZeroStars" xml:space="preserve">
+    <value>Zero Stars</value>
+  </data>
+  <data name="OneStar" xml:space="preserve">
+    <value>One Star</value>
+  </data>
+  <data name="TwoStars" xml:space="preserve">
+    <value>Two Stars</value>
+  </data>
+  <data name="ThreeStars" xml:space="preserve">
+    <value>Three Stars</value>
+  </data>
+  <data name="FourStars" xml:space="preserve">
+    <value>Four Stars</value>
+  </data>
+  <data name="FiveStars" xml:space="preserve">
+    <value>Five Stars</value>
+  </data>
+  <data name="NonFavorite" xml:space="preserve">
+    <value>Non-Favorite</value>
+  </data>
 </root>

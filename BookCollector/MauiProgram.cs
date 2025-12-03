@@ -1,6 +1,8 @@
 ﻿using BarcodeScanner.Mobile;
 using BookCollector.Views.Controls;
 using CommunityToolkit.Maui;
+using Maui.NullableDateTimePicker;
+using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace BookCollector
@@ -13,6 +15,8 @@ namespace BookCollector
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .ConfigureNullableDateTimePicker()
+                .UseMicrocharts()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

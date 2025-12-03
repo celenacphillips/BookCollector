@@ -1,12 +1,142 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Statistics.WishListStatisticsView"
-             Title="WishListStatisticsView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Statistics"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:DataType="viewModel:WishListStatisticsViewModel"
+             Title="{x:Static localization:AppStringResources.Wishlist}">
+
+
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView>
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                        <Grid Margin="20,20,20,40">
+                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Number of Books -->
+                            <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="0" Grid.Column="0"/>
+                            <Label Text="{Binding TotalBooks}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="1" Grid.Column="0"/>
+                            <!-- Number of Books -->
+
+                            <!-- Total Value -->
+                            <Label Text="{x:Static localization:AppStringResources.TotalValue}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="0" Grid.Column="1"/>
+                            <Label Text="{Binding CostBooks}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="1" Grid.Column="1"/>
+                            <!-- Total Value -->
+                        </Grid>
+
+                        <Label Style="{StaticResource ShortSeparator}" />
+
+                        <!-- Book Formats -->
+                        <VerticalStackLayout IsVisible="{Binding ShowFormats}">
+                            <Label Text="{x:Static localization:AppStringResources.BookFormat}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="formats" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
+                            
+                        </VerticalStackLayout>
+                        <!-- Book Formats -->
+
+                        <!-- Book Series -->
+                        <VerticalStackLayout IsVisible="{Binding ShowSeries}">
+                            <Label Text="{x:Static localization:AppStringResources.TopSeries}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="series" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
+                            
+                        </VerticalStackLayout>
+                        <!-- Book Series -->
+
+                        <!-- Authors -->
+                        <VerticalStackLayout IsVisible="{Binding ShowAuthors}">
+                            <Label Text="{x:Static localization:AppStringResources.TopAuthors}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="authors" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
+                            
+                        </VerticalStackLayout>
+                        <!-- Authors -->
+
+                        <!-- Locations -->
+                        <VerticalStackLayout IsVisible="{Binding ShowLocations}">
+                            <Label Text="{x:Static localization:AppStringResources.TopLocations}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="locations" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
+                            
+                        </VerticalStackLayout>
+                        <!-- Locations -->
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+
+        </StackLayout>
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+    </AbsoluteLayout>
 </ContentPage>
