@@ -44,6 +44,7 @@ namespace BookCollector.Data.Models
             var list = await FilterLists.GetAllBooksInLocationList(bookList, this.LocationGuid, showHiddenBooks);
 
             this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
+            this.LocationTotalBooks = list.Count;
         }
     }
 }

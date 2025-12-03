@@ -51,6 +51,7 @@ namespace BookCollector.Data.Models
             var list = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList, showHiddenBooks);
 
             this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
+            this.AuthorTotalBooks = list.Count;
         }
     }
 }

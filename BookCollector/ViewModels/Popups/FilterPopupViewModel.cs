@@ -185,15 +185,32 @@ namespace BookCollector.ViewModels.Popups
 
         private void SetPreferences()
         {
-            Preferences.Set($"{ViewTitle}_FavoriteSelection", FavoriteOption);
-            Preferences.Set($"{ViewTitle}_FormatSelection", FormatOption);
-            Preferences.Set($"{ViewTitle}_AuthorSelection", AuthorOption);
-            Preferences.Set($"{ViewTitle}_PublisherSelection", PublisherOption);
-            Preferences.Set($"{ViewTitle}_PublishYearSelection", PublishYearOption);
-            Preferences.Set($"{ViewTitle}_LanguageSelection", LanguageOption);
-            Preferences.Set($"{ViewTitle}_RatingSelection", RatingOption);
-            Preferences.Set($"{ViewTitle}_LocationSelection", LocationOption);
-            Preferences.Set($"{ViewTitle}_SeriesSelection", SeriesOption);
+            if (FavoriteVisible)
+                Preferences.Set($"{ViewTitle}_FavoriteSelection", FavoriteOption);
+
+            if (FormatVisible)
+                Preferences.Set($"{ViewTitle}_FormatSelection", FormatOption);
+
+            if (AuthorVisible)
+                Preferences.Set($"{ViewTitle}_AuthorSelection", AuthorOption);
+
+            if (PublisherVisible)
+                Preferences.Set($"{ViewTitle}_PublisherSelection", PublisherOption);
+
+            if (PublishYearVisible)
+                Preferences.Set($"{ViewTitle}_PublishYearSelection", PublishYearOption);
+
+            if (LanguageVisible)
+                Preferences.Set($"{ViewTitle}_LanguageSelection", LanguageOption);
+
+            if (RatingVisible)
+                Preferences.Set($"{ViewTitle}_RatingSelection", RatingOption);
+
+            if (LocationVisible)
+                Preferences.Set($"{ViewTitle}_LocationSelection", LocationOption);
+
+            if (SeriesVisible)
+                Preferences.Set($"{ViewTitle}_SeriesSelection", SeriesOption);
         }
     }
 }

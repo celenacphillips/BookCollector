@@ -26,6 +26,15 @@ namespace BookCollector.ViewModels.BaseViewModels
         public string BookRatingOption { get; set; }
         public string BookLocationOption { get; set; }
         public string BookSeriesOption { get; set; }
+        public bool BookTitleChecked { get; set; }
+        public bool BookReadingDateChecked { get; set; }
+        public bool BookReadPercentageChecked { get; set; }
+        public bool BookPublisherChecked { get; set; }
+        public bool BookPublishYearChecked { get; set; }
+        public bool AuthorLastNameChecked { get; set; }
+        public bool BookFormatChecked { get; set; }
+        public bool PageCountChecked { get; set; }
+        public bool BookPriceChecked { get; set; }
 
 
         [ObservableProperty]

@@ -759,4 +759,28 @@
   <data name="BlankItems" xml:space="preserve">
     <value>Blank items</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort By</value>
+  </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="BookReadingDate" xml:space="preserve">
+    <value>Book Reading Date</value>
+  </data>
+  <data name="BookReadPercentage" xml:space="preserve">
+    <value>Book Read Percentage</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Total Price</value>
+  </data>
+  <data name="TotalBooks" xml:space="preserve">
+    <value>Total Books</value>
+  </data>
+  <data name="SeriesOrder" xml:space="preserve">
+    <value>Series Order</value>
+  </data>
 </root>

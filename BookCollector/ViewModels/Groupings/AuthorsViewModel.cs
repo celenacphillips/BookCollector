@@ -3,6 +3,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Author;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
@@ -22,6 +23,11 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         public string? totalAuthorsString;
 
+        private bool ShowHiddenAuthors { get; set; }
+        private bool AuthorLastNameChecked { get; set; }
+        private bool TotalBooksChecked { get; set; }
+        private bool TotalPriceChecked { get; set; }
+
         public AuthorsViewModel(ContentPage view)
         {
             _view = view;
@@ -36,30 +42,40 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
-                var showHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
-                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                GetPreferences();
 
                 // Unit test data
                 var authorList = TestData.AuthorList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList, showHiddenAuthors) ),
+                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList, ShowHiddenAuthors) ),
                 ]);
 
                 TotalAuthorsCount = FullAuthorList.Count;
 
                 FilteredAuthorList = FullAuthorList;
+
+                foreach (var author in FullAuthorList)
+                {
+                    author.SetTotalBooks(ShowHiddenBook);
+                }
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredAuthorList = await FilterLists.SortAuthorList(FilteredAuthorList,
+                                                                                                AuthorLastNameChecked,
+                                                                                                TotalBooksChecked,
+                                                                                                TotalPriceChecked,
+                                                                                                AscendingChecked,
+                                                                                                DescendingChecked) ),
+                ]);
+
                 FilteredAuthorsCount = FilteredAuthorList.Count;
 
                 TotalAuthorsString = StringManipulation.SetTotalAuthorsString(FilteredAuthorsCount, TotalAuthorsCount);
 
                 ShowCollectionViewFooter = FilteredAuthorsCount > 0;
-
-                foreach (var author in FullAuthorList)
-                {
-                    author.SetTotalBooks(showHiddenBooks);
-                }
 
                 SetIsBusyFalse();
             }
@@ -173,6 +189,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 await CanceledAction();
             }
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                AuthorLastNameVisible = true,
+                AuthorLastNameChecked = AuthorLastNameChecked,
+                TotalBooksVisible = true,
+                TotalBooksChecked = TotalBooksChecked,
+                TotalPriceVisible = true,
+                TotalPriceChecked = TotalPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            AuthorLastNameChecked = Preferences.Get($"{ViewTitle}_AuthorLastNameSelection", true  /* Default */);
+            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
+            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }

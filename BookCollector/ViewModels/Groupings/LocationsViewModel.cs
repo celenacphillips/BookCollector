@@ -3,6 +3,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Location;
+using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
@@ -22,6 +23,11 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         public string? totalLocationsString;
 
+        private bool ShowHiddenLocations { get; set; }
+        private bool LocationNameChecked { get; set; }
+        private bool TotalBooksChecked { get; set; }
+        private bool TotalPriceChecked { get; set; }
+
         public LocationsViewModel(ContentPage view)
         {
             _view = view;
@@ -36,30 +42,40 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
-                var showHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
-                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                GetPreferences();
 
                 // Unit test data
                 var locationList = TestData.LocationList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList, showHiddenLocations) ),
+                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList, ShowHiddenLocations) ),
                 ]);
 
                 TotalLocationsCount = FullLocationList.Count;
 
                 FilteredLocationList = FullLocationList;
+
+                foreach (var location in FullLocationList)
+                {
+                    location.SetTotalBooks(ShowHiddenBook);
+                }
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredLocationList = await FilterLists.SortLocationsList(FilteredLocationList,
+                                                                                                     LocationNameChecked,
+                                                                                                     TotalBooksChecked,
+                                                                                                     TotalPriceChecked,
+                                                                                                     AscendingChecked,
+                                                                                                     DescendingChecked) ),
+                ]);
+
                 FilteredLocationsCount = FilteredLocationList.Count;
 
                 TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
 
                 ShowCollectionViewFooter = FilteredLocationsCount > 0;
-
-                foreach (var location in FullLocationList)
-                {
-                    location.SetTotalBooks(showHiddenBooks);
-                }
 
                 SetIsBusyFalse();
             }
@@ -172,6 +188,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 await CanceledAction();
             }
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                LocationNameVisible = true,
+                LocationNameChecked = LocationNameChecked,
+                TotalBooksVisible = true,
+                TotalBooksChecked = TotalBooksChecked,
+                TotalPriceVisible = true,
+                TotalPriceChecked = TotalPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            LocationNameChecked = Preferences.Get($"{ViewTitle}_LocationNameSelection", true  /* Default */);
+            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
+            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }

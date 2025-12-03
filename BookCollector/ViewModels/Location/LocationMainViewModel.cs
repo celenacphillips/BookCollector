@@ -33,15 +33,7 @@ namespace BookCollector.ViewModels.Location
             {
                 SetIsBusyTrue();
 
-                ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
-                ShowFavoriteBooks = Preferences.Get("FavoritesOn", true  /* Default */);
-                ShowBookRatings = Preferences.Get("RatingsOn", true  /* Default */);
-                FavoriteBooksOption = Preferences.Get($"{ViewTitle}_FavoriteSelection", AppStringResources.Both  /* Default */);
-                BookFormatOption = Preferences.Get($"{ViewTitle}_FormatSelection", AppStringResources.AllFormats  /* Default */);
-                BookPublisherOption = Preferences.Get($"{ViewTitle}_PublisherSelection", AppStringResources.AllPublishers  /* Default */);
-                BookPublishYearOption = Preferences.Get($"{ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears  /* Default */);
-                BookLanguageOption = Preferences.Get($"{ViewTitle}_LanguageSelection", AppStringResources.AllLanguages  /* Default */);
-                BookRatingOption = Preferences.Get($"{ViewTitle}_RatingSelection", AppStringResources.AllRatings  /* Default */);
+                GetPreferences();
 
                 // Unit test data
                 var bookList = TestData.BookList;
@@ -66,6 +58,21 @@ namespace BookCollector.ViewModels.Location
                                                                                               BookLanguageOption,
                                                                                               BookRatingOption,
                                                                                               BookPublishYearOption) ),
+                ]);
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredBookList = await FilterLists.SortBookList(FilteredBookList,
+                                                                                            BookTitleChecked,
+                                                                                            BookReadingDateChecked,
+                                                                                            BookReadPercentageChecked,
+                                                                                            BookPublisherChecked,
+                                                                                            BookPublishYearChecked,
+                                                                                            AuthorLastNameChecked,
+                                                                                            BookFormatChecked,
+                                                                                            BookPriceChecked,
+                                                                                            AscendingChecked,
+                                                                                            DescendingChecked) ),
                 ]);
 
                 FilteredBooksCount = FilteredBookList.Count;
@@ -145,6 +152,67 @@ namespace BookCollector.ViewModels.Location
 
             await _view.ShowPopupAsync(popup);
             await SetViewModelData();
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                BookTitleVisible = true,
+                BookTitleChecked = BookTitleChecked,
+                BookReadingDateVisible = true,
+                BookReadingDateChecked = BookReadingDateChecked,
+                BookReadPercentageVisible = true,
+                BookReadPercentageChecked = BookReadPercentageChecked,
+                BookPublisherVisible = true,
+                BookPublisherChecked = BookPublisherChecked,
+                BookPublishYearVisible = true,
+                BookPublishYearChecked = BookPublishYearChecked,
+                AuthorLastNameVisible = true,
+                AuthorLastNameChecked = AuthorLastNameChecked,
+                BookFormatVisible = true,
+                BookFormatChecked = BookFormatChecked,
+                PageCountVisible = true,
+                PageCountChecked = PageCountChecked,
+                BookPriceVisible = true,
+                BookPriceChecked = BookPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+            ShowFavoriteBooks = Preferences.Get("FavoritesOn", true  /* Default */);
+            ShowBookRatings = Preferences.Get("RatingsOn", true  /* Default */);
+
+            FavoriteBooksOption = Preferences.Get($"{ViewTitle}_FavoriteSelection", AppStringResources.Both  /* Default */);
+            BookFormatOption = Preferences.Get($"{ViewTitle}_FormatSelection", AppStringResources.AllFormats  /* Default */);
+            BookPublisherOption = Preferences.Get($"{ViewTitle}_PublisherSelection", AppStringResources.AllPublishers  /* Default */);
+            BookPublishYearOption = Preferences.Get($"{ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears  /* Default */);
+            BookLanguageOption = Preferences.Get($"{ViewTitle}_LanguageSelection", AppStringResources.AllLanguages  /* Default */);
+            BookRatingOption = Preferences.Get($"{ViewTitle}_RatingSelection", AppStringResources.AllRatings  /* Default */);
+
+            BookTitleChecked = Preferences.Get($"{ViewTitle}_BookTitleSelection", true  /* Default */);
+            BookReadingDateChecked = Preferences.Get($"{ViewTitle}_BookReadingDateSelection", false  /* Default */);
+            BookReadPercentageChecked = Preferences.Get($"{ViewTitle}_BookReadPercentageSelection", false  /* Default */);
+            BookPublisherChecked = Preferences.Get($"{ViewTitle}_BookPublisherSelection", false  /* Default */);
+            BookPublishYearChecked = Preferences.Get($"{ViewTitle}_BookPublishYearSelection", false  /* Default */);
+            AuthorLastNameChecked = Preferences.Get($"{ViewTitle}_AuthorLastNameSelection", false  /* Default */);
+            BookFormatChecked = Preferences.Get($"{ViewTitle}_BookFormatSelection", false  /* Default */);
+            PageCountChecked = Preferences.Get($"{ViewTitle}_PageCountSelection", false  /* Default */);
+            BookPriceChecked = Preferences.Get($"{ViewTitle}_BookPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }

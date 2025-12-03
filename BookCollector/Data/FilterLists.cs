@@ -209,6 +209,105 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<ObservableCollection<BookModel>> SortBookList(ObservableCollection<BookModel> bookList,
+                                                                               bool bookTitleChecked,
+                                                                               bool bookReadingDateChecked,
+                                                                               bool bookReadPercentageChecked,
+                                                                               bool bookPublisherChecked,
+                                                                               bool bookPublishYearChecked,
+                                                                               bool authorLastNameChecked,
+                                                                               bool bookFormatChecked,
+                                                                               bool bookPriceChecked,
+                                                                               bool ascendingChecked,
+                                                                               bool descendingChecked,
+                                                                               bool seriesOrderChecked = false)
+        {
+            var filteredList = bookList;
+
+            if (bookTitleChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).ToObservableCollection();
+            }
+
+            if (bookReadingDateChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookStartDate).OrderBy(x => x.BookEndDate).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookStartDate).OrderByDescending(x => x.BookEndDate).ToObservableCollection();
+            }
+
+            if (bookReadPercentageChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.Progress).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.Progress).ToObservableCollection();
+            }
+
+            if (bookPublisherChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
+            }
+
+            if (bookPublishYearChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
+            }
+
+            if (authorLastNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
+            }
+
+            if (bookFormatChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
+            }
+
+            if (bookPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
+            }
+
+            if (seriesOrderChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookNumberInSeries).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookNumberInSeries).ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
         public static async Task<ObservableCollection<BookModel>> GetReadingBooksList(ObservableCollection<BookModel> bookList, bool showHiddenBooks)
         {
             var filteredList = bookList.Where(x => (x.BookPageRead != x.BookPageTotal &&
@@ -566,6 +665,45 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(ObservableCollection<CollectionModel> collectionList,
+                                                                                            bool collectionNameChecked,
+                                                                                            bool totalBooksChecked,
+                                                                                            bool totalPriceChecked,
+                                                                                            bool ascendingChecked,
+                                                                                            bool descendingChecked)
+        {
+            var filteredList = collectionList;
+
+            if (collectionNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.CollectionName).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.CollectionName).ToObservableCollection();
+            }
+
+            if (totalBooksChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.CollectionName).OrderBy(x => x.CollectionTotalBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.CollectionName).OrderByDescending(x => x.CollectionTotalBooks).ToObservableCollection();
+            }
+
+            if (totalPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.CollectionName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.CollectionName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
         public static async Task<ObservableCollection<GenreModel>> GetAllGenresList(ObservableCollection<GenreModel> genreList,
                                                                                     bool showHiddenGenres)
         {
@@ -575,6 +713,45 @@ namespace BookCollector.Data
             if (!showHiddenGenres)
                 filteredList = filteredList.Where(x => !x.HideGenre)
                                            .ToObservableCollection();
+
+            return filteredList;
+        }
+
+        public static async Task<ObservableCollection<GenreModel>> SortGenresList(ObservableCollection<GenreModel> genreList,
+                                                                                  bool genreNameChecked,
+                                                                                  bool totalBooksChecked,
+                                                                                  bool totalPriceChecked,
+                                                                                  bool ascendingChecked,
+                                                                                  bool descendingChecked)
+        {
+            var filteredList = genreList;
+
+            if (genreNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.GenreName).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.GenreName).ToObservableCollection();
+            }
+
+            if (totalBooksChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.GenreName).OrderBy(x => x.GenreTotalBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.GenreName).OrderByDescending(x => x.GenreTotalBooks).ToObservableCollection();
+            }
+
+            if (totalPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.GenreName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.GenreName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -592,6 +769,45 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<ObservableCollection<SeriesModel>> SortSeriesList(ObservableCollection<SeriesModel> seriesList,
+                                                                                   bool seriesNameChecked,
+                                                                                   bool totalBooksChecked,
+                                                                                   bool totalPriceChecked,
+                                                                                   bool ascendingChecked,
+                                                                                   bool descendingChecked)
+        {
+            var filteredList = seriesList;
+
+            if (seriesNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.SeriesName).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.SeriesName).ToObservableCollection();
+            }
+
+            if (totalBooksChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.SeriesName).OrderBy(x => x.SeriesTotalBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.SeriesName).OrderByDescending(x => x.SeriesTotalBooks).ToObservableCollection();
+            }
+
+            if (totalPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.SeriesName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.SeriesName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
         public static async Task<ObservableCollection<LocationModel>> GetAllLocationsList(ObservableCollection<LocationModel> locationList,
                                                                                           bool showHiddenLocations)
         {
@@ -601,6 +817,45 @@ namespace BookCollector.Data
             if (!showHiddenLocations)
                 filteredList = filteredList.Where(x => !x.HideLocation)
                                            .ToObservableCollection();
+
+            return filteredList;
+        }
+
+        public static async Task<ObservableCollection<LocationModel>> SortLocationsList(ObservableCollection<LocationModel> locationList,
+                                                                                        bool locationNameChecked,
+                                                                                        bool totalBooksChecked,
+                                                                                        bool totalPriceChecked,
+                                                                                        bool ascendingChecked,
+                                                                                        bool descendingChecked)
+        {
+            var filteredList = locationList;
+
+            if (locationNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.LocationName).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.LocationName).ToObservableCollection();
+            }
+
+            if (totalBooksChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.LocationName).OrderBy(x => x.LocationTotalBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.LocationName).OrderByDescending(x => x.LocationTotalBooks).ToObservableCollection();
+            }
+
+            if (totalPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.LocationName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.LocationName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -615,6 +870,45 @@ namespace BookCollector.Data
             if (!showHiddenAuthors)
                 filteredList = filteredList.Where(x => !x.HideAuthor)
                                            .ToObservableCollection();
+
+            return filteredList;
+        }
+
+        public static async Task<ObservableCollection<AuthorModel>> SortAuthorList(ObservableCollection<AuthorModel> authorList,
+                                                                                   bool authorLastNameChecked,
+                                                                                   bool totalBooksChecked,
+                                                                                   bool totalPriceChecked,
+                                                                                   bool ascendingChecked,
+                                                                                   bool descendingChecked)
+        {
+            var filteredList = authorList;
+
+            if (authorLastNameChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).ToObservableCollection();
+            }
+
+            if (totalBooksChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.AuthorTotalBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.AuthorTotalBooks).ToObservableCollection();
+            }
+
+            if (totalPriceChecked)
+            {
+                if (ascendingChecked)
+                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+
+                if (descendingChecked)
+                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+            }
 
             return filteredList;
         }

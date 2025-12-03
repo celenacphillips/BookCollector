@@ -14,9 +14,4 @@ public partial class FilterPopup : Popup
 	{
         InitializeComponent();
     }
-
-    public FilterPopup(string viewTitle)
-    {
-
-    }
 }

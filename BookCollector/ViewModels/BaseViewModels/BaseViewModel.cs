@@ -19,6 +19,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public double DoubleMenuBar { get; set; }
         public ContentPage _view { get; set; }
 
+
+        public bool AscendingChecked { get; set; }
+        public bool DescendingChecked { get; set; }
+
         [ObservableProperty]
         public bool isRefreshing;
 
@@ -46,12 +50,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             DoubleMenuBar = DeviceHeight * 0.2899;
             SingleMenuBar = DeviceHeight * 0.2297;
-        }
-
-        [RelayCommand]
-        public async Task SortPopup()
-        {
-            _view.ShowPopup(new SortPopup());
         }
 
         [RelayCommand]

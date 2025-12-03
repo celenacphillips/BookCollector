@@ -42,6 +42,7 @@ namespace BookCollector.Data.Models
             var list = await FilterLists.GetAllBooksInSeriesList(bookList, this.SeriesGuid, showHiddenBooks);
 
             this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
+            this.SeriesTotalBooks = list.Count;
         }
     }
 }

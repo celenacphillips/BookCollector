@@ -2,6 +2,7 @@
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Popups;
 using BookCollector.ViewModels.Series;
 using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
@@ -22,6 +23,11 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         public string? totalSeriesString;
 
+        private bool ShowHiddenSeries {  get; set; }
+        private bool SeriesNameChecked { get; set; }
+        private bool TotalBooksChecked { get; set; }
+        private bool TotalPriceChecked { get; set; }
+
         public SeriesViewModel(ContentPage view)
         {
             _view = view;
@@ -36,30 +42,40 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
-                var showHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
-                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                GetPreferences();
 
                 // Unit test data
                 var seriesList = TestData.SeriesList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList, showHiddenSeries) ),
+                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList, ShowHiddenSeries) ),
                 ]);
 
                 TotalSeriesCount = FullSeriesList.Count;
 
                 FilteredSeriesList = FullSeriesList;
+
+                foreach (var series in fullSeriesList)
+                {
+                    series.SetTotalBooks(ShowHiddenBook);
+                }
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredSeriesList = await FilterLists.SortSeriesList(FilteredSeriesList,
+                                                                                                SeriesNameChecked,
+                                                                                                TotalBooksChecked,
+                                                                                                TotalPriceChecked,
+                                                                                                AscendingChecked,
+                                                                                                DescendingChecked) ),
+                ]);
+
                 FilteredSeriesCount = FilteredSeriesList.Count;
 
                 TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
 
                 ShowCollectionViewFooter = FilteredSeriesCount > 0;
-
-                foreach (var series in fullSeriesList)
-                {
-                    series.SetTotalBooks(showHiddenBooks);
-                }
 
                 SetIsBusyFalse();
             }
@@ -171,6 +187,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 await CanceledAction();
             }
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                SeriesNameVisible = true,
+                SeriesNameChecked = SeriesNameChecked,
+                TotalBooksVisible = true,
+                TotalBooksChecked = TotalBooksChecked,
+                TotalPriceVisible = true,
+                TotalPriceChecked = TotalPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            SeriesNameChecked = Preferences.Get($"{ViewTitle}_SeriesNameSelection", true  /* Default */);
+            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
+            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }

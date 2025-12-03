@@ -3,6 +3,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Collection;
+using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Groupings;
 using BookCollector.Views.Popups;
@@ -23,6 +24,11 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         public string? totalCollectionsString;
 
+        private bool ShowHiddenCollections { get; set; }
+        private bool CollectionNameChecked { get; set; }
+        private bool TotalBooksChecked { get; set; }
+        private bool TotalPriceChecked { get; set; }
+
         public CollectionsViewModel(ContentPage view)
         {
             _view = view;
@@ -37,30 +43,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
-                var showHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
-                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+                GetPreferences();
 
                 // Unit test data
                 var collectionList = TestData.CollectionList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList, showHiddenCollections) ),
+                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList, ShowHiddenCollections) ),
                 ]);
 
                 TotalCollectionsCount = FullCollectionList.Count;
 
                 FilteredCollectionList = FullCollectionList;
+
+                foreach (var collection in FullCollectionList)
+                {
+                    collection.SetTotalBooks(ShowHiddenBook);
+                }
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredCollectionList = await FilterLists.SortCollectionsList(FilteredCollectionList,
+                                                                                                         CollectionNameChecked,
+                                                                                                         TotalBooksChecked,
+                                                                                                         TotalPriceChecked,
+                                                                                                         AscendingChecked,
+                                                                                                         DescendingChecked) ),
+                ]);
+
                 FilteredCollectionsCount = FilteredCollectionList.Count;
 
                 TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
 
                 ShowCollectionViewFooter = FilteredCollectionsCount > 0;
 
-                foreach (var collection in FullCollectionList)
-                {
-                    collection.SetTotalBooks(showHiddenBooks);
-                }
 
                 SetIsBusyFalse();
             }
@@ -172,6 +189,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 await CanceledAction();
             }
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                CollectionNameVisible = true,
+                CollectionNameChecked = CollectionNameChecked,
+                TotalBooksVisible = true,
+                TotalBooksChecked = TotalBooksChecked,
+                TotalPriceVisible = true,
+                TotalPriceChecked = TotalPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            CollectionNameChecked = Preferences.Get($"{ViewTitle}_CollectionNameSelection", true  /* Default */);
+            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
+            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }
