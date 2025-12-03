@@ -47,7 +47,7 @@ namespace BookCollector.Data
                     BookStartDate = "11/13/2025",
                     BookPageRead = 5,
                     BookPublisher = "Publisher",
-                    BookPublishYear = "yyyy",
+                    BookPublishYear = "2025",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
@@ -69,7 +69,7 @@ namespace BookCollector.Data
                     BookEndDate = "11/14/2025",
                     BookPageRead = 100,
                     BookPublisher = "Publisher",
-                    BookPublishYear = "yyyy",
+                    BookPublishYear = "2000",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
@@ -86,7 +86,7 @@ namespace BookCollector.Data
                     BookFormat = "Hardcover",
                     BookPageRead = 0,
                     BookPublisher = "Publisher",
-                    BookPublishYear = "yyyy",
+                    BookPublishYear = "1990",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
                     BookPrice = "$10.00",
@@ -95,7 +95,7 @@ namespace BookCollector.Data
                     BookComments = "Comments",
                     Rating = 5,
                     IsFavorite = true,
-                }
+                },
             };
 
             foreach (var chapter in ChapterList)
@@ -208,9 +208,14 @@ namespace BookCollector.Data
         public static void InsertAuthor(AuthorModel author, Guid? bookGuid)
         {
             AuthorList.Add(author);
+            AddAuthorToBook(author.AuthorGuid, bookGuid);
+        }
+
+        public static void AddAuthorToBook(Guid? authorGuid, Guid? bookGuid)
+        {
             BookAuthorList.Add(new BookAuthorModel()
             {
-                AuthorGuid = (Guid)author.AuthorGuid,
+                AuthorGuid = (Guid)authorGuid,
                 BookGuid = (Guid)bookGuid,
             });
         }

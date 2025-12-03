@@ -33,7 +33,7 @@
                                    HorizontalOptions="Start">
                 <Image HeightRequest="100"
                        WidthRequest="75"
-                       Source="{Binding BookCoverBytes, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                       Source="{Binding BookCover}"
                        IsVisible="{Binding HasBookCover}"/>
 
                 <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"

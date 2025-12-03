@@ -2,6 +2,7 @@
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
@@ -60,7 +61,7 @@ namespace BookCollector.ViewModels.Book
             if (string.IsNullOrEmpty(Input))
             {
                 SetIsBusyFalse();
-                await DisplayMessage($"{AppStringResources.NoISBNEntered}", $"{AppStringResources.NoISBNEntered}", null);
+                await DisplayMessage($"{AppStringResources.NoISBNEntered}", null);
 
                 return;
             }
@@ -89,14 +90,14 @@ namespace BookCollector.ViewModels.Book
                 }
                 catch (Exception ex)
                 {
-                    await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", $"{AppStringResources.ErrorSearchingForBook}", null);
+                    await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
                     SetIsBusyFalse();
                     ShowAddISBN = true;
                 }
             }
             else
             {
-                await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", $"{AppStringResources.PleaseConnectToInternetToSearch}", null);
+                await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", null);
                 SetIsBusyFalse();
             }
         }
@@ -118,7 +119,7 @@ namespace BookCollector.ViewModels.Book
             }
             else
             {
-                await DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}", null);
+                await DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}");
             }
 #endif
         }
@@ -133,7 +134,7 @@ namespace BookCollector.ViewModels.Book
             }
             catch (Exception ex)
             {
-                await DisplayMessage($"{AppStringResources.ErrorSavingBook}", $"{AppStringResources.ErrorSavingBook}", null);
+                await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
             }
         }
 

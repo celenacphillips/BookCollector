@@ -11,11 +11,9 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/filter_icon_light.svg, Dark=Icons/filter_icon_dark.svg}"
-                     Command="{Binding FilterPopupCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding FilterPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/sort_icon_light.svg, Dark=Icons/sort_icon_dark.svg}"
-                     Command="{Binding SortPopupCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding SortPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/book_add_light.svg, Dark=Icons/book_add_dark.svg}"

@@ -1,6 +1,7 @@
 ﻿using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels;
+using BookCollector.ViewModels.BaseViewModels;
 
 namespace BookCollector
 {
@@ -19,8 +20,8 @@ namespace BookCollector
             //SettingPreferences();
 
             // Unit test data
-            var testData = new TestData();
-            //TestData.AddBooksToList();
+            //var testData = new TestData();
+            TestData.AddBooksToList();
 
             BindingContext = this;
         }

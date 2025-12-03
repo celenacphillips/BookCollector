@@ -1,15 +1,19 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Series;
 using BookCollector.Views.Book;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Genre;
 using BookCollector.Views.Location;
+using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -58,12 +62,18 @@ namespace BookCollector.ViewModels.Book
 
         public BookMainView? MainViewBefore { get; set; }
 
+        private Popup _pagesReadPopup;
+
+        public double PopupWidth { get; set; }
+
         public BookEditViewModel(BookModel book, ContentPage view)
         {
             _view = view;
 
             EditedBook = (BookModel)book.Clone();
             InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{EditedBook.BookTitle}")}";
+
+            PopupWidth = DeviceWidth - 50;
         }
 
         public async Task SetViewModelData()
@@ -89,6 +99,13 @@ namespace BookCollector.ViewModels.Book
                 {
                     var imageSource = ImageSource.FromStream(() => new MemoryStream(EditedBook.BookCoverBytes));
                     BookCover = imageSource;
+                    EditedBook.BookCover = BookCover;
+                }
+                else if (EditedBook.BookCoverUrl != null)
+                {
+                    var byteArray = new WebClient().DownloadData($"{EditedBook.BookCoverUrl}");
+                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    EditedBook.BookCover = BookCover;
                 }
 
                 StepperEnabled = EditedBook.BookPageTotal != 0;
@@ -171,9 +188,13 @@ namespace BookCollector.ViewModels.Book
                 foreach (var author in AuthorList)
                 {
                     // Unit test data
-                    if (!TestData.AuthorList.Contains(author))
+                    if (TestData.AuthorList.Where(x => x.AuthorGuid == author.AuthorGuid).ToList().Count == 0)
                     {
                         TestData.InsertAuthor(author, EditedBook.BookGuid);
+                    }
+                    else
+                    {
+                        TestData.UpdateAuthor(author);
                     }
                 }
 
@@ -345,13 +366,19 @@ namespace BookCollector.ViewModels.Book
             EditedBook.SetBookCheckpoints();
         }
 
-        // TO DO
-        // Set up Pages Read Popup - 11/26/25
-        // Preferably a number spinner
         [RelayCommand]
         public async Task PagesReadPopup()
         {
+            try
+            {
+                _pagesReadPopup = new PagesReadPopup(PopupWidth, EditedBook.BookPageRead, EditedBook.BookPageTotal);
+                var result = await _view.ShowPopupAsync(_pagesReadPopup);
+                EditedBook.BookPageRead = (int)result;
+            }
+            catch (Exception ex)
+            {
 
+            }
         }
 
         [RelayCommand]
@@ -402,11 +429,36 @@ namespace BookCollector.ViewModels.Book
             EditedBook.UpNext = value;
         }
 
-
         [RelayCommand]
         public async Task ValidateBookFormat()
         {
             ValidateEntry();
+        }
+
+        [RelayCommand]
+        public async Task BookCoverUrl()
+        {
+            if (!string.IsNullOrEmpty(EditedBook.BookCoverUrl))
+            {
+                try
+                {
+                    SetIsBusyTrue();
+
+                    var byteArray = new WebClient().DownloadData($"{EditedBook.BookCoverUrl}");
+                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    EditedBook.BookCover = BookCover;
+                    EditedBook.HasBookCover = true;
+                    EditedBook.HasNoBookCover = false;
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    SetIsBusyFalse();
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
+                }
+                
+            }
         }
 
         private void ValidateEntry()

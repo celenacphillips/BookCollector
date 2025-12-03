@@ -1,4 +1,5 @@
 ﻿using BarcodeScanner.Mobile;
+using BookCollector.Views.Controls;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 

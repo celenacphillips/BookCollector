@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
-namespace BookCollector.ViewModels
+namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
@@ -18,6 +18,10 @@ namespace BookCollector.ViewModels
         public double SingleMenuBar { get; set; }
         public double DoubleMenuBar { get; set; }
         public ContentPage _view { get; set; }
+
+
+        public bool AscendingChecked { get; set; }
+        public bool DescendingChecked { get; set; }
 
         [ObservableProperty]
         public bool isRefreshing;
@@ -37,24 +41,15 @@ namespace BookCollector.ViewModels
         [ObservableProperty]
         public string? searchString;
 
+        [ObservableProperty]
+        public static bool showCollectionViewFooter;
+
         public BaseViewModel()
         {
             DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
             DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             DoubleMenuBar = DeviceHeight * 0.2899;
             SingleMenuBar = DeviceHeight * 0.2297;
-        }
-
-        [RelayCommand]
-        public async Task FilterPopup()
-        {
-            _view.ShowPopup(new FilterPopup());
-        }
-
-        [RelayCommand]
-        public async Task SortPopup()
-        {
-            _view.ShowPopup(new SortPopup());
         }
 
         [RelayCommand]
@@ -130,20 +125,19 @@ namespace BookCollector.ViewModels
             return action;
         }
 
-        public static async Task DisplayMessage(string inputTitle, string? inputMessage = null, string? inputConfirm = null)
+        public static async Task DisplayMessage(string inputTitle, string? inputMessage = null)
         {
-            if (inputConfirm == null)
-                inputConfirm = $"{AppStringResources.OK}";
-
             if (inputMessage == null)
-                inputMessage = $"{AppStringResources.ActionCanceled}";
+                inputMessage = inputTitle;
+
+            var inputConfirm = $"{AppStringResources.OK}";
 
             await Shell.Current.DisplayAlert(inputTitle, inputMessage, inputConfirm);
         }
 
         public static async Task CanceledAction()
         {
-            await DisplayMessage($"{AppStringResources.ActionCanceled}", null, null);
+            await DisplayMessage($"{AppStringResources.ActionCanceled}", null);
         }
 
         public static async Task ConfirmDelete(string item)
@@ -151,7 +145,7 @@ namespace BookCollector.ViewModels
             var title = $"{AppStringResources.ItemDeleted.Replace("Item", item)}.";
             var message = $"{AppStringResources.ItemWasDeleted.Replace("Item", item)}";
 
-            await DisplayMessage(title, message, null);
+            await DisplayMessage(title, message);
         }
     }
 }

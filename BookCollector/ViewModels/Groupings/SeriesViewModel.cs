@@ -1,9 +1,13 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Popups;
 using BookCollector.ViewModels.Series;
+using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -19,11 +23,17 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         public string? totalSeriesString;
 
+        private bool ShowHiddenSeries {  get; set; }
+        private bool SeriesNameChecked { get; set; }
+        private bool TotalBooksChecked { get; set; }
+        private bool TotalPriceChecked { get; set; }
+
         public SeriesViewModel(ContentPage view)
         {
             _view = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
             InfoText = $"{AppStringResources.SeriesView_InfoText}";
+            ViewTitle = AppStringResources.Series;
         }
 
         public async Task SetViewModelData()
@@ -32,20 +42,40 @@ namespace BookCollector.ViewModels.Groupings
             {
                 SetIsBusyTrue();
 
+                GetPreferences();
+
                 // Unit test data
                 var seriesList = TestData.SeriesList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList) ),
+                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList, ShowHiddenSeries) ),
                 ]);
 
                 TotalSeriesCount = FullSeriesList.Count;
 
                 FilteredSeriesList = FullSeriesList;
+
+                foreach (var series in fullSeriesList)
+                {
+                    series.SetTotalBooks(ShowHiddenBook);
+                }
+
+                Task.WaitAll(
+                [
+                    Task.Run (async () => FilteredSeriesList = await FilterLists.SortSeriesList(FilteredSeriesList,
+                                                                                                SeriesNameChecked,
+                                                                                                TotalBooksChecked,
+                                                                                                TotalPriceChecked,
+                                                                                                AscendingChecked,
+                                                                                                DescendingChecked) ),
+                ]);
+
                 FilteredSeriesCount = FilteredSeriesList.Count;
 
                 TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
+
+                ShowCollectionViewFooter = FilteredSeriesCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -78,7 +108,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task PopupMenuSeries(Guid? input)
         {
             var selected = FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
-            string? action = await BaseViewModel.PopupMenu(selected.SeriesName);
+            string? action = await PopupMenu(selected.SeriesName);
 
             switch (action)
             {
@@ -157,6 +187,41 @@ namespace BookCollector.ViewModels.Groupings
             {
                 await CanceledAction();
             }
+        }
+
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            var popup = new SortPopup();
+            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            {
+                SeriesNameVisible = true,
+                SeriesNameChecked = SeriesNameChecked,
+                TotalBooksVisible = true,
+                TotalBooksChecked = TotalBooksChecked,
+                TotalPriceVisible = true,
+                TotalPriceChecked = TotalPriceChecked,
+                AscendingChecked = AscendingChecked,
+                DescendingChecked = DescendingChecked,
+            };
+
+            popup.BindingContext = viewModel;
+
+            await _view.ShowPopupAsync(popup);
+            await SetViewModelData();
+        }
+
+        private void GetPreferences()
+        {
+            ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            SeriesNameChecked = Preferences.Get($"{ViewTitle}_SeriesNameSelection", true  /* Default */);
+            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
+            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+
+            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
+            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
         }
     }
 }

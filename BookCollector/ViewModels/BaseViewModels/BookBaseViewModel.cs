@@ -10,10 +10,33 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
-namespace BookCollector.ViewModels
+namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BookBaseViewModel: BaseViewModel
     {
+        public bool ShowHiddenBook { get; set; }
+        public bool ShowFavoriteBooks { get; set; }
+        public bool ShowBookRatings { get; set; }
+        public string FavoriteBooksOption { get; set; }
+        public string BookFormatOption { get; set; }
+        public string BookAuthorOption { get; set; }
+        public string BookPublisherOption { get; set; }
+        public string BookPublishYearOption { get; set; }
+        public string BookLanguageOption { get; set; }
+        public string BookRatingOption { get; set; }
+        public string BookLocationOption { get; set; }
+        public string BookSeriesOption { get; set; }
+        public bool BookTitleChecked { get; set; }
+        public bool BookReadingDateChecked { get; set; }
+        public bool BookReadPercentageChecked { get; set; }
+        public bool BookPublisherChecked { get; set; }
+        public bool BookPublishYearChecked { get; set; }
+        public bool AuthorLastNameChecked { get; set; }
+        public bool BookFormatChecked { get; set; }
+        public bool PageCountChecked { get; set; }
+        public bool BookPriceChecked { get; set; }
+
+
         [ObservableProperty]
         public string? totalBooksString;
 
@@ -121,6 +144,21 @@ namespace BookCollector.ViewModels
 
         [ObservableProperty]
         public ImageSource? bookCover;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookPublisherList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookPublishYearList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookLanguageList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookAuthorList;
+
+        [ObservableProperty]
+        public ObservableCollection<string> bookLocationList;
 
         public BookBaseViewModel()
         {

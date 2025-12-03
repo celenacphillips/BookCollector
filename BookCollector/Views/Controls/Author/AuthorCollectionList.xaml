@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookCollector.Views.Controls.Author.AuthorCollectionList"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-             xmlns:viewModel="clr-namespace:BookCollector.ViewModels"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Author"
              x:DataType="viewModel:AuthorBaseViewModel">
 
@@ -39,6 +39,15 @@
                 </VerticalStackLayout>
             </ContentView>
         </CollectionView.EmptyView>
+
+        <CollectionView.Footer>
+            <Label Margin="0,5,0,0"
+                   Text="{x:Static localization:AppStringResources.EndOfList}"
+                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource SubTitle}"
+                   IsVisible="{Binding ShowCollectionViewFooter}" />
+        </CollectionView.Footer>
+
     </CollectionView>
 
 </ContentView>

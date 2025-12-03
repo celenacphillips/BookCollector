@@ -1,5 +1,6 @@
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
+using System.Globalization;
 
 namespace BookCollector.Views.Main;
 
@@ -11,18 +12,24 @@ public partial class SettingsView : ContentPage
     public string SelectedColor { get; set; }
     public List<string> LanguageList { get; set; }
     public string SelectedLanguage { get; set; }
+    public List<string> CurrencyList { get; set; }
+    public string SelectedCurrency { get; set; }
     public string SelectedExportLocation { get; set; }
     public bool CommentsOn { get; set; }
     public bool ChaptersOn { get; set; }
     public bool FavoritesOn { get; set; }
     public bool RatingsOn { get; set; }
     public bool HiddenBooksOn { get; set; }
+    public bool HiddenCollectionsOn { get; set; }
+    public bool HiddenGenresOn { get; set; }
+    public bool HiddenSeriesOn { get; set; }
+    public bool HiddenAuthorsOn { get; set; }
+    public bool HiddenLocationsOn { get; set; }
 
     // TO DO:
     // Add other languages - 11/12/2025
     // Try to add color preview in the picker - 11/12/2025
-    // Add currency option - 11/13/2025
-    // Add Hide Collection, Series, Genre, Author, Location - 11/13/2025
+    // Add more currency options - 12/1/2025
     // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
 
     public SettingsView()
@@ -45,7 +52,10 @@ public partial class SettingsView : ContentPage
         };
 
         LanguageList = [AppStringResources.English];
-        SelectedLanguage = LanguageList[0];
+        SelectedLanguage = Preferences.Get("Language", AppStringResources.English /* Default */);
+
+        CurrencyList = ["$ USD"];
+        SelectedCurrency = Preferences.Get("Currency", "$ USD" /* Default */);
 
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation  /* Default */);
         SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation.Substring(exportLocation.IndexOf("0") + 2);
@@ -54,7 +64,13 @@ public partial class SettingsView : ContentPage
         ChaptersOn = Preferences.Get("ChaptersOn", true  /* Default */);
         FavoritesOn = Preferences.Get("FavoritesOn", true  /* Default */);
         RatingsOn = Preferences.Get("RatingsOn", true  /* Default */);
+        
         HiddenBooksOn = Preferences.Get("HiddenBooksOn", true  /* Default */);
+        HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
+        HiddenGenresOn = Preferences.Get("HiddenGenresOn", true  /* Default */);
+        HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true  /* Default */);
+        HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
+        HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true  /* Default */);
 
         InitializeComponent();
         BindingContext = this;
@@ -67,6 +83,7 @@ public partial class SettingsView : ContentPage
         Preferences.Set("AppTheme", picker.SelectedItem.ToString());
         // TO DO:
         // Add ability to convert AppStringResources string to English string for the Preferences set
+        // If not, when someone changes the language, the default preference will be a different string.
     }
 
     void OnColorPickerSelectedIndexChanged(object sender, EventArgs e)
@@ -105,6 +122,16 @@ public partial class SettingsView : ContentPage
         Preferences.Set("Language", picker.SelectedItem.ToString());
         // TO DO:
         // Add ability to convert AppStringResources string to English string for the Preferences set
+        // If not, when someone changes the language, the default preference will be a different string.
+    }
+
+    void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        var picker = (Picker)sender;
+        Preferences.Set("Currency", picker.SelectedItem.ToString());
+
+        if (picker.SelectedItem.ToString().Equals("$ USD"))
+            Preferences.Set("CultureCode", "en-US");
     }
 
     async void OnExportLocationButtonClicked(object sender, EventArgs e)
@@ -138,5 +165,30 @@ public partial class SettingsView : ContentPage
     void OnHiddenBooksToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenBooksOn", e.Value);
+    }
+
+    void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenCollectionsOn", e.Value);
+    }
+
+    void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenGenresOn", e.Value);
+    }
+
+    void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenSeriesOn", e.Value);
+    }
+
+    void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenAuthorsOn", e.Value);
+    }
+
+    void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenLocationsOn", e.Value);
     }
 }
