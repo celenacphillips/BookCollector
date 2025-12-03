@@ -13,6 +13,7 @@ using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -98,6 +99,13 @@ namespace BookCollector.ViewModels.Book
                 {
                     var imageSource = ImageSource.FromStream(() => new MemoryStream(EditedBook.BookCoverBytes));
                     BookCover = imageSource;
+                    EditedBook.BookCover = BookCover;
+                }
+                else if (EditedBook.BookCoverUrl != null)
+                {
+                    var byteArray = new WebClient().DownloadData($"{EditedBook.BookCoverUrl}");
+                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    EditedBook.BookCover = BookCover;
                 }
 
                 StepperEnabled = EditedBook.BookPageTotal != 0;
@@ -421,11 +429,36 @@ namespace BookCollector.ViewModels.Book
             EditedBook.UpNext = value;
         }
 
-
         [RelayCommand]
         public async Task ValidateBookFormat()
         {
             ValidateEntry();
+        }
+
+        [RelayCommand]
+        public async Task BookCoverUrl()
+        {
+            if (!string.IsNullOrEmpty(EditedBook.BookCoverUrl))
+            {
+                try
+                {
+                    SetIsBusyTrue();
+
+                    var byteArray = new WebClient().DownloadData($"{EditedBook.BookCoverUrl}");
+                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    EditedBook.BookCover = BookCover;
+                    EditedBook.HasBookCover = true;
+                    EditedBook.HasNoBookCover = false;
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
+                {
+                    SetIsBusyFalse();
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
+                }
+                
+            }
         }
 
         private void ValidateEntry()

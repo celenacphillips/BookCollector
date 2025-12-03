@@ -783,4 +783,13 @@
   <data name="SeriesOrder" xml:space="preserve">
     <value>Series Order</value>
   </data>
+  <data name="BookCoverUrl" xml:space="preserve">
+    <value>Book Cover URL</value>
+  </data>
+  <data name="AnErrorOccurred" xml:space="preserve">
+    <value>An Error Occurred</value>
+  </data>
+  <data name="ErrorDownloadingImage" xml:space="preserve">
+    <value>There was an error downloading the image. Try another URL.</value>
+  </data>
 </root>

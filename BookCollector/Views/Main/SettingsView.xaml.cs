@@ -31,7 +31,6 @@ public partial class SettingsView : ContentPage
     // Try to add color preview in the picker - 11/12/2025
     // Add more currency options - 12/1/2025
     // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
-    // Get stored Language and Currency defaults - 12/1/2025
 
     public SettingsView()
 	{
@@ -53,10 +52,10 @@ public partial class SettingsView : ContentPage
         };
 
         LanguageList = [AppStringResources.English];
-        SelectedLanguage = LanguageList[0];
+        SelectedLanguage = Preferences.Get("Language", AppStringResources.English /* Default */);
 
         CurrencyList = ["$ USD"];
-        SelectedCurrency = CurrencyList[0];
+        SelectedCurrency = Preferences.Get("Currency", "$ USD" /* Default */);
 
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation  /* Default */);
         SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation.Substring(exportLocation.IndexOf("0") + 2);
@@ -130,6 +129,9 @@ public partial class SettingsView : ContentPage
     {
         var picker = (Picker)sender;
         Preferences.Set("Currency", picker.SelectedItem.ToString());
+
+        if (picker.SelectedItem.ToString().Equals("$ USD"))
+            Preferences.Set("CultureCode", "en-US");
     }
 
     async void OnExportLocationButtonClicked(object sender, EventArgs e)

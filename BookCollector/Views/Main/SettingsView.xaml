@@ -96,6 +96,10 @@
             </HorizontalStackLayout>
             <!-- Currency -->
 
+            <Label Background="{DynamicResource Primary}"></Label>
+            <Label Background="{DynamicResource Secondary}"></Label>
+            <Label Background="{DynamicResource Tertiary}"></Label>
+
             <!-- Comments -->
             <HorizontalStackLayout Margin="25,10">
                 <Label Text="{x:Static localization:AppStringResources.ShowComments}"
@@ -236,10 +240,6 @@
             </HorizontalStackLayout>
             <!-- Hidden Locations -->
 
-            <Label Background="{DynamicResource Primary}"></Label>
-            <Label Background="{DynamicResource Secondary}"></Label>
-            <Label Background="{DynamicResource Tertiary}"></Label>
-            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

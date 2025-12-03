@@ -259,6 +259,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An Error Occurred.
+        /// </summary>
+        internal static string AnErrorOccurred {
+            get {
+                return ResourceManager.GetString("AnErrorOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Collector.
         /// </summary>
         internal static string ApplicationTitle {
@@ -435,6 +444,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookComments {
             get {
                 return ResourceManager.GetString("BookComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Cover URL.
+        /// </summary>
+        internal static string BookCoverUrl {
+            get {
+                return ResourceManager.GetString("BookCoverUrl", resourceCulture);
             }
         }
         
@@ -939,6 +957,15 @@ namespace BookCollector.Resources.Localization {
         internal static string EnterOnlyISBNs {
             get {
                 return ResourceManager.GetString("EnterOnlyISBNs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error downloading the image. Try another URL..
+        /// </summary>
+        internal static string ErrorDownloadingImage {
+            get {
+                return ResourceManager.GetString("ErrorDownloadingImage", resourceCulture);
             }
         }
         

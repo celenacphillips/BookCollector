@@ -6,6 +6,7 @@ using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -39,6 +40,13 @@ namespace BookCollector.ViewModels.Book
                 {
                     var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
                     BookCover = imageSource;
+                    SelectedBook.BookCover = BookCover;
+                }
+                else if (SelectedBook.BookCoverUrl != null)
+                {
+                    var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
+                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    SelectedBook.BookCover = BookCover;
                 }
 
                 // Unit test data

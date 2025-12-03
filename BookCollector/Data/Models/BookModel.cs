@@ -46,6 +46,8 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public byte[]? bookCoverBytes;
         [ObservableProperty]
+        public string? bookCoverUrl;
+        [ObservableProperty]
         public bool hasBookCover;
         [ObservableProperty]
         public bool hasNoBookCover;
@@ -75,6 +77,8 @@ namespace BookCollector.Data.Models
         public string? partOfSeries;
         [ObservableProperty]
         public string? partOfCollection;
+        [ObservableProperty]
+        public ImageSource? bookCover;
 
         public BookModel()
         {
@@ -184,8 +188,8 @@ namespace BookCollector.Data.Models
 
         public async Task SetCoverDisplay()
         {
-            this.HasBookCover = this.BookCoverBytes != null;
-            this.HasNoBookCover = this.BookCoverBytes == null;
+            this.HasBookCover = this.BookCoverBytes != null || this.BookCoverUrl != null;
+            this.HasNoBookCover = this.BookCoverBytes == null && this.BookCoverUrl == null;
         }
 
         public async Task SetAuthorListString(ObservableCollection<BookAuthorModel> bookAuthorList, ObservableCollection<AuthorModel> authorList)
@@ -251,13 +255,11 @@ namespace BookCollector.Data.Models
             }
         }
 
-        // TO DO
-        // Add ability to change currency type - 11/27/2025
         public async Task SetBookPrice()
         {
-            var currency = Preferences.Get("Currency", "$ USD"  /* Default */);
+            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
 
-            var cultureInfo = new CultureInfo("en-US");
+            var cultureInfo = new CultureInfo(cultureCode);
 
             if (this.BookPrice == null || !this.BookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))
             {

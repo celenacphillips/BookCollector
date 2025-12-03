@@ -10,9 +10,6 @@
              x:DataType="viewModel:BookEditViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
-    
-    <!-- TO DO -->
-    <!-- Add ability to add book cover URL - 12/1/2025 -->
 
     <ContentPage.Resources>
         <Style x:Key="InvalidEntryStyle" TargetType="Entry">
@@ -127,6 +124,17 @@
                                      Padding="10"
                                      Command="{Binding RemoveCoverPhotoCommand}"/>
                         </HorizontalStackLayout>
+
+                        <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
+                                Text="{Binding EditedBook.BookCoverUrl}"
+                                HorizontalTextAlignment="Center"
+                                AutoSize="TextChanges"
+                                Keyboard="Url">
+                            <Editor.Behaviors>
+                                <toolkit:EventToCommandBehavior EventName="Completed"
+                                                                Command="{Binding BookCoverUrlCommand}"/>
+                            </Editor.Behaviors>
+                        </Editor>
 
                         <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=BookCover}"
                                      HeightRequest="200"

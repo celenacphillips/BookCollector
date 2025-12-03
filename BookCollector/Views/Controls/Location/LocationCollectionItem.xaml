@@ -16,9 +16,7 @@
                 <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
-            <!-- TO DO -->
-            <!-- Find location icon - 11/25/2025 -->
+            
             <Image Source="{AppThemeBinding Light=Icons/series_icon_light.svg, Dark=Icons/series_icon_dark.svg}"
                    HeightRequest="30"
                    HorizontalOptions="Start"
