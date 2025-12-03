@@ -792,4 +792,22 @@
   <data name="ErrorDownloadingImage" xml:space="preserve">
     <value>There was an error downloading the image. Try another URL.</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="WishListView_InfoText" xml:space="preserve">
+    <value>Your wishlist is a set of books you do not own but wish to. When you have received the book, you can click on it in the list to move it to your existing library.</value>
+  </data>
+  <data name="WhereToBuy" xml:space="preserve">
+    <value>Where to Buy</value>
+  </data>
+  <data name="AddToLibrary" xml:space="preserve">
+    <value>Add to Library</value>
+  </data>
+  <data name="AreYouSureYouWantToMoveBookToYourLibrary_Question" xml:space="preserve">
+    <value>Are you sure you want to move book to your library?</value>
+  </data>
+  <data name="BookWasAddedToLibrary" xml:space="preserve">
+    <value>Book was added to library and the wish list item was deleted.</value>
+  </data>
 </root>

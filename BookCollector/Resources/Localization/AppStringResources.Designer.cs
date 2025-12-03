@@ -169,6 +169,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add to Library.
+        /// </summary>
+        internal static string AddToLibrary {
+            get {
+                return ResourceManager.GetString("AddToLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Authors.
         /// </summary>
         internal static string AllAuthors {
@@ -300,6 +309,15 @@ namespace BookCollector.Resources.Localization {
         internal static string AreYouSureYouWantToDeleteItem_Question {
             get {
                 return ResourceManager.GetString("AreYouSureYouWantToDeleteItem_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to move book to your library?.
+        /// </summary>
+        internal static string AreYouSureYouWantToMoveBookToYourLibrary_Question {
+            get {
+                return ResourceManager.GetString("AreYouSureYouWantToMoveBookToYourLibrary_Question", resourceCulture);
             }
         }
         
@@ -696,6 +714,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookURL {
             get {
                 return ResourceManager.GetString("BookURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book was added to library and the wish list item was deleted..
+        /// </summary>
+        internal static string BookWasAddedToLibrary {
+            get {
+                return ResourceManager.GetString("BookWasAddedToLibrary", resourceCulture);
             }
         }
         
@@ -1609,6 +1636,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scan Barcode.
         /// </summary>
         internal static string ScanBarcode {
@@ -2068,11 +2104,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Where to Buy.
+        /// </summary>
+        internal static string WhereToBuy {
+            get {
+                return ResourceManager.GetString("WhereToBuy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wishlist.
         /// </summary>
         internal static string Wishlist {
             get {
                 return ResourceManager.GetString("Wishlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your wishlist is a set of books you do not own but wish to. When you have received the book, you can click on it in the list to move it to your existing library..
+        /// </summary>
+        internal static string WishListView_InfoText {
+            get {
+                return ResourceManager.GetString("WishListView_InfoText", resourceCulture);
             }
         }
         

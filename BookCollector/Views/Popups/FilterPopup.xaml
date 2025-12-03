@@ -14,8 +14,8 @@
             
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
 
                 <Label Text="{x:Static localization:AppStringResources.FilterBy}"
@@ -25,9 +25,9 @@
                        VerticalOptions="End"
                        Grid.Row="0" Grid.Column="0"/>
 
-                <Button Text="X" 
+                <Button Text="{x:Static localization:AppStringResources.Save}" 
                         HorizontalOptions="End"
-                        Margin="10,10,15,0"
+                        Margin="10,10,10,0"
                         Command="{Binding CloseCommand}"
                         Grid.Row="0" Grid.Column="1"/>
             </Grid>

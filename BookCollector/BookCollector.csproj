@@ -52,6 +52,8 @@
 		<MauiImage Include="Resources\Icons\plus_icon_light.svg" />
 		<MauiImage Include="Resources\Icons\series_icon_dark.svg" />
 		<MauiImage Include="Resources\Icons\series_icon_light.svg" />
+		<MauiImage Include="Resources\Icons\share_icon_dark.svg" />
+		<MauiImage Include="Resources\Icons\share_icon_light.svg" />
 		<MauiImage Include="Resources\Icons\vertical_dots_dark.svg" />
 		<MauiImage Include="Resources\Icons\vertical_dots_light.svg" />
 
@@ -102,6 +104,8 @@
 		<None Remove="Resources\Icons\search_icon_light.svg" />
 		<None Remove="Resources\Icons\series_icon_dark.svg" />
 		<None Remove="Resources\Icons\series_icon_light.svg" />
+		<None Remove="Resources\Icons\share_icon_dark.svg" />
+		<None Remove="Resources\Icons\share_icon_light.svg" />
 		<None Remove="Resources\Icons\sort_icon_dark.svg" />
 		<None Remove="Resources\Icons\sort_icon_light.svg" />
 		<None Remove="Resources\Icons\star_icon_empty_dark.svg" />
@@ -137,8 +141,20 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>AppStringResources.resx</DependentUpon>
 		</Compile>
+		<Compile Update="Views\Controls\WishListBook\WishListBookCollectionList.xaml.cs">
+		  <DependentUpon>WishListBookCollectionList.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Controls\WishListBook\WishListBookCollectionItem.xaml.cs">
+		  <DependentUpon>WishListBookCollectionItem.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\Popups\InformationPopup.xaml.cs">
 			<DependentUpon>InformationPopup.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\WishListBook\WishListBookMainView.xaml.cs">
+		  <DependentUpon>WishListBookMainView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\WishListBook\WishListBookEditView.xaml.cs">
+		  <DependentUpon>WishListBookEditView.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
@@ -217,6 +233,12 @@
 		<MauiXaml Update="Views\Controls\Series\SeriesCollectionList.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\WishListBook\WishListBookCollectionItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Controls\WishListBook\WishListBookCollectionList.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Genre\GenreEditView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -293,6 +315,12 @@
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Statistics\WishListStatisticsView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\WishListBook\WishListBookEditView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\WishListBook\WishListBookMainView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>

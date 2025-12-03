@@ -1,17 +1,16 @@
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Book;
 using BookCollector.ViewModels.WishListBook;
-using BookCollector.Views.WishListBook;
 
-namespace BookCollector.Views.Book;
+namespace BookCollector.Views.WishListBook;
 
-public partial class BookEditView : ContentPage
+public partial class WishListBookEditView : ContentPage
 {
-    private BookEditViewModel _viewModel { get; set; }
+    private WishListBookEditViewModel _viewModel { get; set; }
 
-    public BookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, BookMainView? mainViewBefore = null)
+    public WishListBookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, WishListBookMainView? mainViewBefore = null)
 	{
-        BookEditViewModel viewModel = new BookEditViewModel(book, this);
+        WishListBookEditViewModel viewModel = new WishListBookEditViewModel(book, this);
         viewModel.ViewTitle = viewTitle;
         viewModel.RemoveMainViewBefore = removeMainViewBefore;
         viewModel.MainViewBefore = mainViewBefore;
