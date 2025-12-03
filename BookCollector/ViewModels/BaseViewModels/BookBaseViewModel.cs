@@ -19,13 +19,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool ShowBookRatings { get; set; }
         public string FavoriteBooksOption { get; set; }
         public string BookFormatOption { get; set; }
-        public string BookAuthorOption { get; set; }
         public string BookPublisherOption { get; set; }
         public string BookPublishYearOption { get; set; }
         public string BookLanguageOption { get; set; }
         public string BookRatingOption { get; set; }
-        public string BookLocationOption { get; set; }
-        public string BookSeriesOption { get; set; }
         public bool BookTitleChecked { get; set; }
         public bool BookReadingDateChecked { get; set; }
         public bool BookReadPercentageChecked { get; set; }
@@ -154,12 +151,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         [ObservableProperty]
         public ObservableCollection<string> bookLanguageList;
 
-        [ObservableProperty]
-        public ObservableCollection<string> bookAuthorList;
-
-        [ObservableProperty]
-        public ObservableCollection<string> bookLocationList;
-
         public BookBaseViewModel()
         {
             ShowComments = Preferences.Get("CommentsOn", true  /* Default */);
@@ -268,11 +259,17 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     string[] name = authorName.Split(",");
 
-                    AuthorModel author = new()
+                    // Unit test data
+                    var author = TestData.AuthorList.FirstOrDefault(x => x.FirstName.Equals(name[1].Trim()) && x.LastName.Equals(name[0].Trim()));
+
+                    if (author == null)
                     {
-                        FirstName = name[1].Trim(),
-                        LastName = name[0].Trim()
-                    };
+                        author = new()
+                        {
+                            FirstName = name[1].Trim(),
+                            LastName = name[0].Trim()
+                        };
+                    }
 
                     authorList.Add(author);
                 }

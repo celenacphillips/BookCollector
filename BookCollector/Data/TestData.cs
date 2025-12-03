@@ -15,6 +15,7 @@ namespace BookCollector.Data
         public static ObservableCollection<CollectionModel> CollectionList { get; set; }
         public static ObservableCollection<LocationModel> LocationList { get; set; }
         public static ObservableCollection<BookAuthorModel> BookAuthorList { get; set; }
+        public static ObservableCollection<BookModel> BookWishList { get; set; }
 
         public TestData()
         {
@@ -26,6 +27,7 @@ namespace BookCollector.Data
             CollectionList = new ObservableCollection<CollectionModel>();
             LocationList = new ObservableCollection<LocationModel>();
             BookAuthorList = new ObservableCollection<BookAuthorModel>();
+            BookWishList = new ObservableCollection<BookModel>();
         }
 
         public static void AddBooksToList()
@@ -46,7 +48,7 @@ namespace BookCollector.Data
                     BookFormat = "Hardcover",
                     BookStartDate = "11/13/2025",
                     BookPageRead = 5,
-                    BookPublisher = "Publisher",
+                    BookPublisher = "Publisher1",
                     BookPublishYear = "2025",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
@@ -68,7 +70,7 @@ namespace BookCollector.Data
                     BookStartDate = "11/13/2025",
                     BookEndDate = "11/14/2025",
                     BookPageRead = 100,
-                    BookPublisher = "Publisher",
+                    BookPublisher = "Publisher1",
                     BookPublishYear = "2000",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
@@ -85,7 +87,7 @@ namespace BookCollector.Data
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookPageRead = 0,
-                    BookPublisher = "Publisher",
+                    BookPublisher = "Publisher2",
                     BookPublishYear = "1990",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
@@ -136,6 +138,87 @@ namespace BookCollector.Data
         public static void DeleteBook(BookModel book)
         {
             BookList.Remove(book);
+        }
+
+        public static void AddWishListBooksToList()
+        {
+            BookWishList = new ObservableCollection<BookModel>()
+            {
+                new BookModel()
+                {
+                    BookTitle = "Book 1",
+                    BookPageTotal = 100,
+                    BookFormat = "Hardcover",
+                    BookPublisher = "Publisher",
+                    BookPublishYear = "2025",
+                    BookIdentifier = "1234",
+                    BookLanguage = "english",
+                    BookPrice = "$10.00",
+                    BookURL = "test.com",
+                    BookSummary = "Text",
+                    BookComments = "Comments",
+                    BookSeries = "Series1",
+                    BookNumberInSeries = 1,
+                    BookWhereToBuy = "website"
+                },
+                new BookModel()
+                {
+                    BookTitle = "Book 2",
+                    BookPageTotal = 500,
+                    BookFormat = "Hardcover",
+                    BookPublisher = "Publisher1",
+                    BookPublishYear = "1978",
+                    BookIdentifier = "1234",
+                    BookLanguage = "english",
+                    BookPrice = "$10.00",
+                    BookURL = "test.com",
+                    BookSummary = "Text",
+                    BookComments = "Comments",
+                    BookSeries = "Series1",
+                    BookNumberInSeries = 2,
+                    BookWhereToBuy = "website"
+                },
+                new BookModel()
+                {
+                    BookTitle = "Book 3",
+                    BookPageTotal = 450,
+                    BookFormat = "Paperback",
+                    BookPublisher = "Publisher2",
+                    BookPublishYear = "2020",
+                    BookIdentifier = "1234",
+                    BookLanguage = "english",
+                    BookPrice = "$10.00",
+                    BookURL = "test.com",
+                    BookSummary = "Text",
+                    BookComments = "Comments",
+                    BookSeries = "Series2",
+                    BookNumberInSeries = 1,
+                    BookWhereToBuy = "website"
+                },
+            };
+
+            foreach (var book in BookWishList)
+            {
+                book.SetCoverDisplay();
+            }
+        }
+
+        public static void UpdateWishListBook(BookModel book)
+        {
+            var oldBook = BookWishList.Where(x => x.BookGuid == book.BookGuid).ToList().FirstOrDefault();
+            var index = BookWishList.IndexOf(oldBook);
+            BookWishList.Remove(oldBook);
+            BookWishList.Insert(index, book);
+        }
+
+        public static void InsertWishListBook(BookModel book)
+        {
+            BookWishList.Add(book);
+        }
+
+        public static void DeleteWishListBook(BookModel book)
+        {
+            BookWishList.Remove(book);
         }
 
         public static void AddChaptersToList()

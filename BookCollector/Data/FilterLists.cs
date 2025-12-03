@@ -3,6 +3,7 @@ using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Core.Extensions;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace BookCollector.Data
 {
@@ -133,7 +134,6 @@ namespace BookCollector.Data
         }
 
         private static ObservableCollection<BookModel> FilterBookAuthor(ObservableCollection<BookModel> bookList,
-                                                                        ObservableCollection<AuthorModel> authorList,
                                                                         string authorOption)
         {
             var filterList = bookList;
@@ -146,7 +146,8 @@ namespace BookCollector.Data
 
             if (!authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                var author = GetAuthorByFullName(authorList, authorOption).Result;
+                // Unit test data
+                var author = TestData.AuthorList.FirstOrDefault(x => x.FullName.Equals(authorOption));
 
                 if (author != null)
                 {
@@ -159,42 +160,59 @@ namespace BookCollector.Data
         }
 
         private static ObservableCollection<BookModel> FilterBookLocation(ObservableCollection<BookModel> bookList,
-                                                                          ObservableCollection<LocationModel> locationList,
                                                                           string locationOption)
         {
             var filterList = bookList;
 
             if (locationOption.Equals(AppStringResources.NoLocation))
             {
-                filterList = bookList.Where(x => x.BookLocationGuid == null)
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
                                      .ToObservableCollection();
             }
 
             if (!locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
             {
-                var location = GetLocationByLocationName(locationList, locationOption).Result;
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.Equals(locationOption))
+                                     .ToObservableCollection();
+            }
 
-                if (location != null)
-                {
-                    filterList = bookList.Where(x => x.BookLocationGuid != null && x.BookLocationGuid == location.LocationGuid)
-                                         .ToObservableCollection();
-                }
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookSeries(ObservableCollection<BookModel> bookList, string seriesOption)
+        {
+            var filterList = bookList;
+
+            if (seriesOption.Equals(AppStringResources.NoSeries))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookSeries))
+                                     .ToObservableCollection();
+            }
+
+            if (!seriesOption.Equals(AppStringResources.NoSeries) && !seriesOption.Equals(AppStringResources.AllSeries))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
+                                     .ToObservableCollection();
             }
 
             return filterList;
         }
 
         public static async Task<ObservableCollection<BookModel>> FilterBookList(ObservableCollection<BookModel> bookList,
-                                                                                 string favoritesOption,
+                                                                                 string? favoritesOption,
                                                                                  string formatOption,
                                                                                  string publisherOption,
                                                                                  string languageOption,
-                                                                                 string ratingOption,
-                                                                                 string publishYearOption)
+                                                                                 string? ratingOption,
+                                                                                 string publishYearOption,
+                                                                                 string? authorOption = null,
+                                                                                 string? locationOption = null,
+                                                                                 string? seriesOption = null)
         {
             var filteredList = bookList;
 
-            filteredList = FilterFavoriteBooks(filteredList, favoritesOption);
+            if(!string.IsNullOrEmpty(favoritesOption))
+                filteredList = FilterFavoriteBooks(filteredList, favoritesOption);
 
             filteredList = FilterBookFormat(filteredList, formatOption);
 
@@ -202,9 +220,19 @@ namespace BookCollector.Data
 
             filteredList = FilterBookLanguage(filteredList, languageOption);
 
-            filteredList = FilterBookRating(filteredList, ratingOption);
+            if (!string.IsNullOrEmpty(ratingOption))
+                filteredList = FilterBookRating(filteredList, ratingOption);
 
             filteredList = FilterBookPublishYear(filteredList, publishYearOption);
+
+            if (!string.IsNullOrEmpty(authorOption))
+                filteredList = FilterBookAuthor(filteredList, authorOption);
+
+            if (!string.IsNullOrEmpty(locationOption))
+                filteredList = FilterBookLocation(filteredList, locationOption);
+
+            if (!string.IsNullOrEmpty(seriesOption))
+                filteredList = FilterBookSeries(filteredList, seriesOption);
 
             return filteredList;
         }
@@ -354,6 +382,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<ObservableCollection<BookModel>> GetBookWishList(ObservableCollection<BookModel> bookList, bool showHiddenBooks)
+        {
+            var filteredList = bookList.OrderBy(x => x.ParsedTitle)
+                                   .ToObservableCollection();
+
+            filteredList = FilterHiddenBooks(filteredList, showHiddenBooks);
+
+            return filteredList;
+        }
+
         public static async Task<ObservableCollection<ChapterModel>> GetAllChaptersInBook(ObservableCollection<ChapterModel> chapterList,
                                                                                           Guid? inputGuid)
         {
@@ -375,6 +413,63 @@ namespace BookCollector.Data
             }
 
             return publisherList;
+        }
+
+        public static async Task<ObservableCollection<string>> GetAllAuthorsInBookList(ObservableCollection<BookModel> bookList)
+        {
+            var authorList = new ObservableCollection<string>();
+
+            foreach (var book in bookList)
+            {
+                if (!string.IsNullOrEmpty(book.AuthorListString))
+                {
+                    string[] authorNames = book.AuthorListString.Split(";");
+
+                    foreach (var authorName in authorNames)
+                    {
+                        if (!string.IsNullOrEmpty(authorName.Trim()))
+                        {
+                            string[] name = authorName.Split(",");
+
+                            AuthorModel author = new()
+                            {
+                                FirstName = name[1].Trim(),
+                                LastName = name[0].Trim()
+                            };
+
+                            authorList.Add(author.FullName);
+                        }
+                    }
+                }
+            }
+
+            return authorList;
+        }
+
+        public static async Task<ObservableCollection<string>> GetAllLocationsInBookList(ObservableCollection<BookModel> bookList)
+        {
+            var locationList = new ObservableCollection<string>();
+
+            foreach (var book in bookList)
+            {
+                if (!string.IsNullOrEmpty(book.BookWhereToBuy) && !locationList.Any(x => x.Equals(book.BookWhereToBuy)))
+                    locationList.Add(book.BookWhereToBuy);
+            }
+
+            return locationList;
+        }
+
+        public static async Task<ObservableCollection<string>> GetAllSeriesInBookList(ObservableCollection<BookModel> bookList)
+        {
+            var seriesList = new ObservableCollection<string>();
+
+            foreach (var book in bookList)
+            {
+                if (!string.IsNullOrEmpty(book.BookSeries) && !seriesList.Any(x => x.Equals(book.BookSeries)))
+                    seriesList.Add(book.BookSeries);
+            }
+
+            return seriesList;
         }
 
         public static async Task<ObservableCollection<string>> GetAllPublisherYearsInBookList(ObservableCollection<BookModel> bookList)

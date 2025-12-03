@@ -202,7 +202,7 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
-                        SelectedBook.SetAuthorListString(authorList.ToObservableCollection());
+                        SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
                     }
                 }
 

@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="BookCollector.Views.WishListBook.WishListBookEditView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:ndtp="clr-namespace:Maui.NullableDateTimePicker;assembly=Maui.NullableDateTimePicker"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.WishListBook"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:DataType="viewModel:WishListBookEditViewModel"
+             xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             Title="{Binding ViewTitle}">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
+            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
+        </Style>
+    </ContentPage.Resources>
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/search_icon_light.svg, Dark=Icons/search_icon_dark.svg}"
+                     Command="{Binding BookSearchCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
+                     Command="{Binding SaveBookCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+
+        <!-- Main Content -->
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView IsEnabled="{Binding IsVisible}">
+                    <VerticalStackLayout Padding="10">
+
+                        <!-- Book Title -->
+                        <VerticalStackLayout Margin="10">
+                            <Editor Text="{Binding EditedBook.BookTitle}"
+                                    Placeholder="{x:Static localization:AppStringResources.BookTitle}"
+                                    FontAttributes="Bold"
+                                    HorizontalTextAlignment="Center"
+                                    AutoSize="TextChanges">
+                                
+                                <Editor.Keyboard>
+                                    <Keyboard x:FactoryMethod="Create">
+                                        <x:Arguments>
+                                            <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                        </x:Arguments>
+                                    </Keyboard>
+                                </Editor.Keyboard>
+
+                                <Editor.Behaviors>
+                                    <toolkit:TextValidationBehavior x:Name="BookTitleValidator"
+                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                                    MinimumLength="2"
+                                                                    Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                                                    IsValid="{Binding BookTitleValid}"/>
+                                </Editor.Behaviors>
+                                
+                            </Editor>
+                        </VerticalStackLayout>
+                        <!-- Book Title -->
+
+                        <!-- Book Cover -->
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                               Margin="0,0,0,15">
+                            <ImageButton Source="Icons/photo_add_dark.svg"
+                                     HeightRequest="50"
+                                     WidthRequest="45"
+                                     Padding="10"
+                                     Command="{Binding AddUploadCoverPhotoCommand}"/>
+                            <ImageButton Source="Icons/photo_remove_dark.svg"
+                                     HeightRequest="50"
+                                     WidthRequest="45"
+                                     Padding="10"
+                                     Command="{Binding RemoveCoverPhotoCommand}"/>
+                        </HorizontalStackLayout>
+
+                        <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
+                                Text="{Binding EditedBook.BookCoverUrl}"
+                                HorizontalTextAlignment="Center"
+                                AutoSize="TextChanges"
+                                Keyboard="Url">
+                            <Editor.Behaviors>
+                                <toolkit:EventToCommandBehavior EventName="Completed"
+                                                                Command="{Binding BookCoverUrlCommand}"/>
+                            </Editor.Behaviors>
+                        </Editor>
+
+                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:WishListBookEditViewModel}}, Path=BookCover}"
+                                     HeightRequest="200"
+                                     WidthRequest="150"
+                                     IsVisible="{Binding EditedBook.HasBookCover}"
+                                     Command="{Binding BookCoverPopupCommand}"
+                                     BackgroundColor="Transparent"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
+                               HeightRequest="200"
+                               WidthRequest="150"
+                               IsVisible="{Binding EditedBook.HasNoBookCover}"
+                               Style="{DynamicResource NoCover}"/>
+                        <!-- Book Cover -->
+
+                        <!-- Book Info 1 -->
+                        <toolkit:Expander IsExpanded="{Binding BookInfo1SectionValue}"
+                                          Command="{Binding BookInfo1ChangedCommand}"
+                                          Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+                                    
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookInformation}"
+                                           Style="{DynamicResource expanderHeaderLabel}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                           IsVisible="{Binding BookInfo1Open}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                           IsVisible="{Binding BookInfo1NotOpen}"
+                                           HorizontalOptions="End"
+                                           Margin="0,7,10,2"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+                            <VerticalStackLayout Margin="0,-10"
+                                             BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Book Format -->
+                                <VerticalStackLayout Margin="10">
+                                    <HorizontalStackLayout>
+                                        <Label Text="{x:Static localization:AppStringResources.BookFormat}"
+                                               Style="{DynamicResource Header}"/>
+                                    <Label Text=" *"
+                                           Style="{DynamicResource Header_Warning}"
+                                           IsVisible="{Binding BookFormatNotValid}"/>
+                                    </HorizontalStackLayout>
+                                    <Picker ItemsSource="{Binding BookFormats}"
+                                            Title="{x:Static localization:AppStringResources.SelectABookFormat}"
+                                            HorizontalTextAlignment="Center"
+                                            SelectedItem="{Binding EditedBook.BookFormat}">
+                                        <Picker.Behaviors>
+                                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                                            Command="{Binding ValidateBookFormatCommand}"/>
+                                        </Picker.Behaviors>
+                                    </Picker>
+                                </VerticalStackLayout>
+                                <!-- Book Format -->
+
+                                <!-- Book Series -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookSeries}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookSeries}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookSeries}"
+                                            HorizontalTextAlignment="Center"
+                                            AutoSize="TextChanges">
+
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookNumber}"
+                                            Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookNumberInSeries}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookNumber}"
+                                            HorizontalTextAlignment="Center"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"/>
+                                </VerticalStackLayout>
+                                <!-- Book Series -->
+                                
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Book Info 1 -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Authors -->
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
+                                      Command="{Binding AuthorListChangedCommand}"
+                                      Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.Authors_Slash}"
+                                       Style="{DynamicResource expanderHeaderLabel}"
+                                       Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                       IsVisible="{Binding AuthorListOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                       IsVisible="{Binding AuthorListNotOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                             BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                
+                                <CollectionView ItemsSource="{Binding AuthorList}"
+                                                Margin="10">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="dataModels:AuthorModel">
+                                            
+                                            <Grid HorizontalOptions="Fill">
+                                                
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="4*" />
+                                                    <ColumnDefinition Width="4*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Text="{x:Static localization:AppStringResources.FirstName}"
+                                                       Grid.Row="0" Grid.Column="0"
+                                                       Style="{DynamicResource SubTitle}"/>
+
+                                                <Label Text="{x:Static localization:AppStringResources.LastName}"
+                                                       Grid.Row="0" Grid.Column="1"
+                                                       Style="{DynamicResource SubTitle}"/>
+
+                                                <Editor Text="{Binding FirstName}"
+                                                        Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
+                                                        HorizontalTextAlignment="Center"
+                                                        AutoSize="TextChanges"
+                                                        Grid.Row="1" Grid.Column="0">
+                                                    <Editor.Keyboard>
+                                                        <Keyboard x:FactoryMethod="Create">
+                                                            <x:Arguments>
+                                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                            </x:Arguments>
+                                                        </Keyboard>
+                                                    </Editor.Keyboard>
+                                                </Editor>
+
+                                                <Editor Text="{Binding LastName}"
+                                                        Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
+                                                        HorizontalTextAlignment="Center"
+                                                        AutoSize="TextChanges"
+                                                        Grid.Row="1" Grid.Column="1">
+                                                    <Editor.Keyboard>
+                                                        <Keyboard x:FactoryMethod="Create">
+                                                            <x:Arguments>
+                                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                            </x:Arguments>
+                                                        </Keyboard>
+                                                    </Editor.Keyboard>
+                                                </Editor>
+
+                                                <Button Text="-"
+                                                        Style="{DynamicResource MinusButton}"
+                                                        Grid.Row="1" Grid.Column="2"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:WishListBookEditViewModel}}, Path=RemoveAuthorCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                                <Button Text="+"
+                                        Command="{Binding AddAuthorCommand}"
+                                        Style="{DynamicResource AddButton}"
+                                        HorizontalOptions="Start"/>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Authors -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Book Information -->
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
+                                      Command="{Binding BookInfoChangedCommand}"
+                                      Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookInformation}"
+                                       Style="{DynamicResource expanderHeaderLabel}"
+                                       Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                       IsVisible="{Binding BookInfoOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                       IsVisible="{Binding BookInfoNotOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                             BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Book Location -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.WhereToBuy}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookWhereToBuy}"
+                                            Placeholder="{x:Static localization:AppStringResources.WhereToBuy}"
+                                            HorizontalTextAlignment="Center"
+                                            AutoSize="TextChanges">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
+                                </VerticalStackLayout>
+                                <!-- Book Location -->
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Publisher -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Editor Text="{Binding EditedBook.BookPublisher}"
+                                                Placeholder="{x:Static localization:AppStringResources.BookPublisher}"
+                                                HorizontalTextAlignment="Center"
+                                                AutoSize="TextChanges">
+                                            <Editor.Keyboard>
+                                                <Keyboard x:FactoryMethod="Create">
+                                                    <x:Arguments>
+                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                    </x:Arguments>
+                                                </Keyboard>
+                                            </Editor.Keyboard>
+                                        </Editor>
+                                    </VerticalStackLayout>
+                                    <!-- Book Publisher -->
+
+                                    <!-- Book Publish Year -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Editor Text="{Binding EditedBook.BookPublishYear}"
+                                                Placeholder="{x:Static localization:AppStringResources.BookPublishYear}"
+                                                HorizontalTextAlignment="Center"
+                                                Keyboard="Numeric"
+                                                MaxLength="4"
+                                                AutoSize="TextChanges"/>
+                                    </VerticalStackLayout>
+                                    <!-- Book Publish Year -->
+                                </Grid>
+
+                                <!-- Book Identifier -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookIdentifier}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookIdentifier}"
+                                            HorizontalTextAlignment="Center"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"/>
+                                </VerticalStackLayout>
+                                <!-- Book Identifier -->
+
+                                <Grid Margin="0,0,0,10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Language -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Editor Text="{Binding EditedBook.BookLanguage}"
+                                                Placeholder="{x:Static localization:AppStringResources.BookLanguage}"
+                                                HorizontalTextAlignment="Center"
+                                                AutoSize="TextChanges">
+                                            <Editor.Keyboard>
+                                                <Keyboard x:FactoryMethod="Create">
+                                                    <x:Arguments>
+                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                    </x:Arguments>
+                                                </Keyboard>
+                                            </Editor.Keyboard>
+                                        </Editor>
+                                    </VerticalStackLayout>
+                                    <!-- Book Language -->
+
+                                    <!-- Book Price -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Editor Text="{Binding EditedBook.BookPrice}"
+                                                Placeholder="{x:Static localization:AppStringResources.BookPrice}"
+                                                HorizontalTextAlignment="Center"
+                                                Keyboard="Numeric"
+                                                AutoSize="TextChanges" />
+                                    </VerticalStackLayout>
+                                    <!-- Book Price -->
+                                </Grid>
+
+                                <!-- Book URL -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.BookURL}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookURL}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookURL}"
+                                            HorizontalTextAlignment="Center"
+                                            AutoSize="TextChanges"/>
+                                </VerticalStackLayout>
+                                <!-- Book URL -->
+
+                                <!-- Hide Book -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.HideBook_Question}"
+                                       Style="{DynamicResource Header}"/>
+                                    <Switch IsToggled="{Binding EditedBook.HideBook}"
+                                        HorizontalOptions="Start"
+                                        Margin="-10"/>
+                                </VerticalStackLayout>
+                                <!-- Hide Book -->
+
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Book Information -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Summary -->
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
+                                      Command="{Binding SummaryChangedCommand}"
+                                      Margin="0,0,0,15">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookSummary}"
+                                       Style="{DynamicResource expanderHeaderLabel}"
+                                       Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                       IsVisible="{Binding SummaryOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                       IsVisible="{Binding SummaryNotOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                             Padding="10"
+                                             BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                
+                                <Editor Text="{Binding EditedBook.BookSummary}"
+                                        Placeholder="{x:Static localization:AppStringResources.BookSummary}"
+                                        HorizontalTextAlignment="Center"
+                                        AutoSize="TextChanges">
+                                    <Editor.Keyboard>
+                                        <Keyboard x:FactoryMethod="Create">
+                                            <x:Arguments>
+                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeSentence</KeyboardFlags>
+                                            </x:Arguments>
+                                        </Keyboard>
+                                    </Editor.Keyboard>
+                                </Editor>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+                        <!-- Summary -->
+
+                        <Label Style="{DynamicResource ShortSeparator}"/>
+
+                        <!-- Comments -->
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
+                                      Command="{Binding CommentsChangedCommand}"
+                                      Margin="0,0,0,15"
+                                      IsVisible="{Binding ShowComments}">
+                            <toolkit:Expander.Header>
+                                <Grid Style="{DynamicResource expanderHeader}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Text="{x:Static localization:AppStringResources.BookComments}"
+                                       Style="{DynamicResource expanderHeaderLabel}"
+                                       Grid.Row="0" Grid.Column="0"/>
+
+                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                       IsVisible="{Binding CommentsOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+
+                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                       IsVisible="{Binding CommentsNotOpen}"
+                                       HorizontalOptions="End"
+                                       Margin="0,7,10,2"
+                                       Grid.Row="0" Grid.Column="1"/>
+                                </Grid>
+                            </toolkit:Expander.Header>
+
+                            <VerticalStackLayout Margin="0,-10"
+                                             Padding="10"
+                                             BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+                                
+                                <Editor Text="{Binding EditedBook.BookComments}"
+                                        Placeholder="{x:Static localization:AppStringResources.BookComments}"
+                                        HorizontalTextAlignment="Center"
+                                        AutoSize="TextChanges">
+                                    <Editor.Keyboard>
+                                        <Keyboard x:FactoryMethod="Create">
+                                            <x:Arguments>
+                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeSentence</KeyboardFlags>
+                                            </x:Arguments>
+                                        </Keyboard>
+                                    </Editor.Keyboard>
+                                </Editor>
+                            </VerticalStackLayout>
+                        </toolkit:Expander>
+
+                        <Label Style="{DynamicResource ShortSeparator}"
+                           IsVisible="{Binding ShowComments}"/>
+                        <!-- Comments -->
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+        </StackLayout>
+        <!-- Main Content -->
+
+        <!-- Activity Indicator -->
+        <StackLayout IsVisible="{Binding IsBusy}"
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 AbsoluteLayout.LayoutFlags="All"
+                 BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                       IsVisible="{Binding IsBusy}"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+        <!-- Activity Indicator -->
+    </AbsoluteLayout>
+</ContentPage>

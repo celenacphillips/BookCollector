@@ -143,7 +143,7 @@ namespace BookCollector.Data.Models
 
         public async Task SetPartOfSeries()
         {
-            this.HasSeries = this.BookSeriesGuid != null;
+            this.HasSeries = this.BookSeriesGuid != null || !string.IsNullOrEmpty(this.BookSeries);
             var output = string.Empty;
 
             if (this.BookSeriesGuid != null)
@@ -164,6 +164,19 @@ namespace BookCollector.Data.Models
                 if (this.BookNumberInSeries == null)
                 {
                     output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(this.BookSeries))
+            {
+                if (this.BookNumberInSeries != null)
+                {
+                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{this.BookSeries}")}, {AppStringResources.BookNumber.Replace("Number", $"{this.BookNumberInSeries}")}";
+                }
+
+                if (this.BookNumberInSeries == null)
+                {
+                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{this.BookSeries}")}";
                 }
             }
 
@@ -210,7 +223,7 @@ namespace BookCollector.Data.Models
             }
         }
 
-        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel> authorList)
+        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel> authorList, bool addToBookAuthorlist = true)
         {
             var bookAuthorList = new ObservableCollection<BookAuthorModel>();
 
@@ -221,11 +234,15 @@ namespace BookCollector.Data.Models
                 if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
                     !string.IsNullOrEmpty(authorList[i].LastName))
                 {
-                    bookAuthorList.Add(new BookAuthorModel()
+
+                    if (addToBookAuthorlist)
                     {
-                        BookGuid = (Guid)this.BookGuid,
-                        AuthorGuid = (Guid)authorList[i].AuthorGuid,
-                    });
+                        bookAuthorList.Add(new BookAuthorModel()
+                        {
+                            BookGuid = (Guid)this.BookGuid,
+                            AuthorGuid = (Guid)authorList[i].AuthorGuid,
+                        });
+                    }
 
                     this.AuthorListString += authorList[i].ReverseFullName;
 

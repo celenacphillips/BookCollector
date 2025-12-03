@@ -22,6 +22,7 @@ namespace BookCollector
             // Unit test data
             //var testData = new TestData();
             TestData.AddBooksToList();
+            TestData.AddWishListBooksToList();
 
             BindingContext = this;
         }
