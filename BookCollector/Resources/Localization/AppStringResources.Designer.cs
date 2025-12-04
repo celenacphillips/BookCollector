@@ -376,6 +376,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author Guid.
+        /// </summary>
+        internal static string AuthorGuid {
+            get {
+                return ResourceManager.GetString("AuthorGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Author Last Name.
         /// </summary>
         internal static string AuthorLastName {
@@ -466,11 +475,38 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Author Guid.
+        /// </summary>
+        internal static string BookAuthorGuid {
+            get {
+                return ResourceManager.GetString("BookAuthorGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Authors.
+        /// </summary>
+        internal static string BookAuthors {
+            get {
+                return ResourceManager.GetString("BookAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Collection.
         /// </summary>
         internal static string BookCollection {
             get {
                 return ResourceManager.GetString("BookCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Collection Guid.
+        /// </summary>
+        internal static string BookCollectionGuid {
+            get {
+                return ResourceManager.GetString("BookCollectionGuid", resourceCulture);
             }
         }
         
@@ -538,6 +574,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Genre Guid.
+        /// </summary>
+        internal static string BookGenreGuid {
+            get {
+                return ResourceManager.GetString("BookGenreGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Guid.
+        /// </summary>
+        internal static string BookGuid {
+            get {
+                return ResourceManager.GetString("BookGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book has been added to grouping..
         /// </summary>
         internal static string BookHasBeenAddedToGrouping {
@@ -552,6 +606,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookIdentifier {
             get {
                 return ResourceManager.GetString("BookIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BookImageBase64String.
+        /// </summary>
+        internal static string BookImageBase64String {
+            get {
+                return ResourceManager.GetString("BookImageBase64String", resourceCulture);
             }
         }
         
@@ -597,6 +660,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookLocation {
             get {
                 return ResourceManager.GetString("BookLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Location Guid.
+        /// </summary>
+        internal static string BookLocationGuid {
+            get {
+                return ResourceManager.GetString("BookLocationGuid", resourceCulture);
             }
         }
         
@@ -709,6 +781,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Series Guid.
+        /// </summary>
+        internal static string BookSeriesGuid {
+            get {
+                return ResourceManager.GetString("BookSeriesGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Books Read This Year: yyyy.
         /// </summary>
         internal static string BooksReadThisYear {
@@ -781,6 +862,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chapter Guid.
+        /// </summary>
+        internal static string ChapterGuid {
+            get {
+                return ResourceManager.GetString("ChapterGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapter Name.
         /// </summary>
         internal static string ChapterName {
@@ -790,11 +880,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chapter Order.
+        /// </summary>
+        internal static string ChapterOrder {
+            get {
+                return ResourceManager.GetString("ChapterOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapter Pages.
         /// </summary>
         internal static string ChapterPages {
             get {
                 return ResourceManager.GetString("ChapterPages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chapters.
+        /// </summary>
+        internal static string Chapters {
+            get {
+                return ResourceManager.GetString("Chapters", resourceCulture);
             }
         }
         
@@ -822,6 +930,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Collection {
             get {
                 return ResourceManager.GetString("Collection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection Guid.
+        /// </summary>
+        internal static string CollectionGuid {
+            get {
+                return ResourceManager.GetString("CollectionGuid", resourceCulture);
             }
         }
         
@@ -1033,11 +1150,74 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error saving author!.
+        /// </summary>
+        internal static string ErrorSavingAuthor {
+            get {
+                return ResourceManager.GetString("ErrorSavingAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error saving book!.
         /// </summary>
         internal static string ErrorSavingBook {
             get {
                 return ResourceManager.GetString("ErrorSavingBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving book author!.
+        /// </summary>
+        internal static string ErrorSavingBookAuthor {
+            get {
+                return ResourceManager.GetString("ErrorSavingBookAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving chapter!.
+        /// </summary>
+        internal static string ErrorSavingChapter {
+            get {
+                return ResourceManager.GetString("ErrorSavingChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving collection!.
+        /// </summary>
+        internal static string ErrorSavingCollection {
+            get {
+                return ResourceManager.GetString("ErrorSavingCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving genre!.
+        /// </summary>
+        internal static string ErrorSavingGenre {
+            get {
+                return ResourceManager.GetString("ErrorSavingGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving location!.
+        /// </summary>
+        internal static string ErrorSavingLocation {
+            get {
+                return ResourceManager.GetString("ErrorSavingLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving series!.
+        /// </summary>
+        internal static string ErrorSavingSeries {
+            get {
+                return ResourceManager.GetString("ErrorSavingSeries", resourceCulture);
             }
         }
         
@@ -1087,6 +1267,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export completed..
+        /// </summary>
+        internal static string ExportComplete {
+            get {
+                return ResourceManager.GetString("ExportComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export/Import.
         /// </summary>
         internal static string ExportImport {
@@ -1110,6 +1299,24 @@ namespace BookCollector.Resources.Localization {
         internal static string ExportLocation {
             get {
                 return ResourceManager.GetString("ExportLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export finished..
+        /// </summary>
+        internal static string ExportResultsFinish {
+            get {
+                return ResourceManager.GetString("ExportResultsFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Started. Please be patient..
+        /// </summary>
+        internal static string ExportResultsStart {
+            get {
+                return ResourceManager.GetString("ExportResultsStart", resourceCulture);
             }
         }
         
@@ -1177,11 +1384,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Full Name.
+        /// </summary>
+        internal static string FullName {
+            get {
+                return ResourceManager.GetString("FullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genre.
         /// </summary>
         internal static string Genre {
             get {
                 return ResourceManager.GetString("Genre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genre Guid.
+        /// </summary>
+        internal static string GenreGuid {
+            get {
+                return ResourceManager.GetString("GenreGuid", resourceCulture);
             }
         }
         
@@ -1303,11 +1528,47 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import completed..
+        /// </summary>
+        internal static string ImportComplete {
+            get {
+                return ResourceManager.GetString("ImportComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import finished..
+        /// </summary>
+        internal static string ImportResultsFinish {
+            get {
+                return ResourceManager.GetString("ImportResultsFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import Started. Please be patient..
+        /// </summary>
+        internal static string ImportResultsStart {
+            get {
+                return ResourceManager.GetString("ImportResultsStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item Deleted.
         /// </summary>
         internal static string ItemDeleted {
             get {
                 return ResourceManager.GetString("ItemDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Skipped..
+        /// </summary>
+        internal static string ItemSkipped {
+            get {
+                return ResourceManager.GetString("ItemSkipped", resourceCulture);
             }
         }
         
@@ -1996,6 +2257,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series Guid.
+        /// </summary>
+        internal static string SeriesGuid {
+            get {
+                return ResourceManager.GetString("SeriesGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a list of books you have in &apos;series&apos;. You can click from here to add a new or existing book..
         /// </summary>
         internal static string SeriesMainView_InfoText {
@@ -2145,6 +2415,42 @@ namespace BookCollector.Resources.Localization {
         internal static string Statistics {
             get {
                 return ResourceManager.GetString("Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table: Getting items....
+        /// </summary>
+        internal static string Table_GettingItems {
+            get {
+                return ResourceManager.GetString("Table_GettingItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table: x imported....
+        /// </summary>
+        internal static string Table_XImported {
+            get {
+                return ResourceManager.GetString("Table_XImported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table: x retrieved....
+        /// </summary>
+        internal static string Table_XRetrieved {
+            get {
+                return ResourceManager.GetString("Table_XRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table: y exported....
+        /// </summary>
+        internal static string Table_YExported {
+            get {
+                return ResourceManager.GetString("Table_YExported", resourceCulture);
             }
         }
         

@@ -912,4 +912,106 @@
   <data name="AreYouSureImport_Question" xml:space="preserve">
     <value>Are you sure you want to import data? This can take a while if you have a large amount of data and/or large images. Please be patient.</value>
   </data>
+  <data name="ExportResultsStart" xml:space="preserve">
+    <value>Export Started. Please be patient.</value>
+  </data>
+  <data name="ImportResultsStart" xml:space="preserve">
+    <value>Import Started. Please be patient.</value>
+  </data>
+  <data name="ExportResultsFinish" xml:space="preserve">
+    <value>Export finished.</value>
+  </data>
+  <data name="ImportResultsFinish" xml:space="preserve">
+    <value>Import finished.</value>
+  </data>
+  <data name="ExportComplete" xml:space="preserve">
+    <value>Export completed.</value>
+  </data>
+  <data name="ImportComplete" xml:space="preserve">
+    <value>Import completed.</value>
+  </data>
+  <data name="Table_GettingItems" xml:space="preserve">
+    <value>Table: Getting items...</value>
+  </data>
+  <data name="ItemSkipped" xml:space="preserve">
+    <value>Item Skipped.</value>
+  </data>
+  <data name="Table_XRetrieved" xml:space="preserve">
+    <value>Table: x retrieved...</value>
+  </data>
+  <data name="BookGuid" xml:space="preserve">
+    <value>Book Guid</value>
+  </data>
+  <data name="BookSeriesGuid" xml:space="preserve">
+    <value>Book Series Guid</value>
+  </data>
+  <data name="BookCollectionGuid" xml:space="preserve">
+    <value>Book Collection Guid</value>
+  </data>
+  <data name="BookGenreGuid" xml:space="preserve">
+    <value>Book Genre Guid</value>
+  </data>
+  <data name="BookImageBase64String" xml:space="preserve">
+    <value>BookImageBase64String</value>
+  </data>
+  <data name="BookLocationGuid" xml:space="preserve">
+    <value>Book Location Guid</value>
+  </data>
+  <data name="Table_YExported" xml:space="preserve">
+    <value>Table: y exported...</value>
+  </data>
+  <data name="Table_XImported" xml:space="preserve">
+    <value>Table: x imported...</value>
+  </data>
+  <data name="BookAuthors" xml:space="preserve">
+    <value>Book Authors</value>
+  </data>
+  <data name="Chapters" xml:space="preserve">
+    <value>Chapters</value>
+  </data>
+  <data name="ChapterGuid" xml:space="preserve">
+    <value>Chapter Guid</value>
+  </data>
+  <data name="ChapterOrder" xml:space="preserve">
+    <value>Chapter Order</value>
+  </data>
+  <data name="ErrorSavingChapter" xml:space="preserve">
+    <value>Error saving chapter!</value>
+  </data>
+  <data name="CollectionGuid" xml:space="preserve">
+    <value>Collection Guid</value>
+  </data>
+  <data name="ErrorSavingCollection" xml:space="preserve">
+    <value>Error saving collection!</value>
+  </data>
+  <data name="GenreGuid" xml:space="preserve">
+    <value>Genre Guid</value>
+  </data>
+  <data name="ErrorSavingGenre" xml:space="preserve">
+    <value>Error saving genre!</value>
+  </data>
+  <data name="SeriesGuid" xml:space="preserve">
+    <value>Series Guid</value>
+  </data>
+  <data name="ErrorSavingSeries" xml:space="preserve">
+    <value>Error saving series!</value>
+  </data>
+  <data name="BookAuthorGuid" xml:space="preserve">
+    <value>Book Author Guid</value>
+  </data>
+  <data name="AuthorGuid" xml:space="preserve">
+    <value>Author Guid</value>
+  </data>
+  <data name="ErrorSavingBookAuthor" xml:space="preserve">
+    <value>Error saving book author!</value>
+  </data>
+  <data name="ErrorSavingAuthor" xml:space="preserve">
+    <value>Error saving author!</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="ErrorSavingLocation" xml:space="preserve">
+    <value>Error saving location!</value>
+  </data>
 </root>
