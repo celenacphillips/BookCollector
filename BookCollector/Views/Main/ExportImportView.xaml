@@ -17,37 +17,173 @@
         <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All" >
 
-            <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                         Command="{Binding RefreshCommand}">
+            <ScrollView>
+                <VerticalStackLayout Margin="20">
 
-                <ScrollView>
-                    <VerticalStackLayout Margin="20">
+                    <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
 
-                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
+                    <Grid Margin="20">
 
-                        <Grid Margin="20">
-                            
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                            <Button Text="{x:Static localization:AppStringResources.Export}"
+                        <Button Text="{x:Static localization:AppStringResources.Export}"
                                     Margin="10"
                                     Command="{Binding ExportCommand}"
-                                    Grid.Row="0" Grid.Column="0"/>
-                            <Button Text="{x:Static localization:AppStringResources.Import}"
+                                    Grid.Row="0" Grid.Column="0"
+                                    IsEnabled="{Binding ExportEnabled}"/>
+
+                        <Button Text="{x:Static localization:AppStringResources.Import}"
                                     Margin="10"
                                     Command="{Binding ImportCommand}"
-                                    Grid.Row="0" Grid.Column="1"/>
+                                    Grid.Row="0" Grid.Column="1"
+                                    IsEnabled="{Binding ImportEnabled}"/>
 
-                        </Grid>
+                    </Grid>
 
-                        <Label Text="{Binding Output}" />
+                    <Grid HorizontalOptions="Center"
+                              IsVisible="{Binding OutputVisible}">
 
-                    </VerticalStackLayout>
-                </ScrollView>
-            </RefreshView>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Label Text="{Binding StartOutput}"
+                                   Grid.Row="0" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding BooksOutput}"
+                                   Grid.Row="1" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding WishListOutput}"
+                                   Grid.Row="2" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding CollectionsOutput}"
+                                   Grid.Row="3" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding GenresOutput}"
+                                   Grid.Row="4" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding SeriesOutput}"
+                                   Grid.Row="5" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding AuthorsOutput}"
+                                   Grid.Row="6" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding LocationsOutput}"
+                                   Grid.Row="7" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <Label Text="{Binding FinalOutput}"
+                                   Grid.Row="8" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                    </Grid>
+
+                    <Grid HorizontalOptions="Center"
+                              IsVisible="{Binding CheckboxesVisible}">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Label Text="{x:Static localization:AppStringResources.Books}"
+                                   Grid.Row="0" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="0" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding BooksChecked}"
+                                      x:Name="books"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Wishlist}"
+                                   Grid.Row="1" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="1" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding WishListChecked}"
+                                      x:Name="wishlist"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Collections}"
+                                   Grid.Row="2" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="2" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding CollectionsChecked}"
+                                      x:Name="collections"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Genres}"
+                                   Grid.Row="3" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="3" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding GenresChecked}"
+                                      x:Name="genres"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Series}"
+                                   Grid.Row="4" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="4" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding SeriesChecked}"
+                                      x:Name="series"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Authors}"
+                                   Grid.Row="5" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="5" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding AuthorsChecked}"
+                                      x:Name="authors"/>
+
+                        <Label Text="{x:Static localization:AppStringResources.Locations}"
+                                   Grid.Row="6" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                        <CheckBox Grid.Row="6" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding LocationsChecked}"
+                                      x:Name="locations"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </ScrollView>
 
         </StackLayout>
         <StackLayout IsVisible="{Binding IsBusy}"

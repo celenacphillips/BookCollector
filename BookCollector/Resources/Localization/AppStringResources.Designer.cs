@@ -304,6 +304,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to export your data? This can take a while if you have a large amount of data and/or large images. Please be patient..
+        /// </summary>
+        internal static string AreYouSureExport_Question {
+            get {
+                return ResourceManager.GetString("AreYouSureExport_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to import data? This can take a while if you have a large amount of data and/or large images. Please be patient..
+        /// </summary>
+        internal static string AreYouSureImport_Question {
+            get {
+                return ResourceManager.GetString("AreYouSureImport_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete item?.
         /// </summary>
         internal static string AreYouSureYouWantToDeleteItem_Question {

@@ -906,4 +906,10 @@
   <data name="ExportImportView_InfoText" xml:space="preserve">
     <value>Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution).</value>
   </data>
+  <data name="AreYouSureExport_Question" xml:space="preserve">
+    <value>Are you sure you want to export your data? This can take a while if you have a large amount of data and/or large images. Please be patient.</value>
+  </data>
+  <data name="AreYouSureImport_Question" xml:space="preserve">
+    <value>Are you sure you want to import data? This can take a while if you have a large amount of data and/or large images. Please be patient.</value>
+  </data>
 </root>
