@@ -38,9 +38,18 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool ShowFavorites { get; set; }
         public bool ShowRatings { get; set; }
+        public bool ShowHiddenBooks { get; set; }
+        public bool ShowHiddenCollections { get; set; }
+        public bool ShowHiddenSeries { get; set; }
+        public bool ShowHiddenLocations { get; set; }
+        public bool ShowHiddenGenres { get; set; }
+        public bool ShowHiddenAuthors { get; set; }
 
         internal void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
         {
+            var textLight = (Color)Application.Current.Resources["TextLight"];
+            var textDark = (Color)Application.Current.Resources["TextDark"];
+
             var section = (ChartView)_view.FindByName(sectionName);
 
             section.Chart = null;
@@ -53,9 +62,9 @@ namespace BookCollector.ViewModels.BaseViewModels
                     new ChartEntry(chartValue.Value)
                     {
                         Label = $"{chartValue.LabelValue}",
-                        TextColor = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
                         ValueLabel = $"{chartValue.Value}",
-                        ValueLabelColor = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        ValueLabelColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
                         Color = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
                     });
             }
@@ -72,6 +81,9 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         internal void SetUpBarChart(List<ChartValues> chartValues, string sectionName)
         {
+            var textLight = (Color)Application.Current.Resources["TextLight"];
+            var textDark = (Color)Application.Current.Resources["TextDark"];
+
             var section = (ChartView)_view.FindByName(sectionName);
 
             section.Chart = null;
@@ -84,9 +96,9 @@ namespace BookCollector.ViewModels.BaseViewModels
                     new ChartEntry(chartValue.Value)
                     {
                         Label = $"{chartValue.LabelValue}",
-                        TextColor = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
                         ValueLabel = $"{chartValue.Value}",
-                        ValueLabelColor = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        ValueLabelColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
                         Color = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
                     });
             }
@@ -104,28 +116,26 @@ namespace BookCollector.ViewModels.BaseViewModels
             };
         }
 
-        // TO DO
-        // fix color calculations - 12/3/2025
-        internal void CalculateColors(Color primaryColor, AppTheme appTheme, int splits)
+        internal void GetColors()
         {
-            float value = (float)1.0 / splits;
+            var color1 = (Color)Application.Current.Resources["Primary"];
+            var color2 = (Color)Application.Current.Resources["Color2"];
+            var color3 = (Color)Application.Current.Resources["Color3"];
+            var color4 = (Color)Application.Current.Resources["Color4"];
+            var color5 = (Color)Application.Current.Resources["Color5"];
+            var color6 = (Color)Application.Current.Resources["Color6"];
 
-            for (int i = 0; i < splits; i++)
-            {
-                float addValue = (float)value * (i + 1);
-                if (appTheme == AppTheme.Light)
-                {
-                    ColorList.Add(primaryColor.WithHue(addValue));
-                }
-                else
-                {
-                    ColorList.Add(primaryColor.WithHue(addValue));
-                }
-            }
+            ColorList = [color1, color2, color3, color4, color5, color6];
         }
 
         internal void GetPreferences()
         {
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+            ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
+            ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
+            ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
+            ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true  /* Default */);
+            ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
             ShowFavorites = Preferences.Get("FavoritesOn", true  /* Default */);
             ShowRatings = Preferences.Get("RatingsOn", true  /* Default */);
         }

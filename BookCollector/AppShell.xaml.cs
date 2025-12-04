@@ -17,8 +17,6 @@ namespace BookCollector
             RegisterRoutes();
             BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
 
-            //SettingPreferences();
-
             // Unit test data
             //var testData = new TestData();
             TestData.AddBooksToList();
@@ -31,10 +29,6 @@ namespace BookCollector
         {
             Routing.RegisterRoute("BookEditView", typeof(Views.Book.BookEditView));
             Routing.RegisterRoute("BookMainView", typeof(Views.Book.BookMainView));
-        }
-
-        private void SettingPreferences ()
-        {
         }
     }
 }

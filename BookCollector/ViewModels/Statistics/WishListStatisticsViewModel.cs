@@ -1,4 +1,6 @@
-﻿using BookCollector.ViewModels.BaseViewModels;
+﻿using BookCollector.Data;
+using BookCollector.Data.Models;
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -21,31 +23,29 @@ namespace BookCollector.ViewModels.Statistics
             {
                 SetIsBusyTrue();
 
-                double bookItemsPrice = 0;
-                //var loadDataTasks = new Task[]
-                //{
-                //    Task.Run(async () => bookItemsPrice = await _database.GetWishListBookItemsCostAsync()),
-                //    Task.Run(async () => TotalBooks = await _database.GetWishListBookItemsCountAsync()),
-                //};
+                GetPreferences();
 
-                //CostBooks = SetPriceString(bookItemsPrice);
+                GetColors();
 
-                var primaryHasValue = Application.Current.Resources.TryGetValue("Primary", out object primaryColor);
+                List<CountModel> seriesCounts = new List<CountModel>();
+                List<CountModel> authorCounts = new List<CountModel>();
+                List<CountModel> locationCounts = new List<CountModel>();
+                List<CountModel> formatCounts = new List<CountModel>();
 
-                if (primaryHasValue)
-                {
-                    Color primary = (Color)primaryColor;
-                    ColorList = [primary];
+                Task.WaitAll(
+                [
+                    Task.Run (async () => CostBooks = await FilterLists.GetPriceOfAllWishListBooks(ShowHiddenBooks) ),
+                    Task.Run (async () => TotalBooks = await FilterLists.GetAllWishListBooksListCount(ShowHiddenBooks) ),
+                    Task.Run (async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(ShowHiddenBooks) ),
+                    Task.Run (async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(ShowHiddenBooks) ),
+                    Task.Run (async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(ShowHiddenBooks) ),
+                    Task.Run (() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(ShowHiddenBooks) ),
+                ]);
 
-                    var appTheme = Application.Current.PlatformAppTheme;
-
-                    await Task.WhenAll([
-                        SetUpFormatsChart(primary, appTheme),
-                        SetUpSeriesChart(primary, appTheme),
-                        SetUpAuthorsChart(primary, appTheme),
-                        SetUpLocationsChart(primary, appTheme),
-                    ]);
-                }
+                SetUpSeriesChart(seriesCounts);
+                SetUpAuthorsChart(authorCounts);
+                SetUpLocationsChart(locationCounts);
+                SetUpFormatsChart(formatCounts);
 
                 SetIsBusyFalse();
             }
@@ -65,33 +65,32 @@ namespace BookCollector.ViewModels.Statistics
 
 
         #region Series
-        private async Task<List<CountValues>> SetShowSeries()
+        private void SetShowSeries(List<CountModel> counts)
         {
-            //List<CountValues> counts = await _database.GetSeriesAndWishListBookCountsAsync(5);
-
-            List<CountValues> counts = null;
-
             if (counts.Any(x => x.Count > 0))
             {
                 ShowSeries = true;
             }
             else
                 ShowSeries = false;
-
-            return counts;
         }
 
-        private async Task SetUpSeriesChart(Color primary, AppTheme appTheme)
+        private void SetUpSeriesChart(List<CountModel> counts)
         {
-            List<CountValues> counts = await SetShowSeries();
+            SetShowSeries(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
 
             if (ShowSeries)
             {
-                CalculateColors(primary, appTheme, counts.Count - 1);
-
                 List<ChartValues> values = new List<ChartValues>();
 
-                for (int i = 0; i < counts.Count; i++)
+                var max = 5;
+
+                if (counts.Count < max)
+                    max = counts.Count;
+
+                for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
@@ -108,33 +107,32 @@ namespace BookCollector.ViewModels.Statistics
         #endregion
 
         #region Author
-        private async Task<List<CountValues>> SetShowAuthors()
+        private void SetShowAuthors(List<CountModel> counts)
         {
-            //List<CountValues> counts = await _database.GetAuthorsAndWishListBookCountsAsync(5);
-
-            List<CountValues> counts = null;
-
             if (counts.Any(x => x.Count > 0))
             {
                 ShowAuthors = true;
             }
             else
                 ShowAuthors = false;
-
-            return counts;
         }
 
-        private async Task SetUpAuthorsChart(Color primary, AppTheme appTheme)
+        private void SetUpAuthorsChart(List<CountModel> counts)
         {
-            List<CountValues> counts = await SetShowAuthors();
+            SetShowAuthors(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
 
             if (ShowAuthors)
             {
-                CalculateColors(primary, appTheme, counts.Count - 1);
-
                 List<ChartValues> values = new List<ChartValues>();
 
-                for (int i = 0; i < counts.Count; i++)
+                var max = 5;
+
+                if (counts.Count < max)
+                    max = counts.Count;
+
+                for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
@@ -151,33 +149,32 @@ namespace BookCollector.ViewModels.Statistics
         #endregion
 
         #region Location
-        private async Task<List<CountValues>> SetShowLocations()
+        private void SetShowLocations(List<CountModel> counts)
         {
-            //List<CountValues> counts = await _database.GetLocationsAndWishListBookCountsAsync(5);
-
-            List<CountValues> counts = null;
-
             if (counts.Any(x => x.Count > 0))
             {
                 ShowLocations = true;
             }
             else
                 ShowLocations = false;
-
-            return counts;
         }
 
-        private async Task SetUpLocationsChart(Color primary, AppTheme appTheme)
+        private void SetUpLocationsChart(List<CountModel> counts)
         {
-            List<CountValues> counts = await SetShowLocations();
+            SetShowLocations(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
 
             if (ShowLocations)
             {
-                CalculateColors(primary, appTheme, counts.Count - 1);
-
                 List<ChartValues> values = new List<ChartValues>();
 
-                for (int i = 0; i < counts.Count; i++)
+                var max = 5;
+
+                if (counts.Count < max)
+                    max = counts.Count;
+
+                for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
@@ -195,33 +192,32 @@ namespace BookCollector.ViewModels.Statistics
         #endregion
 
         #region Format
-        private async Task<List<CountValues>> SetShowFormats()
+        private void SetShowFormats(List<CountModel> counts)
         {
-            //List<CountValues> counts = await _database.GetFormatsAndWishListBookCountsAsync(5);
-
-            List<CountValues> counts = null;
-
             if (counts.Any(x => x.Count > 0))
             {
                 ShowFormats = true;
             }
             else
                 ShowFormats = false;
-
-            return counts;
         }
 
-        private async Task SetUpFormatsChart(Color primary, AppTheme appTheme)
+        private void SetUpFormatsChart(List<CountModel> counts)
         {
-            List<CountValues> counts = await SetShowFormats();
+            SetShowFormats(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
 
             if (ShowFormats)
             {
-                CalculateColors(primary, appTheme, counts.Count - 1);
-
                 List<ChartValues> values = new List<ChartValues>();
 
-                for (int i = 0; i < counts.Count; i++)
+                var max = 5;
+
+                if (counts.Count < max)
+                    max = counts.Count;
+
+                for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()

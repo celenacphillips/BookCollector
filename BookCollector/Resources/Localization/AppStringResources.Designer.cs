@@ -1393,11 +1393,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Collection.
+        /// </summary>
+        internal static string NoCollection {
+            get {
+                return ResourceManager.GetString("NoCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Date.
         /// </summary>
         internal static string NoDate {
             get {
                 return ResourceManager.GetString("NoDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Genre.
+        /// </summary>
+        internal static string NoGenre {
+            get {
+                return ResourceManager.GetString("NoGenre", resourceCulture);
             }
         }
         

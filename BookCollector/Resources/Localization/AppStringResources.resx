@@ -867,4 +867,10 @@
   <data name="NonFavorite" xml:space="preserve">
     <value>Non-Favorite</value>
   </data>
+  <data name="NoCollection" xml:space="preserve">
+    <value>No Collection</value>
+  </data>
+  <data name="NoGenre" xml:space="preserve">
+    <value>No Genre</value>
+  </data>
 </root>

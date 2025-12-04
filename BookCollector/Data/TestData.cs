@@ -120,6 +120,33 @@ namespace BookCollector.Data
                 book.SetCoverDisplay();
                 book.SetAuthorListString(BookAuthorList, AuthorList);
             }
+
+            var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
+
+            foreach (var author in AuthorList)
+            {
+                author.SetTotalBooks(showHiddenBooks);
+            }
+
+            foreach (var series in SeriesList)
+            {
+                series.SetTotalBooks(showHiddenBooks);
+            }
+
+            foreach (var genre in GenreList)
+            {
+                genre.SetTotalBooks(showHiddenBooks);
+            }
+
+            foreach (var collection in CollectionList)
+            {
+                collection.SetTotalBooks(showHiddenBooks);
+            }
+
+            foreach (var location in LocationList)
+            {
+                location.SetTotalBooks(showHiddenBooks);
+            }
         }
 
         public static void UpdateBook(BookModel book)
@@ -153,7 +180,7 @@ namespace BookCollector.Data
                     BookPublishYear = "2025",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
-                    BookPrice = "$10.00",
+                    BookPrice = "$15.00",
                     BookURL = "test.com",
                     BookSummary = "Text",
                     BookComments = "Comments",
@@ -170,7 +197,7 @@ namespace BookCollector.Data
                     BookPublishYear = "1978",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
-                    BookPrice = "$10.00",
+                    BookPrice = "$25.00",
                     BookURL = "test.com",
                     BookSummary = "Text",
                     BookComments = "Comments",
@@ -187,7 +214,7 @@ namespace BookCollector.Data
                     BookPublishYear = "2020",
                     BookIdentifier = "1234",
                     BookLanguage = "english",
-                    BookPrice = "$10.00",
+                    BookPrice = "$50.00",
                     BookURL = "test.com",
                     BookSummary = "Text",
                     BookComments = "Comments",
