@@ -35,13 +35,10 @@ namespace BookCollector.ViewModels.Location
 
                 GetPreferences();
 
-                // Unit test data
-                var bookList = TestData.BookList;
-
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(bookList, SelectedLocation.LocationGuid, ShowHiddenBook) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInLocationList(SelectedLocation.LocationGuid, ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;

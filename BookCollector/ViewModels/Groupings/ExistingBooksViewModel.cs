@@ -44,29 +44,26 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var bookList = TestData.BookList;
-
                 switch (SelectedObjectType)
                 {
                     case "Collection":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(bookList, ShowHiddenBook) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Genre":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAGenreList(bookList, ShowHiddenBook) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAGenreList(ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Series":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutASeriesList(bookList, ShowHiddenBook) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutASeriesList(ShowHiddenBook) ),
                         ]);
                         break;
 
@@ -74,14 +71,14 @@ namespace BookCollector.ViewModels.Groupings
                         var author = (AuthorModel)SelectedObject;
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAuthorList(bookList, author.ReverseFullName ,ShowHiddenBook) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutAuthorList(author.ReverseFullName ,ShowHiddenBook) ),
                         ]);
                         break;
 
                     case "Location":
                         Task.WaitAll(
                         [
-                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutALocationList(bookList, ShowHiddenBook) ),
+                            Task.Run (async () => FullBookList = await FilterLists.GetAllBooksWithoutALocationList(ShowHiddenBook) ),
                         ]);
                         break;
 

@@ -44,12 +44,9 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var genreList = TestData.GenreList;
-
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(genreList, ShowHiddenGenres) ),
+                    Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(ShowHiddenGenres) ),
                 ]);
 
                 TotalGenresCount = FullGenreList.Count;

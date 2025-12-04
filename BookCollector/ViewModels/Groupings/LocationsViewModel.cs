@@ -44,12 +44,9 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var locationList = TestData.LocationList;
-
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(locationList, ShowHiddenLocations) ),
+                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(ShowHiddenLocations) ),
                 ]);
 
                 TotalLocationsCount = FullLocationList.Count;

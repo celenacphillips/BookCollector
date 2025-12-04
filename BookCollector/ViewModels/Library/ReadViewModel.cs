@@ -26,13 +26,10 @@ namespace BookCollector.ViewModels.Library
 
                 GetPreferences();
 
-                // Unit test data
-                var bookList = TestData.BookList;
-
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetReadBooksList(bookList, ShowHiddenBook) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetReadBooksList(ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;

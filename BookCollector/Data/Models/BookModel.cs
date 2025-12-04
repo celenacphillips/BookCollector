@@ -153,8 +153,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookSeriesGuid != null)
             {
-                // Unit test data
-                var series = TestData.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.BookSeriesGuid);
+                var series = await FilterLists.GetSeriesForBook(this.BookSeriesGuid);
 
                 if (this.BookNumberInSeries != null)
                 {
@@ -196,7 +195,7 @@ namespace BookCollector.Data.Models
             if (this.BookCollectionGuid != null)
             {
                 // Unit test data
-                var collection = TestData.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.BookCollectionGuid);
+                var collection = await FilterLists.GetCollectionForBook(this.BookCollectionGuid);
 
                 output = $"{AppStringResources.PartOfCollection.Replace("blank", $"{collection.CollectionName}")}";
             }

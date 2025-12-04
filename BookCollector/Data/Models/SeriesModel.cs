@@ -36,10 +36,7 @@ namespace BookCollector.Data.Models
 
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
-            // Unit test data
-            var bookList = TestData.BookList;
-
-            var list = await FilterLists.GetAllBooksInSeriesList(bookList, this.SeriesGuid, showHiddenBooks);
+            var list = await FilterLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
 
             this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
             this.SeriesTotalBooks = list.Count;
