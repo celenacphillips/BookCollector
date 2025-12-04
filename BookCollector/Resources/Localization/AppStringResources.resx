@@ -825,20 +825,20 @@
   <data name="RatingStatus" xml:space="preserve">
     <value>Rating Status</value>
   </data>
-  <data name="TopCollections" xml:space="preserve">
-    <value>Top Collections</value>
+  <data name="TopXCollections" xml:space="preserve">
+    <value>Top x Collections</value>
   </data>
-  <data name="TopGenres" xml:space="preserve">
-    <value>Top Genres</value>
+  <data name="TopXGenres" xml:space="preserve">
+    <value>Top x Genres</value>
   </data>
-  <data name="TopSeries" xml:space="preserve">
-    <value>Top Series</value>
+  <data name="TopXSeries" xml:space="preserve">
+    <value>Top x Series</value>
   </data>
-  <data name="TopAuthors" xml:space="preserve">
-    <value>Top Authors</value>
+  <data name="TopXAuthors" xml:space="preserve">
+    <value>Top x Authors</value>
   </data>
-  <data name="TopLocations" xml:space="preserve">
-    <value>Top Locations</value>
+  <data name="TopXLocations" xml:space="preserve">
+    <value>Top x Locations</value>
   </data>
   <data name="BooksReadThisYear" xml:space="preserve">
     <value>Books Read This Year: yyyy</value>
@@ -872,5 +872,23 @@
   </data>
   <data name="NoGenre" xml:space="preserve">
     <value>No Genre</value>
+  </data>
+  <data name="TopAuthor" xml:space="preserve">
+    <value>Top Author</value>
+  </data>
+  <data name="TopCollection" xml:space="preserve">
+    <value>Top Collection</value>
+  </data>
+  <data name="TopGenre" xml:space="preserve">
+    <value>Top Genre</value>
+  </data>
+  <data name="TopLocation" xml:space="preserve">
+    <value>Top Location</value>
+  </data>
+  <data name="TopSeries" xml:space="preserve">
+    <value>Top Series</value>
+  </data>
+  <data name="BookFormatsByPrice" xml:space="preserve">
+    <value>Book Formats By Price</value>
   </data>
 </root>

@@ -205,7 +205,20 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async Task Share()
         {
+            /*
+             var bookList = string.Join("\n", books); // books is your List<string>
+            await Share.Default.RequestAsync(new ShareTextRequest
+            {
+                Text = bookList,
+                Title = "Share Book List"
+            });
 
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Share Screenshot",
+                File = new ShareFile(filePath)
+            });
+             */
         }
 
         private void GetPreferences()

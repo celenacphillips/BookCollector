@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data;
 using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -15,6 +16,7 @@ namespace BookCollector.ViewModels.Statistics
         public WishListStatisticsViewModel(ContentPage view)
         {
             _view = view;
+            MaxListNumber = 5;
         }
 
         public async Task SetViewModelData()
@@ -31,21 +33,24 @@ namespace BookCollector.ViewModels.Statistics
                 List<CountModel> authorCounts = new List<CountModel>();
                 List<CountModel> locationCounts = new List<CountModel>();
                 List<CountModel> formatCounts = new List<CountModel>();
+                List<CountModel> formatPriceCounts = new List<CountModel>();
 
                 Task.WaitAll(
                 [
                     Task.Run (async () => CostBooks = await FilterLists.GetPriceOfAllWishListBooks(ShowHiddenBooks) ),
                     Task.Run (async () => TotalBooks = await FilterLists.GetAllWishListBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(ShowHiddenBooks) ),
-                    Task.Run (async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(ShowHiddenBooks) ),
-                    Task.Run (async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(ShowHiddenBooks) ),
+                    Task.Run (async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(ShowHiddenBooks, MaxListNumber) ),
                     Task.Run (() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(ShowHiddenBooks) ),
+                    Task.Run (() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(ShowHiddenBooks) ),
                 ]);
 
                 SetUpSeriesChart(seriesCounts);
                 SetUpAuthorsChart(authorCounts);
                 SetUpLocationsChart(locationCounts);
                 SetUpFormatsChart(formatCounts);
+                SetUpFormatPricesChart(formatPriceCounts);
 
                 SetIsBusyFalse();
             }
@@ -85,10 +90,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                    else
+                        TopXSeries = AppStringResources.TopSeries;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -127,10 +139,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                    else
+                        TopXAuthors = AppStringResources.TopAuthor;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -169,10 +188,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                    else
+                        TopXLocations = AppStringResources.TopLocation;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -229,6 +255,43 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 SetUpPieChart(values, "formats");
+            }
+        }
+        #endregion
+
+        #region Format Price
+        private void SetShowFormatPrices(List<CountModel> counts)
+        {
+            if (counts.Any(x => x.CountDouble > 0))
+            {
+                ShowFormatPrices = true;
+            }
+            else
+                ShowFormatPrices = false;
+        }
+
+        private void SetUpFormatPricesChart(List<CountModel> counts)
+        {
+            SetShowFormatPrices(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
+
+            if (ShowFormatPrices)
+            {
+                List<ChartValues> values = new List<ChartValues>();
+
+                for (int i = 0; i < counts.Count; i++)
+                {
+                    values.Add(
+                        new ChartValues()
+                        {
+                            ColorValue = ColorList[i],
+                            LabelValue = counts[i].Label,
+                            Value = (float)counts[i].CountDouble
+                        });
+                }
+
+                SetUpPieChart(values, "formatprices");
             }
         }
         #endregion

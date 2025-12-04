@@ -34,8 +34,19 @@ namespace BookCollector.ViewModels.BaseViewModels
         [ObservableProperty]
         public bool showFormats;
 
-        public List<Color> ColorList { get; set; }
+        [ObservableProperty]
+        public bool showFormatPrices;
 
+        [ObservableProperty]
+        public string topXSeries;
+
+        [ObservableProperty]
+        public string topXAuthors;
+
+        [ObservableProperty]
+        public string topXLocations;
+
+        public List<Color> ColorList { get; set; }
         public bool ShowFavorites { get; set; }
         public bool ShowRatings { get; set; }
         public bool ShowHiddenBooks { get; set; }
@@ -44,6 +55,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool ShowHiddenLocations { get; set; }
         public bool ShowHiddenGenres { get; set; }
         public bool ShowHiddenAuthors { get; set; }
+        public int MaxListNumber { get; set; }
 
         internal void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
         {

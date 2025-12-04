@@ -829,7 +829,8 @@ namespace BookCollector.Data
         }
 
         public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenCollections,
-                                                                                   bool showHiddenBooks)
+                                                                                   bool showHiddenBooks,
+                                                                                   int maxLimit)
         {
             var collectionList = TestData.CollectionList;
 
@@ -839,7 +840,7 @@ namespace BookCollector.Data
                                              .OrderByDescending(x => x.CollectionTotalBooks)
                                              .ToObservableCollection();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (filteredList.Count < max)
                 max = filteredList.Count;
@@ -913,7 +914,8 @@ namespace BookCollector.Data
         }
 
         public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenGenres,
-                                                                              bool showHiddenBooks)
+                                                                              bool showHiddenBooks,
+                                                                              int maxLimit)
         {
             var genreList = TestData.GenreList;
 
@@ -923,7 +925,7 @@ namespace BookCollector.Data
                                         .OrderByDescending(x => x.GenreTotalBooks)
                                         .ToObservableCollection();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (filteredList.Count < max)
                 max = filteredList.Count;
@@ -997,7 +999,8 @@ namespace BookCollector.Data
         }
 
         public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenSeries,
-                                                                              bool showHiddenBooks)
+                                                                              bool showHiddenBooks,
+                                                                              int maxLimit)
         {
             var seriesList = TestData.SeriesList;
 
@@ -1007,7 +1010,7 @@ namespace BookCollector.Data
                                          .OrderByDescending(x => x.SeriesTotalBooks)
                                          .ToObservableCollection();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (filteredList.Count < max)
                 max = filteredList.Count;
@@ -1081,7 +1084,8 @@ namespace BookCollector.Data
         }
 
         public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenLocations,
-                                                                                 bool showHiddenBooks)
+                                                                                 bool showHiddenBooks,
+                                                                                 int maxLimit)
         {
             var locationList = TestData.LocationList;
 
@@ -1090,7 +1094,7 @@ namespace BookCollector.Data
             var filteredList = locationList.Where(x => x.HideLocation != showHiddenLocations)
                                            .OrderByDescending(x => x.LocationTotalBooks)
                                            .ToObservableCollection();
-            var max = 5;
+            var max = maxLimit;
 
             if (filteredList.Count < max)
                 max = filteredList.Count;
@@ -1165,7 +1169,8 @@ namespace BookCollector.Data
         }
 
         public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenAuthors,
-                                                                               bool showHiddenBooks)
+                                                                               bool showHiddenBooks,
+                                                                               int maxLimit)
         {
             var authorList = TestData.AuthorList;
 
@@ -1179,7 +1184,7 @@ namespace BookCollector.Data
                 filteredList = filteredList.Where(x => !x.HideAuthor)
                                            .ToObservableCollection();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (filteredList.Count < max)
                 max = filteredList.Count;
@@ -1263,6 +1268,30 @@ namespace BookCollector.Data
             return counts;
         }
 
+        public static List<CountModel> GetPriceOfBooksAndBookFormatsList(bool showHiddenBooks)
+        {
+            var bookList = TestData.BookList;
+
+            var counts = new List<CountModel>();
+
+            var formatList = BookBaseViewModel.bookFormats;
+
+            for (int i = 0; i < formatList.Count; i++)
+            {
+                var list = bookList.Where(x => x.HideBook != showHiddenBooks && x.BookFormat.Equals(formatList[i])).ToList();
+
+                var price = list.Sum(x => x.BookPriceValue);
+
+                counts.Add(new CountModel()
+                {
+                    Label = formatList[i],
+                    CountDouble = price,
+                });
+            }
+
+            return counts;
+        }
+
         public static List<CountModel> GetAllWishListBooksAndBookFormatsList(bool showHiddenBooks)
         {
             var bookList = TestData.BookWishList;
@@ -1279,6 +1308,30 @@ namespace BookCollector.Data
                 {
                     Label = formatList[i],
                     Count = count,
+                });
+            }
+
+            return counts;
+        }
+
+        public static List<CountModel> GetPriceOfWishListBooksAndBookFormatsList(bool showHiddenBooks)
+        {
+            var bookList = TestData.BookWishList;
+
+            var counts = new List<CountModel>();
+
+            var formatList = BookBaseViewModel.bookFormats;
+
+            for (int i = 0; i < formatList.Count; i++)
+            {
+                var list = bookList.Where(x => x.HideBook != showHiddenBooks && x.BookFormat.Equals(formatList[i])).ToList();
+
+                var price = list.Sum(x => x.BookPriceValue);
+
+                counts.Add(new CountModel()
+                {
+                    Label = formatList[i],
+                    CountDouble = price,
                 });
             }
 
@@ -1337,7 +1390,7 @@ namespace BookCollector.Data
             return string.Format(cultureInfo, "{0:C}", list.Sum(x => x.BookPriceValue));
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndSeriesList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndSeriesList(bool showHiddenBooks, int maxLimit)
         {
             var bookList = TestData.BookWishList;
 
@@ -1345,7 +1398,7 @@ namespace BookCollector.Data
 
             var list = bookList.Select(x => x.BookSeries).Distinct().ToList();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (list.Count < max)
                 max = list.Count;
@@ -1370,7 +1423,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndLocationList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndLocationList(bool showHiddenBooks, int maxLimit)
         {
             var bookList = TestData.BookWishList;
 
@@ -1378,7 +1431,7 @@ namespace BookCollector.Data
 
             var list = bookList.Select(x => x.BookWhereToBuy).Distinct().ToList();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (list.Count < max)
                 max = list.Count;
@@ -1403,7 +1456,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndAuthorList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndAuthorList(bool showHiddenBooks, int maxLimit)
         {
             var bookList = TestData.BookWishList;
 
@@ -1439,7 +1492,7 @@ namespace BookCollector.Data
 
             list = list.DistinctBy(x => x.FullName).ToList();
 
-            var max = 5;
+            var max = maxLimit;
 
             if (list.Count < max)
                 max = list.Count;

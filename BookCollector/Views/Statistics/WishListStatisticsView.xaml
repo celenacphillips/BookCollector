@@ -72,9 +72,26 @@
                         </VerticalStackLayout>
                         <!-- Book Formats -->
 
+                        <!-- Book Format Prices -->
+                        <VerticalStackLayout IsVisible="{Binding ShowFormatPrices}">
+                            <Label Text="{x:Static localization:AppStringResources.BookFormatsByPrice}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="formatprices" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
+
+                        </VerticalStackLayout>
+                        <!-- Book Format Prices -->
+
                         <!-- Book Series -->
                         <VerticalStackLayout IsVisible="{Binding ShowSeries}">
-                            <Label Text="{x:Static localization:AppStringResources.TopSeries}"
+                            <Label Text="{Binding TopXSeries}"
                                    Style="{StaticResource Header}"
                                    HorizontalOptions="Center"
                                    FontSize="18"/>
@@ -91,7 +108,7 @@
 
                         <!-- Authors -->
                         <VerticalStackLayout IsVisible="{Binding ShowAuthors}">
-                            <Label Text="{x:Static localization:AppStringResources.TopAuthors}"
+                            <Label Text="{Binding TopXAuthors}"
                                    Style="{StaticResource Header}"
                                    HorizontalOptions="Center"
                                    FontSize="18"/>
@@ -108,7 +125,7 @@
 
                         <!-- Locations -->
                         <VerticalStackLayout IsVisible="{Binding ShowLocations}">
-                            <Label Text="{x:Static localization:AppStringResources.TopLocations}"
+                            <Label Text="{Binding TopXLocations}"
                                    Style="{StaticResource Header}"
                                    HorizontalOptions="Center"
                                    FontSize="18"/>

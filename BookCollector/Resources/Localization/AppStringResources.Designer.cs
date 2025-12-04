@@ -502,6 +502,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Formats By Price.
+        /// </summary>
+        internal static string BookFormatsByPrice {
+            get {
+                return ResourceManager.GetString("BookFormatsByPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Genre.
         /// </summary>
         internal static string BookGenre {
@@ -2167,38 +2176,38 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Top Authors.
+        ///   Looks up a localized string similar to Top Author.
         /// </summary>
-        internal static string TopAuthors {
+        internal static string TopAuthor {
             get {
-                return ResourceManager.GetString("TopAuthors", resourceCulture);
+                return ResourceManager.GetString("TopAuthor", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Top Collections.
+        ///   Looks up a localized string similar to Top Collection.
         /// </summary>
-        internal static string TopCollections {
+        internal static string TopCollection {
             get {
-                return ResourceManager.GetString("TopCollections", resourceCulture);
+                return ResourceManager.GetString("TopCollection", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Top Genres.
+        ///   Looks up a localized string similar to Top Genre.
         /// </summary>
-        internal static string TopGenres {
+        internal static string TopGenre {
             get {
-                return ResourceManager.GetString("TopGenres", resourceCulture);
+                return ResourceManager.GetString("TopGenre", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Top Locations.
+        ///   Looks up a localized string similar to Top Location.
         /// </summary>
-        internal static string TopLocations {
+        internal static string TopLocation {
             get {
-                return ResourceManager.GetString("TopLocations", resourceCulture);
+                return ResourceManager.GetString("TopLocation", resourceCulture);
             }
         }
         
@@ -2208,6 +2217,51 @@ namespace BookCollector.Resources.Localization {
         internal static string TopSeries {
             get {
                 return ResourceManager.GetString("TopSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top x Authors.
+        /// </summary>
+        internal static string TopXAuthors {
+            get {
+                return ResourceManager.GetString("TopXAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top x Collections.
+        /// </summary>
+        internal static string TopXCollections {
+            get {
+                return ResourceManager.GetString("TopXCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top x Genres.
+        /// </summary>
+        internal static string TopXGenres {
+            get {
+                return ResourceManager.GetString("TopXGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top x Locations.
+        /// </summary>
+        internal static string TopXLocations {
+            get {
+                return ResourceManager.GetString("TopXLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top x Series.
+        /// </summary>
+        internal static string TopXSeries {
+            get {
+                return ResourceManager.GetString("TopXSeries", resourceCulture);
             }
         }
         

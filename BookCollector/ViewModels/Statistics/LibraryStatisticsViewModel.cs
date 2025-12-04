@@ -42,11 +42,18 @@ namespace BookCollector.ViewModels.Statistics
         [ObservableProperty]
         public int pagesReadCount;
 
+        [ObservableProperty]
+        public string topXCollections;
+
+        [ObservableProperty]
+        public string topXGenres;
+
         public LibraryStatisticsViewModel(ContentPage view)
         {
             _view = view;
             BooksReadString = AppStringResources.BooksReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
             PagesReadString = AppStringResources.PagesReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
+            MaxListNumber = 5;
         }
 
         public async Task SetViewModelData()
@@ -68,6 +75,7 @@ namespace BookCollector.ViewModels.Statistics
                 List<CountModel> authorCounts = new List<CountModel>();
                 List<CountModel> locationCounts = new List<CountModel>();
                 List<CountModel> formatCounts = new List<CountModel>();
+                List<CountModel> formatPriceCounts = new List<CountModel>();
 
                 Task.WaitAll(
                 [
@@ -86,12 +94,13 @@ namespace BookCollector.ViewModels.Statistics
                     Task.Run (async () => three = await FilterLists.GetThreeStarBooksListCount(ShowHiddenBooks) ),
                     Task.Run (async () => four = await FilterLists.GetFourStarBooksListCount(ShowHiddenBooks) ),
                     Task.Run (async () => five = await FilterLists.GetFiveStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => collectionCounts = await FilterLists.GetAllBooksInAllCollectionsList(ShowHiddenCollections, ShowHiddenBooks) ),
-                    Task.Run (async () => genreCounts = await FilterLists.GetAllBooksInAllGenresList(ShowHiddenGenres, ShowHiddenBooks) ),
-                    Task.Run (async () => seriesCounts = await FilterLists.GetAllBooksInAllSeriesList(ShowHiddenSeries, ShowHiddenBooks) ),
-                    Task.Run (async () => authorCounts = await FilterLists.GetAllBooksInAllAuthorsList(ShowHiddenAuthors, ShowHiddenBooks) ),
-                    Task.Run (async () => locationCounts = await FilterLists.GetAllBooksInAllLocationsList( ShowHiddenLocations, ShowHiddenBooks) ),
+                    Task.Run (async () => collectionCounts = await FilterLists.GetAllBooksInAllCollectionsList(ShowHiddenCollections, ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => genreCounts = await FilterLists.GetAllBooksInAllGenresList(ShowHiddenGenres, ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => seriesCounts = await FilterLists.GetAllBooksInAllSeriesList(ShowHiddenSeries, ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => authorCounts = await FilterLists.GetAllBooksInAllAuthorsList(ShowHiddenAuthors, ShowHiddenBooks, MaxListNumber) ),
+                    Task.Run (async () => locationCounts = await FilterLists.GetAllBooksInAllLocationsList( ShowHiddenLocations, ShowHiddenBooks, MaxListNumber) ),
                     Task.Run (() => formatCounts = FilterLists.GetAllBooksAndBookFormatsList(ShowHiddenBooks) ),
+                    Task.Run (() => formatPriceCounts = FilterLists.GetPriceOfBooksAndBookFormatsList(ShowHiddenBooks) ),
                 ]);
 
                 SetUpReadingStatusChart(toBeRead, reading, read);
@@ -103,6 +112,7 @@ namespace BookCollector.ViewModels.Statistics
                 SetUpAuthorsChart(authorCounts);
                 SetUpLocationsChart(locationCounts);
                 SetUpFormatsChart(formatCounts);
+                SetUpFormatPricesChart(formatPriceCounts);
 
                 SetIsBusyFalse();
             }
@@ -334,10 +344,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXCollections = AppStringResources.TopXCollections.Replace("x", $"{max}");
+                    else
+                        TopXCollections = AppStringResources.TopCollection;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -376,10 +393,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXGenres = AppStringResources.TopXGenres.Replace("x", $"{max}");
+                    else
+                        TopXGenres = AppStringResources.TopGenre;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -418,10 +442,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                    else
+                        TopXSeries = AppStringResources.TopXSeries;
+                }
 
                 for (int i = 0; i < counts.Count; i++)
                 {
@@ -460,10 +491,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                    else
+                        TopXAuthors = AppStringResources.TopAuthor;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -502,10 +540,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 List<ChartValues> values = new List<ChartValues>();
 
-                var max = 5;
+                var max = MaxListNumber;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+
+                    if (max != 1)
+                        TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                    else
+                        TopXLocations = AppStringResources.TopLocation;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -556,6 +601,43 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 SetUpPieChart(values, "formats");
+            }
+        }
+        #endregion
+
+        #region Format Price
+        private void SetShowFormatPrices(List<CountModel> counts)
+        {
+            if (counts.Any(x => x.CountDouble > 0))
+            {
+                ShowFormatPrices = true;
+            }
+            else
+                ShowFormatPrices = false;
+        }
+
+        private void SetUpFormatPricesChart(List<CountModel> counts)
+        {
+            SetShowFormatPrices(counts);
+
+            counts = counts.OrderByDescending(x => x.Count).ToList();
+
+            if (ShowFormatPrices)
+            {
+                List<ChartValues> values = new List<ChartValues>();
+
+                for (int i = 0; i < counts.Count; i++)
+                {
+                    values.Add(
+                        new ChartValues()
+                        {
+                            ColorValue = ColorList[i],
+                            LabelValue = counts[i].Label,
+                            Value = (float)counts[i].CountDouble
+                        });
+                }
+
+                SetUpPieChart(values, "formatprices");
             }
         }
         #endregion

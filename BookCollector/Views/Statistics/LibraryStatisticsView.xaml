@@ -88,159 +88,176 @@
 
                     <Label Style="{StaticResource ShortSeparator}" />
 
-                    <!-- Reading Status -->
-                    <VerticalStackLayout IsVisible="{Binding ShowReadingStatus}">
+                        <!-- Reading Status -->
+                        <VerticalStackLayout IsVisible="{Binding ShowReadingStatus}">
                         
-                        <Label Text="{x:Static localization:AppStringResources.ReadingStatus}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                            <Label Text="{x:Static localization:AppStringResources.ReadingStatus}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="readingStatus" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="readingStatus" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Reading Status -->
+                        </VerticalStackLayout>
+                        <!-- Reading Status -->
 
-                    <!-- Favorites -->
-                    <VerticalStackLayout IsVisible="{Binding ShowFavoritesStatus}">
-                        <Label Text="{x:Static localization:AppStringResources.FavoriteStatus}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Favorites -->
+                        <VerticalStackLayout IsVisible="{Binding ShowFavoritesStatus}">
+                            <Label Text="{x:Static localization:AppStringResources.FavoriteStatus}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="favorites" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="favorites" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Favorites -->
+                        </VerticalStackLayout>
+                        <!-- Favorites -->
 
-                    <!-- Ratings -->
-                    <VerticalStackLayout IsVisible="{Binding ShowRatingStatus}">
-                        <Label Text="{x:Static localization:AppStringResources.RatingStatus}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Ratings -->
+                        <VerticalStackLayout IsVisible="{Binding ShowRatingStatus}">
+                            <Label Text="{x:Static localization:AppStringResources.RatingStatus}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="ratings" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="ratings" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Ratings -->
+                        </VerticalStackLayout>
+                        <!-- Ratings -->
 
-                    <!-- Book Formats -->
-                    <VerticalStackLayout IsVisible="{Binding ShowFormats}">
-                        <Label Text="{x:Static localization:AppStringResources.BookFormat}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Book Formats -->
+                        <VerticalStackLayout IsVisible="{Binding ShowFormats}">
+                            <Label Text="{x:Static localization:AppStringResources.BookFormat}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="formats" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="formats" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Book Formats -->
+                        </VerticalStackLayout>
+                        <!-- Book Formats -->
 
-                    <!-- Collections -->
-                    <VerticalStackLayout IsVisible="{Binding ShowCollections}">
-                        <Label Text="{x:Static localization:AppStringResources.TopCollections}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Book Format Prices -->
+                        <VerticalStackLayout IsVisible="{Binding ShowFormatPrices}">
+                            <Label Text="{x:Static localization:AppStringResources.BookFormatsByPrice}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="collections" 
-                                          HeightRequest="450"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="formatprices" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
+
+                        </VerticalStackLayout>
+                        <!-- Book Format Prices -->
+
+                        <!-- Collections -->
+                        <VerticalStackLayout IsVisible="{Binding ShowCollections}">
+                            <Label Text="{Binding TopXCollections}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
+
+                            <charts:ChartView x:Name="collections" 
+                                              HeightRequest="450"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
+
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Collections -->
+                        </VerticalStackLayout>
+                        <!-- Collections -->
 
-                    <!-- Genres -->
-                    <VerticalStackLayout IsVisible="{Binding ShowGenres}">
-                        <Label Text="{x:Static localization:AppStringResources.TopGenres}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Genres -->
+                        <VerticalStackLayout IsVisible="{Binding ShowGenres}">
+                            <Label Text="{Binding TopXGenres}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="genres" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="genres" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Genres -->
+                        </VerticalStackLayout>
+                        <!-- Genres -->
 
-                    <!-- Series -->
-                    <VerticalStackLayout IsVisible="{Binding ShowSeries}">
-                        <Label Text="{x:Static localization:AppStringResources.TopSeries}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Series -->
+                        <VerticalStackLayout IsVisible="{Binding ShowSeries}">
+                            <Label Text="{Binding TopXSeries}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="series" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="series" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Series -->
+                        </VerticalStackLayout>
+                        <!-- Series -->
 
-                    <!-- Authors -->
-                    <VerticalStackLayout IsVisible="{Binding ShowAuthors}">
-                        <Label Text="{x:Static localization:AppStringResources.TopAuthors}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Authors -->
+                        <VerticalStackLayout IsVisible="{Binding ShowAuthors}">
+                            <Label Text="{Binding TopXAuthors}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="authors" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="authors" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Authors -->
+                        </VerticalStackLayout>
+                        <!-- Authors -->
 
-                    <!-- Locations -->
-                    <VerticalStackLayout IsVisible="{Binding ShowLocations}">
-                        <Label Text="{x:Static localization:AppStringResources.TopLocations}"
-                               Style="{StaticResource Header}"
-                               HorizontalOptions="Center"
-                               FontSize="18"/>
+                        <!-- Locations -->
+                        <VerticalStackLayout IsVisible="{Binding ShowLocations}">
+                            <Label Text="{Binding TopXLocations}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalOptions="Center"
+                                   FontSize="18"/>
 
-                        <charts:ChartView x:Name="locations" 
-                                          HeightRequest="350"
-                                          Margin="20"
-                                          HorizontalOptions="Center"/>
+                            <charts:ChartView x:Name="locations" 
+                                              HeightRequest="350"
+                                              Margin="20"
+                                              HorizontalOptions="Center"/>
 
-                        <Label Style="{StaticResource ShortSeparator}" />
+                            <Label Style="{StaticResource ShortSeparator}" />
                         
-                    </VerticalStackLayout>
-                    <!-- Locations -->
+                        </VerticalStackLayout>
+                        <!-- Locations -->
 
                 </VerticalStackLayout>
             </ScrollView>
