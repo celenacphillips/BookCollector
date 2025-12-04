@@ -1,3 +1,4 @@
+using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
 using System.Globalization;
@@ -101,19 +102,11 @@ public partial class SettingsView : ContentPage
             _ => "#336699"
         };
 
-        var color = Color.FromArgb(hexCode);
-        var secondary = color.AddLuminosity((float)0.1);
-        var tertiary = color.AddLuminosity((float)0.2);
+        Data.Colors.SetColors(hexCode);
 
         CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
 
-        Application.Current.Resources["Primary"] = Color.FromArgb(hexCode);
-        Application.Current.Resources["Secondary"] = Color.FromArgb(secondary.ToHex());
-        Application.Current.Resources["Tertiary"] = Color.FromArgb(tertiary.ToHex());
-
         Preferences.Set("AppColor", hexCode);
-        Preferences.Set("Secondary", secondary.ToHex());
-        Preferences.Set("Tertiary", tertiary.ToHex());
     }
 
     void OnLanguagePickerSelectedIndexChanged(object sender, EventArgs e)

@@ -44,12 +44,9 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var seriesList = TestData.SeriesList;
-
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(seriesList, ShowHiddenSeries) ),
+                    Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(ShowHiddenSeries) ),
                 ]);
 
                 TotalSeriesCount = FullSeriesList.Count;

@@ -49,18 +49,13 @@ namespace BookCollector.ViewModels.Book
                     SelectedBook.BookCover = BookCover;
                 }
 
-                // Unit test data
-                var chapterList = TestData.ChapterList;
-                var genreList = TestData.GenreList;
-                var locationList = TestData.LocationList;
-
                 AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, SelectedBook.BookGuid) ),
-                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, SelectedBook.BookGenreGuid) ),
-                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, SelectedBook.BookLocationGuid) ),
+                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(SelectedBook.BookGuid) ),
+                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(SelectedBook.BookGenreGuid) ),
+                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(SelectedBook.BookLocationGuid) ),
                     Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
                     Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
                     Task.Run (async () => await SelectedBook.SetPartOfSeries() ),

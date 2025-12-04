@@ -10,6 +10,7 @@ using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,19 +36,17 @@ namespace BookCollector.ViewModels.Author
 
                 GetPreferences();
 
-                // Unit test data
-                var bookList = TestData.BookList;
-                var bookAuthorList = TestData.BookAuthorList;
+                ObservableCollection<BookAuthorModel> bookAuthorList = new ObservableCollection<BookAuthorModel>();
 
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                 [
-                    Task.Run (async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(bookAuthorList, SelectedAuthor.AuthorGuid) ),
+                    Task.Run (async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(SelectedAuthor.AuthorGuid) ),
                 ]);
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, bookList, ShowHiddenBook) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;

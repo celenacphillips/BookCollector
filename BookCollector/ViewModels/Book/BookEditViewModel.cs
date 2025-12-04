@@ -110,13 +110,6 @@ namespace BookCollector.ViewModels.Book
 
                 StepperEnabled = EditedBook.BookPageTotal != 0;
 
-                // Unit test data
-                var chapterList = TestData.ChapterList;
-                var genreList = TestData.GenreList;
-                var seriesList = TestData.SeriesList;
-                var collectionList = TestData.CollectionList;
-                var locationList = TestData.LocationList;
-
                 AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : new ObservableCollection<AuthorModel>();
                 SeriesList = seriesList;
                 CollectionList = collectionList;
@@ -126,11 +119,11 @@ namespace BookCollector.ViewModels.Book
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(chapterList, EditedBook.BookGuid) ),
-                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(genreList, EditedBook.BookGenreGuid) ),
-                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(locationList, EditedBook.BookLocationGuid) ),
-                    Task.Run (async () => SelectedCollection = await FilterLists.GetCollectionForBook(collectionList, EditedBook.BookCollectionGuid) ),
-                    Task.Run (async () => SelectedSeries = await FilterLists.GetSeriesForBook(seriesList, EditedBook.BookSeriesGuid) ),
+                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(EditedBook.BookGuid) ),
+                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(EditedBook.BookGenreGuid) ),
+                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(EditedBook.BookLocationGuid) ),
+                    Task.Run (async () => SelectedCollection = await FilterLists.GetCollectionForBook(EditedBook.BookCollectionGuid) ),
+                    Task.Run (async () => SelectedSeries = await FilterLists.GetSeriesForBook(EditedBook.BookSeriesGuid) ),
                     Task.Run (async () => await EditedBook.SetBookCheckpoints() ),
                     Task.Run (async () => await EditedBook.SetCoverDisplay() ),
                     Task.Run (async () => await EditedBook.SetBookPrice() ),

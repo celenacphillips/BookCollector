@@ -44,12 +44,9 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var authorList = TestData.AuthorList;
-
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(authorList, ShowHiddenAuthors) ),
+                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(ShowHiddenAuthors) ),
                 ]);
 
                 TotalAuthorsCount = FullAuthorList.Count;

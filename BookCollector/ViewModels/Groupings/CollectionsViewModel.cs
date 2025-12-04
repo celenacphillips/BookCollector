@@ -45,12 +45,10 @@ namespace BookCollector.ViewModels.Groupings
 
                 GetPreferences();
 
-                // Unit test data
-                var collectionList = TestData.CollectionList;
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(collectionList, ShowHiddenCollections) ),
+                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(ShowHiddenCollections) ),
                 ]);
 
                 TotalCollectionsCount = FullCollectionList.Count;

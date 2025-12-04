@@ -8,6 +8,7 @@
     xmlns:mainViews="clr-namespace:BookCollector.Views.Main"
     xmlns:libraryViews="clr-namespace:BookCollector.Views.Library"
     xmlns:groupingsViews="clr-namespace:BookCollector.Views.Groupings"
+    xmlns:statisticsViews="clr-namespace:BookCollector.Views.Statistics"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Shell.FlyoutBehavior="Flyout"
     Title="{x:Static localization:AppStringResources.ApplicationTitle}">
@@ -87,6 +88,16 @@
 
             <ShellContent Title="{x:Static localization:AppStringResources.Locations}"
                           ContentTemplate="{DataTemplate groupingsViews:LocationsView}"/>
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="{x:Static localization:AppStringResources.Statistics}">
+            <ShellContent Title="{x:Static localization:AppStringResources.Library}"
+                          ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
+                          ContentTemplate="{DataTemplate statisticsViews:WishListStatisticsView}"/>
         </Tab>
     </FlyoutItem>
 

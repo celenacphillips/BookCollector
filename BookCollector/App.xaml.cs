@@ -28,13 +28,7 @@ namespace BookCollector
         {
             var savedColorHexCode = Preferences.Get("AppColor", "#336699"  /* Default */);
 
-            var color = Color.FromArgb(savedColorHexCode);
-            var secondary = color.AddLuminosity((float)0.1);
-            var tertiary = color.AddLuminosity((float)0.2);
-
-            Application.Current.Resources["Primary"] = Color.FromArgb(savedColorHexCode);
-            Application.Current.Resources["Secondary"] = Color.FromArgb(secondary.ToHex());
-            Application.Current.Resources["Tertiary"] = Color.FromArgb(tertiary.ToHex());
+            Data.Colors.SetColors(savedColorHexCode);
         }
     }
 }

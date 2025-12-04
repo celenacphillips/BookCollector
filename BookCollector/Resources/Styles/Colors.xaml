@@ -10,6 +10,12 @@
     <Color x:Key="Secondary">#3F7FBF</Color>
     <Color x:Key="Tertiary">#6599CC</Color>
 
+    <Color x:Key="Color2">#329951</Color>
+    <Color x:Key="Color3">#8E9932</Color>
+    <Color x:Key="Color4">#99323D</Color>
+    <Color x:Key="Color5">#7A3299</Color>
+    <Color x:Key="Color6">#7A3299</Color>
+
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>

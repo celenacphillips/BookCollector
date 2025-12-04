@@ -93,6 +93,11 @@ namespace BookCollector.Data.Models
         {
             get => (BookTitle.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)) ? this.BookTitle.Remove(0, this.BookTitle.IndexOf(" ") + 1) : this.BookTitle;
         }
+        public double BookPriceValue
+        {
+            get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice.Substring(1, this.BookPrice.Length - 1)) : 0;
+        }
+
         public Guid? BookSeriesGuid { get; set; }
         public Guid? BookCollectionGuid { get; set; }
         public Guid? BookGenreGuid { get; set; }
@@ -148,8 +153,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookSeriesGuid != null)
             {
-                // Unit test data
-                var series = TestData.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.BookSeriesGuid);
+                var series = await FilterLists.GetSeriesForBook(this.BookSeriesGuid);
 
                 if (this.BookNumberInSeries != null)
                 {
@@ -191,7 +195,7 @@ namespace BookCollector.Data.Models
             if (this.BookCollectionGuid != null)
             {
                 // Unit test data
-                var collection = TestData.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.BookCollectionGuid);
+                var collection = await FilterLists.GetCollectionForBook(this.BookCollectionGuid);
 
                 output = $"{AppStringResources.PartOfCollection.Replace("blank", $"{collection.CollectionName}")}";
             }
@@ -282,7 +286,7 @@ namespace BookCollector.Data.Models
             {
                 double.TryParse(this.BookPrice, out double price);
 
-                this.BookPrice = string.Format("{0:C}", price);
+                this.BookPrice = string.Format(cultureInfo, "{0:C}", price);
             }
         }
     }

@@ -48,13 +48,10 @@ namespace BookCollector.ViewModels.Main
 
                 GetPreferences();
 
-                // Unit test data
-                var bookList = TestData.BookWishList;
-
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullBookList = await FilterLists.GetBookWishList(bookList, ShowHiddenBook) ),
+                    Task.Run (async () => FullBookList = await FilterLists.GetBookWishList(ShowHiddenBook) ),
                 ]);
 
                 TotalBooksCount = FullBookList.Count;
@@ -208,7 +205,20 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async Task Share()
         {
+            /*
+             var bookList = string.Join("\n", books); // books is your List<string>
+            await Share.Default.RequestAsync(new ShareTextRequest
+            {
+                Text = bookList,
+                Title = "Share Book List"
+            });
 
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Share Screenshot",
+                File = new ShareFile(filePath)
+            });
+             */
         }
 
         private void GetPreferences()

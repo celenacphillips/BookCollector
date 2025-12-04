@@ -2,6 +2,7 @@ using BookCollector.Data;
 using BookCollector.Data.Enums;
 using System.Runtime.ConstrainedExecution;
 using System.Windows.Input;
+using Colors = Microsoft.Maui.Graphics.Colors;
 
 namespace BookCollector.Views.Controls;
 
