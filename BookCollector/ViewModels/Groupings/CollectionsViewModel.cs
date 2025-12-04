@@ -34,7 +34,7 @@ namespace BookCollector.ViewModels.Groupings
             _view = view;
 
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            InfoText = $"{AppStringResources.Collections}";
+            InfoText = $"{AppStringResources.CollectionView_InfoText}";
         }
 
         public async Task SetViewModelData()

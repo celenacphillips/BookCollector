@@ -1042,11 +1042,47 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        internal static string Export {
+            get {
+                return ResourceManager.GetString("Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export/Import.
+        /// </summary>
+        internal static string Export_Import {
+            get {
+                return ResourceManager.GetString("Export_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to import or export your data?.
+        /// </summary>
+        internal static string Export_Import_Question {
+            get {
+                return ResourceManager.GetString("Export_Import_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export/Import.
         /// </summary>
         internal static string ExportImport {
             get {
                 return ResourceManager.GetString("ExportImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution)..
+        /// </summary>
+        internal static string ExportImportView_InfoText {
+            get {
+                return ResourceManager.GetString("ExportImportView_InfoText", resourceCulture);
             }
         }
         
@@ -1236,6 +1272,15 @@ namespace BookCollector.Resources.Localization {
         internal static string HideSeries_Question {
             get {
                 return ResourceManager.GetString("HideSeries_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        internal static string Import {
+            get {
+                return ResourceManager.GetString("Import", resourceCulture);
             }
         }
         

@@ -55,7 +55,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task InfoPopup()
         {
-            _view.ShowPopup(new InformationPopup());
+            _view.ShowPopup(new InformationPopup(DeviceWidth - 50, InfoText));
         }
 
         [RelayCommand]

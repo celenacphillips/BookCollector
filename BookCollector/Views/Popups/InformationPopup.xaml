@@ -3,31 +3,36 @@
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-               xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
-               x:DataType="viewModel:BaseViewModel"
                x:Class="BookCollector.Views.Popups.InformationPopup"
                CanBeDismissedByTappingOutsideOfPopup="True">
+    
     <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
                          Padding="2"
-                         HeightRequest="300">
-        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-                             Padding="40"
-                             HeightRequest="295">
+                         WidthRequest="{Binding PopupWidth}"
+                         MinimumHeightRequest="{Binding PopupHeight}">
+        
+        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
-            <Grid HeightRequest="190">
+            <Grid>
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
                 <Image Source="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                       HorizontalOptions="Start"
-                       Margin="10"
+                       HorizontalOptions="Center"
                        Grid.Row="0" Grid.Column="0"/>
+                
                 <Label Text="{Binding InfoText}"
                        Grid.Row="0" Grid.Column="1"
-                       VerticalTextAlignment="Center"/>
+                       VerticalTextAlignment="Center"
+                       Margin="20"/>
+                
             </Grid>
+            
         </VerticalStackLayout>
+        
     </VerticalStackLayout>
+    
 </toolkit:Popup>

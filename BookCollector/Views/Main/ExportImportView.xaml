@@ -1,12 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Main.ExportImportView"
-             Title="ExportImportView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Main"
+             x:DataType="viewModel:ExportImportViewModel"
+             Title="{x:Static localization:AppStringResources.Export_Import}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                     Command="{Binding InfoPopupCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All" >
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView>
+                    <VerticalStackLayout Margin="20">
+
+                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
+
+                        <Grid Margin="20">
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Text="{x:Static localization:AppStringResources.Export}"
+                                    Margin="10"
+                                    Command="{Binding ExportCommand}"
+                                    Grid.Row="0" Grid.Column="0"/>
+                            <Button Text="{x:Static localization:AppStringResources.Import}"
+                                    Margin="10"
+                                    Command="{Binding ImportCommand}"
+                                    Grid.Row="0" Grid.Column="1"/>
+
+                        </Grid>
+
+                        <Label Text="{Binding Output}" />
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+
+        </StackLayout>
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Gray" Opacity="0.5">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+    </AbsoluteLayout>
+    
 </ContentPage>
