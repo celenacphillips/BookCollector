@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               x:Class="BookCollector.Views.Popups.BookCoverUrlPopup"
+               CanBeDismissedByTappingOutsideOfPopup="True">
+    
+    <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
+                         Padding="2"
+                         WidthRequest="{Binding PopupWidth}">
+        
+        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+            <Grid Margin="0,10">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.BookCoverUrl}"
+                       Style="{DynamicResource Header}"
+                       FontSize="Subtitle"
+                       HorizontalOptions="Center"
+                       VerticalOptions="End"
+                       Grid.Row="0" Grid.Column="0"/>
+                
+                <Button Text="X" 
+                        HorizontalOptions="End"
+                        Margin="10,10,15,0"
+                        Grid.Row="0" Grid.Column="2"
+                        Clicked="OnClose"/>
+            </Grid>
+
+            <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
+                    Text="{Binding BookCoverUrl}"
+                    HorizontalTextAlignment="Center"
+                    AutoSize="TextChanges"
+                    Keyboard="Url"
+                    Margin="20"/> 
+
+        </VerticalStackLayout>
+        
+    </VerticalStackLayout>
+    
+</toolkit:Popup>

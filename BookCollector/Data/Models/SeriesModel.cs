@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DocumentFormat.OpenXml.Bibliography;
 using SQLite;
 using System.Collections.ObjectModel;
 
@@ -20,7 +21,14 @@ namespace BookCollector.Data.Models
         public bool hideSeries;
 
         public int? ID { get; set; }
-        public string? ParsedSeriesName { get; set; }
+        public string? ParsedSeriesName
+        {
+            get => (this.SeriesName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.SeriesName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.SeriesName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
+                        ? this.SeriesName.Remove(0, this.SeriesName.IndexOf(" ") + 1)
+                        : this.SeriesName;
+        }
         public int SeriesTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
 
@@ -38,7 +46,9 @@ namespace BookCollector.Data.Models
         {
             var list = await FilterLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
 
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
+            this.TotalBooksString = !string.IsNullOrEmpty(this.TotalBooksInSeries) ?
+                                    StringManipulation.SetTotalBooksString(list.Count, int.Parse(this.TotalBooksInSeries)) :
+                                    StringManipulation.SetTotalBooksString(list.Count);
             this.SeriesTotalBooks = list.Count;
         }
     }

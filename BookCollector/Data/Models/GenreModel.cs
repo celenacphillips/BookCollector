@@ -16,7 +16,14 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public bool hideGenre;
 
-        public string? ParsedGenreName { get; set; }
+        public string? ParsedGenreName
+        {
+            get => (this.GenreName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.GenreName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.GenreName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
+                        ? this.GenreName.Remove(0, this.GenreName.IndexOf(" ") + 1)
+                        : this.GenreName;
+        }
         public int GenreTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
         public int? ID { get; set; }

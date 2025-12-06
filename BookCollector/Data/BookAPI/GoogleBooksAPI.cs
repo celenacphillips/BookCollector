@@ -42,12 +42,12 @@ namespace BookCollector.Data.BookAPI
                             foreach (var item in isbnItems)
                             {
                                 if (item.VolumeInfo.ImageLinks != null &&
-                                    item.VolumeInfo.ImageLinks.smallThumbnail != null)
+                                    item.VolumeInfo.ImageLinks.thumbnail != null)
                                 {
+                                    item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.thumbnail}.jpg";
                                     var byteArray = new WebClient().DownloadData($"{item.VolumeInfo.ImageLinks.thumbnail}.jpg");
                                     item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
                                     item.VolumeInfo.HasBookCover = true;
-                                    item.VolumeInfo.ImageLinks.ImageByteArray = byteArray;
                                 }
                                 else
                                     item.VolumeInfo.HasBookCover = false;

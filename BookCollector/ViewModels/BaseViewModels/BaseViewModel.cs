@@ -102,6 +102,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             return await Shell.Current.DisplayActionSheet(title, cancel, destruction, buttons);
         }
 
+        public static async Task<string?> PopupMenu_CoverPhoto()
+        {
+            var title = AppStringResources.AddOrReplaceCoverPhoto;
+            var file = AppStringResources.UploadExistingFile;
+            var url = AppStringResources.BookCoverUrl;
+
+            string cancel = AppStringResources.Cancel;
+            string? destruction = null;
+            string[] buttons = [file, url];
+            return await Shell.Current.DisplayActionSheet(title, cancel, destruction, buttons);
+        }
+
         public static async Task<bool> DeleteCheck(string item)
         {
             var message = $"{AppStringResources.AreYouSureYouWantToDeleteItem_Question.Replace("item", item)}";

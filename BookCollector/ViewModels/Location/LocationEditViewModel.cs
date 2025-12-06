@@ -59,13 +59,25 @@ namespace BookCollector.ViewModels.Location
 
                 if (ViewTitle.Equals($"{AppStringResources.AddNewLocation}"))
                 {
-                    // Unit test data
-                    TestData.InsertLocation(EditedLocation);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertLocation(EditedLocation);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    // Unit test data
-                    TestData.UpdateLocation(EditedLocation);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateLocation(EditedLocation);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 if (InsertMainViewBefore)

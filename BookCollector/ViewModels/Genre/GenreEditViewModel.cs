@@ -59,13 +59,25 @@ namespace BookCollector.ViewModels.Genre
 
                 if (ViewTitle.Equals($"{AppStringResources.AddNewGenre}"))
                 {
-                    // Unit test data
-                    TestData.InsertGenre(EditedGenre);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertGenre(EditedGenre);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    // Unit test data
-                    TestData.UpdateGenre(EditedGenre);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateGenre(EditedGenre);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 if (InsertMainViewBefore)

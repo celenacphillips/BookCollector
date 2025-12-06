@@ -86,8 +86,6 @@ namespace BookCollector.Data.Spreadsheet
                     }
                 }
 
-
-
                 // Save the new worksheet.
                 worksheetPart.Worksheet.Save();
             }
@@ -304,6 +302,7 @@ namespace BookCollector.Data.Spreadsheet
         private static string SetCurrentColumn(int input)
         {
             var convertedInput = input;
+            var output = string.Empty;
 
             if (input > 26)
             {
@@ -313,33 +312,38 @@ namespace BookCollector.Data.Spreadsheet
 
             switch (convertedInput)
             {
-                case 1: return "B";
-                case 2: return "C";
-                case 3: return "D";
-                case 4: return "E";
-                case 5: return "F";
-                case 6: return "G";
-                case 7: return "H";
-                case 8: return "I";
-                case 9: return "J";
-                case 10: return "K";
-                case 11: return "L";
-                case 12: return "M";
-                case 13: return "N";
-                case 14: return "O";
-                case 15: return "P";
-                case 16: return "Q";
-                case 17: return "R";
-                case 18: return "S";
-                case 19: return "T";
-                case 20: return "U";
-                case 21: return "V";
-                case 22: return "W";
-                case 23: return "X";
-                case 24: return "Y";
-                case 25: case -1: return "Z";
-                default: return "A";
+                case 1: output = "B"; break;
+                case 2: output = "C"; break;
+                case 3: output = "D"; break;
+                case 4: output = "E"; break;
+                case 5: output = "F"; break;
+                case 6: output = "G"; break;
+                case 7: output = "H"; break;
+                case 8: output = "I"; break;
+                case 9: output = "J"; break;
+                case 10: output = "K"; break;
+                case 11: output = "L"; break;
+                case 12: output = "M"; break;
+                case 13: output = "N"; break;
+                case 14: output = "O"; break;
+                case 15: output = "P"; break;
+                case 16: output = "Q"; break;
+                case 17: output = "R"; break;
+                case 18: output = "S"; break;
+                case 19: output = "T"; break;
+                case 20: output = "U"; break;
+                case 21: output = "V"; break;
+                case 22: output = "W"; break;
+                case 23: output = "X"; break;
+                case 24: output = "Y"; break;
+                case 25: case -1: output = "Z"; break;
+                default: output = "A"; break;
             }
+
+            if (input > 26)
+                output = $"A{output}";
+
+            return output;
         }
 
         private static int SetRow(int? input)

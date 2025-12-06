@@ -156,6 +156,9 @@
 		<Compile Update="Views\Popups\InformationPopup.xaml.cs">
 			<DependentUpon>InformationPopup.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\Popups\BookCoverUrlPopup.xaml.cs">
+		  <DependentUpon>BookCoverUrlPopup.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\WishListBook\WishListBookMainView.xaml.cs">
 		  <DependentUpon>WishListBookMainView.xaml</DependentUpon>
 		</Compile>
@@ -304,6 +307,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\InformationPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\BookCoverUrlPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\PagesReadPopup.xaml">
 		  <Generator>MSBuild:Compile</Generator>

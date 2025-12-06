@@ -162,12 +162,12 @@ namespace BookCollector.ViewModels.Book
 
             if (SelectedBook != null && SelectedISBNItem != null)
             {
-                if (SelectedBook.BookCoverBytes == null)
+                if (string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) || string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation))
                 {
                     if (SelectedISBNItem.VolumeInfo.ImageLinks != null)
                     {
                         SelectedBook.HasBookCover = true;
-                        SelectedBook.BookCoverBytes = SelectedISBNItem.VolumeInfo.ImageLinks.ImageByteArray;
+                        SelectedBook.BookCoverUrl = SelectedISBNItem.VolumeInfo.ImageLinks.ImageURL;
                     }
                     else
                         SelectedBook.HasBookCover = false;

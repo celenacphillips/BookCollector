@@ -60,13 +60,25 @@ namespace BookCollector.ViewModels.Collection
 
                 if (ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
                 {
-                    // Unit test data
-                    TestData.InsertCollection(EditedCollection);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertCollection(EditedCollection);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    // Unit test data
-                    TestData.UpdateCollection(EditedCollection);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateCollection(EditedCollection);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 if (InsertMainViewBefore)

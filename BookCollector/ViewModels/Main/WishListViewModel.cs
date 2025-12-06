@@ -35,7 +35,7 @@ namespace BookCollector.ViewModels.Main
         public WishListViewModel(ContentPage view)
         {
             _view = view;
-            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
+            CollectionViewHeight = DeviceHeight - SingleMenuBar;
             InfoText = AppStringResources.WishListView_InfoText;
             ViewTitle = AppStringResources.Wishlist;
         }
@@ -203,8 +203,14 @@ namespace BookCollector.ViewModels.Main
         // TO DO
         // Figure out how to share an item - 12/3/2025
         [RelayCommand]
-        public async Task Share()
+        public async Task ShareList()
         {
+            await Share.Default.RequestAsync(new ShareTextRequest
+            {
+                Text = "Text",
+                Title = "Test"
+            });
+
             /*
              var bookList = string.Join("\n", books); // books is your List<string>
             await Share.Default.RequestAsync(new ShareTextRequest

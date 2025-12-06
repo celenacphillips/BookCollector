@@ -1,7 +1,9 @@
 ﻿using BookCollector.Data.Models;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace BookCollector.Data
 {
@@ -16,6 +18,8 @@ namespace BookCollector.Data
         public static ObservableCollection<LocationModel> LocationList { get; set; }
         public static ObservableCollection<BookAuthorModel> BookAuthorList { get; set; }
         public static ObservableCollection<BookModel> BookWishList { get; set; }
+
+        public static bool UseTestData { get; set; }
 
         public TestData()
         {
@@ -118,7 +122,7 @@ namespace BookCollector.Data
             {
                 book.SetReadingProgress();
                 book.SetCoverDisplay();
-                book.SetAuthorListString(BookAuthorList, AuthorList);
+                book.SetAuthorListString();
             }
 
             var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
@@ -152,13 +156,27 @@ namespace BookCollector.Data
         public static void UpdateBook(BookModel book)
         {
             var oldBook = BookList.Where(x => x.BookGuid == book.BookGuid).ToList().FirstOrDefault();
-            var index = BookList.IndexOf(oldBook);
-            BookList.Remove(oldBook);
-            BookList.Insert(index, book);
+
+            if (oldBook != null)
+            {
+                var index = BookList.IndexOf(oldBook);
+                BookList.Remove(oldBook);
+                BookList.Insert(index, book);
+            }
+            else
+            {
+                book.SetReadingProgress();
+                book.SetCoverDisplay();
+                InsertBook(book);
+            }
+
         }
 
         public static void InsertBook(BookModel book)
         {
+            if (book.BookGuid == null)
+                book.BookGuid = Guid.NewGuid();
+
             BookList.Add(book);
         }
 
@@ -233,13 +251,26 @@ namespace BookCollector.Data
         public static void UpdateWishListBook(BookModel book)
         {
             var oldBook = BookWishList.Where(x => x.BookGuid == book.BookGuid).ToList().FirstOrDefault();
-            var index = BookWishList.IndexOf(oldBook);
-            BookWishList.Remove(oldBook);
-            BookWishList.Insert(index, book);
+
+            if (oldBook != null)
+            {
+                var index = BookWishList.IndexOf(oldBook);
+                BookWishList.Remove(oldBook);
+                BookWishList.Insert(index, book);
+            }
+            else
+            {
+                book.SetReadingProgress();
+                book.SetCoverDisplay();
+                InsertWishListBook(book);
+            }
         }
 
         public static void InsertWishListBook(BookModel book)
         {
+            if (book.BookGuid == null)
+                book.BookGuid = Guid.NewGuid();
+
             BookWishList.Add(book);
         }
 
@@ -250,7 +281,7 @@ namespace BookCollector.Data
 
         public static void AddChaptersToList()
         {
-            ChapterList =  new ObservableCollection<ChapterModel>()
+            ChapterList = new ObservableCollection<ChapterModel>()
             {
                 new ChapterModel()
                 {
@@ -270,13 +301,24 @@ namespace BookCollector.Data
         public static void UpdateChapter(ChapterModel chapter)
         {
             var oldChapter = ChapterList.Where(x => x.ChapterGuid == chapter.ChapterGuid).ToList().FirstOrDefault();
-            var index = ChapterList.IndexOf(oldChapter);
-            ChapterList.Remove(oldChapter);
-            ChapterList.Insert(index, chapter);
+
+            if (oldChapter != null)
+            {
+                var index = ChapterList.IndexOf(oldChapter);
+                ChapterList.Remove(oldChapter);
+                ChapterList.Insert(index, chapter);
+            }
+            else
+            {
+                InsertChapter(chapter);
+            }
         }
 
         public static void InsertChapter(ChapterModel chapter)
         {
+            if (chapter.ChapterGuid == null)
+                chapter.ChapterGuid = Guid.NewGuid();
+
             ChapterList.Add(chapter);
         }
 
@@ -285,9 +327,38 @@ namespace BookCollector.Data
             ChapterList.Remove(chapter);
         }
 
+        public static void UpdateBookAuthor(BookAuthorModel bookAuthor)
+        {
+            var oldBookAuthor = BookAuthorList.Where(x => x.BookAuthorGuid == bookAuthor.BookAuthorGuid).ToList().FirstOrDefault();
+
+            if (oldBookAuthor != null)
+            {
+                var index = BookAuthorList.IndexOf(oldBookAuthor);
+                BookAuthorList.Remove(oldBookAuthor);
+                BookAuthorList.Insert(index, bookAuthor);
+            }
+            else
+            {
+                InsertBookAuthor(bookAuthor);
+            }
+        }
+
+        public static void InsertBookAuthor(BookAuthorModel bookAuthor)
+        {
+            if (bookAuthor.BookAuthorGuid == null)
+                bookAuthor.BookAuthorGuid = Guid.NewGuid();
+
+            BookAuthorList.Add(bookAuthor);
+        }
+
+        public static void DeleteBookAuthor(BookAuthorModel bookAuthor)
+        {
+            BookAuthorList.Remove(bookAuthor);
+        }
+
         public static void AddAuthorsToList()
         {
-            AuthorList =  new ObservableCollection<AuthorModel>()
+            AuthorList = new ObservableCollection<AuthorModel>()
             {
                 new AuthorModel()
                 {
@@ -305,29 +376,42 @@ namespace BookCollector.Data
         public static void UpdateAuthor(AuthorModel author)
         {
             var oldAuthor = AuthorList.Where(x => x.AuthorGuid == author.AuthorGuid).ToList().FirstOrDefault();
-            var index = AuthorList.IndexOf(oldAuthor);
-            AuthorList.Remove(oldAuthor);
-            AuthorList.Insert(index, author);
+
+            if (oldAuthor != null)
+            {
+                var index = AuthorList.IndexOf(oldAuthor);
+                AuthorList.Remove(oldAuthor);
+                AuthorList.Insert(index, author);
+            }
+            else
+            {
+                InsertAuthor(author);
+            }
         }
 
         public static void InsertAuthor(AuthorModel author)
         {
+            if (author.AuthorGuid == null)
+                author.AuthorGuid = Guid.NewGuid();
+
             AuthorList.Add(author);
         }
 
         public static void InsertAuthor(AuthorModel author, Guid? bookGuid)
         {
-            AuthorList.Add(author);
+            InsertAuthor(author);
             AddAuthorToBook(author.AuthorGuid, bookGuid);
         }
 
         public static void AddAuthorToBook(Guid? authorGuid, Guid? bookGuid)
         {
-            BookAuthorList.Add(new BookAuthorModel()
+            var bookAuthor = new BookAuthorModel()
             {
                 AuthorGuid = (Guid)authorGuid,
                 BookGuid = (Guid)bookGuid,
-            });
+            };
+
+            InsertBookAuthor(bookAuthor);
         }
 
         public static void DeleteAuthor(AuthorModel author)
@@ -365,13 +449,24 @@ namespace BookCollector.Data
         public static void UpdateSeries(SeriesModel series)
         {
             var oldSeries = SeriesList.Where(x => x.SeriesGuid == series.SeriesGuid).ToList().FirstOrDefault();
-            var index = SeriesList.IndexOf(oldSeries);
-            SeriesList.Remove(oldSeries);
-            SeriesList.Insert(index, series);
+
+            if (oldSeries != null)
+            {
+                var index = SeriesList.IndexOf(oldSeries);
+                SeriesList.Remove(oldSeries);
+                SeriesList.Insert(index, series);
+            }
+            else
+            {
+                InsertSeries(series);
+            }
         }
 
         public static void InsertSeries(SeriesModel series)
         {
+            if (series.SeriesGuid == null)
+                series.SeriesGuid = Guid.NewGuid();
+
             SeriesList.Add(series);
         }
 
@@ -404,13 +499,24 @@ namespace BookCollector.Data
         public static void UpdateGenre(GenreModel genre)
         {
             var oldGenre = GenreList.Where(x => x.GenreGuid == genre.GenreGuid).ToList().FirstOrDefault();
-            var index = GenreList.IndexOf(oldGenre);
-            GenreList.Remove(oldGenre);
-            GenreList.Insert(index, genre);
+
+            if (oldGenre != null)
+            {
+                var index = GenreList.IndexOf(oldGenre);
+                GenreList.Remove(oldGenre);
+                GenreList.Insert(index, genre);
+            }
+            else
+            {
+                InsertGenre(genre);
+            }
         }
 
         public static void InsertGenre(GenreModel genre)
         {
+            if (genre.GenreGuid == null)
+                genre.GenreGuid = Guid.NewGuid();
+
             GenreList.Add(genre);
         }
 
@@ -443,13 +549,24 @@ namespace BookCollector.Data
         public static void UpdateCollection(CollectionModel collection)
         {
             var oldCollection = CollectionList.Where(x => x.CollectionGuid == collection.CollectionGuid).ToList().FirstOrDefault();
-            var index = CollectionList.IndexOf(oldCollection);
-            CollectionList.Remove(oldCollection);
-            CollectionList.Insert(index, collection);
+
+            if (oldCollection != null)
+            {
+                var index = CollectionList.IndexOf(oldCollection);
+                CollectionList.Remove(oldCollection);
+                CollectionList.Insert(index, collection);
+            }
+            else
+            {
+                InsertCollection(collection);
+            }
         }
 
         public static void InsertCollection(CollectionModel collection)
         {
+            if (collection.CollectionGuid == null)
+                collection.CollectionGuid = Guid.NewGuid();
+
             CollectionList.Add(collection);
         }
 
@@ -483,13 +600,24 @@ namespace BookCollector.Data
         public static void UpdateLocation(LocationModel location)
         {
             var oldLocation = LocationList.Where(x => x.LocationGuid == location.LocationGuid).ToList().FirstOrDefault();
-            var index = LocationList.IndexOf(oldLocation);
-            LocationList.Remove(oldLocation);
-            LocationList.Insert(index, location);
+
+            if (oldLocation != null)
+            {
+                var index = LocationList.IndexOf(oldLocation);
+                LocationList.Remove(oldLocation);
+                LocationList.Insert(index, location);
+            }
+            else
+            {
+                InsertLocation(location);
+            }
         }
 
         public static void InsertLocation(LocationModel location)
         {
+            if (location.LocationGuid == null)
+                location.LocationGuid = Guid.NewGuid();
+
             LocationList.Add(location);
         }
 
@@ -501,6 +629,39 @@ namespace BookCollector.Data
             foreach (var book in bookList)
             {
                 book.BookLocationGuid = null;
+            }
+        }
+
+        public static async Task DataCleanup()
+        {
+            foreach (var collection in CollectionList)
+            {
+                collection.SetTotalBooks(true);
+            }
+
+            foreach (var author in AuthorList)
+            {
+                author.SetTotalBooks(true);
+            }
+
+            foreach (var series in SeriesList)
+            {
+                series.SetTotalBooks(true);
+            }
+
+            foreach (var location in LocationList)
+            {
+                location.SetTotalBooks(true);
+            }
+
+            foreach (var genre in GenreList)
+            {
+                genre.SetTotalBooks(true);
+            }
+
+            foreach (var book in BookList)
+            {
+                book.SetAuthorListString();
             }
         }
     }

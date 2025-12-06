@@ -21,7 +21,14 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public bool hideLocation;
 
-        public string? ParsedLocationName { get; set; }
+        public string? ParsedLocationName
+        {
+            get => (this.LocationName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.LocationName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.LocationName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
+                        ? this.LocationName.Remove(0, this.LocationName.IndexOf(" ") + 1)
+                        : this.LocationName;
+        }
         public int LocationTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
         public int? ID { get; set; }

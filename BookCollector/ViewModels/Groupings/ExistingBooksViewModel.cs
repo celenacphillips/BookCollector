@@ -277,9 +277,14 @@ namespace BookCollector.ViewModels.Groupings
                         SelectedBook.AuthorListString += $"; {author.ReverseFullName}";
                     else
                         SelectedBook.AuthorListString = $"{author.ReverseFullName}";
+                        if (TestData.UseTestData)
+                        {
+                            TestData.AddAuthorToBook(author.AuthorGuid, SelectedBook.BookGuid);
+                        }
+                        else
+                        {
 
-                        // Unit test data
-                        TestData.AddAuthorToBook(author.AuthorGuid, SelectedBook.BookGuid);
+                        }
                     break;
 
                 case "Location":

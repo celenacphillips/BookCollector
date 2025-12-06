@@ -169,8 +169,14 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteCollection(selected);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteCollection(selected);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(selected.CollectionName);
 

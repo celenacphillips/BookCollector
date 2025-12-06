@@ -59,13 +59,25 @@ namespace BookCollector.ViewModels.Series
 
                 if (ViewTitle.Equals($"{AppStringResources.AddNewSeries}"))
                 {
-                    // Unit test data
-                    TestData.InsertSeries(EditedSeries);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertSeries(EditedSeries);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    // Unit test data
-                    TestData.UpdateSeries(EditedSeries);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateSeries(EditedSeries);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 if (InsertMainViewBefore)
                 {

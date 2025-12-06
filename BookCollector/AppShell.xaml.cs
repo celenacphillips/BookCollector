@@ -17,10 +17,14 @@ namespace BookCollector
             RegisterRoutes();
             BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
 
-            // Unit test data
-            //var testData = new TestData();
-            TestData.AddBooksToList();
-            TestData.AddWishListBooksToList();
+            TestData.UseTestData = true;
+
+            if (TestData.UseTestData)
+            {
+                //var testData = new TestData();
+                TestData.AddBooksToList();
+                TestData.AddWishListBooksToList();
+            }
 
             BindingContext = this;
         }

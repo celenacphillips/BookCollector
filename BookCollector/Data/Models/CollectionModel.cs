@@ -18,7 +18,14 @@ namespace BookCollector.Data.Models
         public bool hideCollection;
 
         public int? ID { get; set; }
-        public string? ParsedCollectionName { get; set; }
+        public string? ParsedCollectionName
+        {
+            get => (this.CollectionName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.CollectionName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.CollectionName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
+                        ? this.CollectionName.Remove(0, this.CollectionName.IndexOf(" ") + 1)
+                        : this.CollectionName;
+        }
         public int CollectionTotalBooks { get; set; }
         public double TotalCostOfBooks { get; set; }
 

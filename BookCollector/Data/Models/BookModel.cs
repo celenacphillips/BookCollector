@@ -1,4 +1,5 @@
 ﻿using BookCollector.Resources.Localization;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 using System.Collections.ObjectModel;
@@ -44,8 +45,6 @@ namespace BookCollector.Data.Models
         [ObservableProperty]
         public string? bookComments;
         [ObservableProperty]
-        public byte[]? bookCoverBytes;
-        [ObservableProperty]
         public string? bookCoverUrl;
         [ObservableProperty]
         public bool hasBookCover;
@@ -79,6 +78,8 @@ namespace BookCollector.Data.Models
         public string? partOfCollection;
         [ObservableProperty]
         public ImageSource? bookCover;
+        [ObservableProperty]
+        public string? bookCoverFileLocation;
 
         public BookModel()
         {
@@ -91,18 +92,29 @@ namespace BookCollector.Data.Models
         }
         public string? ParsedTitle
         {
-            get => (BookTitle.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) || BookTitle.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)) ? this.BookTitle.Remove(0, this.BookTitle.IndexOf(" ") + 1) : this.BookTitle;
+            get => (this.BookTitle.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.BookTitle.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
+                    this.BookTitle.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
+                        ? this.BookTitle.Remove(0, this.BookTitle.IndexOf(" ") + 1)
+                        : this.BookTitle;
         }
         public double BookPriceValue
         {
             get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice.Substring(1, this.BookPrice.Length - 1)) : 0;
+        }
+        public DateTime? StartDateValue
+        {
+            get => !string.IsNullOrEmpty(this.BookStartDate) ? DateTime.Parse(this.BookStartDate) : null;
+        }
+        public DateTime? EndDateValue
+        {
+            get => !string.IsNullOrEmpty(this.BookEndDate) ? DateTime.Parse(this.BookEndDate) : null;
         }
 
         public Guid? BookSeriesGuid { get; set; }
         public Guid? BookCollectionGuid { get; set; }
         public Guid? BookGenreGuid { get; set; }
         public Guid? BookLocationGuid { get; set; }
-        public string? BookImageBase64String { get; set; }
         public string? AuthorListString { get; set; }
         public string? SelectedAuthorString { get; set; }
         public bool IsFavorite { get; set; }
@@ -205,12 +217,25 @@ namespace BookCollector.Data.Models
 
         public async Task SetCoverDisplay()
         {
-            this.HasBookCover = this.BookCoverBytes != null || this.BookCoverUrl != null;
-            this.HasNoBookCover = this.BookCoverBytes == null && this.BookCoverUrl == null;
+            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
+            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
         }
 
-        public async Task SetAuthorListString(ObservableCollection<BookAuthorModel> bookAuthorList, ObservableCollection<AuthorModel> authorList)
+        public async Task SetAuthorListString()
         {
+            ObservableCollection<AuthorModel>? authorList = null;
+            ObservableCollection<BookAuthorModel>? bookAuthorList = await FilterLists.GetAllBookAuthorsForBook(this.BookGuid);
+
+            if (TestData.UseTestData)
+            {
+                authorList = TestData.AuthorList;
+
+            }
+            else
+            {
+
+            }
+
             if (bookAuthorList.Any(x => x.BookGuid == this.BookGuid))
             {
                 this.AuthorListString = string.Empty;
@@ -219,7 +244,7 @@ namespace BookCollector.Data.Models
                 {
                     var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
 
-                    this.AuthorListString += authorList[i].ReverseFullName;
+                    this.AuthorListString += author.ReverseFullName;
 
                     if (i != bookAuthorList.Count - 1)
                         this.AuthorListString += "; ";
@@ -270,8 +295,14 @@ namespace BookCollector.Data.Models
                 {
                     chapter.BookGuid = (Guid)this.BookGuid;
 
-                    // Unit test data
-                    TestData.InsertChapter(chapter);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertChapter(chapter);
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
         }

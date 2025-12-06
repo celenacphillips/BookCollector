@@ -95,12 +95,12 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
-                    else
-                        TopXSeries = AppStringResources.TopSeries;
                 }
+
+                if (max != 1)
+                    TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                else
+                    TopXSeries = AppStringResources.TopSeries;
 
                 for (int i = 0; i < max; i++)
                 {
@@ -144,12 +144,12 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
-                    else
-                        TopXAuthors = AppStringResources.TopAuthor;
                 }
+
+                if (max != 1)
+                    TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                else
+                    TopXAuthors = AppStringResources.TopAuthor;
 
                 for (int i = 0; i < max; i++)
                 {
@@ -193,12 +193,12 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
-                    else
-                        TopXLocations = AppStringResources.TopLocation;
                 }
+
+                if (max != 1)
+                    TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                else
+                    TopXLocations = AppStringResources.TopLocation;
 
                 for (int i = 0; i < max; i++)
                 {

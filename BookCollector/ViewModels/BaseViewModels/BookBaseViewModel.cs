@@ -259,8 +259,16 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     string[] name = authorName.Split(",");
 
-                    // Unit test data
-                    var author = TestData.AuthorList.FirstOrDefault(x => x.FirstName.Equals(name[1].Trim()) && x.LastName.Equals(name[0].Trim()));
+                    AuthorModel? author = null;
+
+                    if (TestData.UseTestData)
+                    {
+                        author = TestData.AuthorList.FirstOrDefault(x => x.FirstName.Equals(name[1].Trim()) && x.LastName.Equals(name[0].Trim()));
+                    }
+                    else
+                    {
+
+                    }
 
                     if (author == null)
                     {

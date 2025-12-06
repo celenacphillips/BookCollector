@@ -166,8 +166,14 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteLocation(selected);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteLocation(selected);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(selected.LocationName);
 

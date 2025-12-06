@@ -376,7 +376,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author Guid.
+        ///   Looks up a localized string similar to Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string AuthorGuid {
             get {
@@ -475,7 +475,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Author Guid.
+        ///   Looks up a localized string similar to Book Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string BookAuthorGuid {
             get {
@@ -583,7 +583,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Guid.
+        ///   Looks up a localized string similar to Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string BookGuid {
             get {
@@ -610,11 +610,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BookImageBase64String.
+        ///   Looks up a localized string similar to Book Import Export File Location.
         /// </summary>
-        internal static string BookImageBase64String {
+        internal static string BookImportExportFileLocation {
             get {
-                return ResourceManager.GetString("BookImageBase64String", resourceCulture);
+                return ResourceManager.GetString("BookImportExportFileLocation", resourceCulture);
             }
         }
         
@@ -862,7 +862,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chapter Guid.
+        ///   Looks up a localized string similar to Chapter Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string ChapterGuid {
             get {
@@ -934,7 +934,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Collection Guid.
+        ///   Looks up a localized string similar to Collection Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string CollectionGuid {
             get {
@@ -1402,7 +1402,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Genre Guid.
+        ///   Looks up a localized string similar to Genre Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string GenreGuid {
             get {
@@ -1623,6 +1623,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        /// </summary>
+        internal static string LocationGuid {
+            get {
+                return ResourceManager.GetString("LocationGuid", resourceCulture);
             }
         }
         
@@ -1969,6 +1978,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please connect to Internet to find book cover!.
+        /// </summary>
+        internal static string PleaseConnectToInternetToFindBookCover {
+            get {
+                return ResourceManager.GetString("PleaseConnectToInternetToFindBookCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please connect to Internet to search!.
         /// </summary>
         internal static string PleaseConnectToInternetToSearch {
@@ -2257,7 +2275,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Series Guid.
+        ///   Looks up a localized string similar to Series Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string SeriesGuid {
             get {
@@ -2428,7 +2446,16 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Table: x imported....
+        ///   Looks up a localized string similar to Table: Waiting....
+        /// </summary>
+        internal static string Table_Waiting {
+            get {
+                return ResourceManager.GetString("Table_Waiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table: x/z imported....
         /// </summary>
         internal static string Table_XImported {
             get {
@@ -2446,7 +2473,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Table: y exported....
+        ///   Looks up a localized string similar to Table: y/z exported....
         /// </summary>
         internal static string Table_YExported {
             get {
@@ -2694,6 +2721,15 @@ namespace BookCollector.Resources.Localization {
         internal static string TwoStars {
             get {
                 return ResourceManager.GetString("TwoStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Existing File.
+        /// </summary>
+        internal static string UploadExistingFile {
+            get {
+                return ResourceManager.GetString("UploadExistingFile", resourceCulture);
             }
         }
         

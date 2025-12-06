@@ -168,8 +168,14 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteAuthor(selected);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteAuthor(selected);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(selected.FullName);
 

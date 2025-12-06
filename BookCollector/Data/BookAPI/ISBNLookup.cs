@@ -37,7 +37,7 @@ namespace BookCollector.Data.BookAPI
         [ObservableProperty]
         public ImageSource imageSource;
 
-        public byte[] ImageByteArray { get; set; }
+        public string? ImageURL { get; set; }
     }
 
     public class IndustryIdentifier

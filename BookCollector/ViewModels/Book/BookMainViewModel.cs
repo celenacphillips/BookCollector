@@ -18,6 +18,7 @@ namespace BookCollector.ViewModels.Book
 
             SelectedBook = book;
             InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book",$"{SelectedBook.BookTitle}")}";
+            AuthorList = new ObservableCollection<AuthorModel>();
         }
 
         public async Task SetViewModelData()
@@ -36,18 +37,27 @@ namespace BookCollector.ViewModels.Book
                 BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
                 ShowUpNext = SelectedBook.BookPageRead == 0;
 
-                if (SelectedBook.BookCoverBytes != null)
+                if (!string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) && SelectedBook.BookCover == null)
                 {
-                    var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
-                    BookCover = imageSource;
-                    SelectedBook.BookCover = BookCover;
+                    var imageBytes = File.ReadAllBytes(SelectedBook.BookCoverFileLocation);
+                    var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    SelectedBook.BookCover = imageSource;
                 }
-                else if (SelectedBook.BookCoverUrl != null)
+
+                if (!string.IsNullOrEmpty(SelectedBook.BookCoverUrl) && SelectedBook.BookCover == null)
                 {
-                    var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
-                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-                    SelectedBook.BookCover = BookCover;
+                    if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                    {
+                        var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
+                        SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    }
+                    else
+                    {
+                        await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
+                    }
                 }
+
+                BookCover = SelectedBook.BookCover;
 
                 AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
 
@@ -110,8 +120,14 @@ namespace BookCollector.ViewModels.Book
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteBook(SelectedBook);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteBook(SelectedBook);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(SelectedBook.BookTitle);
 

@@ -53,7 +53,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 FilteredSeriesList = FullSeriesList;
 
-                foreach (var series in fullSeriesList)
+                foreach (var series in FullSeriesList)
                 {
                     series.SetTotalBooks(ShowHiddenBook);
                 }
@@ -165,8 +165,14 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteSeries(selected);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteSeries(selected);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(selected.SeriesName);
 

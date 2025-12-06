@@ -338,8 +338,6 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowCollections(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
-
             if (ShowCollections)
             {
                 List<ChartValues> values = new List<ChartValues>();
@@ -349,23 +347,23 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXCollections = AppStringResources.TopXCollections.Replace("x", $"{max}");
-                    else
-                        TopXCollections = AppStringResources.TopCollection;
                 }
+
+                if (max != 1)
+                    TopXCollections = AppStringResources.TopXCollections.Replace("x", $"{max}");
+                else
+                    TopXCollections = AppStringResources.TopCollection;
 
                 for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = ColorList[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count
-                        });
-                }
+                    {
+                        values.Add(
+                            new ChartValues()
+                            {
+                                ColorValue = ColorList[i],
+                                LabelValue = counts[i].Label,
+                                Value = counts[i].Count
+                            });
+                    }
 
                 SetUpBarChart(values, "collections");
             }
@@ -398,23 +396,23 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXGenres = AppStringResources.TopXGenres.Replace("x", $"{max}");
-                    else
-                        TopXGenres = AppStringResources.TopGenre;
                 }
+
+                if (max != 1)
+                    TopXGenres = AppStringResources.TopXGenres.Replace("x", $"{max}");
+                else
+                    TopXGenres = AppStringResources.TopGenre;
 
                 for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = ColorList[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count
-                        });
-                }
+                    {
+                        values.Add(
+                            new ChartValues()
+                            {
+                                ColorValue = ColorList[i],
+                                LabelValue = counts[i].Label,
+                                Value = counts[i].Count
+                            });
+                    }
 
                 SetUpBarChart(values, "genres");
             }
@@ -447,14 +445,14 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
-                    else
-                        TopXSeries = AppStringResources.TopXSeries;
                 }
 
-                for (int i = 0; i < counts.Count; i++)
+                if (max != 1)
+                    TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                else
+                    TopXSeries = AppStringResources.TopSeries;
+
+                for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
@@ -496,12 +494,12 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
-                    else
-                        TopXAuthors = AppStringResources.TopAuthor;
                 }
+
+                if (max != 1)
+                    TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                else
+                    TopXAuthors = AppStringResources.TopAuthor;
 
                 for (int i = 0; i < max; i++)
                 {
@@ -545,12 +543,12 @@ namespace BookCollector.ViewModels.Statistics
                 if (counts.Count < max)
                 {
                     max = counts.Count;
-
-                    if (max != 1)
-                        TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
-                    else
-                        TopXLocations = AppStringResources.TopLocation;
                 }
+
+                if (max != 1)
+                    TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                else
+                    TopXLocations = AppStringResources.TopLocation;
 
                 for (int i = 0; i < max; i++)
                 {

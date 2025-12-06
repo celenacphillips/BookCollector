@@ -125,17 +125,6 @@
                                      Command="{Binding RemoveCoverPhotoCommand}"/>
                         </HorizontalStackLayout>
 
-                        <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
-                                Text="{Binding EditedBook.BookCoverUrl}"
-                                HorizontalTextAlignment="Center"
-                                AutoSize="TextChanges"
-                                Keyboard="Url">
-                            <Editor.Behaviors>
-                                <toolkit:EventToCommandBehavior EventName="Completed"
-                                                                Command="{Binding BookCoverUrlCommand}"/>
-                            </Editor.Behaviors>
-                        </Editor>
-
                         <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"

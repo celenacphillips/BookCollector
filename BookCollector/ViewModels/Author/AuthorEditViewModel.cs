@@ -57,13 +57,25 @@ namespace BookCollector.ViewModels.Author
 
                 if (ViewTitle.Equals($"{AppStringResources.AddNewAuthor}"))
                 {
-                    // Unit test data
-                    TestData.InsertAuthor(EditedAuthor);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertAuthor(EditedAuthor);
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    // Unit test data
-                    TestData.UpdateAuthor(EditedAuthor);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateAuthor(EditedAuthor);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 AuthorMainView view = new AuthorMainView(EditedAuthor, $"{EditedAuthor.FullName}");

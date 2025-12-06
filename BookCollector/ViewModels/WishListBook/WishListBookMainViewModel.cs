@@ -19,6 +19,7 @@ namespace BookCollector.ViewModels.WishListBook
 
             SelectedBook = book;
             InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book",$"{SelectedBook.BookTitle}")}";
+            AuthorList = new ObservableCollection<AuthorModel>();
         }
 
         public async Task SetViewModelData()
@@ -32,18 +33,27 @@ namespace BookCollector.ViewModels.WishListBook
                 SummarySectionValue = true;
                 CommentsSectionValue = true;
 
-                if (SelectedBook.BookCoverBytes != null)
+                if (!string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) && SelectedBook.BookCover == null)
                 {
-                    var imageSource = ImageSource.FromStream(() => new MemoryStream(SelectedBook.BookCoverBytes));
-                    BookCover = imageSource;
-                    SelectedBook.BookCover = BookCover;
+                    var imageBytes = File.ReadAllBytes(SelectedBook.BookCoverFileLocation);
+                    var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    SelectedBook.BookCover = imageSource;
                 }
-                else if (SelectedBook.BookCoverUrl != null)
+
+                if (!string.IsNullOrEmpty(SelectedBook.BookCoverUrl) && SelectedBook.BookCover == null)
                 {
-                    var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
-                    BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-                    SelectedBook.BookCover = BookCover;
+                    if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                    {
+                        var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
+                        SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    }
+                    else
+                    {
+                        await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
+                    }
                 }
+
+                BookCover = SelectedBook.BookCover;
 
                 AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
 
@@ -99,8 +109,14 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteWishListBook(SelectedBook);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteWishListBook(SelectedBook);
+                    }
+                    else
+                    {
+
+                    }
 
                     await ConfirmDelete(SelectedBook.BookTitle);
 
@@ -130,9 +146,17 @@ namespace BookCollector.ViewModels.WishListBook
                 try
                 {
                     SetIsBusyTrue();
-                    
-                    // Unit test data
-                    var series = TestData.SeriesList.SingleOrDefault(x => x.SeriesName.Equals(SelectedBook.BookSeries));
+
+                    SeriesModel? series = null;
+
+                    if (TestData.UseTestData)
+                    {
+                        series = TestData.SeriesList.SingleOrDefault(x => x.SeriesName.Equals(SelectedBook.BookSeries));
+                    }
+                    else
+                    {
+
+                    }
 
                     if (series == null)
                     {
@@ -141,8 +165,14 @@ namespace BookCollector.ViewModels.WishListBook
                             SeriesName = SelectedBook.BookSeries
                         };
 
-                        // Unit test data
-                        TestData.InsertSeries(series);
+                        if (TestData.UseTestData)
+                        {
+                            TestData.InsertSeries(series);
+                        }
+                        else
+                        {
+
+                        }
                     }
                     
                     SelectedBook.BookSeriesGuid = series.SeriesGuid;
@@ -152,9 +182,16 @@ namespace BookCollector.ViewModels.WishListBook
                         Task.Run (async () => await SelectedBook.SetReadingProgress() ),
                     ]);
 
-                    // Unit test data
-                    TestData.InsertBook(SelectedBook);
-                    TestData.DeleteWishListBook(SelectedBook);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.InsertBook(SelectedBook);
+                        TestData.DeleteWishListBook(SelectedBook);
+                    }
+                    else
+                    {
+
+                    }
+                    
 
                     await DisplayMessage(AppStringResources.AddToLibrary, AppStringResources.BookWasAddedToLibrary);
 
