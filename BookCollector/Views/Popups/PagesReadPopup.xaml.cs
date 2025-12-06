@@ -17,9 +17,12 @@ public partial class PagesReadPopup : Popup
 		this.PagesRead = pagesRead;
 		this.PageTotal = pageTotal;
 
-		InitializeComponent();
-		BindingContext = this;
-	}
+        BindingContext = this;
+
+        InitializeComponent();
+
+        PagesReadLabel.Text = $"{this.PagesRead}";
+    }
 
 	async void OnClose(object sender, EventArgs e)
 	{
