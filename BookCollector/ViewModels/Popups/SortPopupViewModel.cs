@@ -13,7 +13,7 @@ namespace BookCollector.ViewModels.Popups
     public partial class SortPopupViewModel : BaseViewModel
     {
         public double PopupWidth { get; set; }
-        private Popup _popup { get; set; }
+        private Popup Popup { get; set; }
 
         [ObservableProperty]
         public bool bookTitleVisible;
@@ -133,7 +133,7 @@ namespace BookCollector.ViewModels.Popups
 
         public SortPopupViewModel(Popup popup, string viewTitle)
         {
-            _popup = popup;
+            Popup = popup;
             ViewTitle = viewTitle;
             PopupWidth = DeviceWidth - 50;
         }
@@ -145,7 +145,7 @@ namespace BookCollector.ViewModels.Popups
 
             SetPreferences();
 
-            await _popup.CloseAsync(token: cts.Token);
+            await Popup.CloseAsync(token: cts.Token);
         }
 
         private void SetPreferences()

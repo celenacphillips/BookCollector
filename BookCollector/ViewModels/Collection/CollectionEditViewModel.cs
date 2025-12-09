@@ -26,7 +26,7 @@ namespace BookCollector.ViewModels.Collection
 
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
         {
-            _view = view;
+            View = view;
 
             EditedCollection = (CollectionModel)collection.Clone();
         }
@@ -50,7 +50,11 @@ namespace BookCollector.ViewModels.Collection
         [RelayCommand]
         public async Task SaveCollection()
         {
-            if (CollectionNameValid)
+            if (!CollectionNameValid)
+            {
+                await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
+            }
+            else
             {
 #if ANDROID
                 if (Platform.CurrentActivity != null &&
@@ -58,7 +62,7 @@ namespace BookCollector.ViewModels.Collection
                         Platform.CurrentActivity.Window.DecorView.ClearFocus();
 #endif
 
-                if (ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
+                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
                 {
                     if (TestData.UseTestData)
                     {
@@ -84,7 +88,7 @@ namespace BookCollector.ViewModels.Collection
                 if (InsertMainViewBefore)
                 {
                     CollectionMainView view = new CollectionMainView(EditedCollection, $"{EditedCollection.CollectionName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                    Shell.Current.Navigation.InsertPageBefore(view, View);
                 }
 
                 await Shell.Current.Navigation.PopAsync();
@@ -99,12 +103,28 @@ namespace BookCollector.ViewModels.Collection
             SetRefreshFalse();
         }
 
+        [RelayCommand]
+        public void ValidateCollectionName()
+        {
+            ValidateEntry();
+        }
+
         private void ValidateEntry()
         {
             if (string.IsNullOrEmpty(EditedCollection.CollectionName))
+            {
+                var collectionNameEditor = View.FindByName<Editor>("CollectionNameEditor");
+                collectionNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
+                collectionNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
                 CollectionNameValid = false;
+            }
             else
+            {
+                var collectionNameEditor = View.FindByName<Editor>("CollectionNameEditor");
+                collectionNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                collectionNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 CollectionNameValid = true;
+            }
         }
     }
 }

@@ -5,13 +5,15 @@ namespace BookCollector.Views.Collection;
 
 public partial class CollectionMainView : ContentPage
 {
-    private CollectionMainViewModel _viewModel;
+    private CollectionMainViewModel ViewModel;
 
     public CollectionMainView(CollectionModel collection, string viewTitle)
 	{
-        CollectionMainViewModel viewModel = new CollectionMainViewModel(collection, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
+        var viewModel = new CollectionMainViewModel(collection, this)
+        {
+            ViewTitle = viewTitle
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -21,6 +23,6 @@ public partial class CollectionMainView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

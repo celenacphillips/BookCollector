@@ -2,7 +2,7 @@ namespace BookCollector.Views.Controls.Series;
 
 public partial class SeriesCollectionList : ContentView
 {
-	public SeriesCollectionList()
+    public SeriesCollectionList()
 	{
 		InitializeComponent();
 	}

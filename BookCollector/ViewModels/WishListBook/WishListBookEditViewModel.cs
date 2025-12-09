@@ -11,12 +11,14 @@ using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
 using BookCollector.Views.WishListBook;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Net;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace BookCollector.ViewModels.WishListBook
 {
@@ -48,7 +50,7 @@ namespace BookCollector.ViewModels.WishListBook
 
         public WishListBookEditViewModel(BookModel book, ContentPage view)
         {
-            _view = view;
+            View = view;
 
             EditedBook = (BookModel)book.Clone();
             InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{EditedBook.BookTitle}")}";
@@ -81,7 +83,7 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
-                        var byteArray = new WebClient().DownloadData($"{EditedBook.BookCoverUrl}");
+                        var byteArray = DownloadImage(EditedBook.BookCoverUrl);
                         EditedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                     }
                     else
@@ -92,11 +94,11 @@ namespace BookCollector.ViewModels.WishListBook
 
                 BookCover = EditedBook.BookCover;
 
-                AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : new ObservableCollection<AuthorModel>();
+                AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : [];
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                    Task.Run (async () => EditedBook.SetCoverDisplay() ),
                     Task.Run (async () => await EditedBook.SetBookPrice() ),
                     Task.Run (async () => await BookInfo1Changed() ),
                     Task.Run (async () => await ReadingDataChanged() ),
@@ -128,10 +130,12 @@ namespace BookCollector.ViewModels.WishListBook
         {
             SetIsBusyTrue();
 
-            BookSearchView view = new BookSearchView();
-            BookSearchViewModel bindingContext = new BookSearchViewModel(null, view);
-            bindingContext.ViewTitle = $"{AppStringResources.BookSearch}";
-            bindingContext.SelectedBook = EditedBook;
+            var view = new BookSearchView();
+            var bindingContext = new BookSearchViewModel(null, view)
+            {
+                ViewTitle = $"{AppStringResources.BookSearch}",
+                SelectedBook = EditedBook
+            };
             view.BindingContext = bindingContext;
 
             await Shell.Current.Navigation.PushModalAsync(view);
@@ -142,12 +146,24 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task SaveBook()
         {
-            if (BookTitleValid && !BookFormatNotValid)
+            if (!BookTitleValid && BookFormatNotValid)
+            {
+                if (!BookTitleValid)
+                {
+                    await DisplayMessage(AppStringResources.BookTitleNotValid, null);
+                }
+
+                if (BookFormatNotValid)
+                {
+                    await DisplayMessage(AppStringResources.BookFormatNotValid, null);
+                }
+            }
+            else
             {
                 Task.WaitAll(
                 [
                     Task.Run (async () => await EditedBook.SetPartOfSeries() ),
-                    Task.Run (async () => await EditedBook.SetCoverDisplay() ),
+                    Task.Run (async () => EditedBook.SetCoverDisplay() ),
                     Task.Run (async () => await EditedBook.SetBookPrice() ),
                     Task.Run (async () => await EditedBook.SetAuthorListString(AuthorList, false) ),
                 ]);
@@ -158,7 +174,7 @@ namespace BookCollector.ViewModels.WishListBook
                     Platform.CurrentActivity.Window.DecorView.ClearFocus();
 #endif
 
-                if (ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
+                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
                 {
                     if (TestData.UseTestData)
                     {
@@ -186,23 +202,15 @@ namespace BookCollector.ViewModels.WishListBook
                     Shell.Current.Navigation.RemovePage(MainViewBefore);
                 }
 
-                WishListBookMainView view = new WishListBookMainView(EditedBook, $"{EditedBook.BookTitle}");
-                Shell.Current.Navigation.InsertPageBefore(view, _view);
+                var view = new WishListBookMainView(EditedBook, $"{EditedBook.BookTitle}");
+                Shell.Current.Navigation.InsertPageBefore(view, View);
 
                 await Shell.Current.Navigation.PopAsync();
-            }
-            else
-            {
-                if (!BookTitleValid)
-                    await Shell.Current.DisplayAlert("Book Title not valid", "Book Title not valid", $"{AppStringResources.OK}");
-
-                if (BookFormatNotValid)
-                    await Shell.Current.DisplayAlert("Book Format not valid", "Book Format not valid", $"{AppStringResources.OK}");
             }
         }
 
         [RelayCommand]
-        public async Task BookInfo1Changed()
+        public void BookInfo1Changed()
         {
             BookInfo1Open = BookInfo1SectionValue;
             BookInfo1NotOpen = !BookInfo1SectionValue;
@@ -226,11 +234,12 @@ namespace BookCollector.ViewModels.WishListBook
 
                     try
                     {
-                        var result = await MediaPicker.PickPhotoAsync(pickerOptions);
+                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
 
-                        if (result != null)
+                        if (photos?.Count > 0)
                         {
-                            BookCover = ImageSource.FromFile(result.FullPath);
+                            var firstPhoto = photos.First();
+                            BookCover = ImageSource.FromFile(firstPhoto.FullPath);
                             EditedBook.HasBookCover = true;
                             EditedBook.HasNoBookCover = false;
 
@@ -239,9 +248,9 @@ namespace BookCollector.ViewModels.WishListBook
                             if (!Directory.Exists(directory))
                                 Directory.CreateDirectory(directory);
 
-                            var fi = new FileInfo(result.FullPath);
+                            var fi = new FileInfo(firstPhoto.FullPath);
                             var filePath = $"{directory}/{fi.Name}";
-                            File.Copy(result.FullPath, filePath, true);
+                            File.Copy(firstPhoto.FullPath, filePath, true);
 
                             EditedBook.BookCoverFileLocation = filePath;
                         }
@@ -249,15 +258,15 @@ namespace BookCollector.ViewModels.WishListBook
                     catch (Exception ex)
                     {
                         SetIsBusyFalse();
-                        await Shell.Current.DisplayAlert(null, AppStringResources.PickingCoverCanceled, AppStringResources.OK);
+                        await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
                     }
 
                     if (EditedBook.HasNoBookCover)
-                        await Shell.Current.DisplayAlert(null, AppStringResources.PickingCoverCanceled, AppStringResources.OK);
+                        await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert(null, AppStringResources.PleaseAllowPhotoPermissionToAddCover, AppStringResources.OK);
+                    await DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
                 }
 
 
@@ -266,8 +275,8 @@ namespace BookCollector.ViewModels.WishListBook
 
             if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.BookCoverUrl))
             {
-                var result = await _view.ShowPopupAsync(new BookCoverUrlPopup(PopupWidth, EditedBook.BookCoverUrl));
-                var bookCoverUrl = (string?)result;
+                var result = await View.ShowPopupAsync<string>(new BookCoverUrlPopup(PopupWidth, EditedBook.BookCoverUrl));
+                var bookCoverUrl = result.Result;
 
                 if (!string.IsNullOrEmpty(bookCoverUrl))
                 {
@@ -277,7 +286,7 @@ namespace BookCollector.ViewModels.WishListBook
                     {
                         try
                         {
-                            var byteArray = new WebClient().DownloadData($"{bookCoverUrl}");
+                            var byteArray = DownloadImage(bookCoverUrl);
                             BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                             EditedBook.BookCover = BookCover;
                             EditedBook.HasBookCover = true;
@@ -308,7 +317,7 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         [RelayCommand]
-        public async Task RemoveCoverPhoto()
+        public void RemoveCoverPhoto()
         {
             EditedBook.HasBookCover = false;
             EditedBook.HasNoBookCover = true;
@@ -318,22 +327,27 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         [RelayCommand]
-        public async Task AddAuthor()
+        public void AddAuthor()
         {
-            if (AuthorList == null)
-                AuthorList = [];
+            AuthorList ??= [];
 
             AuthorList.Add(new AuthorModel());
         }
 
         [RelayCommand]
-        public async Task RemoveAuthor(AuthorModel author)
+        public void RemoveAuthor(AuthorModel author)
         {
-            AuthorList.Remove(author);
+            AuthorList?.Remove(author);
         }
 
         [RelayCommand]
-        public async Task ValidateBookFormat()
+        public void ValidateBookFormat()
+        {
+            ValidateEntry();
+        }
+
+        [RelayCommand]
+        public void ValidateBookTitle()
         {
             ValidateEntry();
         }
@@ -341,9 +355,19 @@ namespace BookCollector.ViewModels.WishListBook
         private void ValidateEntry()
         {
             if (string.IsNullOrEmpty(EditedBook.BookTitle))
+            {
+                var bookTitleEditor = View.FindByName<Editor>("BookTitleEditor");
+                bookTitleEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
+                bookTitleEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
                 BookTitleValid = false;
+            }
             else
+            {
+                var bookTitleEditor = View.FindByName<Editor>("BookTitleEditor");
+                bookTitleEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                bookTitleEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 BookTitleValid = true;
+            }
 
             if (string.IsNullOrEmpty(EditedBook.BookFormat))
                 BookFormatNotValid = true;

@@ -12,9 +12,9 @@ namespace BookCollector.Data.Models
         public Guid? SeriesGuid { get; set; }
 
         [ObservableProperty]
-        public string seriesName;
+        public string? seriesName;
         [ObservableProperty]
-        public string totalBooksString;
+        public string? totalBooksString;
         [ObservableProperty]
         public string? totalBooksInSeries;
         [ObservableProperty]
@@ -23,13 +23,16 @@ namespace BookCollector.Data.Models
         public int? ID { get; set; }
         public string? ParsedSeriesName
         {
-            get => (this.SeriesName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+            get => (!string.IsNullOrEmpty(this.SeriesName) &&
+                    (this.SeriesName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
                     this.SeriesName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.SeriesName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
-                        ? this.SeriesName.Remove(0, this.SeriesName.IndexOf(" ") + 1)
+                    this.SeriesName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
+                        ? this.SeriesName[(this.SeriesName.IndexOf(' ') + 1)..]
                         : this.SeriesName;
         }
         public int SeriesTotalBooks { get; set; }
+        // TO DO
+        // Set value - 12/8/2025
         public double TotalCostOfBooks { get; set; }
 
         public SeriesModel()
@@ -45,11 +48,17 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FilterLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
+            var count = 0;
+
+            if (list != null)
+            {
+                count = list.Count;
+            }
 
             this.TotalBooksString = !string.IsNullOrEmpty(this.TotalBooksInSeries) ?
-                                    StringManipulation.SetTotalBooksString(list.Count, int.Parse(this.TotalBooksInSeries)) :
-                                    StringManipulation.SetTotalBooksString(list.Count);
-            this.SeriesTotalBooks = list.Count;
+                                    StringManipulation.SetTotalBooksString(count, int.Parse(this.TotalBooksInSeries)) :
+                                    StringManipulation.SetTotalBooksString(count);
+            this.SeriesTotalBooks = count;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BookCollector.Resources.Localization {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppStringResources {
@@ -403,6 +403,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author Name not valid!.
+        /// </summary>
+        internal static string AuthorNameNotValid {
+            get {
+                return ResourceManager.GetString("AuthorNameNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authors.
         /// </summary>
         internal static string Authors {
@@ -552,6 +561,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookFormat {
             get {
                 return ResourceManager.GetString("BookFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Format not valid..
+        /// </summary>
+        internal static string BookFormatNotValid {
+            get {
+                return ResourceManager.GetString("BookFormatNotValid", resourceCulture);
             }
         }
         
@@ -826,6 +844,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Title not valid..
+        /// </summary>
+        internal static string BookTitleNotValid {
+            get {
+                return ResourceManager.GetString("BookTitleNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book URL.
         /// </summary>
         internal static string BookURL {
@@ -957,6 +984,15 @@ namespace BookCollector.Resources.Localization {
         internal static string CollectionName {
             get {
                 return ResourceManager.GetString("CollectionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection Name not valid!.
+        /// </summary>
+        internal static string CollectionNameNotValid {
+            get {
+                return ResourceManager.GetString("CollectionNameNotValid", resourceCulture);
             }
         }
         
@@ -1429,6 +1465,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Genre Name not valid!.
+        /// </summary>
+        internal static string GenreNameNotValid {
+            get {
+                return ResourceManager.GetString("GenreNameNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genres.
         /// </summary>
         internal static string Genres {
@@ -1650,6 +1695,15 @@ namespace BookCollector.Resources.Localization {
         internal static string LocationName {
             get {
                 return ResourceManager.GetString("LocationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Name not valid!.
+        /// </summary>
+        internal static string LocationNameNotValid {
+            get {
+                return ResourceManager.GetString("LocationNameNotValid", resourceCulture);
             }
         }
         
@@ -2298,6 +2352,15 @@ namespace BookCollector.Resources.Localization {
         internal static string SeriesName {
             get {
                 return ResourceManager.GetString("SeriesName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series Name not valid!.
+        /// </summary>
+        internal static string SeriesNameNotValid {
+            get {
+                return ResourceManager.GetString("SeriesNameNotValid", resourceCulture);
             }
         }
         

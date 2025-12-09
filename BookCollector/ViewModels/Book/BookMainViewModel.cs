@@ -14,77 +14,79 @@ namespace BookCollector.ViewModels.Book
     {
         public BookMainViewModel(BookModel book, ContentPage view)
         {
-            _view = view;
+            View = view;
 
             SelectedBook = book;
             InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book",$"{SelectedBook.BookTitle}")}";
-            AuthorList = new ObservableCollection<AuthorModel>();
         }
 
         public async Task SetViewModelData()
         {
-            try
+            if (SelectedBook != null)
             {
-                SetIsBusyTrue();
-
-                ReadingDataSectionValue = true;
-                ChapterListSectionValue = true;
-                AuthorListSectionValue = true;
-                BookInfoSectionValue = true;
-                SummarySectionValue = true;
-                CommentsSectionValue = true;
-
-                BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
-                ShowUpNext = SelectedBook.BookPageRead == 0;
-
-                if (!string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) && SelectedBook.BookCover == null)
+                try
                 {
-                    var imageBytes = File.ReadAllBytes(SelectedBook.BookCoverFileLocation);
-                    var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                    SelectedBook.BookCover = imageSource;
-                }
+                    SetIsBusyTrue();
 
-                if (!string.IsNullOrEmpty(SelectedBook.BookCoverUrl) && SelectedBook.BookCover == null)
+                    ReadingDataSectionValue = true;
+                    ChapterListSectionValue = true;
+                    AuthorListSectionValue = true;
+                    BookInfoSectionValue = true;
+                    SummarySectionValue = true;
+                    CommentsSectionValue = true;
+
+                    BookIsRead = SelectedBook.BookPageRead == SelectedBook.BookPageTotal && SelectedBook.BookPageTotal != 0;
+                    ShowUpNext = SelectedBook.BookPageRead == 0;
+
+                    if (!string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) && SelectedBook.BookCover == null)
+                    {
+                        var imageBytes = File.ReadAllBytes(SelectedBook.BookCoverFileLocation);
+                        var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                        SelectedBook.BookCover = imageSource;
+                    }
+
+                    if (!string.IsNullOrEmpty(SelectedBook.BookCoverUrl) && SelectedBook.BookCover == null)
+                    {
+                        if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                        {
+                            var byteArray = DownloadImage(SelectedBook.BookCoverUrl);
+                            SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                        }
+                        else
+                        {
+                            await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
+                        }
+                    }
+
+                    BookCover = SelectedBook.BookCover;
+
+                    AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
+
+                    Task.WaitAll(
+                    [
+                        Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(SelectedBook.BookGuid) ),
+                        Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(SelectedBook.BookGenreGuid) ),
+                        Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(SelectedBook.BookLocationGuid) ),
+                        Task.Run (async () => SelectedBook.SetBookCheckpoints() ),
+                        Task.Run (async () => SelectedBook.SetCoverDisplay() ),
+                        Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
+                        Task.Run (async () => await SelectedBook.SetPartOfCollection() ),
+                        Task.Run (async () => await SelectedBook.SetDates() ),
+                        Task.Run (async () => await SelectedBook.SetBookPrice() ),
+                        Task.Run (async () => await ReadingDataChanged() ),
+                        Task.Run (async () => await ChapterListChanged() ),
+                        Task.Run (async () => await AuthorListChanged() ),
+                        Task.Run (async () => await BookInfoChanged() ),
+                        Task.Run (async () => await SummaryChanged() ),
+                        Task.Run (async () => await CommentsChanged() ),
+                    ]);
+
+                    SetIsBusyFalse();
+                }
+                catch (Exception ex)
                 {
-                    if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                    {
-                        var byteArray = new WebClient().DownloadData($"{SelectedBook.BookCoverUrl}");
-                        SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-                    }
-                    else
-                    {
-                        await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
-                    }
+                    SetIsBusyFalse();
                 }
-
-                BookCover = SelectedBook.BookCover;
-
-                AuthorList = !string.IsNullOrEmpty(SelectedBook.AuthorListString) ? ParseOutAuthorsFromString(SelectedBook.AuthorListString) : null;
-
-                Task.WaitAll(
-                [
-                    Task.Run (async () => ChapterList = await FilterLists.GetAllChaptersInBook(SelectedBook.BookGuid) ),
-                    Task.Run (async () => SelectedGenre = await FilterLists.GetGenreForBook(SelectedBook.BookGenreGuid) ),
-                    Task.Run (async () => SelectedLocation = await FilterLists.GetLocationForBook(SelectedBook.BookLocationGuid) ),
-                    Task.Run (async () => await SelectedBook.SetBookCheckpoints() ),
-                    Task.Run (async () => await SelectedBook.SetCoverDisplay() ),
-                    Task.Run (async () => await SelectedBook.SetPartOfSeries() ),
-                    Task.Run (async () => await SelectedBook.SetPartOfCollection() ),
-                    Task.Run (async () => await SelectedBook.SetDates() ),
-                    Task.Run (async () => await SelectedBook.SetBookPrice() ),
-                    Task.Run (async () => await ReadingDataChanged() ),
-                    Task.Run (async () => await ChapterListChanged() ),
-                    Task.Run (async () => await AuthorListChanged() ),
-                    Task.Run (async () => await BookInfoChanged() ),
-                    Task.Run (async () => await SummaryChanged() ),
-                    Task.Run (async () => await CommentsChanged() ),
-                ]);
-
-                SetIsBusyFalse();
-            }
-            catch (Exception ex)
-            {
-                SetIsBusyFalse();
             }
         }
 
@@ -100,51 +102,56 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task EditBook()
         {
-            SetIsBusyTrue();
+            if (SelectedBook != null)
+            {
+                SetIsBusyTrue();
 
-            BookEditView view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)_view);
+                var view = new BookEditView(SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)View);
 
-            await Shell.Current.Navigation.PushAsync(view);
+                await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+                SetIsBusyFalse();
+            }
         }
 
         [RelayCommand]
         public async Task DeleteBook()
         {
-            bool answer = await DeleteCheck(SelectedBook.BookTitle);
-
-            if (answer)
+            if (SelectedBook != null && !string.IsNullOrEmpty(SelectedBook.BookTitle))
             {
-                try
+                var answer = await DeleteCheck(SelectedBook.BookTitle);
+
+                if (answer)
                 {
-                    SetIsBusyTrue();
-
-                    if (TestData.UseTestData)
+                    try
                     {
-                        TestData.DeleteBook(SelectedBook);
+                        SetIsBusyTrue();
+
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteBook(SelectedBook);
+                        }
+                        else
+                        {
+
+                        }
+
+                        await ConfirmDelete(SelectedBook.BookTitle);
+
+                        await Shell.Current.Navigation.PopAsync();
+
+                        SetIsBusyFalse();
                     }
-                    else
+                    catch (Exception ex)
                     {
-
+                        await CanceledAction();
                     }
-
-                    await ConfirmDelete(SelectedBook.BookTitle);
-
-                    await Shell.Current.Navigation.PopAsync();
-
-                    SetIsBusyFalse();
                 }
-                catch (Exception ex)
+                else
                 {
                     await CanceledAction();
                 }
             }
-            else
-            {
-                await CanceledAction();
-            }
-            
         }
     }
 }

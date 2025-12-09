@@ -5,13 +5,15 @@ namespace BookCollector.Views.Author;
 
 public partial class AuthorMainView : ContentPage
 {
-    private AuthorMainViewModel _viewModel;
+    private AuthorMainViewModel ViewModel;
 
     public AuthorMainView(AuthorModel author, string viewTitle)
 	{
-        AuthorMainViewModel viewModel = new AuthorMainViewModel(author, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
+        var viewModel = new AuthorMainViewModel(author, this)
+        {
+            ViewTitle = viewTitle
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -21,6 +23,6 @@ public partial class AuthorMainView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        ViewModel.SetViewModelData();
     }
 }

@@ -4,44 +4,42 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
                x:Class="BookCollector.Views.Popups.BookCoverUrlPopup"
-               CanBeDismissedByTappingOutsideOfPopup="True">
-    
-    <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
-                         Padding="2"
-                         WidthRequest="{Binding PopupWidth}">
-        
-        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+               x:TypeArguments="x:String"
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               WidthRequest="{Binding PopupWidth}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0">
 
-            <Grid Margin="0,10">
+    <VerticalStackLayout>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+        <Grid Margin="0,10">
 
-                <Label Text="{x:Static localization:AppStringResources.BookCoverUrl}"
-                       Style="{DynamicResource Header}"
-                       FontSize="Subtitle"
-                       HorizontalOptions="Center"
-                       VerticalOptions="End"
-                       Grid.Row="0" Grid.Column="0"/>
-                
-                <Button Text="X" 
-                        HorizontalOptions="End"
-                        Margin="10,10,15,0"
-                        Grid.Row="0" Grid.Column="2"
-                        Clicked="OnClose"/>
-            </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-            <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
-                    Text="{Binding BookCoverUrl}"
-                    HorizontalTextAlignment="Center"
-                    AutoSize="TextChanges"
-                    Keyboard="Url"
-                    Margin="20"/> 
+            <Label Text="{x:Static localization:AppStringResources.BookCoverUrl}"
+                   Style="{DynamicResource Header}"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Grid.Row="0" Grid.Column="0"/>
 
-        </VerticalStackLayout>
-        
+            <Button Text="{x:Static localization:AppStringResources.Save}" 
+                    HorizontalOptions="End"
+                    Margin="10,10,15,0"
+                    Grid.Row="0" Grid.Column="2"
+                    Clicked="OnClose"/>
+        </Grid>
+
+        <Editor Placeholder="{x:Static localization:AppStringResources.BookCoverUrl}"
+                Text="{Binding BookCoverUrl}"
+                HorizontalTextAlignment="Center"
+                AutoSize="TextChanges"
+                Keyboard="Url"
+                Margin="20"/> 
+
     </VerticalStackLayout>
-    
+        
 </toolkit:Popup>

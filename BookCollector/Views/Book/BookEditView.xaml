@@ -9,15 +9,8 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:BookEditViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             x:Name="BookEditPage"
              Title="{Binding ViewTitle}">
-
-    <ContentPage.Resources>
-        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
-            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
-            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
-        </Style>
-    </ContentPage.Resources>
-
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
@@ -28,11 +21,10 @@
                      Command="{Binding SaveBookCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
+    <Grid>
 
         <!-- Main Content -->
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+        <StackLayout Grid.Row="0" Grid.Column="0" >
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -75,7 +67,8 @@
                                     <Switch.Behaviors>
                                         <toolkit:EventToCommandBehavior EventName="Toggled"
                                                                         Command="{Binding ReadToggleCommand}"
-                                                                        CommandParameter="{Binding Source={x:Reference ReadToggle}, Path=IsToggled}"/>
+                                                                        CommandParameter="{Binding Source={x:Reference ReadToggle}, Path=IsToggled}"
+                                                                        BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                     </Switch.Behaviors>
                                 </Switch>
                             </VerticalStackLayout>
@@ -88,7 +81,8 @@
                                     Placeholder="{x:Static localization:AppStringResources.BookTitle}"
                                     FontAttributes="Bold"
                                     HorizontalTextAlignment="Center"
-                                    AutoSize="TextChanges">
+                                    AutoSize="TextChanges"
+                                    x:Name="BookTitleEditor">
                                 
                                 <Editor.Keyboard>
                                     <Keyboard x:FactoryMethod="Create">
@@ -99,11 +93,9 @@
                                 </Editor.Keyboard>
 
                                 <Editor.Behaviors>
-                                    <toolkit:TextValidationBehavior x:Name="BookTitleValidator"
-                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                                    MinimumLength="2"
-                                                                    Flags="ValidateOnAttaching,ValidateOnValueChanged"
-                                                                    IsValid="{Binding BookTitleValid}"/>
+                                    <toolkit:EventToCommandBehavior EventName="TextChanged"
+                                                                    Command="{Binding ValidateBookTitleCommand}"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                 </Editor.Behaviors>
                                 
                             </Editor>
@@ -155,13 +147,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding BookInfo1Open}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding BookInfo1NotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -186,7 +178,8 @@
                                             SelectedItem="{Binding EditedBook.BookFormat}">
                                         <Picker.Behaviors>
                                             <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                                            Command="{Binding ValidateBookFormatCommand}"/>
+                                                                            Command="{Binding ValidateBookFormatCommand}"
+                                                                            BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                         </Picker.Behaviors>
                                     </Picker>
                                 </VerticalStackLayout>
@@ -286,13 +279,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}" 
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding ReadingDataOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding ReadingDataNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -314,7 +307,8 @@
                                         <Switch.Behaviors>
                                             <toolkit:EventToCommandBehavior EventName="Toggled"
                                                                             Command="{Binding UpNextToggleCommand}"
-                                                                            CommandParameter="{Binding Source={x:Reference UpNextToggle}, Path=IsToggled}"/>
+                                                                            CommandParameter="{Binding Source={x:Reference UpNextToggle}, Path=IsToggled}"
+                                                                            BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                         </Switch.Behaviors>
                                     </Switch>
                                 </VerticalStackLayout>
@@ -327,12 +321,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     
+                                    <!-- TO DO -->
+                                    <!-- Fix bug, when closing date picker, triggers OnAppearing - 12/8/2025 -->
                                     <!-- Reading Start Date -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">
                                         <Label Text="{x:Static localization:AppStringResources.ReadingStartDate}"
                                                Style="{DynamicResource Header}"/>
-                                        <ndtp:NullableDateTimePicker NullableDateTime="{Binding EditedBook.BookStartDate}"
+                                        <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookStartDate}"
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
@@ -347,7 +343,7 @@
                                                          Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.ReadingEndDate}"
                                                Style="{DynamicResource Header}"/>
-                                        <ndtp:NullableDateTimePicker NullableDateTime="{Binding EditedBook.BookEndDate}"
+                                        <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookEndDate}"
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
@@ -375,7 +371,8 @@
                                                 x:Name="PageTotalEditor">
                                             <Editor.Behaviors>
                                                 <toolkit:EventToCommandBehavior EventName="TextChanged"
-                                                                                Command="{Binding UpdateProgressCommand}"/>
+                                                                                Command="{Binding UpdateProgressCommand}"
+                                                                                BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                             </Editor.Behaviors>
                                         </Editor>
                                     </VerticalStackLayout>
@@ -401,7 +398,8 @@
                                             <Stepper.Behaviors>
                                                 <toolkit:EventToCommandBehavior EventName="ValueChanged"
                                                                                 Command="{Binding StepperValueChangeCommand}"
-                                                                                CommandParameter="{Binding Source={x:Reference PageReadStepper}, Path=Value}"/>
+                                                                                CommandParameter="{Binding Source={x:Reference PageReadStepper}, Path=Value}"
+                                                                                BindingContext="{Binding BindingContext, Source={x:Reference BookEditPage}}"/>
                                             </Stepper.Behaviors>
                                         </Stepper>
                                     </VerticalStackLayout>
@@ -470,13 +468,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding ChapterListOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding ChapterListNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -568,13 +566,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding AuthorListOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding AuthorListNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -673,13 +671,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding BookInfoOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding BookInfoNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -883,7 +881,7 @@
                                                      Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
                                            Style="{DynamicResource Header}"/>
-                                        <ndtp:NullableDateTimePicker NullableDateTime="{Binding EditedBook.BookLoanedOutOn}"
+                                        <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookLoanedOutOn}"
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
@@ -925,13 +923,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding SummaryOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding SummaryNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -978,13 +976,13 @@
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                        IsVisible="{Binding CommentsOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
                                        Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                        IsVisible="{Binding CommentsNotOpen}"
                                        HorizontalOptions="End"
                                        Margin="0,7,10,2"
@@ -1022,16 +1020,15 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <StackLayout IsVisible="{Binding IsBusy}"
-                 AbsoluteLayout.LayoutBounds="0,0,1,1"
-                 AbsoluteLayout.LayoutFlags="All"
-                 BackgroundColor="Gray" Opacity="0.5">
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                       IsVisible="{Binding IsBusy}"
-                       HorizontalOptions="CenterAndExpand"
-                       VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
         <!-- Activity Indicator -->
-    </AbsoluteLayout>
+    </Grid>
 </ContentPage>

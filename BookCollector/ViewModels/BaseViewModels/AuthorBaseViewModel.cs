@@ -33,7 +33,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             if (SelectedAuthor != null)
             {
-                AuthorMainView view = new AuthorMainView(SelectedAuthor, SelectedAuthor.FullName);
+                var view = new AuthorMainView(SelectedAuthor, SelectedAuthor.FullName);
 
                 await Shell.Current.Navigation.PushAsync(view);
                 SelectedAuthor = null;

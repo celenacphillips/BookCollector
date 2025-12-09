@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.WishListBook"
              x:DataType="viewModel:WishListViewModel"
              x:Class="BookCollector.Views.Main.WishListView"
+             x:Name="WishListPage"
              Title="{x:Static localization:AppStringResources.Wishlist}">
 
     <ContentPage.ToolbarItems>
@@ -22,9 +23,10 @@
                      Command="{Binding AddWishListBookCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -45,7 +47,8 @@
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
                                                                     CommandParameter="{Binding SearchString}"
-                                                                    EventName="TextChanged" />
+                                                                    EventName="TextChanged"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference WishListPage}}"/>
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
@@ -57,15 +60,16 @@
             </RefreshView>
         </StackLayout>
 
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <!-- Activity Indicator -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
+        <!-- Activity Indicator -->
+    </Grid>
 </ContentPage>

@@ -21,7 +21,7 @@ namespace BookCollector.Data.Spreadsheet
             var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
 
             // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
-            using (XmlTextWriter writer = new XmlTextWriter(coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+            using (XmlTextWriter writer = new(coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
             {
                 writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
                 writer.Flush();
@@ -46,49 +46,47 @@ namespace BookCollector.Data.Spreadsheet
         #region Write
         public static void WriteToSpreadsheet(string filePath, List<List<string?>> itemsList, string tableName)
         {
-            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(filePath, true))
+            using SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(filePath, true);
+            WorkbookPart workbookPart;
+
+            if (spreadSheet.WorkbookPart == null)
+                workbookPart = spreadSheet.AddWorkbookPart();
+            else
+                workbookPart = spreadSheet.WorkbookPart;
+
+            // Insert a new worksheet.
+            WorksheetPart worksheetPart = InsertWorksheet(workbookPart, tableName);
+            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+            int? rowValue = null;
+
+
+            foreach (var items in itemsList)
             {
-                WorkbookPart workbookPart;
+                rowValue = SetRow(rowValue);
+                string? columnValue = null;
 
-                if (spreadSheet.WorkbookPart == null)
-                    workbookPart = spreadSheet.AddWorkbookPart();
-                else
-                    workbookPart = spreadSheet.WorkbookPart;
+                Row row;
+                row = new Row() { RowIndex = (uint)rowValue };
+                sheetData.Append(row);
 
-                // Insert a new worksheet.
-                WorksheetPart worksheetPart = InsertWorksheet(workbookPart, tableName);
-                SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-
-                int? rowValue = null;
-
-
-                foreach (var items in itemsList)
+                foreach (var item in items)
                 {
-                    rowValue = SetRow(rowValue);
-                    string? columnValue = null;
+                    columnValue = SetNextColumn(columnValue);
 
-                    Row row;
-                    row = new Row() { RowIndex = (uint)rowValue };
-                    sheetData.Append(row);
+                    // Add the cell to the cell table 
+                    Cell? refCell = null;
+                    Cell newCell = new() { CellReference = $"{columnValue}{rowValue}" };
+                    row.InsertBefore(newCell, refCell);
 
-                    foreach (var item in items)
-                    {
-                        columnValue = SetNextColumn(columnValue);
-
-                        // Add the cell to the cell table 
-                        Cell refCell = null;
-                        Cell newCell = new Cell() { CellReference = $"{columnValue}{rowValue}" };
-                        row.InsertBefore(newCell, refCell);
-
-                        // Set the cell value 
-                        newCell.CellValue = new CellValue(item);
-                        newCell.DataType = new EnumValue<CellValues>(CellValues.String);
-                    }
+                    // Set the cell value 
+                    newCell.CellValue = new CellValue(item);
+                    newCell.DataType = new EnumValue<CellValues>(CellValues.String);
                 }
-
-                // Save the new worksheet.
-                worksheetPart.Worksheet.Save();
             }
+
+            // Save the new worksheet.
+            worksheetPart.Worksheet.Save();
         }
 
         // Given a WorkbookPart, inserts a new worksheet.
@@ -104,7 +102,7 @@ namespace BookCollector.Data.Spreadsheet
 
             // Get a unique ID for the new sheet.
             uint sheetId = 1;
-            if (sheets.Elements<Sheet>().Count() > 0)
+            if (sheets.Elements<Sheet>().Any())
             {
                 sheetId = sheets.Elements<Sheet>().Select<Sheet, uint>(s =>
                 {
@@ -118,7 +116,7 @@ namespace BookCollector.Data.Spreadsheet
             }
 
             // Append the new worksheet and associate it with the workbook.
-            Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+            Sheet sheet = new() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
             sheets.Append(sheet);
             workbookPart.Workbook.Save();
 
@@ -128,7 +126,7 @@ namespace BookCollector.Data.Spreadsheet
 
         public static List<List<string>> ReadSpreadSheet(string fileName, string sheetName)
         {
-            List<List<string>> spreadsheetValues = new List<List<string>>();
+            List<List<string>> spreadsheetValues = [];
             // Open the spreadsheet document for read-only access.
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(fileName, false))
             {
@@ -145,61 +143,71 @@ namespace BookCollector.Data.Spreadsheet
                 }
                 // Retrieve a reference to the worksheet part.
                 WorksheetPart worksheetPart = (WorksheetPart)workbookPart!.GetPartById(theSheet.Id!);
-                List<Row?> rows = worksheetPart.Worksheet?.Descendants<Row?>()?.ToList();
+                List<Row?>? rows = worksheetPart.Worksheet?.Descendants<Row?>()?.ToList();
 
                 var columnCount = 0;
 
-                foreach (var row in rows)
+                if (rows != null)
                 {
-                    if (row.RowIndex == 1)
+                    foreach (var row in rows)
                     {
-                        columnCount = row.Descendants<Cell>().Count();
-                    }
-
-                    if (row.RowIndex != 1)
-                    {
-                        List<string> cellValues = new List<string>();
-
-                        var theCells = row.Descendants<Cell>()?.ToList();
-
-                        int columnIndex = 0;
-
-                        // There is a bug here for some books. It will add unnecessary empty cell values between the Image string.
-                        foreach (Cell theCell in theCells)
+                        if (row != null)
                         {
-                            string columnValue = SetCurrentColumn(columnIndex);
-
-                            while (theCell.CellReference != $"{columnValue}{row.RowIndex}")
+                            if (row.RowIndex == 1)
                             {
-                                if (!columnValue.Equals("A"))
+                                columnCount = row.Descendants<Cell>().Count();
+                            }
+
+                            if (row.RowIndex != 1)
+                            {
+                                List<string> cellValues = [];
+
+                                var theCells = row.Descendants<Cell>()?.ToList();
+
+                                int columnIndex = 0;
+
+                                if (theCells != null)
                                 {
-                                    cellValues.Add("");
-                                    columnIndex++;
-                                    columnValue = SetCurrentColumn(columnIndex);
+                                    // TO DO
+                                    // There is a bug here for some books. It will add unnecessary empty cell values between the Image string.
+                                    foreach (Cell theCell in theCells)
+                                    {
+                                        string columnValue = SetCurrentColumn(columnIndex);
+
+                                        while (theCell.CellReference != $"{columnValue}{row.RowIndex}")
+                                        {
+                                            if (!columnValue.Equals("A"))
+                                            {
+                                                cellValues.Add("");
+                                                columnIndex++;
+                                                columnValue = SetCurrentColumn(columnIndex);
+                                            }
+                                            else
+                                            {
+                                                columnValue += "A";
+                                            }
+                                        }
+
+                                        if (theCell.CellReference == $"{columnValue}{row.RowIndex}")
+                                        {
+                                            var cellValue = GetCellValue(theCell, workbookPart);
+                                            cellValues.Add(cellValue);
+                                        }
+
+                                        columnIndex++;
+                                    }
                                 }
-                                else
+
+                                if (cellValues.Count != 0)
                                 {
-                                    columnValue += "A";
+                                    while (cellValues.Count <= columnCount)
+                                    {
+                                        cellValues.Add("");
+                                    }
+
+                                    spreadsheetValues.Add(cellValues);
                                 }
                             }
-
-                            if (theCell.CellReference == $"{columnValue}{row.RowIndex}")
-                            {
-                                var cellValue = GetCellValue(theCell, workbookPart);
-                                cellValues.Add(cellValue);
-                            }
-
-                            columnIndex++;
-                        }
-
-                        if (cellValues.Count != 0)
-                        {
-                            while (cellValues.Count <= columnCount)
-                            {
-                                cellValues.Add("");
-                            }
-
-                            spreadsheetValues.Add(cellValues);
                         }
                     }
                 }
@@ -210,12 +218,11 @@ namespace BookCollector.Data.Spreadsheet
 
         private static string GetCellValue(Cell? theCell, WorkbookPart? workbookPart)
         {
-            string? value = null;
             if (theCell is null || theCell.InnerText.Length < 0)
             {
                 return string.Empty;
             }
-            value = theCell.InnerText;
+            string? value = theCell.InnerText;
             // If the cell represents an integer number, you are done. 
             // For dates, this code returns the serialized value that 
             // represents the date. The code handles strings and 
@@ -229,7 +236,7 @@ namespace BookCollector.Data.Spreadsheet
                 {
                     // For shared strings, look up the value in the
                     // shared strings table.
-                    var stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+                    var stringTable = workbookPart?.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
                     // If the shared string table is missing, something 
                     // is wrong. Return the index that is in
                     // the cell. Otherwise, look up the correct text in 
@@ -241,15 +248,11 @@ namespace BookCollector.Data.Spreadsheet
                 }
                 else if (theCell.DataType.Value == CellValues.Boolean)
                 {
-                    switch (value)
+                    value = value switch
                     {
-                        case "0":
-                            value = "FALSE";
-                            break;
-                        default:
-                            value = "TRUE";
-                            break;
-                    }
+                        "0" => "FALSE",
+                        _ => "TRUE",
+                    };
                 }
             }
 
@@ -267,79 +270,76 @@ namespace BookCollector.Data.Spreadsheet
 
         private static string SetNextColumn(string? input)
         {
-            switch (input)
+            return input switch
             {
-                case "A": return "B";
-                case "B": return "C";
-                case "C": return "D";
-                case "D": return "E";
-                case "E": return "F";
-                case "F": return "G";
-                case "G": return "H";
-                case "H": return "I";
-                case "I": return "J";
-                case "J": return "K";
-                case "K": return "L";
-                case "L": return "M";
-                case "M": return "N";
-                case "N": return "O";
-                case "O": return "P";
-                case "P": return "Q";
-                case "Q": return "R";
-                case "R": return "S";
-                case "S": return "T";
-                case "T": return "U";
-                case "U": return "V";
-                case "V": return "W";
-                case "W": return "X";
-                case "X": return "Y";
-                case "Y": return "Z";
-                case "Z": return "AA";
-                default: return "A";
-            }
+                "A" => "B",
+                "B" => "C",
+                "C" => "D",
+                "D" => "E",
+                "E" => "F",
+                "F" => "G",
+                "G" => "H",
+                "H" => "I",
+                "I" => "J",
+                "J" => "K",
+                "K" => "L",
+                "L" => "M",
+                "M" => "N",
+                "N" => "O",
+                "O" => "P",
+                "P" => "Q",
+                "Q" => "R",
+                "R" => "S",
+                "S" => "T",
+                "T" => "U",
+                "U" => "V",
+                "V" => "W",
+                "W" => "X",
+                "X" => "Y",
+                "Y" => "Z",
+                "Z" => "AA",
+                _ => "A",
+            };
         }
 
         private static string SetCurrentColumn(int input)
         {
             var convertedInput = input;
-            var output = string.Empty;
-
             if (input > 26)
             {
                 double convert = ((double)input % (double)26) - 1;
                 convertedInput = (int)convert;
             }
 
-            switch (convertedInput)
+            string? output = convertedInput switch
             {
-                case 1: output = "B"; break;
-                case 2: output = "C"; break;
-                case 3: output = "D"; break;
-                case 4: output = "E"; break;
-                case 5: output = "F"; break;
-                case 6: output = "G"; break;
-                case 7: output = "H"; break;
-                case 8: output = "I"; break;
-                case 9: output = "J"; break;
-                case 10: output = "K"; break;
-                case 11: output = "L"; break;
-                case 12: output = "M"; break;
-                case 13: output = "N"; break;
-                case 14: output = "O"; break;
-                case 15: output = "P"; break;
-                case 16: output = "Q"; break;
-                case 17: output = "R"; break;
-                case 18: output = "S"; break;
-                case 19: output = "T"; break;
-                case 20: output = "U"; break;
-                case 21: output = "V"; break;
-                case 22: output = "W"; break;
-                case 23: output = "X"; break;
-                case 24: output = "Y"; break;
-                case 25: case -1: output = "Z"; break;
-                default: output = "A"; break;
-            }
-
+                1 => "B",
+                2 => "C",
+                3 => "D",
+                4 => "E",
+                5 => "F",
+                6 => "G",
+                7 => "H",
+                8 => "I",
+                9 => "J",
+                10 => "K",
+                11 => "L",
+                12 => "M",
+                13 => "N",
+                14 => "O",
+                15 => "P",
+                16 => "Q",
+                17 => "R",
+                18 => "S",
+                19 => "T",
+                20 => "U",
+                21 => "V",
+                22 => "W",
+                23 => "X",
+                24 => "Y",
+                25 or -1 => "Z",
+                _ => "A",
+            };
             if (input > 26)
                 output = $"A{output}";
 

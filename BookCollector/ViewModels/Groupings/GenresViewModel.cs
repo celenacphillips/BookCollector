@@ -7,6 +7,7 @@ using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Genre;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,7 +31,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public GenresViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
             InfoText = $"{AppStringResources.GenreView_InfoText}";
             ViewTitle = AppStringResources.Genres;
@@ -49,30 +50,33 @@ namespace BookCollector.ViewModels.Groupings
                     Task.Run (async () => FullGenreList = await FilterLists.GetAllGenresList(ShowHiddenGenres) ),
                 ]);
 
-                TotalGenresCount = FullGenreList.Count;
-
-                FilteredGenreList = FullGenreList;
-
-                foreach (var genre in FullGenreList)
+                if (FullGenreList != null)
                 {
-                    genre.SetTotalBooks(ShowHiddenBook);
+                    TotalGenresCount = FullGenreList.Count;
+
+                    FilteredGenreList = FullGenreList;
+
+                    foreach (var genre in FullGenreList)
+                    {
+                        await genre.SetTotalBooks(ShowHiddenBook);
+                    }
+
+                    Task.WaitAll(
+                    [
+                        Task.Run (async () => FilteredGenreList = await FilterLists.SortGenresList(FilteredGenreList,
+                                                                                                   GenreNameChecked,
+                                                                                                   TotalBooksChecked,
+                                                                                                   TotalPriceChecked,
+                                                                                                   AscendingChecked,
+                                                                                                   DescendingChecked) ),
+                    ]);
+
+                    FilteredGenresCount = FilteredGenreList.Count;
+
+                    TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
+
+                    ShowCollectionViewFooter = FilteredGenresCount > 0;
                 }
-
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FilteredGenreList = await FilterLists.SortGenresList(FilteredGenreList,
-                                                                                               GenreNameChecked,
-                                                                                               TotalBooksChecked,
-                                                                                               TotalPriceChecked,
-                                                                                               AscendingChecked,
-                                                                                               DescendingChecked) ),
-                ]);
-
-                FilteredGenresCount = FilteredGenreList.Count;
-
-                TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
-
-                ShowCollectionViewFooter = FilteredGenresCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -83,20 +87,23 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async Task SearchOnGenre(string? input)
+        public void SearchOnGenre(string? input)
         {
             SetIsBusyTrue();
 
             SearchString = input;
 
-            if (!string.IsNullOrEmpty(SearchString))
-                FilteredGenreList = FilteredGenreList.Where(x => x.GenreName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-            else
-                FilteredGenreList = FullGenreList;
+            if (FilteredGenreList != null)
+            {
+                if (!string.IsNullOrEmpty(SearchString))
+                    FilteredGenreList = FilteredGenreList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                else
+                    FilteredGenreList = FullGenreList;
 
-            FilteredGenresCount = FilteredGenreList.Count;
+                FilteredGenresCount = FilteredGenreList != null ? FilteredGenreList.Count : 0;
 
-            TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
+                TotalGenresString = StringManipulation.SetTotalGenresString(FilteredGenresCount, TotalGenresCount);
+            }
 
             SetIsBusyFalse();
         }
@@ -104,21 +111,24 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuGenre(Guid? input)
         {
-            var selected = FilteredGenreList.FirstOrDefault(x => x.GenreGuid == input);
-            string? action = await PopupMenu(selected.GenreName);
-
-            switch (action)
+            if (FilteredGenreList != null)
             {
-                case "Edit":
-                    await EditGenre(selected);
-                    break;
+                var selected = FilteredGenreList.FirstOrDefault(x => x.GenreGuid == input);
 
-                case "Delete":
-                    await DeleteGenre(selected);
-                    break;
+                if (selected != null && !string.IsNullOrEmpty(selected.GenreName))
+                {
+                    var action = await PopupMenu(selected.GenreName);
 
-                default:
-                    break;
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                    {
+                        await EditGenre(selected);
+                    }
+
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
+                    {
+                        await DeleteGenre(selected);
+                    }
+                }
             }
         }
 
@@ -135,7 +145,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}", true);
+            var view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -147,7 +157,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            GenreEditView view = new GenreEditView(selected, $"{AppStringResources.EditGenre}", true);
+            var view = new GenreEditView(selected, $"{AppStringResources.EditGenre}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -157,60 +167,66 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task DeleteGenre(GenreModel selected)
         {
-            bool answer = await DeleteCheck(selected.GenreName);
-
-            if (answer)
+            if (!string.IsNullOrEmpty(selected.GenreName))
             {
-                try
+                var answer = await DeleteCheck(selected.GenreName);
+
+                if (answer)
                 {
-                    SetIsBusyTrue();
-
-                    if (TestData.UseTestData)
+                    try
                     {
-                        TestData.DeleteGenre(selected);
+                        SetIsBusyTrue();
+
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteGenre(selected);
+                        }
+                        else
+                        {
+
+                        }
+
+                        await ConfirmDelete(selected.GenreName);
+
+                        await SetViewModelData();
+
+                        SetIsBusyFalse();
                     }
-                    else
+                    catch (Exception ex)
                     {
-
+                        await CanceledAction();
                     }
-
-                    await ConfirmDelete(selected.GenreName);
-
-                    await SetViewModelData();
-
-                    SetIsBusyFalse();
                 }
-                catch (Exception ex)
+                else
                 {
                     await CanceledAction();
                 }
-            }
-            else
-            {
-                await CanceledAction();
             }
         }
 
         [RelayCommand]
         public async Task SortPopup()
         {
-            var popup = new SortPopup();
-            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            if (!string.IsNullOrEmpty(ViewTitle))
             {
-                GenreNameVisible = true,
-                GenreNameChecked = GenreNameChecked,
-                TotalBooksVisible = true,
-                TotalBooksChecked = TotalBooksChecked,
-                TotalPriceVisible = true,
-                TotalPriceChecked = TotalPriceChecked,
-                AscendingChecked = AscendingChecked,
-                DescendingChecked = DescendingChecked,
-            };
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, ViewTitle)
+                {
+                    GenreNameVisible = true,
+                    GenreNameChecked = GenreNameChecked,
+                    TotalBooksVisible = true,
+                    TotalBooksChecked = TotalBooksChecked,
+                    TotalPriceVisible = true,
+                    TotalPriceChecked = TotalPriceChecked,
+                    AscendingChecked = AscendingChecked,
+                    DescendingChecked = DescendingChecked,
+                };
 
-            popup.BindingContext = viewModel;
+                popup.BindingContext = viewModel;
 
-            await _view.ShowPopupAsync(popup);
-            await SetViewModelData();
+                await View.ShowPopupAsync(popup);
+                await SetViewModelData();
+            }
         }
 
         private void GetPreferences()

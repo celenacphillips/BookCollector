@@ -25,15 +25,12 @@ namespace BookCollector.ViewModels.BaseViewModels
         [ObservableProperty]
         public static ObservableCollection<LocationModel>? filteredLocationList;
 
-        [ObservableProperty]
-        public LocationModel? selectedLocation;
-
         [RelayCommand]
         public async Task LocationSelectionChanged()
         {
-            if (SelectedLocation != null)
+            if (SelectedLocation != null && !string.IsNullOrEmpty(SelectedLocation.LocationName))
             {
-                LocationMainView view = new LocationMainView(SelectedLocation, SelectedLocation.LocationName);
+                var view = new LocationMainView(SelectedLocation, SelectedLocation.LocationName);
 
                 await Shell.Current.Navigation.PushAsync(view);
                 SelectedLocation = null;

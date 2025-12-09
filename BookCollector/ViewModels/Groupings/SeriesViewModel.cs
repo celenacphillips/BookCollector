@@ -7,6 +7,7 @@ using BookCollector.ViewModels.Series;
 using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,7 +31,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public SeriesViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
             InfoText = $"{AppStringResources.SeriesView_InfoText}";
             ViewTitle = AppStringResources.Series;
@@ -49,30 +50,33 @@ namespace BookCollector.ViewModels.Groupings
                     Task.Run (async () => FullSeriesList = await FilterLists.GetAllSeriesList(ShowHiddenSeries) ),
                 ]);
 
-                TotalSeriesCount = FullSeriesList.Count;
-
-                FilteredSeriesList = FullSeriesList;
-
-                foreach (var series in FullSeriesList)
+                if (FullSeriesList != null)
                 {
-                    series.SetTotalBooks(ShowHiddenBook);
+                    TotalSeriesCount = FullSeriesList.Count;
+
+                    FilteredSeriesList = FullSeriesList;
+
+                    foreach (var series in FullSeriesList)
+                    {
+                        await series.SetTotalBooks(ShowHiddenBook);
+                    }
+
+                    Task.WaitAll(
+                    [
+                        Task.Run (async () => FilteredSeriesList = await FilterLists.SortSeriesList(FilteredSeriesList,
+                                                                                                    SeriesNameChecked,
+                                                                                                    TotalBooksChecked,
+                                                                                                    TotalPriceChecked,
+                                                                                                    AscendingChecked,
+                                                                                                    DescendingChecked) ),
+                    ]);
+
+                    FilteredSeriesCount = FilteredSeriesList.Count;
+
+                    TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
+
+                    ShowCollectionViewFooter = FilteredSeriesCount > 0;
                 }
-
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FilteredSeriesList = await FilterLists.SortSeriesList(FilteredSeriesList,
-                                                                                                SeriesNameChecked,
-                                                                                                TotalBooksChecked,
-                                                                                                TotalPriceChecked,
-                                                                                                AscendingChecked,
-                                                                                                DescendingChecked) ),
-                ]);
-
-                FilteredSeriesCount = FilteredSeriesList.Count;
-
-                TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
-
-                ShowCollectionViewFooter = FilteredSeriesCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -83,20 +87,23 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async Task SearchOnSeries(string? input)
+        public void SearchOnSeries(string? input)
         {
             SetIsBusyTrue();
 
             SearchString = input;
 
-            if (!string.IsNullOrEmpty(SearchString))
-                FilteredSeriesList = FilteredSeriesList.Where(x => x.SeriesName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-            else
-                FilteredSeriesList = FullSeriesList;
+            if (FilteredSeriesList != null)
+            {
+                if (!string.IsNullOrEmpty(SearchString))
+                    FilteredSeriesList = FilteredSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                else
+                    FilteredSeriesList = FullSeriesList;
 
-            FilteredSeriesCount = FilteredSeriesList.Count;
+                FilteredSeriesCount = FilteredSeriesList != null ? FilteredSeriesList.Count : 0;
 
-            TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
+                TotalSeriesString = StringManipulation.SetTotalSeriesString(FilteredSeriesCount, TotalSeriesCount);
+            }
 
             SetIsBusyFalse();
         }
@@ -104,21 +111,24 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuSeries(Guid? input)
         {
-            var selected = FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
-            string? action = await PopupMenu(selected.SeriesName);
-
-            switch (action)
+            if (FilteredSeriesList != null)
             {
-                case "Edit":
-                    await EditSeries(selected);
-                    break;
+                var selected = FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
 
-                case "Delete":
-                    await DeleteSeries(selected);
-                    break;
+                if (selected != null && !string.IsNullOrEmpty(selected.SeriesName))
+                {
+                    var action = await PopupMenu(selected.SeriesName);
 
-                default:
-                    break;
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                    {
+                        await EditSeries(selected);
+                    }
+
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
+                    {
+                        await DeleteSeries(selected);
+                    }
+                }
             }
         }
 
@@ -135,7 +145,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}", true);
+            var view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -147,7 +157,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            SeriesEditView view = new SeriesEditView(selected, $"{AppStringResources.EditSeries}", true);
+            var view = new SeriesEditView(selected, $"{AppStringResources.EditSeries}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -157,61 +167,67 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task DeleteSeries(SeriesModel selected)
         {
-            bool answer = await DeleteCheck(selected.SeriesName);
-
-            if (answer)
+            if (!string.IsNullOrEmpty(selected.SeriesName))
             {
-                try
+                var answer = await DeleteCheck(selected.SeriesName);
+
+                if (answer)
                 {
-                    SetIsBusyTrue();
-
-                    if (TestData.UseTestData)
+                    try
                     {
-                        TestData.DeleteSeries(selected);
+                        SetIsBusyTrue();
+
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteSeries(selected);
+                        }
+                        else
+                        {
+
+                        }
+
+                        await ConfirmDelete(selected.SeriesName);
+
+                        await SetViewModelData();
+
+                        SetIsBusyFalse();
+
                     }
-                    else
+                    catch (Exception ex)
                     {
-
+                        await CanceledAction();
                     }
-
-                    await ConfirmDelete(selected.SeriesName);
-
-                    await SetViewModelData();
-
-                    SetIsBusyFalse();
-
                 }
-                catch (Exception ex)
+                else
                 {
                     await CanceledAction();
                 }
-            }
-            else
-            {
-                await CanceledAction();
             }
         }
 
         [RelayCommand]
         public async Task SortPopup()
         {
-            var popup = new SortPopup();
-            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            if (!string.IsNullOrEmpty(ViewTitle))
             {
-                SeriesNameVisible = true,
-                SeriesNameChecked = SeriesNameChecked,
-                TotalBooksVisible = true,
-                TotalBooksChecked = TotalBooksChecked,
-                TotalPriceVisible = true,
-                TotalPriceChecked = TotalPriceChecked,
-                AscendingChecked = AscendingChecked,
-                DescendingChecked = DescendingChecked,
-            };
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, ViewTitle)
+                {
+                    SeriesNameVisible = true,
+                    SeriesNameChecked = SeriesNameChecked,
+                    TotalBooksVisible = true,
+                    TotalBooksChecked = TotalBooksChecked,
+                    TotalPriceVisible = true,
+                    TotalPriceChecked = TotalPriceChecked,
+                    AscendingChecked = AscendingChecked,
+                    DescendingChecked = DescendingChecked,
+                };
 
-            popup.BindingContext = viewModel;
+                popup.BindingContext = viewModel;
 
-            await _view.ShowPopupAsync(popup);
-            await SetViewModelData();
+                await View.ShowPopupAsync(popup);
+                await SetViewModelData();
+            }
         }
 
         private void GetPreferences()

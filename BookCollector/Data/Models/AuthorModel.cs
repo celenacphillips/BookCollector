@@ -10,9 +10,9 @@ namespace BookCollector.Data.Models
         public Guid? AuthorGuid { get; set; }
 
         [ObservableProperty]
-        public string firstName;
+        public string? firstName;
         [ObservableProperty]
-        public string lastName;
+        public string? lastName;
         [ObservableProperty]
         public string? totalBooksString;
         [ObservableProperty]
@@ -33,6 +33,8 @@ namespace BookCollector.Data.Models
         }
 
         public int AuthorTotalBooks { get; set; }
+        // TO DO
+        // Set value - 12/8/2025
         public double TotalCostOfBooks { get; set; }
 
         public object Clone()

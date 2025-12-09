@@ -1,12 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using BookCollector.ViewModels.BaseViewModels;
+using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net;
 
 namespace BookCollector.Data.BookAPI
 {
-    public class GoogleBooksAPI
+    public class GoogleBooksAPI : BaseViewModel
     {
-        public static async Task<(ObservableCollection<Item>, int)> SearchAsync(string input)
+        public static (ObservableCollection<Item>?, int) Search(string input)
         {
             HttpClient client = new()
             {
@@ -33,37 +34,40 @@ namespace BookCollector.Data.BookAPI
 
                         if (isbnResponse != null)
                         {
-                            isbnItems = [.. isbnResponse.items];
-                            totalItems = isbnResponse.totalItems;
+                            isbnItems = isbnResponse.Items != null ? [.. isbnResponse.Items] : null;
+                            totalItems = isbnResponse.TotalItems;
 
                             if (totalItems == 0)
                                 throw new Exception();
 
-                            foreach (var item in isbnItems)
+                            if (isbnItems != null)
                             {
-                                if (item.VolumeInfo.ImageLinks != null &&
-                                    item.VolumeInfo.ImageLinks.thumbnail != null)
+                                foreach (var item in isbnItems)
                                 {
-                                    item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.thumbnail}.jpg";
-                                    var byteArray = new WebClient().DownloadData($"{item.VolumeInfo.ImageLinks.thumbnail}.jpg");
-                                    item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
-                                    item.VolumeInfo.HasBookCover = true;
-                                }
-                                else
-                                    item.VolumeInfo.HasBookCover = false;
-
-                                item.VolumeInfo.HasNoBookCover = !item.VolumeInfo.HasBookCover;
-
-                                if (item.VolumeInfo.Authors != null && item.VolumeInfo.Authors.Count != 0)
-                                {
-                                    item.VolumeInfo.AuthorList = string.Empty;
-
-                                    for (int i = 0; i < item.VolumeInfo.Authors.Count; i++)
+                                    if (item.VolumeInfo?.ImageLinks != null &&
+                                        item.VolumeInfo.ImageLinks.Thumbnail != null)
                                     {
-                                        item.VolumeInfo.AuthorList += $"{item.VolumeInfo.Authors[i]}";
+                                        item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.Thumbnail}.jpg";
+                                        var byteArray = DownloadImage($"{item.VolumeInfo.ImageLinks.Thumbnail}.jpg");
+                                        item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                                        item.VolumeInfo.HasBookCover = true;
+                                    }
+                                    else
+                                        item.VolumeInfo?.HasBookCover = false;
 
-                                        if (i != item.VolumeInfo.Authors.Count - 1)
-                                            item.VolumeInfo.AuthorList += ", ";
+                                    item.VolumeInfo?.HasNoBookCover = !item.VolumeInfo.HasBookCover;
+
+                                    if (item.VolumeInfo?.Authors != null && item.VolumeInfo.Authors.Count != 0)
+                                    {
+                                        item.VolumeInfo.AuthorList = string.Empty;
+
+                                        for (int i = 0; i < item.VolumeInfo.Authors.Count; i++)
+                                        {
+                                            item.VolumeInfo.AuthorList += $"{item.VolumeInfo.Authors[i]}";
+
+                                            if (i != item.VolumeInfo.Authors.Count - 1)
+                                                item.VolumeInfo.AuthorList += ", ";
+                                        }
                                     }
                                 }
                             }
@@ -78,13 +82,11 @@ namespace BookCollector.Data.BookAPI
                 }
                 catch (Exception ex)
                 {
-                    //await Shell.Current.DisplayAlert(null, AppResources.ErrorSearchingForBook, AppResources.OK);
                     return (null, 0);
                 }
             }
             else
             {
-                //await Shell.Current.DisplayAlert(response.ReasonPhrase, AppResources.ErrorSearchingForBook, AppResources.OK);
                 return (null, 0);
             }
         }

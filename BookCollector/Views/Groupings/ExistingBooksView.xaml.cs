@@ -4,13 +4,15 @@ namespace BookCollector.Views.Groupings;
 
 public partial class ExistingBooksView : ContentPage
 {
-    private ExistingBooksViewModel _viewModel;
+    private ExistingBooksViewModel ViewModel;
 
     public ExistingBooksView(object selected, string viewTitle)
 	{
-        ExistingBooksViewModel viewModel = new ExistingBooksViewModel(selected, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
+        var viewModel = new ExistingBooksViewModel(selected, this)
+        {
+            ViewTitle = viewTitle
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -20,6 +22,6 @@ public partial class ExistingBooksView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

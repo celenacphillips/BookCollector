@@ -4,12 +4,12 @@ namespace BookCollector.Views.Groupings;
 
 public partial class AuthorsView : ContentPage
 {
-    private AuthorsViewModel _viewModel { get; set; }
+    private AuthorsViewModel ViewModel { get; set; }
 
     public AuthorsView()
 	{
-        AuthorsViewModel viewModel = new AuthorsViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new AuthorsViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class AuthorsView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

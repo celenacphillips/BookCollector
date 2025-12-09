@@ -4,12 +4,12 @@ namespace BookCollector.Views.Main;
 
 public partial class WishListView : ContentPage
 {
-	private WishListViewModel _viewModel { get; set; }
+	private WishListViewModel ViewModel { get; set; }
 
-	public WishListView()
+    public WishListView()
 	{
-		WishListViewModel viewModel = new WishListViewModel(this);
-		_viewModel = viewModel;
+		var viewModel = new WishListViewModel(this);
+		ViewModel = viewModel;
 		BindingContext = viewModel;
 
 		InitializeComponent();
@@ -19,6 +19,6 @@ public partial class WishListView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

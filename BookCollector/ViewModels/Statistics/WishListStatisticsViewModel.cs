@@ -15,7 +15,7 @@ namespace BookCollector.ViewModels.Statistics
     {
         public WishListStatisticsViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             MaxListNumber = 5;
         }
 
@@ -29,11 +29,11 @@ namespace BookCollector.ViewModels.Statistics
 
                 GetColors();
 
-                List<CountModel> seriesCounts = new List<CountModel>();
-                List<CountModel> authorCounts = new List<CountModel>();
-                List<CountModel> locationCounts = new List<CountModel>();
-                List<CountModel> formatCounts = new List<CountModel>();
-                List<CountModel> formatPriceCounts = new List<CountModel>();
+                List<CountModel> seriesCounts = [];
+                List<CountModel> authorCounts = [];
+                List<CountModel> locationCounts = [];
+                List<CountModel> formatCounts = [];
+                List<CountModel> formatPriceCounts = [];
 
                 Task.WaitAll(
                 [
@@ -84,11 +84,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowSeries(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowSeries)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -107,7 +107,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -133,11 +133,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowAuthors(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowAuthors)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -156,7 +156,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -182,11 +182,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowLocations(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowLocations)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -205,7 +205,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -232,11 +232,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowFormats(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowFormats)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = 5;
 
@@ -248,7 +248,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -274,18 +274,18 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowFormatPrices(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowFormatPrices)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = (float)counts[i].CountDouble
                         });

@@ -5,14 +5,16 @@ namespace BookCollector.Views.Location;
 
 public partial class LocationEditView : ContentPage
 {
-    private LocationEditViewModel _viewModel { get; set; }
+    private LocationEditViewModel ViewModel { get; set; }
 
     public LocationEditView(LocationModel location, string viewTitle, bool insertMainViewBefore = false)
 	{
-        LocationEditViewModel viewModel = new LocationEditViewModel(location, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.InsertMainViewBefore = insertMainViewBefore;
-        _viewModel = viewModel;
+        var viewModel = new LocationEditViewModel(location, this)
+        {
+            ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -22,6 +24,6 @@ public partial class LocationEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

@@ -7,6 +7,7 @@ using BookCollector.Views;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -36,7 +37,7 @@ namespace BookCollector.ViewModels.Book
 
         public BookSearchViewModel(string? inputIsbn, ContentPage view)
         {
-            _view = view;
+            View = view;
             Input = inputIsbn;
             TotalItemsString = $"{AppStringResources.TotalItems}: ";
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
@@ -72,7 +73,7 @@ namespace BookCollector.ViewModels.Book
             {
                 try
                 {
-                    var (items, totalItems) = await GoogleBooksAPI.SearchAsync(Input);
+                    var (items, totalItems) = GoogleBooksAPI.Search(Input);
 
                     SetIsBusyFalse();
 
@@ -108,12 +109,14 @@ namespace BookCollector.ViewModels.Book
 #if ANDROID
             Methods.SetSupportBarcodeFormat(BarcodeFormats.All);
 
-            bool allowed = await Methods.AskForRequiredPermission();
+            var allowed = await Methods.AskForRequiredPermission();
 
             if (allowed)
             {
-                BookScanView view = new();
-                view.ReturnViewModel = this;
+                BookScanView view = new()
+                {
+                    ReturnViewModel = this
+                };
 
                 await Shell.Current.Navigation.PushModalAsync(view);
             }
@@ -139,10 +142,10 @@ namespace BookCollector.ViewModels.Book
         }
 
         [RelayCommand]
-        public async Task BookSearch_BookCoverPopup(ImageSource imageSource)
+        public void BookSearch_BookCoverPopup(ImageSource imageSource)
         {
             BookCover = imageSource;
-            _view.ShowPopup(new BookCoverPopup());
+            View.ShowPopup(new BookCoverPopup(BookCover));
         }
 
         private void SetData()
@@ -164,7 +167,7 @@ namespace BookCollector.ViewModels.Book
             {
                 if (string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation) || string.IsNullOrEmpty(SelectedBook.BookCoverFileLocation))
                 {
-                    if (SelectedISBNItem.VolumeInfo.ImageLinks != null)
+                    if (SelectedISBNItem.VolumeInfo?.ImageLinks != null)
                     {
                         SelectedBook.HasBookCover = true;
                         SelectedBook.BookCoverUrl = SelectedISBNItem.VolumeInfo.ImageLinks.ImageURL;
@@ -177,22 +180,22 @@ namespace BookCollector.ViewModels.Book
 
                 if (string.IsNullOrEmpty(SelectedBook.BookTitle))
                 {
-                    SelectedBook.BookTitle = SelectedISBNItem.VolumeInfo.Title;
+                    SelectedBook.BookTitle = SelectedISBNItem.VolumeInfo?.Title;
 
-                    if (!string.IsNullOrEmpty(SelectedISBNItem.VolumeInfo.Subtitle))
+                    if (!string.IsNullOrEmpty(SelectedISBNItem.VolumeInfo?.Subtitle))
                         SelectedBook.BookTitle += $": {SelectedISBNItem.VolumeInfo.Subtitle}";
                 }
 
                 if (string.IsNullOrEmpty(SelectedBook.AuthorListString))
                 {
-                    if (SelectedISBNItem.VolumeInfo.Authors != null)
+                    if (SelectedISBNItem.VolumeInfo?.Authors != null)
                     {
-                        List<AuthorModel> authorList = new List<AuthorModel>();
+                        List<AuthorModel> authorList = [];
 
                         foreach (var author in SelectedISBNItem.VolumeInfo.Authors)
                         {
                             string firstName = author[..author.LastIndexOf(' ')];
-                            string lastName = author[(author.LastIndexOf(" ") + 1)..];
+                            string lastName = author[(author.LastIndexOf(' ') + 1)..];
 
                             authorList.Add(
                                 new AuthorModel()
@@ -202,36 +205,36 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
-                        SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
+                        var _ = SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
                     }
                 }
 
                 if (string.IsNullOrEmpty(SelectedBook.BookPublisher))
                 {
-                    SelectedBook.BookPublisher = SelectedISBNItem.VolumeInfo.Publisher;
+                    SelectedBook.BookPublisher = SelectedISBNItem.VolumeInfo?.Publisher;
                 }
 
                 if (string.IsNullOrEmpty(SelectedBook.BookPublishYear))
                 {
-                    if (SelectedISBNItem.VolumeInfo.PublishedDate.Contains("-"))
-                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo.PublishedDate.Substring(0, SelectedISBNItem.VolumeInfo.PublishedDate.IndexOf("-"));
+                    if (!string.IsNullOrEmpty(SelectedISBNItem.VolumeInfo?.PublishedDate) && SelectedISBNItem.VolumeInfo.PublishedDate.Contains('-'))
+                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo.PublishedDate[..SelectedISBNItem.VolumeInfo.PublishedDate.IndexOf('-')];
                     else
-                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo.PublishedDate;
+                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo?.PublishedDate;
                 }
 
                 if (SelectedBook.BookPageTotal <= 0)
                 {
-                    SelectedBook.BookPageTotal = SelectedISBNItem.VolumeInfo.PageCount;
+                    SelectedBook.BookPageTotal = (int)SelectedISBNItem.VolumeInfo?.PageCount;
                 }
 
                 if (string.IsNullOrEmpty(SelectedBook.BookSummary))
                 {
-                    SelectedBook.BookSummary = SelectedISBNItem.VolumeInfo.Description;
+                    SelectedBook.BookSummary = SelectedISBNItem.VolumeInfo?.Description;
                 }
 
                 if (string.IsNullOrEmpty(SelectedBook.BookLanguage))
                 {
-                    if (SelectedISBNItem.VolumeInfo.Language.Equals("en"))
+                    if (!string.IsNullOrEmpty(SelectedISBNItem.VolumeInfo?.Language) &&SelectedISBNItem.VolumeInfo.Language.Equals("en"))
                         SelectedBook.BookLanguage = $"{AppStringResources.English}";
                 }
 

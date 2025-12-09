@@ -5,14 +5,16 @@ namespace BookCollector.Views.Collection;
 
 public partial class CollectionEditView : ContentPage
 {
-	private CollectionEditViewModel _viewModel {  get; set; }
+	private CollectionEditViewModel ViewModel {  get; set; }
 
     public CollectionEditView(CollectionModel collection, string viewTitle, bool insertMainViewBefore = false)
 	{
-        CollectionEditViewModel viewModel = new CollectionEditViewModel(collection, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.InsertMainViewBefore = insertMainViewBefore;
-        _viewModel = viewModel;
+        var viewModel = new CollectionEditViewModel(collection, this)
+        {
+            ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -22,6 +24,6 @@ public partial class CollectionEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

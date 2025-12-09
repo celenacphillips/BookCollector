@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace BookCollector.Data
 {
-    internal class StringManipulation
+    public class StringManipulation
     {
         public static string SetTotalBooksString(int filteredCount, int totalCount)
         {

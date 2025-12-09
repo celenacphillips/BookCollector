@@ -4,11 +4,11 @@ namespace BookCollector.Views.Library;
 
 public partial class AllBooksView : ContentPage
 {
-    private AllBooksViewModel _viewModel { get; set; }
-	public AllBooksView()
+    private AllBooksViewModel ViewModel { get; set; }
+    public AllBooksView()
 	{
-        AllBooksViewModel viewModel = new AllBooksViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new AllBooksViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -18,6 +18,6 @@ public partial class AllBooksView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

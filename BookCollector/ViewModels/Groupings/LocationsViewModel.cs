@@ -7,6 +7,7 @@ using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,7 +31,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public LocationsViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             CollectionViewHeight = DeviceHeight - DoubleMenuBar;
             InfoText = $"{AppStringResources.LocationView_InfoText}";
             ViewTitle = AppStringResources.Locations;
@@ -49,30 +50,33 @@ namespace BookCollector.ViewModels.Groupings
                     Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(ShowHiddenLocations) ),
                 ]);
 
-                TotalLocationsCount = FullLocationList.Count;
-
-                FilteredLocationList = FullLocationList;
-
-                foreach (var location in FullLocationList)
+                if (FullLocationList != null)
                 {
-                    location.SetTotalBooks(ShowHiddenBook);
+                    TotalLocationsCount = FullLocationList.Count;
+
+                    FilteredLocationList = FullLocationList;
+
+                    foreach (var location in FullLocationList)
+                    {
+                        await location.SetTotalBooks(ShowHiddenBook);
+                    }
+
+                    Task.WaitAll(
+                    [
+                        Task.Run (async () => FilteredLocationList = await FilterLists.SortLocationsList(FilteredLocationList,
+                                                                                                         LocationNameChecked,
+                                                                                                         TotalBooksChecked,
+                                                                                                         TotalPriceChecked,
+                                                                                                         AscendingChecked,
+                                                                                                         DescendingChecked) ),
+                    ]);
+
+                    FilteredLocationsCount = FilteredLocationList.Count;
+
+                    TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+
+                    ShowCollectionViewFooter = FilteredLocationsCount > 0;
                 }
-
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FilteredLocationList = await FilterLists.SortLocationsList(FilteredLocationList,
-                                                                                                     LocationNameChecked,
-                                                                                                     TotalBooksChecked,
-                                                                                                     TotalPriceChecked,
-                                                                                                     AscendingChecked,
-                                                                                                     DescendingChecked) ),
-                ]);
-
-                FilteredLocationsCount = FilteredLocationList.Count;
-
-                TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
-
-                ShowCollectionViewFooter = FilteredLocationsCount > 0;
 
                 SetIsBusyFalse();
             }
@@ -83,20 +87,23 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async Task SearchOnLocation(string? input)
+        public void SearchOnLocation(string? input)
         {
             SetIsBusyTrue();
 
             SearchString = input;
 
-            if (!string.IsNullOrEmpty(SearchString))
-                FilteredLocationList = FilteredLocationList.Where(x => x.LocationName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-            else
-                FilteredLocationList = FullLocationList;
+            if (FilteredLocationList != null)
+            {
+                if (!string.IsNullOrEmpty(SearchString))
+                    FilteredLocationList = FilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                else
+                    FilteredLocationList = FullLocationList;
 
-            FilteredLocationsCount = FilteredLocationList.Count;
+                FilteredLocationsCount = FilteredLocationList != null ? FilteredLocationList.Count : 0;
 
-            TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+                TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+            }
 
             SetIsBusyFalse();
         }
@@ -105,21 +112,24 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
-            var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
-            string? action = await PopupMenu(selected.LocationName);
-
-            switch (action)
+            if (FilteredLocationList != null)
             {
-                case "Edit":
-                    await EditLocation(selected);
-                    break;
+                var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
 
-                case "Delete":
-                    await DeleteLocation(selected);
-                    break;
+                if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
+                {
+                    var action = await PopupMenu(selected.LocationName);
 
-                default:
-                    break;
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                    {
+                        await EditLocation(selected);
+                    }
+
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
+                    {
+                        await DeleteLocation(selected);
+                    }
+                }
             }
         }
 
@@ -136,7 +146,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
+            var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -148,7 +158,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             SetIsBusyTrue();
 
-            LocationEditView view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
+            var view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -158,61 +168,67 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task DeleteLocation(LocationModel selected)
         {
-            bool answer = await DeleteCheck(selected.LocationName);
-
-            if (answer)
+            if (!string.IsNullOrEmpty(selected.LocationName))
             {
-                try
+                var answer = await DeleteCheck(selected.LocationName);
+
+                if (answer)
                 {
-                    SetIsBusyTrue();
-
-                    if (TestData.UseTestData)
+                    try
                     {
-                        TestData.DeleteLocation(selected);
+                        SetIsBusyTrue();
+
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteLocation(selected);
+                        }
+                        else
+                        {
+
+                        }
+
+                        await ConfirmDelete(selected.LocationName);
+
+                        await SetViewModelData();
+
+                        SetIsBusyFalse();
+
                     }
-                    else
+                    catch (Exception ex)
                     {
-
+                        await CanceledAction();
                     }
-
-                    await ConfirmDelete(selected.LocationName);
-
-                    await SetViewModelData();
-
-                    SetIsBusyFalse();
-
                 }
-                catch (Exception ex)
+                else
                 {
                     await CanceledAction();
                 }
-            }
-            else
-            {
-                await CanceledAction();
             }
         }
 
         [RelayCommand]
         public async Task SortPopup()
         {
-            var popup = new SortPopup();
-            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            if (!string.IsNullOrEmpty(ViewTitle))
             {
-                LocationNameVisible = true,
-                LocationNameChecked = LocationNameChecked,
-                TotalBooksVisible = true,
-                TotalBooksChecked = TotalBooksChecked,
-                TotalPriceVisible = true,
-                TotalPriceChecked = TotalPriceChecked,
-                AscendingChecked = AscendingChecked,
-                DescendingChecked = DescendingChecked,
-            };
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, ViewTitle)
+                {
+                    LocationNameVisible = true,
+                    LocationNameChecked = LocationNameChecked,
+                    TotalBooksVisible = true,
+                    TotalBooksChecked = TotalBooksChecked,
+                    TotalPriceVisible = true,
+                    TotalPriceChecked = TotalPriceChecked,
+                    AscendingChecked = AscendingChecked,
+                    DescendingChecked = DescendingChecked,
+                };
 
-            popup.BindingContext = viewModel;
+                popup.BindingContext = viewModel;
 
-            await _view.ShowPopupAsync(popup);
-            await SetViewModelData();
+                await View.ShowPopupAsync(popup);
+                await SetViewModelData();
+            }
         }
 
         private void GetPreferences()

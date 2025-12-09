@@ -5,14 +5,16 @@ namespace BookCollector.Views.Genre;
 
 public partial class GenreEditView : ContentPage
 {
-    private GenreEditViewModel _viewModel { get; set; }
+    private GenreEditViewModel ViewModel { get; set; }
 
     public GenreEditView(GenreModel genre, string viewTitle, bool insertMainViewBefore = false)
 	{
-        GenreEditViewModel viewModel = new GenreEditViewModel(genre, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.InsertMainViewBefore = insertMainViewBefore;
-        _viewModel = viewModel;
+        var viewModel = new GenreEditViewModel(genre, this)
+        {
+            ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -22,6 +24,6 @@ public partial class GenreEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

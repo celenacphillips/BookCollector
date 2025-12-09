@@ -25,15 +25,12 @@ namespace BookCollector.ViewModels.BaseViewModels
         [ObservableProperty]
         public static ObservableCollection<GenreModel>? filteredGenreList;
 
-        [ObservableProperty]
-        public GenreModel? selectedGenre;
-
         [RelayCommand]
         public async Task GenreSelectionChanged()
         {
-            if (SelectedGenre != null)
+            if (SelectedGenre != null && !string.IsNullOrEmpty(SelectedGenre.GenreName))
             {
-                GenreMainView view = new GenreMainView(SelectedGenre, SelectedGenre.GenreName);
+                var view = new GenreMainView(SelectedGenre, SelectedGenre.GenreName);
 
                 await Shell.Current.Navigation.PushAsync(view);
                 SelectedGenre = null;

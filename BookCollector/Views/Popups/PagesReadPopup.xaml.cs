@@ -3,15 +3,15 @@ using CommunityToolkit.Maui.Views;
 
 namespace BookCollector.Views.Popups;
 
-public partial class PagesReadPopup : Popup
+public partial class PagesReadPopup : Popup<int>
 {
 	public double PopupWidth { get; set; }
 
-	public int PagesRead { get; set; }
+    public int PagesRead { get; set; }
 
-	public int PageTotal { get; set; }
+    public int PageTotal { get; set; }
 
-	public PagesReadPopup(double popupWidth, int pagesRead, int pageTotal)
+    public PagesReadPopup(double popupWidth, int pagesRead, int pageTotal)
 	{
 		this.PopupWidth = popupWidth;
 		this.PagesRead = pagesRead;
@@ -21,19 +21,21 @@ public partial class PagesReadPopup : Popup
 
         InitializeComponent();
 
-        PagesReadLabel.Text = $"{this.PagesRead}";
+        var label = this.FindByName<Label>("PagesReadLabel");
+        label.Text = $"{this.PagesRead}";
     }
 
-	async void OnClose(object sender, EventArgs e)
+	public async void OnClose(object? sender, EventArgs e)
 	{
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await this.CloseAsync(this.PagesRead, token: cts.Token);
+        await CloseAsync(this.PagesRead, token: cts.Token);
     }
 
-    void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
+    public void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
     {
         int value = (int)args.NewValue;
-        PagesReadLabel.Text = $"{value}";
+        var label = this.FindByName<Label>("PagesReadLabel");
+        label.Text = $"{value}";
     }
 }

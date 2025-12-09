@@ -43,14 +43,14 @@ namespace BookCollector.ViewModels.Statistics
         public int pagesReadCount;
 
         [ObservableProperty]
-        public string topXCollections;
+        public string? topXCollections;
 
         [ObservableProperty]
-        public string topXGenres;
+        public string? topXGenres;
 
         public LibraryStatisticsViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             BooksReadString = AppStringResources.BooksReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
             PagesReadString = AppStringResources.PagesReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
             MaxListNumber = 5;
@@ -69,13 +69,13 @@ namespace BookCollector.ViewModels.Statistics
                 int toBeRead = 0, reading = 0, read = 0;
                 int favorite = 0, nonFavorite = 0;
                 int zero = 0, one = 0, two = 0, three = 0, four = 0, five = 0;
-                List<CountModel> collectionCounts = new List<CountModel>();
-                List<CountModel> genreCounts = new List<CountModel>();
-                List<CountModel> seriesCounts = new List<CountModel>();
-                List<CountModel> authorCounts = new List<CountModel>();
-                List<CountModel> locationCounts = new List<CountModel>();
-                List<CountModel> formatCounts = new List<CountModel>();
-                List<CountModel> formatPriceCounts = new List<CountModel>();
+                List<CountModel> collectionCounts = [];
+                List<CountModel> genreCounts = [];
+                List<CountModel> seriesCounts = [];
+                List<CountModel> authorCounts = [];
+                List<CountModel> locationCounts = [];
+                List<CountModel> formatCounts = [];
+                List<CountModel> formatPriceCounts = [];
 
                 Task.WaitAll(
                 [
@@ -86,14 +86,14 @@ namespace BookCollector.ViewModels.Statistics
                     Task.Run (async () => toBeRead = await FilterLists.GetToBeReadBooksListCount(ShowHiddenBooks) ),
                     Task.Run (async () => reading = await FilterLists.GetReadingBooksListCount(ShowHiddenBooks) ),
                     Task.Run (async () => read = await FilterLists.GetReadBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => favorite = await FilterLists.GetFavoriteBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => nonFavorite = await FilterLists.GetNonFavoriteBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => zero = await FilterLists.GetZeroStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => one = await FilterLists.GetOneStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => two = await FilterLists.GetTwoStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => three = await FilterLists.GetThreeStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => four = await FilterLists.GetFourStarBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => five = await FilterLists.GetFiveStarBooksListCount(ShowHiddenBooks) ),
+                    Task.Run (async () => favorite = await FilterLists.GetBooksListCountByFavorite(ShowHiddenBooks, true) ),
+                    Task.Run (async () => nonFavorite = await FilterLists.GetBooksListCountByFavorite(ShowHiddenBooks, false) ),
+                    Task.Run (async () => zero = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 0) ),
+                    Task.Run (async () => one = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 1) ),
+                    Task.Run (async () => two = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 2) ),
+                    Task.Run (async () => three = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 3) ),
+                    Task.Run (async () => four = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 4) ),
+                    Task.Run (async () => five = await FilterLists.GetBooksListCountByRating(ShowHiddenBooks, 5) ),
                     Task.Run (async () => collectionCounts = await FilterLists.GetAllBooksInAllCollectionsList(ShowHiddenCollections, ShowHiddenBooks, MaxListNumber) ),
                     Task.Run (async () => genreCounts = await FilterLists.GetAllBooksInAllGenresList(ShowHiddenGenres, ShowHiddenBooks, MaxListNumber) ),
                     Task.Run (async () => seriesCounts = await FilterLists.GetAllBooksInAllSeriesList(ShowHiddenSeries, ShowHiddenBooks, MaxListNumber) ),
@@ -131,9 +131,9 @@ namespace BookCollector.ViewModels.Statistics
         }
 
         #region Reading Status
-        private List<CountValues> SetShowReadingStatus(int toBeRead, int reading, int read)
+        private List<CountModel> SetShowReadingStatus(int toBeRead, int reading, int read)
         {
-            List<CountValues> counts = new List<CountValues>();
+            List<CountModel> counts = [];
 
             if (toBeRead > 0 ||
                 reading > 0 ||
@@ -141,17 +141,17 @@ namespace BookCollector.ViewModels.Statistics
             {
                 ShowReadingStatus = true;
 
-                counts.Add(new CountValues()
+                counts.Add(new CountModel()
                 {
                     Count = toBeRead,
                     Label = AppStringResources.ToBeRead
                 });
-                counts.Add(new CountValues()
+                counts.Add(new CountModel()
                 {
                     Count = reading,
                     Label = AppStringResources.Reading
                 });
-                counts.Add(new CountValues()
+                counts.Add(new CountModel()
                 {
                     Count = read,
                     Label = AppStringResources.Read
@@ -165,18 +165,18 @@ namespace BookCollector.ViewModels.Statistics
 
         private void SetUpReadingStatusChart(int toBeRead, int reading, int read)
         {
-            List<CountValues> counts = SetShowReadingStatus(toBeRead, reading ,read);
+            List<CountModel> counts = SetShowReadingStatus(toBeRead, reading ,read);
 
             if (ShowReadingStatus)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -188,9 +188,9 @@ namespace BookCollector.ViewModels.Statistics
         #endregion
 
         #region Favorites
-        private List<CountValues> SetShowFavorites(int favorite, int nonFavorite)
+        private List<CountModel> SetShowFavorites(int favorite, int nonFavorite)
         {
-            List<CountValues> counts = new List<CountValues>();
+            List<CountModel> counts = [];
 
             if (ShowFavorites)
             {
@@ -199,12 +199,12 @@ namespace BookCollector.ViewModels.Statistics
                 {
                     ShowFavoritesStatus = true;
 
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = favorite,
                         Label = AppStringResources.Favorite
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = nonFavorite,
                         Label = AppStringResources.NonFavorite
@@ -221,18 +221,18 @@ namespace BookCollector.ViewModels.Statistics
 
         private void SetUpFavoritesChart(int favorite, int nonFavorite)
         {
-            List<CountValues> counts = SetShowFavorites(favorite, nonFavorite);
+            List<CountModel> counts = SetShowFavorites(favorite, nonFavorite);
 
             if (ShowFavoritesStatus)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -244,9 +244,9 @@ namespace BookCollector.ViewModels.Statistics
         #endregion
 
         #region Ratings
-        private List<CountValues> SetShowRatings(int zero, int one, int two, int three, int four, int five)
+        private List<CountModel> SetShowRatings(int zero, int one, int two, int three, int four, int five)
         {
-            List<CountValues> counts = new List<CountValues>();
+            List<CountModel> counts = [];
 
             if (ShowRatings)
             {
@@ -259,32 +259,32 @@ namespace BookCollector.ViewModels.Statistics
                 {
                     ShowRatingStatus = true;
 
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = zero,
                         Label = AppStringResources.ZeroStars
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = one,
                         Label = AppStringResources.OneStar
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = two,
                         Label = AppStringResources.TwoStars
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = three,
                         Label = AppStringResources.ThreeStars
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = four,
                         Label = AppStringResources.FourStars
                     });
-                    counts.Add(new CountValues()
+                    counts.Add(new CountModel()
                     {
                         Count = five,
                         Label = AppStringResources.FiveStars
@@ -301,18 +301,18 @@ namespace BookCollector.ViewModels.Statistics
 
         private void SetUpRatingsChart(int zero, int one, int two, int three, int four, int five)
         {
-            List<CountValues> counts = SetShowRatings(zero, one, two, three, four, five);
+            List<CountModel> counts = SetShowRatings(zero, one, two, three, four, five);
 
             if (ShowRatings)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -340,7 +340,7 @@ namespace BookCollector.ViewModels.Statistics
 
             if (ShowCollections)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -359,7 +359,7 @@ namespace BookCollector.ViewModels.Statistics
                         values.Add(
                             new ChartValues()
                             {
-                                ColorValue = ColorList[i],
+                                ColorValue = ColorList?[i],
                                 LabelValue = counts[i].Label,
                                 Value = counts[i].Count
                             });
@@ -385,11 +385,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowGenres(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowGenres)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -408,7 +408,7 @@ namespace BookCollector.ViewModels.Statistics
                         values.Add(
                             new ChartValues()
                             {
-                                ColorValue = ColorList[i],
+                                ColorValue = ColorList?[i],
                                 LabelValue = counts[i].Label,
                                 Value = counts[i].Count
                             });
@@ -434,11 +434,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowSeries(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowSeries)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -457,7 +457,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -483,11 +483,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowAuthors(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowAuthors)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -506,7 +506,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -532,11 +532,11 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowLocations(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowLocations)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 var max = MaxListNumber;
 
@@ -555,7 +555,7 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -581,18 +581,18 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowFormats(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowFormats)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = counts[i].Count
                         });
@@ -618,18 +618,18 @@ namespace BookCollector.ViewModels.Statistics
         {
             SetShowFormatPrices(counts);
 
-            counts = counts.OrderByDescending(x => x.Count).ToList();
+            counts = [.. counts.OrderByDescending(x => x.Count)];
 
             if (ShowFormatPrices)
             {
-                List<ChartValues> values = new List<ChartValues>();
+                List<ChartValues> values = [];
 
                 for (int i = 0; i < counts.Count; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList[i],
+                            ColorValue = ColorList?[i],
                             LabelValue = counts[i].Label,
                             Value = (float)counts[i].CountDouble
                         });

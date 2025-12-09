@@ -11,22 +11,25 @@ namespace BookCollector.Data.Models
         public Guid? CollectionGuid { get; set; }
 
         [ObservableProperty]
-        public string collectionName;
+        public string? collectionName;
         [ObservableProperty]
-        public string totalBooksString;
+        public string? totalBooksString;
         [ObservableProperty]
         public bool hideCollection;
 
         public int? ID { get; set; }
         public string? ParsedCollectionName
         {
-            get => (this.CollectionName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+            get => (!string.IsNullOrEmpty(this.CollectionName) &&
+                    (this.CollectionName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
                     this.CollectionName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.CollectionName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
-                        ? this.CollectionName.Remove(0, this.CollectionName.IndexOf(" ") + 1)
+                    this.CollectionName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
+                        ? this.CollectionName[(this.CollectionName.IndexOf(' ') + 1)..]
                         : this.CollectionName;
         }
         public int CollectionTotalBooks { get; set; }
+        // TO DO
+        // Set value - 12/8/2025
         public double TotalCostOfBooks { get; set; }
 
         public CollectionModel()
@@ -41,9 +44,15 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FilterLists.GetAllBooksInCollectionList(this.CollectionGuid, showHiddenBooks);
+            var count = 0;
 
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
-            this.CollectionTotalBooks = list.Count;
+            if (list != null)
+            {
+                count = list.Count;
+            }
+
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(count);
+            this.CollectionTotalBooks = count;
         }
     }
 }

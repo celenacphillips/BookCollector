@@ -5,13 +5,15 @@ namespace BookCollector.Views.Genre;
 
 public partial class GenreMainView : ContentPage
 {
-    private GenreMainViewModel _viewModel;
+    private GenreMainViewModel ViewModel;
 
     public GenreMainView(GenreModel genre, string viewTitle)
 	{
-        GenreMainViewModel viewModel = new GenreMainViewModel(genre, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
+        var viewModel = new GenreMainViewModel(genre, this)
+        {
+            ViewTitle = viewTitle
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -21,6 +23,6 @@ public partial class GenreMainView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

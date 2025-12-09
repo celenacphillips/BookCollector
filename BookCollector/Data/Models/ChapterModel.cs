@@ -9,9 +9,9 @@ namespace BookCollector.Data.Models
         public Guid? ChapterGuid { get; set; }
 
         [ObservableProperty]
-        public string chapterName;
+        public string? chapterName;
         [ObservableProperty]
-        public string pageRange;
+        public string? pageRange;
 
         public int ChapterOrder { get; set; }
         public Guid BookGuid { get; set; }

@@ -25,7 +25,7 @@ namespace BookCollector.ViewModels.Series
 
         public SeriesEditViewModel(SeriesModel series, ContentPage view)
         {
-            _view = view;
+            View = view;
 
             EditedSeries = (SeriesModel)series.Clone();
         }
@@ -49,7 +49,11 @@ namespace BookCollector.ViewModels.Series
         [RelayCommand]
         public async Task SaveSeries()
         {
-            if (SeriesNameValid)
+            if (!SeriesNameValid)
+            {
+                await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
+            }
+            else
             {
 #if ANDROID
                 if (Platform.CurrentActivity != null &&
@@ -57,7 +61,7 @@ namespace BookCollector.ViewModels.Series
                     Platform.CurrentActivity.Window.DecorView.ClearFocus();
 #endif
 
-                if (ViewTitle.Equals($"{AppStringResources.AddNewSeries}"))
+                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewSeries}"))
                 {
                     if (TestData.UseTestData)
                     {
@@ -81,10 +85,10 @@ namespace BookCollector.ViewModels.Series
                 }
                 if (InsertMainViewBefore)
                 {
-                    SeriesMainView view = new SeriesMainView(EditedSeries, $"{EditedSeries.SeriesName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                    var view = new SeriesMainView(EditedSeries, $"{EditedSeries.SeriesName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, View);
                 }
-                
+
                 await Shell.Current.Navigation.PopAsync();
             }
         }
@@ -97,12 +101,28 @@ namespace BookCollector.ViewModels.Series
             SetRefreshFalse();
         }
 
+        [RelayCommand]
+        public void ValidateSeriesName()
+        {
+            ValidateEntry();
+        }
+
         private void ValidateEntry()
         {
             if (string.IsNullOrEmpty(EditedSeries.SeriesName))
+            {
+                var seriesNameEditor = View.FindByName<Editor>("SeriesNameEditor");
+                seriesNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
+                seriesNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
                 SeriesNameValid = false;
+            }
             else
+            {
+                var seriesNameEditor = View.FindByName<Editor>("SeriesNameEditor");
+                seriesNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                seriesNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 SeriesNameValid = true;
+            }
         }
     }
 }

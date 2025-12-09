@@ -6,7 +6,9 @@ using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml.Presentation;
 using SkiaSharp;
@@ -23,37 +25,37 @@ namespace BookCollector.ViewModels.Main
     public partial class ExportImportViewModel : BaseViewModel
     {
         [ObservableProperty]
-        public string startOutput;
+        public string? startOutput;
 
         [ObservableProperty]
-        public string booksOutput;
+        public string? booksOutput;
 
         [ObservableProperty]
-        public string wishListOutput;
+        public string? wishListOutput;
 
         [ObservableProperty]
-        public string collectionsOutput;
+        public string? collectionsOutput;
 
         [ObservableProperty]
-        public string genresOutput;
+        public string? genresOutput;
 
         [ObservableProperty]
-        public string seriesOutput;
+        public string? seriesOutput;
 
         [ObservableProperty]
-        public string authorsOutput;
+        public string? authorsOutput;
 
         [ObservableProperty]
-        public string locationsOutput;
+        public string? locationsOutput;
 
         [ObservableProperty]
-        public string chaptersOutput;
+        public string? chaptersOutput;
 
         [ObservableProperty]
-        public string bookAuthorsOutput;
+        public string? bookAuthorsOutput;
 
         [ObservableProperty]
-        public string finalOutput;
+        public string? finalOutput;
 
         [ObservableProperty]
         public bool booksChecked;
@@ -99,11 +101,11 @@ namespace BookCollector.ViewModels.Main
 
         private string _filePath = string.Empty;
         private string _imageExportLocation = string.Empty;
-        private Color BusyColor = (Color)Application.Current.Resources["Primary"];
+        private readonly Color? BusyColor = (Color?)Application.Current?.Resources["Primary"];
 
         public ExportImportViewModel(ContentPage view)
         {
-            _view = view;
+            View = view;
             InfoText = AppStringResources.ExportImportView_InfoText;
         }
 
@@ -152,7 +154,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         var result = await FolderPicker.PickAsync(CancellationToken.None);
 
-                        if (result != null)
+                        if (result != null && result.Folder != null)
                         {
                             exportLocation = result.Folder.Path;
                             Preferences.Set("ExportLocation", result.Folder.Path);
@@ -275,7 +277,7 @@ namespace BookCollector.ViewModels.Main
 
                         if (TestData.UseTestData)
                         {
-                            await TestData.DataCleanup();
+                            TestData.DataCleanup();
                         }
                         else
                         {
@@ -340,7 +342,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteBooksToSpreadsheet()
         {
             var tableName = "Books";
-            var label = (Label)_view.FindByName("booksOutput");
+            var label = (Label)View.FindByName("booksOutput");
 
             if (BooksChecked)
             {
@@ -350,14 +352,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var bookList = await FilterLists.GetAllBooksList(true);
+                var count = bookList != null ? bookList.Count : 0;
 
-                BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{bookList.Count}");
+                BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.BookGuid.Replace(" ", "")}",
                         $"{AppStringResources.BookTitle.Replace(" ", "")}",
@@ -388,58 +391,61 @@ namespace BookCollector.ViewModels.Main
                     }
                 };
 
-                foreach (var book in bookList)
+                if (bookList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var book in bookList)
                     {
-                        book.BookGuid.ToString(),
-                        book.BookTitle,
-                        book.BookSeriesGuid.ToString(),
-                        book.BookNumberInSeries.ToString(),
-                        book.BookPublisher,
-                        book.BookPublishYear,
-                        book.BookIdentifier,
-                        book.BookFormat,
-                        book.BookLanguage,
-                        book.BookPrice,
-                        book.BookSummary,
-                        book.BookPageRead.ToString(),
-                        book.BookPageTotal.ToString(),
-                        book.BookStartDate,
-                        book.BookEndDate,
-                        book.BookLocationGuid.ToString(),
-                        book.BookComments,
-                        book.BookCollectionGuid.ToString(),
-                        book.BookGenreGuid.ToString(),
-                        book.BookURL,
-                        book.Rating.ToString(),
-                        book.IsFavorite.ToString(),
-                        book.LoanedTo,
-                        book.BookLoanedOutOn,
-                        book.BookCoverUrl,
-                    };
+                        var stringItem = new List<String?>
+                        {
+                            book.BookGuid.ToString(),
+                            book.BookTitle,
+                            book.BookSeriesGuid.ToString(),
+                            book.BookNumberInSeries.ToString(),
+                            book.BookPublisher,
+                            book.BookPublishYear,
+                            book.BookIdentifier,
+                            book.BookFormat,
+                            book.BookLanguage,
+                            book.BookPrice,
+                            book.BookSummary,
+                            book.BookPageRead.ToString(),
+                            book.BookPageTotal.ToString(),
+                            book.BookStartDate,
+                            book.BookEndDate,
+                            book.BookLocationGuid.ToString(),
+                            book.BookComments,
+                            book.BookCollectionGuid.ToString(),
+                            book.BookGenreGuid.ToString(),
+                            book.BookURL,
+                            book.Rating.ToString(),
+                            book.IsFavorite.ToString(),
+                            book.LoanedTo,
+                            book.BookLoanedOutOn,
+                            book.BookCoverUrl,
+                        };
 
-                    if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
-                    {
-                        var fi = new FileInfo(book.BookCoverFileLocation);
-                        var exportLocation = $"{_imageExportLocation}/{fi.Name}";
-                        File.Copy(book.BookCoverFileLocation, exportLocation, true);
-                        stringItem.Add(exportLocation);
+                        if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                        {
+                            var fi = new FileInfo(book.BookCoverFileLocation);
+                            var exportLocation = $"{_imageExportLocation}/{fi.Name}";
+                            File.Copy(book.BookCoverFileLocation, exportLocation, true);
+                            stringItem.Add(exportLocation);
+                        }
+                        else
+                            stringItem.Add("");
+
+                        stringItems.Add(stringItem);
                     }
-                    else
-                        stringItem.Add("");
 
-                    stringItems.Add(stringItem);
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    BooksOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = bookList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                BooksOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{bookList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -452,7 +458,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadBooksFromSpreadsheet()
         {
             var tableName = "Books";
-            var label = (Label)_view.FindByName("booksOutput");
+            var label = (Label)View.FindByName("booksOutput");
 
             if (BooksChecked)
             {
@@ -475,9 +481,9 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            BookModel book = new BookModel()
+                            var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]),
+                                BookGuid = (Guid)ParseGuid(values[0]),
                                 BookTitle = values[1],
                                 BookSeriesGuid = ParseGuid(values[2]),
                                 BookNumberInSeries = ParseInt(values[3]),
@@ -511,7 +517,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     try
                                     {
-                                        var byteArray = new WebClient().DownloadData($"{book.BookCoverUrl}");
+                                        var byteArray = DownloadImage(book.BookCoverUrl);
                                         book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                                     }
                                     catch (Exception ex)
@@ -572,7 +578,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -589,7 +595,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteWishListBooksToSpreadsheet()
         {
             var tableName = "WishListBooks";
-            var label = (Label)_view.FindByName("wishListOutput");
+            var label = (Label)View.FindByName("wishListOutput");
 
             if (WishListChecked)
             {
@@ -599,14 +605,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var bookList = await FilterLists.GetBookWishList(true);
+                var count = bookList != null ? bookList.Count : 0;
 
-                WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{bookList.Count}");
+                WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.BookGuid.Replace(" ", "")}",
                         $"{AppStringResources.BookTitle.Replace(" ", "")}",
@@ -629,65 +636,68 @@ namespace BookCollector.ViewModels.Main
                     }
                 };
 
-                foreach (var book in bookList)
+                if (bookList != null)
                 {
+                    foreach (var book in bookList)
+                    {
+                        try
+                        {
+
+                            var stringItem = new List<String?>
+                            {
+                                book.BookGuid.ToString(),
+                                book.BookTitle,
+                                book.AuthorListString,
+                                book.BookSeries,
+                                book.BookNumberInSeries.ToString(),
+                                book.BookPublisher,
+                                book.BookPublishYear,
+                                book.BookIdentifier,
+                                book.BookFormat,
+                                book.BookLanguage,
+                                book.BookPrice,
+                                book.BookSummary,
+                                book.BookPageTotal.ToString(),
+                                book.BookComments,
+                                book.BookWhereToBuy,
+                                book.BookURL,
+                                book.BookCoverUrl,
+                            };
+
+                            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                            {
+                                var fi = new FileInfo(book.BookCoverFileLocation);
+                                var exportLocation = $"{_imageExportLocation}/{fi.Name}";
+                                File.Copy(book.BookCoverFileLocation, exportLocation, true);
+                                stringItem.Add(exportLocation);
+                            }
+                            else
+                                stringItem.Add("");
+
+                            stringItems.Add(stringItem);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
+                    var exportCount = bookList.Count;
+
                     try
                     {
-
-                        var stringItem = new List<String?>
-                        {
-                            book.BookGuid.ToString(),
-                            book.BookTitle,
-                            book.AuthorListString,
-                            book.BookSeries,
-                            $"{book.BookNumberInSeries}",
-                            book.BookPublisher,
-                            book.BookPublishYear,
-                            book.BookIdentifier,
-                            book.BookFormat,
-                            book.BookLanguage,
-                            book.BookPrice,
-                            book.BookSummary,
-                            book.BookPageTotal.ToString(),
-                            book.BookComments,
-                            book.BookWhereToBuy,
-                            book.BookURL,
-                            book.BookCoverUrl,
-                        };
-
-                        if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
-                        {
-                            var fi = new FileInfo(book.BookCoverFileLocation);
-                            var exportLocation = $"{_imageExportLocation}/{fi.Name}";
-                            File.Copy(book.BookCoverFileLocation, exportLocation, true);
-                            stringItem.Add(exportLocation);
-                        }
-                        else
-                            stringItem.Add("");
-
-                        stringItems.Add(stringItem);
+                        ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
                     }
                     catch (Exception ex)
                     {
 
                     }
+
+                    WishListOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = bookList.Count;
-
-                try
-                {
-                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-                WishListOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{bookList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -700,7 +710,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadWishListBooksFromSpreadsheet()
         {
             var tableName = "WishListBooks";
-            var label = (Label)_view.FindByName("wishListOutput");
+            var label = (Label)View.FindByName("wishListOutput");
 
             if (WishListChecked)
             {
@@ -723,9 +733,9 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            BookModel book = new BookModel()
+                            var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]),
+                                BookGuid = (Guid)ParseGuid(values[0]),
                                 BookTitle = values[1],
                                 AuthorListString = values[2],
                                 BookSeries = values[3],
@@ -751,7 +761,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     try
                                     {
-                                        var byteArray = new WebClient().DownloadData($"{book.BookCoverUrl}");
+                                        var byteArray = DownloadImage(book.BookCoverUrl);
                                         book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                                     }
                                     catch (Exception ex)
@@ -812,7 +822,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -829,7 +839,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteChaptersToSpreadsheet()
         {
             var tableName = "Chapters";
-            var label = (Label)_view.FindByName("chaptersOutput");
+            var label = (Label)View.FindByName("chaptersOutput");
 
             if (ChaptersChecked)
             {
@@ -839,14 +849,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var chapterList = await FilterLists.GetAllChapters();
+                var count = chapterList != null ? chapterList.Count : 0;
 
-                ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{chapterList.Count}");
+                ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.ChapterGuid.Replace(" ", "")}",
                         $"{AppStringResources.ChapterName.Replace(" ", "")}",
@@ -856,28 +867,31 @@ namespace BookCollector.ViewModels.Main
                     }
                 };
 
-                foreach (var chapter in chapterList)
+                if (chapterList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var chapter in chapterList)
                     {
-                        chapter.ChapterGuid.ToString(),
-                        chapter.ChapterName,
-                        chapter.PageRange,
-                        chapter.ChapterOrder.ToString(),
-                        chapter.BookGuid.ToString(),
-                    };
+                        var stringItem = new List<String?>
+                        {
+                            chapter.ChapterGuid.ToString(),
+                            chapter.ChapterName,
+                            chapter.PageRange,
+                            chapter.ChapterOrder.ToString(),
+                            chapter.BookGuid.ToString(),
+                        };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    ChaptersOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = chapterList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                ChaptersOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{chapterList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -890,7 +904,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadChaptersFromSpreadsheet()
         {
             var tableName = "Chapters";
-            var label = (Label)_view.FindByName("chaptersOutput");
+            var label = (Label)View.FindByName("chaptersOutput");
 
             if (ChaptersChecked)
             {
@@ -913,7 +927,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            ChapterModel chapter = new ChapterModel()
+                            var chapter = new ChapterModel()
                             {
                                 ChapterGuid = ParseGuid(values[0]),
                                 ChapterName = values[1],
@@ -940,7 +954,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -957,7 +971,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteCollectionsToSpreadsheet()
         {
             var tableName = "Collections";
-            var label = (Label)_view.FindByName("collectionsOutput");
+            var label = (Label)View.FindByName("collectionsOutput");
 
             if (CollectionsChecked)
             {
@@ -968,39 +982,43 @@ namespace BookCollector.ViewModels.Main
 
                 
                 var collectionList = await FilterLists.GetAllCollectionsList(true);
+                var count = collectionList != null ? collectionList.Count : 0;
 
-                CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{collectionList.Count}");
+                CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.CollectionGuid.Replace(" ", "")}",
                         $"{AppStringResources.CollectionName.Replace(" ", "")}"
                     }
                 };
 
-                foreach (var collection in collectionList)
+                if (collectionList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var collection in collectionList)
+                    {
+                        var stringItem = new List<String?>
                     {
                         collection.CollectionGuid.ToString(),
                         collection.CollectionName
                     };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    CollectionsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = collectionList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                CollectionsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{collectionList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1013,7 +1031,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadCollectionsFromSpreadsheet()
         {
             var tableName = "Collections";
-            var label = (Label)_view.FindByName("collectionsOutput");
+            var label = (Label)View.FindByName("collectionsOutput");
 
             if (CollectionsChecked)
             {
@@ -1036,7 +1054,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            CollectionModel collection = new CollectionModel()
+                            var collection = new CollectionModel()
                             {
                                 CollectionGuid = ParseGuid(values[0]),
                                 CollectionName = values[1],
@@ -1060,7 +1078,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1077,7 +1095,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteGenresToSpreadsheet()
         {
             var tableName = "Genres";
-            var label = (Label)_view.FindByName("genresOutput");
+            var label = (Label)View.FindByName("genresOutput");
 
             if (GenresChecked)
             {
@@ -1087,39 +1105,43 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var genreList = await FilterLists.GetAllGenresList(true);
+                var count = genreList != null ? genreList.Count : 0;
 
-                GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{genreList.Count}");
+                GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.GenreGuid.Replace(" ", "")}",
                         $"{AppStringResources.GenreName.Replace(" ", "")}"
                     }
                 };
 
-                foreach (var genre in genreList)
+                if (genreList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var genre in genreList)
+                    {
+                        var stringItem = new List<String?>
                     {
                         genre.GenreGuid.ToString(),
                         genre.GenreName
                     };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    GenresOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = genreList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                GenresOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{genreList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1132,7 +1154,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadGenresFromSpreadsheet()
         {
             var tableName = "Genres";
-            var label = (Label)_view.FindByName("genresOutput");
+            var label = (Label)View.FindByName("genresOutput");
 
             if (GenresChecked)
             {
@@ -1155,7 +1177,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            GenreModel genre = new GenreModel()
+                            var genre = new GenreModel()
                             {
                                 GenreGuid = ParseGuid(values[0]),
                                 GenreName = values[1],
@@ -1179,7 +1201,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1196,7 +1218,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteSeriesToSpreadsheet()
         {
             var tableName = "Series";
-            var label = (Label)_view.FindByName("seriesOutput");
+            var label = (Label)View.FindByName("seriesOutput");
 
             if (SeriesChecked)
             {
@@ -1206,14 +1228,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var seriesList = await FilterLists.GetAllSeriesList(true);
+                var count = seriesList != null ? seriesList.Count : 0;
 
-                SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{seriesList.Count}");
+                SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.SeriesGuid.Replace(" ", "")}",
                         $"{AppStringResources.SeriesName.Replace(" ", "")}",
@@ -1221,26 +1244,29 @@ namespace BookCollector.ViewModels.Main
                     }
                 };
 
-                foreach (var series in seriesList)
+                if (seriesList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var series in seriesList)
                     {
-                        series.SeriesGuid.ToString(),
-                        series.SeriesName,
-                        series.TotalBooksInSeries
-                    };
+                        var stringItem = new List<String?>
+                        {
+                            series.SeriesGuid.ToString(),
+                            series.SeriesName,
+                            series.TotalBooksInSeries
+                        };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    SeriesOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = seriesList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                SeriesOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{seriesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1253,7 +1279,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadSeriesFromSpreadsheet()
         {
             var tableName = "Series";
-            var label = (Label)_view.FindByName("seriesOutput");
+            var label = (Label)View.FindByName("seriesOutput");
 
             if (SeriesChecked)
             {
@@ -1276,7 +1302,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            SeriesModel series = new SeriesModel()
+                            var series = new SeriesModel()
                             {
                                 SeriesGuid = ParseGuid(values[0]),
                                 SeriesName = values[1],
@@ -1301,7 +1327,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1318,7 +1344,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteBookAuthorsToSpreadsheet()
         {
             var tableName = "BookAuthors";
-            var label = (Label)_view.FindByName("bookAuthorsOutput");
+            var label = (Label)View.FindByName("bookAuthorsOutput");
 
             if (BookAuthorsChecked)
             {
@@ -1328,14 +1354,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var bookAuthorList = await FilterLists.GetAllBookAuthors();
+                var count = bookAuthorList != null ? bookAuthorList.Count : 0;
 
-                BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{bookAuthorList.Count}");
+                BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.BookAuthorGuid.Replace(" ", "")}",
                         $"{AppStringResources.AuthorGuid.Replace(" ", "")}",
@@ -1343,26 +1370,29 @@ namespace BookCollector.ViewModels.Main
                     }
                 };
 
-                foreach (var bookAuthor in bookAuthorList)
+                if (bookAuthorList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var bookAuthor in bookAuthorList)
                     {
-                        bookAuthor.BookAuthorGuid.ToString(),
-                        bookAuthor.AuthorGuid.ToString(),
-                        bookAuthor.BookGuid.ToString()
-                    };
+                        var stringItem = new List<String?>
+                        {
+                            bookAuthor.BookAuthorGuid.ToString(),
+                            bookAuthor.AuthorGuid.ToString(),
+                            bookAuthor.BookGuid.ToString()
+                        };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    BookAuthorsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = bookAuthorList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                BookAuthorsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{bookAuthorList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1375,7 +1405,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadBookAuthorsFromSpreadsheet()
         {
             var tableName = "BookAuthors";
-            var label = (Label)_view.FindByName("bookAuthorsOutput");
+            var label = (Label)View.FindByName("bookAuthorsOutput");
 
             if (BookAuthorsChecked)
             {
@@ -1398,7 +1428,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            BookAuthorModel bookAuthor = new BookAuthorModel()
+                            var bookAuthor = new BookAuthorModel()
                             {
                                 BookAuthorGuid = ParseGuid(values[0]),
                                 AuthorGuid = (Guid)ParseGuid(values[1]),
@@ -1423,7 +1453,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1440,7 +1470,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteAuthorsToSpreadsheet()
         {
             var tableName = "Authors";
-            var label = (Label)_view.FindByName("authorsOutput");
+            var label = (Label)View.FindByName("authorsOutput");
 
             if (AuthorsChecked)
             {
@@ -1450,14 +1480,15 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var authorList = await FilterLists.GetAllAuthorsList(true);
+                var count = authorList != null ? authorList.Count : 0;
 
-                AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{authorList.Count}");
+                AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.AuthorGuid.Replace(" ", "")}",
                         $"{AppStringResources.FirstName.Replace(" ", "")}",
@@ -1465,10 +1496,12 @@ namespace BookCollector.ViewModels.Main
                         $"{AppStringResources.FullName.Replace(" ", "")}"
                     }
                 };
-
-                foreach (var author in authorList)
+                
+                if (authorList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var author in authorList)
+                    {
+                        var stringItem = new List<String?>
                     {
                         author.AuthorGuid.ToString(),
                         author.FirstName,
@@ -1476,17 +1509,18 @@ namespace BookCollector.ViewModels.Main
                         author.FullName
                     };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    AuthorsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = authorList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                AuthorsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{authorList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1499,7 +1533,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadAuthorsFromSpreadsheet()
         {
             var tableName = "Authors";
-            var label = (Label)_view.FindByName("authorsOutput");
+            var label = (Label)View.FindByName("authorsOutput");
 
             if (AuthorsChecked)
             {
@@ -1522,9 +1556,9 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            AuthorModel author = new AuthorModel()
+                            var author = new AuthorModel()
                             {
-                                AuthorGuid = ParseGuid(values[0]),
+                                AuthorGuid = (Guid)ParseGuid(values[0]),
                                 FirstName = values[1],
                                 LastName = values[2],
                             };
@@ -1547,7 +1581,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1564,7 +1598,7 @@ namespace BookCollector.ViewModels.Main
         private async Task WriteLocationsToSpreadsheet()
         {
             var tableName = "Locations";
-            var label = (Label)_view.FindByName("locationsOutput");
+            var label = (Label)View.FindByName("locationsOutput");
 
             if (LocationsChecked)
             {
@@ -1574,39 +1608,43 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var locationList = await FilterLists.GetAllLocationsList(true);
+                var count = locationList != null ? locationList.Count : 0;
 
-                LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{locationList.Count}");
+                LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
 
                 await Task.Delay(1);
 
                 var stringItems = new List<List<String?>>
                 {
-                    new List<string?>()
+                    new()
                     {
                         $"{AppStringResources.LocationGuid.Replace(" ", "")}",
                         $"{AppStringResources.LocationName.Replace(" ", "")}",
                     }
                 };
 
-                foreach (var location in locationList)
+                if (locationList != null)
                 {
-                    var stringItem = new List<String?>
+                    foreach (var location in locationList)
+                    {
+                        var stringItem = new List<String?>
                     {
                         location.LocationGuid.ToString(),
                         location.LocationName
                     };
 
-                    stringItems.Add(stringItem);
+                        stringItems.Add(stringItem);
+                    }
+
+                    var exportCount = count;
+
+                    ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
+
+                    LocationsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{count}");
+                    label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
+
+                    await Task.Delay(1);
                 }
-
-                var exportCount = locationList.Count;
-
-                ReadWriteSpreadsheet.WriteToSpreadsheet(_filePath, stringItems, tableName);
-
-                LocationsOutput = AppStringResources.Table_YExported.Replace("Table", tableName).Replace("y", $"{exportCount}").Replace("z", $"{locationList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
-
-                await Task.Delay(1);
             }
             else
             {
@@ -1619,7 +1657,7 @@ namespace BookCollector.ViewModels.Main
         private async Task ReadLocationsFromSpreadsheet()
         {
             var tableName = "Locations";
-            var label = (Label)_view.FindByName("locationsOutput");
+            var label = (Label)View.FindByName("locationsOutput");
 
             if (LocationsChecked)
             {
@@ -1642,7 +1680,7 @@ namespace BookCollector.ViewModels.Main
                     {
                         if (values.Count > 0)
                         {
-                            LocationModel location = new LocationModel()
+                            var location = new LocationModel()
                             {
                                 LocationGuid = ParseGuid(values[0]),
                                 LocationName = values[1],
@@ -1666,7 +1704,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
-                label.TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? (Color)Application.Current.Resources["TextDark"] : (Color)Application.Current.Resources["TextLight"];
+                label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
 
                 await Task.Delay(1);
             }
@@ -1680,11 +1718,10 @@ namespace BookCollector.ViewModels.Main
         #endregion
         #endregion
 
-        private Guid? ParseGuid(string input)
+        private static Guid? ParseGuid(string input)
         {
             Guid? guid;
-            Guid guidParse;
-            Guid.TryParse(input, out guidParse);
+            var parsed = Guid.TryParse(input, out Guid guidParse);
 
             if (guidParse == Guid.Empty)
                 guid = null;
@@ -1694,11 +1731,9 @@ namespace BookCollector.ViewModels.Main
             return guid;
         }
 
-        private int ParseInt(string input)
+        private static int ParseInt(string input)
         {
-            int intParse;
-
-            int.TryParse(input, out intParse);
+            var parsed = int.TryParse(input, out int intParse);
 
             if (intParse == 0)
             {
@@ -1708,23 +1743,19 @@ namespace BookCollector.ViewModels.Main
             return intParse;
         }
 
-        private double ParseDouble(string input)
+        private static double ParseDouble(string input)
         {
-            double doubleParse;
-
             if (input.StartsWith('$'))
-                input = input.Substring(1);
+                input = input[1..];
 
-            double.TryParse(input, out doubleParse);
+            var parsed = double.TryParse(input, out double doubleParse);
 
             return doubleParse;
         }
 
-        private bool ParseBool(string input)
+        private static bool ParseBool(string input)
         {
-            bool boolParse;
-
-            bool.TryParse(input, out boolParse);
+            var parsed = bool.TryParse(input, out bool boolParse);
 
             return boolParse;
         }

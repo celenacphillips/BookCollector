@@ -8,9 +8,8 @@ namespace BookCollector.Data.Models
 {
     public class CountModel
     {
-        internal int Count { get; set; }
-        internal double CountDouble { get; set; }
-
-        internal string Label { get; set; }
+        public int Count { get; set; }
+        public double CountDouble { get; set; }
+        public string? Label { get; set; }
     }
 }

@@ -32,15 +32,21 @@ public partial class SettingsView : ContentPage
     // Try to add color preview in the picker - 11/12/2025
     // Add more currency options - 12/1/2025
     // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
+    // WishListBook Toggle - 12/8/2025
 
     public SettingsView()
 	{
+        var userAppTheme = Application.Current?.UserAppTheme;
+
+        if (userAppTheme == AppTheme.Unspecified)
+            userAppTheme = Application.Current?.PlatformAppTheme;
+
         AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
-        SelectedAppTheme = Application.Current.UserAppTheme == AppTheme.Dark ? AppThemeList[1] : AppThemeList[0];
+        SelectedAppTheme = userAppTheme == AppTheme.Dark ? AppThemeList[1] : AppThemeList[0];
 
         ColorList = [AppStringResources.BlueGray, "Red", "Purple", "Green", "Orange", "Teal", "Magenta"];
-        var color = (Color)Application.Current.Resources["Primary"];
-        var hexCode = color.ToHex().ToLower();
+        var color = (Color?)Application.Current?.Resources["Primary"];
+        var hexCode = color?.ToHex().ToLower();
         SelectedColor = hexCode switch
         {
             "#ff0000" => ColorList[1],
@@ -59,7 +65,7 @@ public partial class SettingsView : ContentPage
         SelectedCurrency = Preferences.Get("Currency", "$ USD" /* Default */);
 
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation  /* Default */);
-        SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation.Substring(exportLocation.IndexOf("0") + 2);
+        SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2)..];
 
         CommentsOn = Preferences.Get("CommentsOn", true  /* Default */);
         ChaptersOn = Preferences.Get("ChaptersOn", true  /* Default */);
@@ -77,17 +83,23 @@ public partial class SettingsView : ContentPage
         BindingContext = this;
     }
 
-    void OnAppThemePickerSelectedIndexChanged(object sender, EventArgs e)
+    public void OnAppThemePickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
-        Application.Current.UserAppTheme = picker.SelectedItem.ToString().Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
-        Preferences.Set("AppTheme", picker.SelectedItem.ToString());
-        // TO DO:
-        // Add ability to convert AppStringResources string to English string for the Preferences set
-        // If not, when someone changes the language, the default preference will be a different string.
+        var item = picker.SelectedItem.ToString();
+
+        if (!string.IsNullOrEmpty(item))
+        {
+            Application.Current?.UserAppTheme = item.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
+            Preferences.Set("AppTheme", picker.SelectedItem.ToString());
+            // TO DO:
+            // Add ability to convert AppStringResources string to English string for the Preferences set
+            // If not, when someone changes the language, the default preference will be a different string.
+        }
+
     }
 
-    void OnColorPickerSelectedIndexChanged(object sender, EventArgs e)
+    public void OnColorPickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
         var colorName = picker.SelectedItem.ToString();
@@ -104,12 +116,14 @@ public partial class SettingsView : ContentPage
 
         Data.Colors.SetColors(hexCode);
 
+#if ANDROID
         CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
+#endif
 
         Preferences.Set("AppColor", hexCode);
     }
 
-    void OnLanguagePickerSelectedIndexChanged(object sender, EventArgs e)
+    public void OnLanguagePickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
         Preferences.Set("Language", picker.SelectedItem.ToString());
@@ -118,69 +132,81 @@ public partial class SettingsView : ContentPage
         // If not, when someone changes the language, the default preference will be a different string.
     }
 
-    void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)
+    public void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
-        Preferences.Set("Currency", picker.SelectedItem.ToString());
 
-        if (picker.SelectedItem.ToString().Equals("$ USD"))
-            Preferences.Set("CultureCode", "en-US");
+        var item = picker.SelectedItem.ToString();
+
+        if (!string.IsNullOrEmpty(item))
+        {
+            Preferences.Set("Currency", picker.SelectedItem.ToString());
+
+            if (item.Equals("$ USD"))
+                Preferences.Set("CultureCode", "en-US");
+        }
     }
 
-    async void OnExportLocationButtonClicked(object sender, EventArgs e)
+    public async void OnExportLocationButtonClicked(object sender, EventArgs e)
     {
         var result = await FolderPicker.Default.PickAsync(CancellationToken.None);
-        SelectedExportLocation = result.Folder.Path.Substring(result.Folder.Path.IndexOf("0") + 2);
-        SelectedExportLocationLabel.Text = result.Folder.Path.Substring(result.Folder.Path.IndexOf("0") + 2);
-        Preferences.Set("ExportLocation", result.Folder.Path);
+
+        var folder = result.Folder;
+
+        if (folder != null)
+        {
+            SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2)..];
+            SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2)..];
+            Preferences.Set("ExportLocation", folder.Path);
+        }
     }
 
-    void OnCommentsToggled(object sender, ToggledEventArgs e)
+    public void OnCommentsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("CommentsOn", e.Value);
     }
 
-    void OnChaptersToggled(object sender, ToggledEventArgs e)
+    public void OnChaptersToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("ChaptersOn", e.Value);
     }
 
-    void OnFavoritesToggled(object sender, ToggledEventArgs e)
+    public void OnFavoritesToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("FavoritesOn", e.Value);
     }
 
-    void OnRatingsToggled(object sender, ToggledEventArgs e)
+    public void OnRatingsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("RatingsOn", e.Value);
     }
 
-    void OnHiddenBooksToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenBooksToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenBooksOn", e.Value);
     }
 
-    void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenCollectionsOn", e.Value);
     }
 
-    void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenGenresOn", e.Value);
     }
 
-    void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenSeriesOn", e.Value);
     }
 
-    void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenAuthorsOn", e.Value);
     }
 
-    void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
+    public void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenLocationsOn", e.Value);
     }

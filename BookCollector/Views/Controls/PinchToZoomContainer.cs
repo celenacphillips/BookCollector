@@ -11,16 +11,16 @@ public class PinchandPanContainer : ContentView
 
     public PinchandPanContainer()
     {
-        PinchGestureRecognizer pinchGesture = new PinchGestureRecognizer();
+        var pinchGesture = new PinchGestureRecognizer();
         pinchGesture.PinchUpdated += OnPinchUpdated;
         GestureRecognizers.Add(pinchGesture);
 
-        PanGestureRecognizer panGesture = new PanGestureRecognizer();
+        var panGesture = new PanGestureRecognizer();
         panGesture.PanUpdated += OnPanUpdated;
         GestureRecognizers.Add(panGesture);
     }
 
-    void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+    public void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
         if (e.Status == GestureStatus.Started)
         {
@@ -69,7 +69,7 @@ public class PinchandPanContainer : ContentView
         }
     }
 
-    void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+    public void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         switch (e.StatusType)
         {

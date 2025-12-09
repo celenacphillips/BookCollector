@@ -5,12 +5,12 @@ namespace BookCollector.Views.Groupings;
 
 public partial class CollectionsView : ContentPage
 {
-    private CollectionsViewModel _viewModel { get; set; }
+    private CollectionsViewModel ViewModel { get; set; }
 
     public CollectionsView()
 	{
-        CollectionsViewModel viewModel = new CollectionsViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new CollectionsViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -20,6 +20,6 @@ public partial class CollectionsView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

@@ -3,10 +3,12 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
@@ -17,7 +19,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public double CollectionViewHeight { get; set; }
         public double SingleMenuBar { get; set; }
         public double DoubleMenuBar { get; set; }
-        public ContentPage _view { get; set; }
+        public ContentPage View { get; set; }
 
 
         public bool AscendingChecked { get; set; }
@@ -50,12 +52,14 @@ namespace BookCollector.ViewModels.BaseViewModels
             DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             DoubleMenuBar = DeviceHeight * 0.2899;
             SingleMenuBar = DeviceHeight * 0.2297;
+            InfoText = string.Empty;
+            View = new ContentPage();
         }
 
         [RelayCommand]
-        public async Task InfoPopup()
+        public void InfoPopup()
         {
-            _view.ShowPopup(new InformationPopup(DeviceWidth - 50, InfoText));
+            View.ShowPopup(new InformationPopup(DeviceWidth - 50, InfoText));
         }
 
         [RelayCommand]
@@ -68,7 +72,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             }    
         }
 
-        public async void SetIsBusyTrue()
+        public void SetIsBusyTrue()
         {
             GC.Collect();
             IsBusy = true;
@@ -99,7 +103,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             string cancel = $"{AppStringResources.Cancel}";
             string? destruction = null;
             string[] buttons = [edit, delete];
-            return await Shell.Current.DisplayActionSheet(title, cancel, destruction, buttons);
+            return await Shell.Current.DisplayActionSheetAsync(title, cancel, destruction, buttons);
         }
 
         public static async Task<string?> PopupMenu_CoverPhoto()
@@ -111,7 +115,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             string cancel = AppStringResources.Cancel;
             string? destruction = null;
             string[] buttons = [file, url];
-            return await Shell.Current.DisplayActionSheet(title, cancel, destruction, buttons);
+            return await Shell.Current.DisplayActionSheetAsync(title, cancel, destruction, buttons);
         }
 
         public static async Task<bool> DeleteCheck(string item)
@@ -124,27 +128,23 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static async Task<bool> DisplayMessage(string inputTitle, string? inputMessage = null, string? inputConfirm = null, string? inputDeny = null)
         {
-            if (inputConfirm == null)
-                inputConfirm = $"{AppStringResources.Yes}";
+            inputConfirm ??= $"{AppStringResources.Yes}";
 
-            if (inputDeny == null)
-                inputDeny = $"{AppStringResources.No}";
+            inputDeny ??= $"{AppStringResources.No}";
 
-            if (inputMessage == null)
-                inputMessage = $"{AppStringResources.AreYouSure_Question}";
+            inputMessage ??= $"{AppStringResources.AreYouSure_Question}";
 
-            var action = await Shell.Current.DisplayAlert(inputTitle, inputMessage, inputConfirm, inputDeny);
+            var action = await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm, inputDeny);
             return action;
         }
 
         public static async Task DisplayMessage(string inputTitle, string? inputMessage = null)
         {
-            if (inputMessage == null)
-                inputMessage = inputTitle;
+            inputMessage ??= inputTitle;
 
             var inputConfirm = $"{AppStringResources.OK}";
 
-            await Shell.Current.DisplayAlert(inputTitle, inputMessage, inputConfirm);
+            await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm);
         }
 
         public static async Task CanceledAction()
@@ -158,6 +158,11 @@ namespace BookCollector.ViewModels.BaseViewModels
             var message = $"{AppStringResources.ItemWasDeleted.Replace("Item", item)}";
 
             await DisplayMessage(title, message);
+        }
+
+        public static byte[] DownloadImage(string imageURL)
+        {
+            return new HttpClient().GetByteArrayAsync(imageURL).Result;
         }
     }
 }

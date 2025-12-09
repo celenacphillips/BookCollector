@@ -15,21 +15,24 @@ namespace BookCollector.Data.Models
         public Guid? LocationGuid { get; set; }
 
         [ObservableProperty]
-        public string locationName;
+        public string? locationName;
         [ObservableProperty]
-        public string totalBooksString;
+        public string? totalBooksString;
         [ObservableProperty]
         public bool hideLocation;
 
         public string? ParsedLocationName
         {
-            get => (this.LocationName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
+            get => (!string.IsNullOrEmpty(this.LocationName) &&
+                    (this.LocationName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
                     this.LocationName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.LocationName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase))
-                        ? this.LocationName.Remove(0, this.LocationName.IndexOf(" ") + 1)
+                    this.LocationName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
+                        ? this.LocationName[(this.LocationName.IndexOf(' ') + 1)..]
                         : this.LocationName;
         }
         public int LocationTotalBooks { get; set; }
+        // TO DO
+        // Set value - 12/8/2025
         public double TotalCostOfBooks { get; set; }
         public int? ID { get; set; }
 
@@ -46,9 +49,15 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FilterLists.GetAllBooksInLocationList(this.LocationGuid, showHiddenBooks);
+            var count = 0;
 
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(list.Count);
-            this.LocationTotalBooks = list.Count;
+            if (list != null)
+            {
+                count = list.Count;
+            }
+
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(count);
+            this.LocationTotalBooks = count;
         }
     }
 }

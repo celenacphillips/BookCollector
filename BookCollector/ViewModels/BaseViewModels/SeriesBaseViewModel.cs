@@ -31,9 +31,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task SeriesSelectionChanged()
         {
-            if (SelectedSeries != null)
+            if (SelectedSeries != null && !string.IsNullOrEmpty(SelectedSeries.SeriesName))
             {
-                SeriesMainView view = new SeriesMainView(SelectedSeries, SelectedSeries.SeriesName);
+                var view = new SeriesMainView(SelectedSeries, SelectedSeries.SeriesName);
 
                 await Shell.Current.Navigation.PushAsync(view);
                 SelectedSeries = null;

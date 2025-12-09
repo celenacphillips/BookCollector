@@ -25,7 +25,7 @@ namespace BookCollector.ViewModels.Location
 
         public LocationEditViewModel(LocationModel location, ContentPage view)
         {
-            _view = view;
+            View = view;
 
             EditedLocation = (LocationModel)location.Clone();
         }
@@ -49,7 +49,11 @@ namespace BookCollector.ViewModels.Location
         [RelayCommand]
         public async Task SaveLocation()
         {
-            if (LocationNameValid)
+            if (!LocationNameValid)
+            {
+                await DisplayMessage(AppStringResources.LocationNameNotValid, null);
+            }
+            else
             {
 #if ANDROID
                 if (Platform.CurrentActivity != null &&
@@ -57,7 +61,7 @@ namespace BookCollector.ViewModels.Location
                     Platform.CurrentActivity.Window.DecorView.ClearFocus();
 #endif
 
-                if (ViewTitle.Equals($"{AppStringResources.AddNewLocation}"))
+                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewLocation}"))
                 {
                     if (TestData.UseTestData)
                     {
@@ -82,8 +86,8 @@ namespace BookCollector.ViewModels.Location
 
                 if (InsertMainViewBefore)
                 {
-                    LocationMainView view = new LocationMainView(EditedLocation, $"{EditedLocation.LocationName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, _view);
+                    var view = new LocationMainView(EditedLocation, $"{EditedLocation.LocationName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, View);
 
                 }
 
@@ -99,12 +103,28 @@ namespace BookCollector.ViewModels.Location
             SetRefreshFalse();
         }
 
+        [RelayCommand]
+        public void ValidateLocationName()
+        {
+            ValidateEntry();
+        }
+
         private void ValidateEntry()
         {
             if (string.IsNullOrEmpty(EditedLocation.LocationName))
+            {
+                var locationNameEditor = View.FindByName<Editor>("LocationNameEditor");
+                locationNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
+                locationNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
                 LocationNameValid = false;
+            }
             else
+            {
+                var locationNameEditor = View.FindByName<Editor>("LocationNameEditor");
+                locationNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                locationNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 LocationNameValid = true;
+            }
         }
 
     }

@@ -7,6 +7,7 @@
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Groupings"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Author"
              x:DataType="viewModel:AuthorsViewModel"
+             x:Name="AuthorsPage"
              Title="{x:Static localization:AppStringResources.Authors}">
 
     <ContentPage.ToolbarItems>
@@ -18,9 +19,10 @@
                      Command="{Binding AddAuthorCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -41,7 +43,8 @@
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding SearchOnAuthorCommand}"
                                                                     CommandParameter="{Binding SearchString}"
-                                                                    EventName="TextChanged" />
+                                                                    EventName="TextChanged"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference AuthorsPage}}"/>
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
@@ -52,17 +55,19 @@
                 </VerticalStackLayout>
             </RefreshView>
         </StackLayout>
+        <!-- Main Content -->
 
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <!-- Activity Indicator -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
+        <!-- Activity Indicator -->
+    </Grid>
     
 </ContentPage>

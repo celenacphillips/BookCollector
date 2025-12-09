@@ -14,7 +14,7 @@ namespace BookCollector
             Year = DateTime.Now.Year.ToString();
             InitializeComponent();
 
-            RegisterRoutes();
+            AppShell.RegisterRoutes();
             BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
 
             TestData.UseTestData = true;
@@ -29,7 +29,7 @@ namespace BookCollector
             BindingContext = this;
         }
 
-        private void RegisterRoutes()
+        private static void RegisterRoutes()
         {
             Routing.RegisterRoute("BookEditView", typeof(Views.Book.BookEditView));
             Routing.RegisterRoute("BookMainView", typeof(Views.Book.BookMainView));

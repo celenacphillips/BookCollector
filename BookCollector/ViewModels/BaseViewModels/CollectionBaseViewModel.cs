@@ -31,9 +31,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task CollectionSelectionChanged()
         {
-            if (SelectedCollection != null)
+            if (SelectedCollection != null && !string.IsNullOrEmpty(SelectedCollection.CollectionName))
             {
-                CollectionMainView view = new CollectionMainView(SelectedCollection, SelectedCollection.CollectionName);
+                var view = new CollectionMainView(SelectedCollection, SelectedCollection.CollectionName);
 
                 await Shell.Current.Navigation.PushAsync(view);
                 SelectedCollection = null;

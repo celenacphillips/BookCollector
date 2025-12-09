@@ -42,16 +42,16 @@ public partial class Favorite : ContentView
             heart.Source = CreateHeartLabel(HeartState.Full);
     }
 
-    private ImageSource CreateHeartLabel(HeartState state)
+    private static ImageSource CreateHeartLabel(HeartState state)
     {
         return state switch
         {
-            HeartState.Empty => Application.Current.UserAppTheme switch
+            HeartState.Empty => Application.Current?.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_empty_dark.svg"),
                 _ => ImageSource.FromFile("Icons/heart_icon_empty_light.svg")
             },
-            HeartState.Full => Application.Current.UserAppTheme switch
+            HeartState.Full => Application.Current?.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_full_dark.svg"),
                 _ => ImageSource.FromFile("Icons/heart_icon_full_light.svg"),
@@ -60,7 +60,7 @@ public partial class Favorite : ContentView
         };
     }
 
-    private void heart_Clicked(object sender, EventArgs e)
+    private void Heart_Clicked(object sender, EventArgs e)
     {
         if (!CurrentValue)
             CurrentValue = true;

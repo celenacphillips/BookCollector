@@ -7,24 +7,26 @@ namespace BookCollector.Views.Book;
 
 public partial class BookEditView : ContentPage
 {
-    private BookEditViewModel _viewModel { get; set; }
+    private BookEditViewModel ViewModel { get; set; }
 
     public BookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, BookMainView? mainViewBefore = null)
 	{
-        BookEditViewModel viewModel = new BookEditViewModel(book, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.RemoveMainViewBefore = removeMainViewBefore;
-        viewModel.MainViewBefore = mainViewBefore;
-        _viewModel = viewModel;
+        var viewModel = new BookEditViewModel(book, this)
+        {
+            ViewTitle = viewTitle,
+            RemoveMainViewBefore = removeMainViewBefore,
+            MainViewBefore = mainViewBefore
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
-	}
+    }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

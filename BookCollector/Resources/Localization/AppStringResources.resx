@@ -1026,4 +1026,25 @@
   <data name="PleaseConnectToInternetToFindBookCover" xml:space="preserve">
     <value>Please connect to Internet to find book cover!</value>
   </data>
+  <data name="BookTitleNotValid" xml:space="preserve">
+    <value>Book Title not valid.</value>
+  </data>
+  <data name="BookFormatNotValid" xml:space="preserve">
+    <value>Book Format not valid.</value>
+  </data>
+  <data name="SeriesNameNotValid" xml:space="preserve">
+    <value>Series Name not valid!</value>
+  </data>
+  <data name="LocationNameNotValid" xml:space="preserve">
+    <value>Location Name not valid!</value>
+  </data>
+  <data name="GenreNameNotValid" xml:space="preserve">
+    <value>Genre Name not valid!</value>
+  </data>
+  <data name="AuthorNameNotValid" xml:space="preserve">
+    <value>Author Name not valid!</value>
+  </data>
+  <data name="CollectionNameNotValid" xml:space="preserve">
+    <value>Collection Name not valid!</value>
+  </data>
 </root>

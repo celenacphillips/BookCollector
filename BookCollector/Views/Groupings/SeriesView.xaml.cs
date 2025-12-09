@@ -4,12 +4,12 @@ namespace BookCollector.Views.Groupings;
 
 public partial class SeriesView : ContentPage
 {
-    private SeriesViewModel _viewModel { get; set; }
+    private SeriesViewModel ViewModel { get; set; }
 
     public SeriesView()
 	{
-        SeriesViewModel viewModel = new SeriesViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new SeriesViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class SeriesView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

@@ -4,12 +4,12 @@ namespace BookCollector.Views.Library;
 
 public partial class ReadView : ContentPage
 {
-    private ReadViewModel _viewModel {  get; set; }
+    private ReadViewModel ViewModel {  get; set; }
 
-	public ReadView()
+    public ReadView()
 	{
-        ReadViewModel viewModel = new ReadViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new ReadViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class ReadView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

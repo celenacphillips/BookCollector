@@ -70,21 +70,21 @@ public partial class Rating : ContentView
         };
     }
 
-    private ICommand StarsClicked(int index)
+    private Command StarsClicked(int index)
     {
-        return new Command(() => stars_Clicked(index));
+        return new Command(() => Stars_Clicked(index));
     }
 
-    private ImageSource CreateStarLabel(StarState state)
+    private static ImageSource CreateStarLabel(StarState state)
     {
         return state switch
         {
-            StarState.Empty => Application.Current.UserAppTheme switch
+            StarState.Empty => Application.Current?.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_empty_dark.svg"),
                 _ => ImageSource.FromFile("Icons/star_icon_empty_light.svg"),
             },
-            StarState.Full => Application.Current.UserAppTheme switch
+            StarState.Full => Application.Current?.UserAppTheme switch
             {
                 AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_full_dark.svg"),
                 _ => ImageSource.FromFile("Icons/star_icon_full_light.svg"),
@@ -93,20 +93,14 @@ public partial class Rating : ContentView
         };
     }
 
-    private void stars_Clicked(int index)
+    private void Stars_Clicked(int index)
     {
         CurrentValue = index;
 
         SetStars();
     }
 
-    private void stars_Clicked(object sender, EventArgs e)
-    {
-        CurrentValue = 0;
-
-        SetStars();
-    }
-    private double ClampValue(double value)
+    private static double ClampValue(double value)
     {
         if (value < 0)
             return 0;

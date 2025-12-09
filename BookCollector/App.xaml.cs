@@ -7,24 +7,30 @@ namespace BookCollector
         public App()
         {
             InitializeComponent();
-            GetAppTheme();
-            GetColor();
-
-            MainPage = new AppShell();
+            App.GetAppTheme();
+            App.GetColor();
         }
 
-        private void GetAppTheme()
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            // Create the root window and set its page
+            return new Window(new AppShell());
+        }
+
+
+        private static void GetAppTheme()
         {
             var savedTheme = Preferences.Get("AppTheme", "System" /* Default */);
-            Application.Current.UserAppTheme = savedTheme switch
-            {
-                "Light" => AppTheme.Light,
-                "Dark" => AppTheme.Dark,
-                _ => AppTheme.Unspecified // Follows system
-            };
+
+            Current?.UserAppTheme = savedTheme switch
+                {
+                    "Light" => AppTheme.Light,
+                    "Dark" => AppTheme.Dark,
+                    _ => AppTheme.Unspecified // Follows system
+                };
         }
 
-        private void GetColor()
+        private static void GetColor()
         {
             var savedColorHexCode = Preferences.Get("AppColor", "#336699"  /* Default */);
 

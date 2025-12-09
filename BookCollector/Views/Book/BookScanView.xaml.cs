@@ -7,7 +7,7 @@ namespace BookCollector.Views.Book;
 
 public partial class BookScanView : ContentPage
 {
-    public BookSearchViewModel ReturnViewModel { get; set; }
+    public BookSearchViewModel? ReturnViewModel { get; set; }
 
     public string? InputString { get; set; }
 
@@ -18,16 +18,16 @@ public partial class BookScanView : ContentPage
         InitializeComponent();
     }
 
-    async void CameraView_OnDetected(object sender, OnDetectedEventArg e)
+    public async void CameraView_OnDetected(object sender, OnDetectedEventArg e)
     {
         await Shell.Current.DisplaySnackbar(AppStringResources.BarcodeScanned);
 
         var result = e.BarcodeResults.Where(x => x.BarcodeType == BarcodeTypes.Isbn);
 
-        if (result.Count() == 1)
+        if (result != null && result.Count() == 1)
         {
             await Shell.Current.Navigation.PopModalAsync();
-            InputString = result.FirstOrDefault().RawValue;
+            InputString = result.FirstOrDefault()?.RawValue;
             await ScanSearch();
         }
         else
@@ -40,7 +40,10 @@ public partial class BookScanView : ContentPage
 
     public async Task ScanSearch()
     {
-        ReturnViewModel.Input = InputString;
-        await ReturnViewModel.Search();
+        if (ReturnViewModel != null)
+        {
+            ReturnViewModel.Input = InputString;
+            await ReturnViewModel.Search();
+        }
     }
 }

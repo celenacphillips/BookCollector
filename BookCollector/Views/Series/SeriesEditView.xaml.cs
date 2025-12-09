@@ -5,14 +5,16 @@ namespace BookCollector.Views.Series;
 
 public partial class SeriesEditView : ContentPage
 {
-    private SeriesEditViewModel _viewModel { get; set; }
+    private SeriesEditViewModel ViewModel { get; set; }
 
     public SeriesEditView(SeriesModel series, string viewTitle, bool insertMainViewBefore = false)
 	{
-        SeriesEditViewModel viewModel = new SeriesEditViewModel(series, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.InsertMainViewBefore = insertMainViewBefore;
-        _viewModel = viewModel;
+        var viewModel = new SeriesEditViewModel(series, this)
+        {
+            ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore
+        };
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -22,6 +24,6 @@ public partial class SeriesEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

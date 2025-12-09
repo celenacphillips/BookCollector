@@ -6,7 +6,7 @@
     
     <HorizontalStackLayout BindingContext="{x:Reference this}">
         <Button Text=""
-                Clicked="stars_Clicked"
+                Clicked="Stars_Clicked"
                 BackgroundColor="Transparent"
                 Style="{DynamicResource RatingButton}"/>
         <HorizontalStackLayout x:Name="starLayout">

@@ -4,12 +4,12 @@ namespace BookCollector.Views.Library;
 
 public partial class ToBeReadView : ContentPage
 {
-    private ToBeReadViewModel _viewModel {  get; set; }
+    private ToBeReadViewModel ViewModel {  get; set; }
 
-	public ToBeReadView()
+    public ToBeReadView()
 	{
-        ToBeReadViewModel viewModel = new ToBeReadViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new ToBeReadViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class ToBeReadView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

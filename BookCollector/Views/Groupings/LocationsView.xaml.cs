@@ -4,12 +4,12 @@ namespace BookCollector.Views.Groupings;
 
 public partial class LocationsView : ContentPage
 {
-    private LocationsViewModel _viewModel { get; set; }
+    private LocationsViewModel ViewModel { get; set; }
 
     public LocationsView()
 	{
-        LocationsViewModel viewModel = new LocationsViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new LocationsViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class LocationsView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

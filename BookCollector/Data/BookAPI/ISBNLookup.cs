@@ -4,127 +4,127 @@ namespace BookCollector.Data.BookAPI
 {
     public class ISBNLookup
     {
-        public string kind { get; set; }
-        public int totalItems { get; set; }
-        public List<Item> items { get; set; }
+        public string? Kind { get; set; }
+        public int TotalItems { get; set; }
+        public List<Item>? Items { get; set; }
     }
 
     public class AccessInfo
     {
-        public string country { get; set; }
-        public string viewability { get; set; }
-        public bool embeddable { get; set; }
-        public bool publicDomain { get; set; }
-        public string textToSpeechPermission { get; set; }
-        public Epub epub { get; set; }
-        public Pdf pdf { get; set; }
-        public string webReaderLink { get; set; }
-        public string accessViewStatus { get; set; }
-        public bool quoteSharingAllowed { get; set; }
+        public string? Country { get; set; }
+        public string? Viewability { get; set; }
+        public bool? Embeddable { get; set; }
+        public bool? publicDomain { get; set; }
+        public string? TextToSpeechPermission { get; set; }
+        public Epub? Epub { get; set; }
+        public Pdf? Pdf { get; set; }
+        public string? WebReaderLink { get; set; }
+        public string? AccessViewStatus { get; set; }
+        public bool QuoteSharingAllowed { get; set; }
     }
 
     public class Epub
     {
-        public bool isAvailable { get; set; }
+        public bool IsAvailable { get; set; }
     }
 
     public partial class ImageLinks : ObservableObject
     {
-        public string smallThumbnail { get; set; }
+        public string? SmallThumbnail { get; set; }
 
-        public string thumbnail { get; set; }
+        public string? Thumbnail { get; set; }
 
         [ObservableProperty]
-        public ImageSource imageSource;
+        public ImageSource? imageSource;
 
         public string? ImageURL { get; set; }
     }
 
     public class IndustryIdentifier
     {
-        public string type { get; set; }
-        public string identifier { get; set; }
+        public string? Type { get; set; }
+        public string? Identifier { get; set; }
     }
 
     public partial class Item : ObservableObject
     {
-        public string kind { get; set; }
-        public string id { get; set; }
-        public string etag { get; set; }
-        public string selfLink { get; set; }
+        public string? Kind { get; set; }
+        public string? Id { get; set; }
+        public string? Etag { get; set; }
+        public string? SelfLink { get; set; }
 
         [ObservableProperty]
-        public VolumeInfo volumeInfo;
-        public SaleInfo saleInfo { get; set; }
-        public AccessInfo accessInfo { get; set; }
-        public SearchInfo searchInfo { get; set; }
+        public VolumeInfo? volumeInfo;
+        public SaleInfo? SaleInfo { get; set; }
+        public AccessInfo? AccessInfo { get; set; }
+        public SearchInfo? SearchInfo { get; set; }
     }
 
     public class PanelizationSummary
     {
-        public bool containsEpubBubbles { get; set; }
-        public bool containsImageBubbles { get; set; }
+        public bool ContainsEpubBubbles { get; set; }
+        public bool ContainsImageBubbles { get; set; }
     }
 
     public class Pdf
     {
-        public bool isAvailable { get; set; }
+        public bool IsAvailable { get; set; }
     }
 
     public class ReadingModes
     {
-        public bool text { get; set; }
-        public bool image { get; set; }
+        public bool Text { get; set; }
+        public bool Image { get; set; }
     }
 
     public class SaleInfo
     {
-        public string country { get; set; }
-        public string saleability { get; set; }
-        public bool isEBook { get; set; }
+        public string? Country { get; set; }
+        public string? Saleability { get; set; }
+        public bool IsEBook { get; set; }
     }
 
     public class SearchInfo
     {
-        public string textSnippet { get; set; }
+        public string? TextSnippet { get; set; }
     }
 
     public partial class VolumeInfo : ObservableObject
     {
         [ObservableProperty]
-        public string title;
+        public string? title;
 
         [ObservableProperty]
-        public string subtitle;
+        public string? subtitle;
 
         [ObservableProperty]
-        public List<string> authors;
+        public List<string>? authors;
 
         [ObservableProperty]
-        public string authorList;
+        public string? authorList;
 
         [ObservableProperty]
-        public string publisher;
+        public string? publisher;
 
         [ObservableProperty]
-        public string publishedDate;
+        public string? publishedDate;
 
         [ObservableProperty]
-        public string description;
-        public List<IndustryIdentifier> industryIdentifiers { get; set; }
-        public ReadingModes readingModes { get; set; }
+        public string? description;
+        public List<IndustryIdentifier>? IndustryIdentifiers { get; set; }
+        public ReadingModes? ReadingModes { get; set; }
 
         [ObservableProperty]
         public int pageCount;
-        public string printType { get; set; }
-        public List<string> categories { get; set; }
-        public string maturityRating { get; set; }
-        public bool allowAnonLogging { get; set; }
-        public string contentVersion { get; set; }
-        public PanelizationSummary panelizationSummary { get; set; }
+        public string? PrintType { get; set; }
+        public List<string>? Categories { get; set; }
+        public string? MaturityRating { get; set; }
+        public bool AllowAnonLogging { get; set; }
+        public string? ContentVersion { get; set; }
+        public PanelizationSummary? PanelizationSummary { get; set; }
 
         [ObservableProperty]
-        public ImageLinks imageLinks;
+        public ImageLinks? imageLinks;
 
         [ObservableProperty]
         public bool hasBookCover;
@@ -133,9 +133,9 @@ namespace BookCollector.Data.BookAPI
         public bool hasNoBookCover;
 
         [ObservableProperty]
-        public string language;
-        public string previewLink { get; set; }
-        public string infoLink { get; set; }
-        public string canonicalVolumeLink { get; set; }
+        public string? language;
+        public string? PreviewLink { get; set; }
+        public string? InfoLink { get; set; }
+        public string? CanonicalVolumeLink { get; set; }
     }
 }

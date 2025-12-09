@@ -38,15 +38,15 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool showFormatPrices;
 
         [ObservableProperty]
-        public string topXSeries;
+        public string? topXSeries;
 
         [ObservableProperty]
-        public string topXAuthors;
+        public string? topXAuthors;
 
         [ObservableProperty]
-        public string topXLocations;
+        public string? topXLocations;
 
-        public List<Color> ColorList { get; set; }
+        public List<Color?>? ColorList { get; set; }
         public bool ShowFavorites { get; set; }
         public bool ShowRatings { get; set; }
         public bool ShowHiddenBooks { get; set; }
@@ -57,16 +57,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool ShowHiddenAuthors { get; set; }
         public int MaxListNumber { get; set; }
 
-        internal void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
+        public void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
         {
-            var textLight = (Color)Application.Current.Resources["TextLight"];
-            var textDark = (Color)Application.Current.Resources["TextDark"];
+            var textLight = (Color?)Application.Current?.Resources["TextLight"];
+            var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
-            var section = (ChartView)_view.FindByName(sectionName);
+            var section = (ChartView)View.FindByName(sectionName);
 
             section.Chart = null;
 
-            List<ChartEntry> entries = new();
+            List<ChartEntry> entries = [];
 
             foreach (var chartValue in chartValues)
             {
@@ -74,10 +74,10 @@ namespace BookCollector.ViewModels.BaseViewModels
                     new ChartEntry(chartValue.Value)
                     {
                         Label = $"{chartValue.LabelValue}",
-                        TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
+                        TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark?.ToHex()) : SKColor.Parse(textLight?.ToHex()),
                         ValueLabel = $"{chartValue.Value}",
-                        ValueLabelColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
-                        Color = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        ValueLabelColor = Application.Current?.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark?.ToHex()) : SKColor.Parse(textLight?.ToHex()),
+                        Color = SKColor.Parse($"{chartValue?.ColorValue?.ToHex()}"),
                     });
             }
 
@@ -91,16 +91,16 @@ namespace BookCollector.ViewModels.BaseViewModels
             };
         }
 
-        internal void SetUpBarChart(List<ChartValues> chartValues, string sectionName)
+        public void SetUpBarChart(List<ChartValues> chartValues, string sectionName)
         {
-            var textLight = (Color)Application.Current.Resources["TextLight"];
-            var textDark = (Color)Application.Current.Resources["TextDark"];
+            var textLight = (Color?)Application.Current?.Resources["TextLight"];
+            var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
-            var section = (ChartView)_view.FindByName(sectionName);
+            var section = (ChartView)View.FindByName(sectionName);
 
             section.Chart = null;
 
-            List<ChartEntry> entries = new();
+            List<ChartEntry> entries = [];
 
             foreach (var chartValue in chartValues)
             {
@@ -108,10 +108,10 @@ namespace BookCollector.ViewModels.BaseViewModels
                     new ChartEntry(chartValue.Value)
                     {
                         Label = $"{chartValue.LabelValue}",
-                        TextColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
+                        TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark?.ToHex()) : SKColor.Parse(textLight?.ToHex()),
                         ValueLabel = $"{chartValue.Value}",
-                        ValueLabelColor = Application.Current.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark.ToHex()) : SKColor.Parse(textLight.ToHex()),
-                        Color = SKColor.Parse($"{chartValue.ColorValue.ToHex()}"),
+                        ValueLabelColor = Application.Current?.UserAppTheme == AppTheme.Dark ? SKColor.Parse(textDark?.ToHex()) : SKColor.Parse(textLight?.ToHex()),
+                        Color = SKColor.Parse($"{chartValue?.ColorValue?.ToHex()}"),
                     });
             }
 
@@ -128,19 +128,19 @@ namespace BookCollector.ViewModels.BaseViewModels
             };
         }
 
-        internal void GetColors()
+        public void GetColors()
         {
-            var color1 = (Color)Application.Current.Resources["Primary"];
-            var color2 = (Color)Application.Current.Resources["Color2"];
-            var color3 = (Color)Application.Current.Resources["Color3"];
-            var color4 = (Color)Application.Current.Resources["Color4"];
-            var color5 = (Color)Application.Current.Resources["Color5"];
-            var color6 = (Color)Application.Current.Resources["Color6"];
+            var color1 = (Color?)Application.Current?.Resources["Primary"];
+            var color2 = (Color?)Application.Current?.Resources["Color2"];
+            var color3 = (Color?)Application.Current?.Resources["Color3"];
+            var color4 = (Color?)Application.Current?.Resources["Color4"];
+            var color5 = (Color?)Application.Current?.Resources["Color5"];
+            var color6 = (Color?)Application.Current?.Resources["Color6"];
 
             ColorList = [color1, color2, color3, color4, color5, color6];
         }
 
-        internal void GetPreferences()
+        public void GetPreferences()
         {
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
             ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
@@ -153,19 +153,12 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
     }
 
-    internal class ChartValues
+    public class ChartValues
     {
-        internal Color ColorValue { get; set; }
+        public Color? ColorValue { get; set; }
 
-        internal string LabelValue { get; set; }
+        public string? LabelValue { get; set; }
 
-        internal float Value { get; set; }
-    }
-
-    public class CountValues
-    {
-        internal int Count { get; set; }
-
-        internal string Label { get; set; }
+        public float Value { get; set; }
     }
 }

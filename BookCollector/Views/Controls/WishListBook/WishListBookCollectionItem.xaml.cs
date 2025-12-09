@@ -2,7 +2,7 @@ namespace BookCollector.Views.Controls.WishListBook;
 
 public partial class WishListBookCollectionItem : ContentView
 {
-	public WishListBookCollectionItem()
+    public WishListBookCollectionItem()
 	{
 		InitializeComponent();
 	}

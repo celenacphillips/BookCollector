@@ -4,12 +4,12 @@ namespace BookCollector.Views.Groupings;
 
 public partial class GenresView : ContentPage
 {
-    private GenresViewModel _viewModel { get; set; }
+    private GenresViewModel ViewModel { get; set; }
 
     public GenresView()
 	{
-        GenresViewModel viewModel = new GenresViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new GenresViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -19,6 +19,6 @@ public partial class GenresView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }

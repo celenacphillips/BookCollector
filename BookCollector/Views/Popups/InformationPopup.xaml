@@ -4,35 +4,31 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
                x:Class="BookCollector.Views.Popups.InformationPopup"
-               CanBeDismissedByTappingOutsideOfPopup="True">
-    
-    <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
-                         Padding="2"
-                         WidthRequest="{Binding PopupWidth}"
-                         MinimumHeightRequest="{Binding PopupHeight}">
-        
-        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               WidthRequest="{Binding PopupWidth}"
+               MinimumHeightRequest="{Binding PopupHeight}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0">
 
-            <Grid>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
+    <VerticalStackLayout>
+        <Grid>
 
-                <Image Source="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                       HorizontalOptions="Center"
-                       Grid.Row="0" Grid.Column="0"/>
-                
-                <Label Text="{Binding InfoText}"
-                       Grid.Row="0" Grid.Column="1"
-                       VerticalTextAlignment="Center"
-                       Margin="20"/>
-                
-            </Grid>
-            
-        </VerticalStackLayout>
-        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                   HorizontalOptions="Center"
+                   Grid.Row="0" Grid.Column="0"/>
+
+            <Label Text="{Binding InfoText}"
+                   Grid.Row="0" Grid.Column="1"
+                   VerticalTextAlignment="Center"
+                   Margin="20"/>
+
+        </Grid>
+
     </VerticalStackLayout>
     
 </toolkit:Popup>

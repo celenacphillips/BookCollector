@@ -4,13 +4,12 @@ namespace BookCollector.Views.Statistics;
 
 public partial class LibraryStatisticsView : ContentPage
 {
-    private LibraryStatisticsViewModel _viewModel;
+    private LibraryStatisticsViewModel ViewModel;
 
-    // If data isn't showing, check here.
     public LibraryStatisticsView()
 	{
-        LibraryStatisticsViewModel viewModel = new LibraryStatisticsViewModel(this);
-        _viewModel = viewModel;
+        var viewModel = new LibraryStatisticsViewModel(this);
+        ViewModel = viewModel;
         BindingContext = viewModel;
 
         InitializeComponent();
@@ -18,6 +17,6 @@ public partial class LibraryStatisticsView : ContentPage
 
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var _ = ViewModel.SetViewModelData();
     }
 }
