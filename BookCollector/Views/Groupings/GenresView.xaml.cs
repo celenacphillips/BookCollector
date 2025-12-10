@@ -4,21 +4,20 @@ namespace BookCollector.Views.Groupings;
 
 public partial class GenresView : ContentPage
 {
-    private GenresViewModel ViewModel { get; set; }
-
     public GenresView()
-	{
-        var viewModel = new GenresViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.ViewModel = new GenresViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private GenresViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

@@ -1,7 +1,7 @@
-﻿using BookCollector.ViewModels.BaseViewModels;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Net;
+using BookCollector.ViewModels.BaseViewModels;
+using Newtonsoft.Json;
 
 namespace BookCollector.Data.BookAPI
 {
@@ -9,15 +9,15 @@ namespace BookCollector.Data.BookAPI
     {
         public static (ObservableCollection<Item>?, int) Search(string input)
         {
-            HttpClient client = new()
+            HttpClient client = new ()
             {
-                BaseAddress = new Uri("https://www.googleapis.com/books/v1/volumes?q=isbn:")
+                BaseAddress = new Uri("https://www.googleapis.com/books/v1/volumes?q=isbn:"),
             };
             var endpoint = $"{client.BaseAddress}{input}";
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
-            ISBNLookup? isbnResponse = new();
+            ISBNLookup? isbnResponse = new ();
 
             if (response.IsSuccessStatusCode)
             {
@@ -38,7 +38,9 @@ namespace BookCollector.Data.BookAPI
                             totalItems = isbnResponse.TotalItems;
 
                             if (totalItems == 0)
+                            {
                                 throw new Exception();
+                            }
 
                             if (isbnItems != null)
                             {
@@ -53,7 +55,9 @@ namespace BookCollector.Data.BookAPI
                                         item.VolumeInfo.HasBookCover = true;
                                     }
                                     else
+                                    {
                                         item.VolumeInfo?.HasBookCover = false;
+                                    }
 
                                     item.VolumeInfo?.HasNoBookCover = !item.VolumeInfo.HasBookCover;
 
@@ -66,7 +70,9 @@ namespace BookCollector.Data.BookAPI
                                             item.VolumeInfo.AuthorList += $"{item.VolumeInfo.Authors[i]}";
 
                                             if (i != item.VolumeInfo.Authors.Count - 1)
+                                            {
                                                 item.VolumeInfo.AuthorList += ", ";
+                                            }
                                         }
                                     }
                                 }
@@ -80,7 +86,7 @@ namespace BookCollector.Data.BookAPI
                         throw new Exception();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return (null, 0);
                 }

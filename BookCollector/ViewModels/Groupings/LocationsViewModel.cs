@@ -2,119 +2,119 @@
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Location;
 using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
     public partial class LocationsViewModel : LocationBaseViewModel
     {
         [ObservableProperty]
-        public string? totalLocationsString;
-
-        private bool ShowHiddenLocations { get; set; }
-        private bool LocationNameChecked { get; set; }
-        private bool TotalBooksChecked { get; set; }
-        private bool TotalPriceChecked { get; set; }
+        public string? totalLocationsstring;
 
         public LocationsViewModel(ContentPage view)
         {
-            View = view;
-            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            InfoText = $"{AppStringResources.LocationView_InfoText}";
-            ViewTitle = AppStringResources.Locations;
+            this.View = view;
+            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.InfoText = $"{AppStringResources.LocationView_InfoText}";
+            this.ViewTitle = AppStringResources.Locations;
         }
+
+        private bool ShowHiddenLocations { get; set; }
+
+        private bool LocationNameChecked { get; set; }
+
+        private bool TotalBooksChecked { get; set; }
+
+        private bool TotalPriceChecked { get; set; }
 
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                GetPreferences();
+                this.GetPreferences();
 
                 Task.WaitAll(
-                [
-                    Task.Run (async () => FullLocationList = await FilterLists.GetAllLocationsList(ShowHiddenLocations) ),
+               [
+                    Task.Run(async () => this.FullLocationList = await FilterLists.GetAllLocationsList(this.ShowHiddenLocations)),
                 ]);
 
-                if (FullLocationList != null)
+                if (this.FullLocationList != null)
                 {
-                    TotalLocationsCount = FullLocationList.Count;
+                    this.TotalLocationsCount = this.FullLocationList.Count;
 
-                    FilteredLocationList = FullLocationList;
+                    this.FilteredLocationList = this.FullLocationList;
 
-                    foreach (var location in FullLocationList)
+                    foreach (var location in this.FullLocationList)
                     {
-                        await location.SetTotalBooks(ShowHiddenBook);
+                        await location.SetTotalBooks(this.ShowHiddenBook);
                     }
 
                     Task.WaitAll(
-                    [
-                        Task.Run (async () => FilteredLocationList = await FilterLists.SortLocationsList(FilteredLocationList,
-                                                                                                         LocationNameChecked,
-                                                                                                         TotalBooksChecked,
-                                                                                                         TotalPriceChecked,
-                                                                                                         AscendingChecked,
-                                                                                                         DescendingChecked) ),
+                   [
+                        Task.Run(async () => this.FilteredLocationList = await FilterLists.SortLocationsList(
+                            this.FilteredLocationList,
+                            this.LocationNameChecked,
+                            this.TotalBooksChecked,
+                            this.TotalPriceChecked,
+                            this.AscendingChecked,
+                            this.DescendingChecked)),
                     ]);
 
-                    FilteredLocationsCount = FilteredLocationList.Count;
+                    this.FilteredLocationsCount = this.FilteredLocationList.Count;
 
-                    TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+                    this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
-                    ShowCollectionViewFooter = FilteredLocationsCount > 0;
+                    this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
                 }
 
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
         public void SearchOnLocation(string? input)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            SearchString = input;
+            this.Searchstring = input;
 
-            if (FilteredLocationList != null)
+            if (this.FilteredLocationList != null)
             {
-                if (!string.IsNullOrEmpty(SearchString))
-                    FilteredLocationList = FilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                if (!string.IsNullOrEmpty(this.Searchstring))
+                {
+                    this.FilteredLocationList = this.FilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                }
                 else
-                    FilteredLocationList = FullLocationList;
+                {
+                    this.FilteredLocationList = this.FullLocationList;
+                }
 
-                FilteredLocationsCount = FilteredLocationList != null ? FilteredLocationList.Count : 0;
+                this.FilteredLocationsCount = this.FilteredLocationList != null ? this.FilteredLocationList.Count : 0;
 
-                TotalLocationsString = StringManipulation.SetTotalLocationsString(FilteredLocationsCount, TotalLocationsCount);
+                this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
             }
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
-
 
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
-            if (FilteredLocationList != null)
+            if (this.FilteredLocationList != null)
             {
-                var selected = FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
+                var selected = this.FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
                 {
@@ -122,12 +122,12 @@ namespace BookCollector.ViewModels.Groupings
 
                     if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
                     {
-                        await EditLocation(selected);
+                        await this.EditLocation(selected);
                     }
 
                     if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
                     {
-                        await DeleteLocation(selected);
+                        await this.DeleteLocation(selected);
                     }
                 }
             }
@@ -136,33 +136,33 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public async Task AddLocation()
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
             var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task EditLocation(LocationModel selected)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
             var view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
@@ -176,7 +176,7 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     try
                     {
-                        SetIsBusyTrue();
+                        this.SetIsBusyTrue();
 
                         if (TestData.UseTestData)
                         {
@@ -184,17 +184,15 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
-
                         }
 
                         await ConfirmDelete(selected.LocationName);
 
-                        await SetViewModelData();
+                        await this.SetViewModelData();
 
-                        SetIsBusyFalse();
-
+                        this.SetIsBusyFalse();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await CanceledAction();
                     }
@@ -209,39 +207,39 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task SortPopup()
         {
-            if (!string.IsNullOrEmpty(ViewTitle))
+            if (!string.IsNullOrEmpty(this.ViewTitle))
             {
                 var popup = new SortPopup();
-                var viewModel = new SortPopupViewModel(popup, ViewTitle)
+                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
                 {
                     LocationNameVisible = true,
-                    LocationNameChecked = LocationNameChecked,
+                    LocationNameChecked = this.LocationNameChecked,
                     TotalBooksVisible = true,
-                    TotalBooksChecked = TotalBooksChecked,
+                    TotalBooksChecked = this.TotalBooksChecked,
                     TotalPriceVisible = true,
-                    TotalPriceChecked = TotalPriceChecked,
-                    AscendingChecked = AscendingChecked,
-                    DescendingChecked = DescendingChecked,
+                    TotalPriceChecked = this.TotalPriceChecked,
+                    AscendingChecked = this.AscendingChecked,
+                    DescendingChecked = this.DescendingChecked,
                 };
 
                 popup.BindingContext = viewModel;
 
-                await View.ShowPopupAsync(popup);
-                await SetViewModelData();
+                await this.View.ShowPopupAsync(popup);
+                await this.SetViewModelData();
             }
         }
 
         private void GetPreferences()
         {
-            ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
+            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            LocationNameChecked = Preferences.Get($"{ViewTitle}_LocationNameSelection", true  /* Default */);
-            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
-            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
-            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

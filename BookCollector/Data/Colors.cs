@@ -5,16 +5,16 @@
         public static void SetColors(string hexcode)
         {
             var color = Color.FromArgb(hexcode);
-            var secondary = color.AddLuminosity((float)0.1);
-            var tertiary = color.AddLuminosity((float)0.2);
+            var secondary = color.AddLuminosity(0.1f);
+            var tertiary = color.AddLuminosity(0.2f);
 
             var colorHue = color.GetHue();
 
-            var color2 = color.WithHue((float)(colorHue - 0.2));
-            var color3 = color.WithHue((float)(colorHue - 0.4));
-            var color4 = color.WithHue((float)(colorHue - 0.6));
-            var color5 = color.WithHue((float)(colorHue - 0.8));
-            var color6 = color.WithHue((float)(colorHue - 0.5));
+            var color2 = color.WithHue(colorHue - 0.2f);
+            var color3 = color.WithHue(colorHue - 0.4f);
+            var color4 = color.WithHue(colorHue - 0.6f);
+            var color5 = color.WithHue(colorHue - 0.8f);
+            var color6 = color.WithHue(colorHue - 0.5f);
 
             Application.Current?.Resources["Primary"] = Color.FromArgb(hexcode);
             Application.Current?.Resources["Secondary"] = Color.FromArgb(secondary.ToHex());

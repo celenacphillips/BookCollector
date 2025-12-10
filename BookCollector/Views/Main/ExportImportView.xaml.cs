@@ -4,21 +4,20 @@ namespace BookCollector.Views.Main;
 
 public partial class ExportImportView : ContentPage
 {
-	private ExportImportViewModel ViewModel;
+    private ExportImportViewModel viewModel;
 
     public ExportImportView()
-	{
-        var viewModel = new ExportImportViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.viewModel = new ExportImportViewModel(this);
+        this.BindingContext = this.viewModel;
 
-		InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        var _ = ViewModel.SetViewModelData();
+        var variable = this.viewModel.SetViewModelData();
     }
 }

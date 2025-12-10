@@ -1,24 +1,13 @@
-﻿using BookCollector.Data.Models;
+﻿using System.Collections.ObjectModel;
+using BookCollector.Data.Models;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class CollectionBaseViewModel : BookBaseViewModel
     {
-        [ObservableProperty]
-        public int totalCollectionsCount;
-
-        [ObservableProperty]
-        public int filteredCollectionsCount;
-
         [ObservableProperty]
         public static ObservableCollection<CollectionModel>? fullCollectionList;
 
@@ -26,17 +15,23 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<CollectionModel>? filteredCollectionList;
 
         [ObservableProperty]
+        public int totalCollectionsCount;
+
+        [ObservableProperty]
+        public int filteredCollectionsCount;
+
+        [ObservableProperty]
         public CollectionModel? selectedCollection;
 
         [RelayCommand]
         public async Task CollectionSelectionChanged()
         {
-            if (SelectedCollection != null && !string.IsNullOrEmpty(SelectedCollection.CollectionName))
+            if (this.SelectedCollection != null && !string.IsNullOrEmpty(this.SelectedCollection.CollectionName))
             {
-                var view = new CollectionMainView(SelectedCollection, SelectedCollection.CollectionName);
+                var view = new CollectionMainView(this.SelectedCollection, this.SelectedCollection.CollectionName);
 
                 await Shell.Current.Navigation.PushAsync(view);
-                SelectedCollection = null;
+                this.SelectedCollection = null;
             }
         }
     }

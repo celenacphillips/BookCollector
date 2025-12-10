@@ -1,16 +1,10 @@
-using BookCollector.Data;
 using BookCollector.Data.Enums;
-using System.Runtime.ConstrainedExecution;
-using System.Windows.Input;
 using Colors = Microsoft.Maui.Graphics.Colors;
 
 namespace BookCollector.Views.Controls;
 
 public partial class Rating : ContentView
 {
-    private readonly Rating _view;
-    private const int MAX_VALUE = 5;
-
     public static readonly BindableProperty CurrentValueProperty =
              BindableProperty.Create(
                  nameof(CurrentValue),
@@ -18,17 +12,20 @@ public partial class Rating : ContentView
                  typeof(Rating),
                  propertyChanged: OnRefreshControl);
 
-    public int CurrentValue
-    {
-        get => (int)GetValue(CurrentValueProperty);
-        set => SetValue(CurrentValueProperty, value);
-    }
+    private const int MAXVALUE = 5;
+    private readonly Rating view;
 
     public Rating()
     {
-        _view = this;
-        InitializeComponent();
-        SetStars();
+        this.view = this;
+        this.InitializeComponent();
+        this.SetStars();
+    }
+
+    public int CurrentValue
+    {
+        get => (int)this.GetValue(CurrentValueProperty);
+        set => this.SetValue(CurrentValueProperty, value);
     }
 
     private static void OnRefreshControl(BindableObject bindable, object oldValue, object newValue)
@@ -37,42 +34,6 @@ public partial class Rating : ContentView
         {
             rating.SetStars();
         }
-
-    }
-
-    private void SetStars()
-    {
-        var starLayout = _view.starLayout;
-        starLayout.Children.Clear();
-
-        var intValue = (int)ClampValue(CurrentValue);
-
-        for (int i = 1; i <= MAX_VALUE; i++)
-        {
-            if (intValue >= i)
-            {
-                starLayout.Add(CreateButton(StarState.Full, i));
-            }
-            else
-            {
-                starLayout.Add(CreateButton(StarState.Empty, i));
-            }
-        }
-    }
-
-    private ImageButton CreateButton(StarState state, int index)
-    {
-        return new ImageButton()
-        {
-            Source = CreateStarLabel(state),
-            Command = StarsClicked(index),
-            Background = Colors.Transparent,
-        };
-    }
-
-    private Command StarsClicked(int index)
-    {
-        return new Command(() => Stars_Clicked(index));
     }
 
     private static ImageSource CreateStarLabel(StarState state)
@@ -93,21 +54,60 @@ public partial class Rating : ContentView
         };
     }
 
-    private void Stars_Clicked(int index)
-    {
-        CurrentValue = index;
-
-        SetStars();
-    }
-
     private static double ClampValue(double value)
     {
         if (value < 0)
+        {
             return 0;
+        }
 
-        if (value > MAX_VALUE)
-            return MAX_VALUE;
+        if (value > MAXVALUE)
+        {
+            return MAXVALUE;
+        }
 
         return value;
+    }
+
+    private void SetStars()
+    {
+        var starLayout = this.view.starLayout;
+        starLayout.Children.Clear();
+
+        var intValue = (int)ClampValue(this.CurrentValue);
+
+        for (int i = 1; i <= MAXVALUE; i++)
+        {
+            if (intValue >= i)
+            {
+                starLayout.Add(this.CreateButton(StarState.Full, i));
+            }
+            else
+            {
+                starLayout.Add(this.CreateButton(StarState.Empty, i));
+            }
+        }
+    }
+
+    private ImageButton CreateButton(StarState state, int index)
+    {
+        return new ImageButton()
+        {
+            Source = CreateStarLabel(state),
+            Command = this.StarsClicked(index),
+            Background = Colors.Transparent,
+        };
+    }
+
+    private Command StarsClicked(int index)
+    {
+        return new Command(() => this.Stars_Clicked(index));
+    }
+
+    private void Stars_Clicked(int index)
+    {
+        this.CurrentValue = index;
+
+        this.SetStars();
     }
 }

@@ -4,19 +4,18 @@ namespace BookCollector.Views.Statistics;
 
 public partial class WishListStatisticsView : ContentPage
 {
-    private WishListStatisticsViewModel ViewModel;
+    private WishListStatisticsViewModel viewModel;
 
     public WishListStatisticsView()
-	{
-        var viewModel = new WishListStatisticsViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.viewModel = new WishListStatisticsViewModel(this);
+        this.BindingContext = this.viewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.viewModel.SetViewModelData();
     }
 }

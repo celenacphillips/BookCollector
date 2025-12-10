@@ -1,12 +1,10 @@
-﻿using BookCollector.Data.Models;
-
-namespace BookCollector
+﻿namespace BookCollector
 {
     public partial class App : Application
     {
         public App()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             App.GetAppTheme();
             App.GetColor();
         }
@@ -16,7 +14,6 @@ namespace BookCollector
             // Create the root window and set its page
             return new Window(new AppShell());
         }
-
 
         private static void GetAppTheme()
         {
@@ -32,7 +29,7 @@ namespace BookCollector
 
         private static void GetColor()
         {
-            var savedColorHexCode = Preferences.Get("AppColor", "#336699"  /* Default */);
+            var savedColorHexCode = Preferences.Get("AppColor", "#336699" /* Default */);
 
             Data.Colors.SetColors(savedColorHexCode);
         }

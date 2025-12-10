@@ -42,7 +42,7 @@
                                 Margin="10"/>
 
                         <HorizontalStackLayout HorizontalOptions="Center">
-                            <Label Text="{Binding TotalItemsString}" />
+                            <Label Text="{Binding TotalItemsstring}" />
                             <Label Text="{Binding TotalItems}" />
                         </HorizontalStackLayout>
 

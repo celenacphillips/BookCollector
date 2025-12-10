@@ -5,12 +5,6 @@ using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls.PlatformConfiguration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Collection
 {
@@ -22,73 +16,72 @@ namespace BookCollector.ViewModels.Collection
         [ObservableProperty]
         public bool collectionNameValid;
 
-        public bool InsertMainViewBefore { get; set; }
-
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
         {
-            View = view;
+            this.View = view;
 
-            EditedCollection = (CollectionModel)collection.Clone();
+            this.EditedCollection = (CollectionModel)collection.Clone();
         }
+
+        public bool InsertMainViewBefore { get; set; }
 
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                ValidateEntry();
+                this.ValidateEntry();
 
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
         public async Task SaveCollection()
         {
-            if (!CollectionNameValid)
+            if (!this.CollectionNameValid)
             {
                 await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
             }
             else
             {
 #if ANDROID
-                if (Platform.CurrentActivity != null &&
-                Platform.CurrentActivity.Window != null)
-                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                {
+                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                }
 #endif
 
-                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
+                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.InsertCollection(EditedCollection);
+                        TestData.InsertCollection(this.EditedCollection);
                     }
                     else
                     {
-
                     }
                 }
                 else
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.UpdateCollection(EditedCollection);
+                        TestData.UpdateCollection(this.EditedCollection);
                     }
                     else
                     {
-
                     }
                 }
 
-                if (InsertMainViewBefore)
+                if (this.InsertMainViewBefore)
                 {
-                    CollectionMainView view = new CollectionMainView(EditedCollection, $"{EditedCollection.CollectionName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, View);
+                    CollectionMainView view = new CollectionMainView(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
                 }
 
                 await Shell.Current.Navigation.PopAsync();
@@ -98,32 +91,32 @@ namespace BookCollector.ViewModels.Collection
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public void ValidateCollectionName()
         {
-            ValidateEntry();
+            this.ValidateEntry();
         }
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(EditedCollection.CollectionName))
+            if (string.IsNullOrEmpty(this.EditedCollection.CollectionName))
             {
-                var collectionNameEditor = View.FindByName<Editor>("CollectionNameEditor");
+                var collectionNameEditor = this.View.FindByName<Editor>("CollectionNameEditor");
                 collectionNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
                 collectionNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                CollectionNameValid = false;
+                this.CollectionNameValid = false;
             }
             else
             {
-                var collectionNameEditor = View.FindByName<Editor>("CollectionNameEditor");
+                var collectionNameEditor = this.View.FindByName<Editor>("CollectionNameEditor");
                 collectionNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 collectionNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                CollectionNameValid = true;
+                this.CollectionNameValid = true;
             }
         }
     }

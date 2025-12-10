@@ -3,11 +3,6 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -15,19 +10,19 @@ namespace BookCollector.ViewModels.Statistics
     {
         public WishListStatisticsViewModel(ContentPage view)
         {
-            View = view;
-            MaxListNumber = 5;
+            this.View = view;
+            this.MaxListNumber = 5;
         }
 
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                GetPreferences();
+                this.GetPreferences();
 
-                GetColors();
+                this.GetColors();
 
                 List<CountModel> seriesCounts = [];
                 List<CountModel> authorCounts = [];
@@ -36,61 +31,62 @@ namespace BookCollector.ViewModels.Statistics
                 List<CountModel> formatPriceCounts = [];
 
                 Task.WaitAll(
-                [
-                    Task.Run (async () => CostBooks = await FilterLists.GetPriceOfAllWishListBooks(ShowHiddenBooks) ),
-                    Task.Run (async () => TotalBooks = await FilterLists.GetAllWishListBooksListCount(ShowHiddenBooks) ),
-                    Task.Run (async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(ShowHiddenBooks, MaxListNumber) ),
-                    Task.Run (async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(ShowHiddenBooks, MaxListNumber) ),
-                    Task.Run (async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(ShowHiddenBooks, MaxListNumber) ),
-                    Task.Run (() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(ShowHiddenBooks) ),
-                    Task.Run (() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(ShowHiddenBooks) ),
+               [
+                    Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllWishListBooks(this.ShowHiddenBooks)),
+                    Task.Run(async () => this.TotalBooks = await FilterLists.GetAllWishListBooksListCount(this.ShowHiddenBooks)),
+                    Task.Run(async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(this.ShowHiddenBooks, this.MaxListNumber)),
+                    Task.Run(async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(this.ShowHiddenBooks, this.MaxListNumber)),
+                    Task.Run(async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(this.ShowHiddenBooks, this.MaxListNumber)),
+                    Task.Run(() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenBooks)),
+                    Task.Run(() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenBooks)),
                 ]);
 
-                SetUpSeriesChart(seriesCounts);
-                SetUpAuthorsChart(authorCounts);
-                SetUpLocationsChart(locationCounts);
-                SetUpFormatsChart(formatCounts);
-                SetUpFormatPricesChart(formatPriceCounts);
+                this.SetUpSeriesChart(seriesCounts);
+                this.SetUpAuthorsChart(authorCounts);
+                this.SetUpLocationsChart(locationCounts);
+                this.SetUpFormatsChart(formatCounts);
+                this.SetUpFormatPricesChart(formatPriceCounts);
 
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
-
-        #region Series
+        /*********************** Series Methods ***********************/
         private void SetShowSeries(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
-                ShowSeries = true;
+                this.ShowSeries = true;
             }
             else
-                ShowSeries = false;
+            {
+                this.ShowSeries = false;
+            }
         }
 
         private void SetUpSeriesChart(List<CountModel> counts)
         {
-            SetShowSeries(counts);
+            this.SetShowSeries(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            if (ShowSeries)
+            if (this.ShowSeries)
             {
                 List<ChartValues> values = [];
 
-                var max = MaxListNumber;
+                var max = this.MaxListNumber;
 
                 if (counts.Count < max)
                 {
@@ -98,48 +94,55 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 if (max != 1)
-                    TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                {
+                    this.TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
+                }
                 else
-                    TopXSeries = AppStringResources.TopSeries;
+                {
+                    this.TopXSeries = AppStringResources.TopSeries;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList?[i],
+                            ColorValue = this.ColorList?[i],
                             LabelValue = counts[i].Label,
-                            Value = counts[i].Count
+                            Value = counts[i].Count,
                         });
                 }
 
-                SetUpBarChart(values, "series");
+                this.SetUpBarChart(values, "series");
             }
         }
-        #endregion
 
-        #region Author
+        /*********************** Series Methods ***********************/
+
+        /*********************** Authors Methods ***********************/
         private void SetShowAuthors(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
-                ShowAuthors = true;
+                this.ShowAuthors = true;
             }
             else
-                ShowAuthors = false;
+            {
+                this.ShowAuthors = false;
+            }
         }
 
         private void SetUpAuthorsChart(List<CountModel> counts)
         {
-            SetShowAuthors(counts);
+            this.SetShowAuthors(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            if (ShowAuthors)
+            if (this.ShowAuthors)
             {
                 List<ChartValues> values = [];
 
-                var max = MaxListNumber;
+                var max = this.MaxListNumber;
 
                 if (counts.Count < max)
                 {
@@ -147,48 +150,55 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 if (max != 1)
-                    TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                {
+                    this.TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
+                }
                 else
-                    TopXAuthors = AppStringResources.TopAuthor;
+                {
+                    this.TopXAuthors = AppStringResources.TopAuthor;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList?[i],
+                            ColorValue = this.ColorList?[i],
                             LabelValue = counts[i].Label,
-                            Value = counts[i].Count
+                            Value = counts[i].Count,
                         });
                 }
 
-                SetUpBarChart(values, "authors");
+                this.SetUpBarChart(values, "authors");
             }
         }
-        #endregion
 
-        #region Location
+        /*********************** Series Methods ***********************/
+
+        /*********************** Locations Methods ***********************/
         private void SetShowLocations(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
-                ShowLocations = true;
+                this.ShowLocations = true;
             }
             else
-                ShowLocations = false;
+            {
+                this.ShowLocations = false;
+            }
         }
 
         private void SetUpLocationsChart(List<CountModel> counts)
         {
-            SetShowLocations(counts);
+            this.SetShowLocations(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            if (ShowLocations)
+            if (this.ShowLocations)
             {
                 List<ChartValues> values = [];
 
-                var max = MaxListNumber;
+                var max = this.MaxListNumber;
 
                 if (counts.Count < max)
                 {
@@ -196,87 +206,98 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 if (max != 1)
-                    TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                {
+                    this.TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
+                }
                 else
-                    TopXLocations = AppStringResources.TopLocation;
+                {
+                    this.TopXLocations = AppStringResources.TopLocation;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList?[i],
+                            ColorValue = this.ColorList?[i],
                             LabelValue = counts[i].Label,
-                            Value = counts[i].Count
+                            Value = counts[i].Count,
                         });
                 }
 
-                SetUpBarChart(values, "locations");
+                this.SetUpBarChart(values, "locations");
             }
         }
 
-        #endregion
+        /*********************** Locations Methods ***********************/
 
-        #region Format
+        /*********************** Formats Methods ***********************/
         private void SetShowFormats(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
-                ShowFormats = true;
+                this.ShowFormats = true;
             }
             else
-                ShowFormats = false;
+            {
+                this.ShowFormats = false;
+            }
         }
 
         private void SetUpFormatsChart(List<CountModel> counts)
         {
-            SetShowFormats(counts);
+            this.SetShowFormats(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            if (ShowFormats)
+            if (this.ShowFormats)
             {
                 List<ChartValues> values = [];
 
                 var max = 5;
 
                 if (counts.Count < max)
+                {
                     max = counts.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList?[i],
+                            ColorValue = this.ColorList?[i],
                             LabelValue = counts[i].Label,
-                            Value = counts[i].Count
+                            Value = counts[i].Count,
                         });
                 }
 
-                SetUpPieChart(values, "formats");
+                this.SetUpPieChart(values, "formats");
             }
         }
-        #endregion
 
-        #region Format Price
+        /*********************** Formats Methods ***********************/
+
+        /*********************** Format Prices Methods ***********************/
         private void SetShowFormatPrices(List<CountModel> counts)
         {
             if (counts.Any(x => x.CountDouble > 0))
             {
-                ShowFormatPrices = true;
+                this.ShowFormatPrices = true;
             }
             else
-                ShowFormatPrices = false;
+            {
+                this.ShowFormatPrices = false;
+            }
         }
 
         private void SetUpFormatPricesChart(List<CountModel> counts)
         {
-            SetShowFormatPrices(counts);
+            this.SetShowFormatPrices(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            if (ShowFormatPrices)
+            if (this.ShowFormatPrices)
             {
                 List<ChartValues> values = [];
 
@@ -285,15 +306,16 @@ namespace BookCollector.ViewModels.Statistics
                     values.Add(
                         new ChartValues()
                         {
-                            ColorValue = ColorList?[i],
+                            ColorValue = this.ColorList?[i],
                             LabelValue = counts[i].Label,
-                            Value = (float)counts[i].CountDouble
+                            Value = (float)counts[i].CountDouble,
                         });
                 }
 
-                SetUpPieChart(values, "formatprices");
+                this.SetUpPieChart(values, "formatprices");
             }
         }
-        #endregion
+
+        /*********************** Format Prices Methods ***********************/
     }
 }

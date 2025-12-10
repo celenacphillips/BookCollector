@@ -2,25 +2,16 @@
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Popups
 {
     public partial class SortPopupViewModel : BaseViewModel
     {
-        public double PopupWidth { get; set; }
-        private Popup Popup { get; set; }
-
         [ObservableProperty]
         public bool bookTitleVisible;
 
         [ObservableProperty]
         public bool bookTitleChecked;
-
 
         [ObservableProperty]
         public bool collectionNameVisible;
@@ -28,13 +19,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool collectionNameChecked;
 
-
         [ObservableProperty]
         public bool genreNameVisible;
 
         [ObservableProperty]
         public bool genreNameChecked;
-
 
         [ObservableProperty]
         public bool seriesNameVisible;
@@ -42,13 +31,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool seriesNameChecked;
 
-
         [ObservableProperty]
         public bool authorLastNameVisible;
 
         [ObservableProperty]
         public bool authorLastNameChecked;
-
 
         [ObservableProperty]
         public bool locationNameVisible;
@@ -56,13 +43,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool locationNameChecked;
 
-
         [ObservableProperty]
         public bool bookReadingDateVisible;
 
         [ObservableProperty]
         public bool bookReadingDateChecked;
-
 
         [ObservableProperty]
         public bool totalBooksVisible;
@@ -76,13 +61,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookReadPercentageChecked;
 
-
         [ObservableProperty]
         public bool bookPublisherVisible;
 
         [ObservableProperty]
         public bool bookPublisherChecked;
-
 
         [ObservableProperty]
         public bool bookPublishYearVisible;
@@ -90,13 +73,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookPublishYearChecked;
 
-
         [ObservableProperty]
         public bool bookFormatVisible;
 
         [ObservableProperty]
         public bool bookFormatChecked;
-
 
         [ObservableProperty]
         public bool pageCountVisible;
@@ -104,13 +85,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool pageCountChecked;
 
-
         [ObservableProperty]
         public bool totalPriceVisible;
 
         [ObservableProperty]
         public bool totalPriceChecked;
-
 
         [ObservableProperty]
         public bool bookPriceVisible;
@@ -124,7 +103,6 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool seriesOrderChecked;
 
-
         [ObservableProperty]
         public bool ascendingChecked;
 
@@ -133,73 +111,109 @@ namespace BookCollector.ViewModels.Popups
 
         public SortPopupViewModel(Popup popup, string viewTitle)
         {
-            Popup = popup;
-            ViewTitle = viewTitle;
-            PopupWidth = DeviceWidth - 50;
+            this.Popup = popup;
+            this.ViewTitle = viewTitle;
+            this.PopupWidth = this.DeviceWidth - 50;
         }
+
+        public double PopupWidth { get; set; }
+
+        private Popup Popup { get; set; }
 
         [RelayCommand]
         public async Task Close()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-            SetPreferences();
+            this.SetPreferences();
 
-            await Popup.CloseAsync(token: cts.Token);
+            await this.Popup.CloseAsync(token: cts.Token);
         }
 
         private void SetPreferences()
         {
-            if (BookTitleVisible)
-                Preferences.Set($"{ViewTitle}_BookTitleSelection", BookTitleChecked);
+            if (this.BookTitleVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookTitleSelection", this.BookTitleChecked);
+            }
 
-            if (CollectionNameVisible)
-                Preferences.Set($"{ViewTitle}_CollectionNameSelection", CollectionNameChecked);
+            if (this.CollectionNameVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_CollectionNameSelection", this.CollectionNameChecked);
+            }
 
-            if (GenreNameVisible)
-                Preferences.Set($"{ViewTitle}_GenreNameSelection", GenreNameChecked);
+            if (this.GenreNameVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_GenreNameSelection", this.GenreNameChecked);
+            }
 
-            if (SeriesNameVisible)
-                Preferences.Set($"{ViewTitle}_SeriesNameSelection", SeriesNameChecked);
+            if (this.SeriesNameVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_SeriesNameSelection", this.SeriesNameChecked);
+            }
 
-            if (AuthorLastNameVisible)
-                Preferences.Set($"{ViewTitle}_AuthorLastNameSelection", AuthorLastNameChecked);
+            if (this.AuthorLastNameVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_AuthorLastNameSelection", this.AuthorLastNameChecked);
+            }
 
-            if (LocationNameVisible)
-                Preferences.Set($"{ViewTitle}_LocationNameSelection", LocationNameChecked);
+            if (this.LocationNameVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_LocationNameSelection", this.LocationNameChecked);
+            }
 
-            if (BookReadingDateVisible)
-                Preferences.Set($"{ViewTitle}_BookReadingDateSelection", BookReadingDateChecked);
+            if (this.BookReadingDateVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookReadingDateSelection", this.BookReadingDateChecked);
+            }
 
-            if (TotalBooksVisible)
-                Preferences.Set($"{ViewTitle}_TotalBooksSelection", TotalBooksChecked);
+            if (this.TotalBooksVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_TotalBooksSelection", this.TotalBooksChecked);
+            }
 
-            if (BookReadPercentageVisible)
-                Preferences.Set($"{ViewTitle}_BookReadPercentageSelection", BookReadPercentageChecked);
+            if (this.BookReadPercentageVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookReadPercentageSelection", this.BookReadPercentageChecked);
+            }
 
-            if (BookPublisherVisible)
-                Preferences.Set($"{ViewTitle}_BookPublisherSelection", BookPublisherChecked);
+            if (this.BookPublisherVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookPublisherSelection", this.BookPublisherChecked);
+            }
 
-            if (BookPublishYearVisible)
-                Preferences.Set($"{ViewTitle}_BookPublishYearSelection", BookPublishYearChecked);
+            if (this.BookPublishYearVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookPublishYearSelection", this.BookPublishYearChecked);
+            }
 
-            if (BookFormatVisible)
-                Preferences.Set($"{ViewTitle}_BookFormatSelection", BookFormatChecked);
+            if (this.BookFormatVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookFormatSelection", this.BookFormatChecked);
+            }
 
-            if (PageCountVisible)
-                Preferences.Set($"{ViewTitle}_PageCountSelection", PageCountChecked);
+            if (this.PageCountVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_PageCountSelection", this.PageCountChecked);
+            }
 
-            if (TotalPriceVisible)
-                Preferences.Set($"{ViewTitle}_TotalPriceSelection", TotalPriceChecked);
+            if (this.TotalPriceVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_TotalPriceSelection", this.TotalPriceChecked);
+            }
 
-            if (BookPriceVisible)
-                Preferences.Set($"{ViewTitle}_BookPriceSelection", BookPriceChecked);
+            if (this.BookPriceVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookPriceSelection", this.BookPriceChecked);
+            }
 
-            if (SeriesOrderVisible)
-                Preferences.Set($"{ViewTitle}_SeriesOrderSelection", SeriesOrderChecked);
+            if (this.SeriesOrderVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_SeriesOrderSelection", this.SeriesOrderChecked);
+            }
 
-            Preferences.Set($"{ViewTitle}_AscendingSelection", AscendingChecked);
-            Preferences.Set($"{ViewTitle}_DescendingSelection", DescendingChecked);
+            Preferences.Set($"{this.ViewTitle}_AscendingSelection", this.AscendingChecked);
+            Preferences.Set($"{this.ViewTitle}_DescendingSelection", this.DescendingChecked);
         }
     }
 }

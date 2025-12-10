@@ -5,11 +5,6 @@ using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Author;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Author
 {
@@ -26,71 +21,70 @@ namespace BookCollector.ViewModels.Author
 
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
         {
-            View = view;
+            this.View = view;
 
-            EditedAuthor = (AuthorModel)author.Clone();
+            this.EditedAuthor = (AuthorModel)author.Clone();
         }
 
         public void SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                AuthorFirstNameValid = !string.IsNullOrEmpty(EditedAuthor.FirstName);
-                AuthorLastNameValid = !string.IsNullOrEmpty(EditedAuthor.LastName);
+                this.AuthorFirstNameValid = !string.IsNullOrEmpty(this.EditedAuthor.FirstName);
+                this.AuthorLastNameValid = !string.IsNullOrEmpty(this.EditedAuthor.LastName);
 
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
         public async Task SaveAuthor()
         {
-            ValidateFirstName();
-            ValidateLastName();
+            this.ValidateFirstName();
+            this.ValidateLastName();
 
-            if (!AuthorFirstNameValid || !AuthorLastNameValid)
+            if (!this.AuthorFirstNameValid || !this.AuthorLastNameValid)
             {
                 await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
             }
             else
             {
 #if ANDROID
-                if (Platform.CurrentActivity != null &&
-                Platform.CurrentActivity.Window != null)
+                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                {
                     Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                }
 #endif
 
-                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewAuthor}"))
+                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewAuthor}"))
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.InsertAuthor(EditedAuthor);
+                        TestData.InsertAuthor(this.EditedAuthor);
                     }
                     else
                     {
-
                     }
                 }
                 else
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.UpdateAuthor(EditedAuthor);
+                        TestData.UpdateAuthor(this.EditedAuthor);
                     }
                     else
                     {
-
                     }
                 }
 
-                var view = new AuthorMainView(EditedAuthor, $"{EditedAuthor.FullName}");
-                Shell.Current.Navigation.InsertPageBefore(view, View);
+                var view = new AuthorMainView(this.EditedAuthor, $"{this.EditedAuthor.FullName}");
+                Shell.Current.Navigation.InsertPageBefore(view, this.View);
                 await Shell.Current.Navigation.PopAsync();
             }
         }
@@ -98,46 +92,46 @@ namespace BookCollector.ViewModels.Author
         [RelayCommand]
         public void Refresh()
         {
-            SetRefreshTrue();
-            SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public void ValidateFirstName()
         {
-            if (string.IsNullOrEmpty(EditedAuthor.FirstName))
+            if (string.IsNullOrEmpty(this.EditedAuthor.FirstName))
             {
-                var firstNameEditor = View.FindByName<Editor>("FirstNameEditor");
+                var firstNameEditor = this.View.FindByName<Editor>("FirstNameEditor");
                 firstNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
                 firstNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                AuthorFirstNameValid = false;
+                this.AuthorFirstNameValid = false;
             }
             else
             {
-                var firstNameEditor = View.FindByName<Editor>("FirstNameEditor");
+                var firstNameEditor = this.View.FindByName<Editor>("FirstNameEditor");
                 firstNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 firstNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                AuthorFirstNameValid = true;
+                this.AuthorFirstNameValid = true;
             }
         }
 
         [RelayCommand]
         public void ValidateLastName()
         {
-            if (string.IsNullOrEmpty(EditedAuthor.LastName))
+            if (string.IsNullOrEmpty(this.EditedAuthor.LastName))
             {
-                var lastNameEditor = View.FindByName<Editor>("LastNameEditor");
+                var lastNameEditor = this.View.FindByName<Editor>("LastNameEditor");
                 lastNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
                 lastNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                AuthorLastNameValid = false;
+                this.AuthorLastNameValid = false;
             }
             else
             {
-                var lastNameEditor = View.FindByName<Editor>("LastNameEditor");
+                var lastNameEditor = this.View.FindByName<Editor>("LastNameEditor");
                 lastNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 lastNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                AuthorLastNameValid = true;
+                this.AuthorLastNameValid = true;
             }
         }
     }

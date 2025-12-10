@@ -5,24 +5,23 @@ namespace BookCollector.Views.Genre;
 
 public partial class GenreMainView : ContentPage
 {
-    private GenreMainViewModel ViewModel;
+    private GenreMainViewModel viewModel;
 
     public GenreMainView(GenreModel genre, string viewTitle)
-	{
-        var viewModel = new GenreMainViewModel(genre, this)
+    {
+        this.viewModel = new GenreMainViewModel(genre, this)
         {
-            ViewTitle = viewTitle
+            ViewTitle = viewTitle,
         };
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+        this.BindingContext = this.viewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.viewModel.SetViewModelData();
     }
 }

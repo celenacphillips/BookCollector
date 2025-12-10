@@ -1,54 +1,35 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.ObjectModel;
+using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Book;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
-    public partial class BookBaseViewModel: BaseViewModel
+    public partial class BookBaseViewModel : BaseViewModel
     {
-        public bool ShowHiddenBook { get; set; }
-        public bool ShowFavoriteBooks { get; set; }
-        public bool ShowBookRatings { get; set; }
-        public string? FavoriteBooksOption { get; set; }
-        public string? BookFormatOption { get; set; }
-        public string? BookPublisherOption { get; set; }
-        public string? BookPublishYearOption { get; set; }
-        public string? BookLanguageOption { get; set; }
-        public string? BookRatingOption { get; set; }
-        public bool BookTitleChecked { get; set; }
-        public bool BookReadingDateChecked { get; set; }
-        public bool BookReadPercentageChecked { get; set; }
-        public bool BookPublisherChecked { get; set; }
-        public bool BookPublishYearChecked { get; set; }
-        public bool AuthorLastNameChecked { get; set; }
-        public bool BookFormatChecked { get; set; }
-        public bool PageCountChecked { get; set; }
-        public bool BookPriceChecked { get; set; }
-
+        [ObservableProperty]
+        public static ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
-        public string? totalBooksString;
+        public static ObservableCollection<BookModel>? filteredBookList;
+
+        [ObservableProperty]
+        public static ObservableCollection<string>? bookFormats;
+
+        [ObservableProperty]
+        public string? totalBooksstring;
 
         [ObservableProperty]
         public int totalBooksCount;
 
         [ObservableProperty]
         public int filteredBooksCount;
-
-        [ObservableProperty]
-        internal static ObservableCollection<BookModel>? fullBookList;
-
-        [ObservableProperty]
-        internal static ObservableCollection<BookModel>? filteredBookList;
 
         [ObservableProperty]
         public BookModel? selectedBook;
@@ -138,9 +119,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         public LocationModel? selectedLocation;
 
         [ObservableProperty]
-        internal static ObservableCollection<string>? bookFormats;
-
-        [ObservableProperty]
         public ImageSource? bookCover;
 
         [ObservableProperty]
@@ -154,111 +132,53 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public BookBaseViewModel()
         {
-            ShowComments = Preferences.Get("CommentsOn", true  /* Default */);
-            ShowChapters = Preferences.Get("ChaptersOn", true  /* Default */);
-            ShowFavorites = Preferences.Get("FavoritesOn", true  /* Default */);
-            ShowRatings = Preferences.Get("RatingsOn", true  /* Default */);
+            this.ShowComments = Preferences.Get("CommentsOn", true /* Default */);
+            this.ShowChapters = Preferences.Get("ChaptersOn", true /* Default */);
+            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
+            this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }
 
-        [RelayCommand]
-        public void BookSearchOnTitle(string? input)
-        {
-            SetIsBusyTrue();
+        public bool ShowHiddenBook { get; set; }
 
-            SearchString = input;
+        public bool ShowFavoriteBooks { get; set; }
 
-            if (FilteredBookList != null)
-            {
-                if (!string.IsNullOrEmpty(SearchString))
-                    FilteredBookList = FilteredBookList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-                else
-                    FilteredBookList = FullBookList;
+        public bool ShowBookRatings { get; set; }
 
-                FilteredBooksCount = FilteredBookList != null ? FilteredBookList.Count : 0;
+        public string? FavoriteBooksOption { get; set; }
 
-                TotalBooksString = StringManipulation.SetTotalBooksString(FilteredBooksCount, TotalBooksCount);
-            }
+        public string? BookFormatOption { get; set; }
 
-            SetIsBusyFalse();
-        }
+        public string? BookPublisherOption { get; set; }
 
-        [RelayCommand]
-        public async Task BookSelectionChanged()
-        {
-            if (SelectedBook != null && !string.IsNullOrEmpty(SelectedBook.BookTitle))
-            {
-                var view = new BookMainView(SelectedBook, SelectedBook.BookTitle);
+        public string? BookPublishYearOption { get; set; }
 
-                await Shell.Current.Navigation.PushAsync(view);
-                SelectedBook = null;
-            }
-        }
+        public string? BookLanguageOption { get; set; }
 
-        [RelayCommand]
-        public async Task AddBook()
-        {
-            SetIsBusyTrue();
+        public string? BookRatingOption { get; set; }
 
-            var view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
+        public bool BookTitleChecked { get; set; }
 
-            await Shell.Current.Navigation.PushAsync(view);
+        public bool BookReadingDateChecked { get; set; }
 
-            SetIsBusyFalse();
-        }
+        public bool BookReadPercentageChecked { get; set; }
 
-        [RelayCommand]
-        public void ReadingDataChanged()
-        {
-            ReadingDataOpen = ReadingDataSectionValue;
-            ReadingDataNotOpen = !ReadingDataSectionValue;
-        }
+        public bool BookPublisherChecked { get; set; }
 
-        [RelayCommand]
-        public void ChapterListChanged()
-        {
-            ChapterListOpen = ChapterListSectionValue;
-            ChapterListNotOpen = !ChapterListSectionValue;
-        }
+        public bool BookPublishYearChecked { get; set; }
 
-        [RelayCommand]
-        public void AuthorListChanged()
-        {
-            AuthorListOpen = AuthorListSectionValue;
-            AuthorListNotOpen = !AuthorListSectionValue;
-        }
+        public bool AuthorLastNameChecked { get; set; }
 
-        [RelayCommand]
-        public void BookInfoChanged()
-        {
-            BookInfoOpen = BookInfoSectionValue;
-            BookInfoNotOpen = !BookInfoSectionValue;
-        }
+        public bool BookFormatChecked { get; set; }
 
-        [RelayCommand]
-        public void SummaryChanged()
-        {
-            SummaryOpen = SummarySectionValue;
-            SummaryNotOpen = !SummarySectionValue;
-        }
+        public bool PageCountChecked { get; set; }
 
-        [RelayCommand]
-        public void CommentsChanged()
-        {
-            CommentsOpen = CommentsSectionValue;
-            CommentsNotOpen = !CommentsSectionValue;
-        }
+        public bool BookPriceChecked { get; set; }
 
-        [RelayCommand]
-        public void BookCoverPopup()
-        {
-            View.ShowPopup(new BookCoverPopup(BookCover));
-        }
-
-        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromString(string inputString)
+        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromstring(string inputstring)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
-            string[] authorNames = inputString.Split(";");
+            string[] authorNames = inputstring.Split(";");
 
             foreach (var authorName in authorNames)
             {
@@ -277,20 +197,117 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                     else
                     {
-
                     }
 
-                    author ??= new()
-                        {
-                            FirstName = name[1].Trim(),
-                            LastName = name[0].Trim()
-                        };
+                    author ??= new ()
+                    {
+                        FirstName = name[1].Trim(),
+                        LastName = name[0].Trim(),
+                    };
 
                     authorList.Add(author);
                 }
             }
 
             return authorList;
+        }
+
+        [RelayCommand]
+        public void BookSearchOnTitle(string? input)
+        {
+            this.SetIsBusyTrue();
+
+            this.Searchstring = input;
+
+            if (this.FilteredBookList != null)
+            {
+                if (!string.IsNullOrEmpty(this.Searchstring))
+                {
+                    this.FilteredBookList = this.FilteredBookList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                }
+                else
+                {
+                    this.FilteredBookList = this.FullBookList;
+                }
+
+                this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
+
+                this.TotalBooksstring = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+            }
+
+            this.SetIsBusyFalse();
+        }
+
+        [RelayCommand]
+        public async Task BookSelectionChanged()
+        {
+            if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
+            {
+                var view = new BookMainView(this.SelectedBook, this.SelectedBook.BookTitle);
+
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedBook = null;
+            }
+        }
+
+        [RelayCommand]
+        public async Task AddBook()
+        {
+            this.SetIsBusyTrue();
+
+            var view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        [RelayCommand]
+        public void ReadingDataChanged()
+        {
+            this.ReadingDataOpen = this.ReadingDataSectionValue;
+            this.ReadingDataNotOpen = !this.ReadingDataSectionValue;
+        }
+
+        [RelayCommand]
+        public void ChapterListChanged()
+        {
+            this.ChapterListOpen = this.ChapterListSectionValue;
+            this.ChapterListNotOpen = !this.ChapterListSectionValue;
+        }
+
+        [RelayCommand]
+        public void AuthorListChanged()
+        {
+            this.AuthorListOpen = this.AuthorListSectionValue;
+            this.AuthorListNotOpen = !this.AuthorListSectionValue;
+        }
+
+        [RelayCommand]
+        public void BookInfoChanged()
+        {
+            this.BookInfoOpen = this.BookInfoSectionValue;
+            this.BookInfoNotOpen = !this.BookInfoSectionValue;
+        }
+
+        [RelayCommand]
+        public void SummaryChanged()
+        {
+            this.SummaryOpen = this.SummarySectionValue;
+            this.SummaryNotOpen = !this.SummarySectionValue;
+        }
+
+        [RelayCommand]
+        public void CommentsChanged()
+        {
+            this.CommentsOpen = this.CommentsSectionValue;
+            this.CommentsNotOpen = !this.CommentsSectionValue;
+        }
+
+        [RelayCommand]
+        public void BookCoverPopup()
+        {
+            this.View.ShowPopup(new BookCoverPopup(this.BookCover));
         }
     }
 }

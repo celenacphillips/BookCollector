@@ -4,16 +4,17 @@ namespace BookCollector.Data.Models
 {
     public class BookAuthorModel : ICloneable
     {
+        public BookAuthorModel()
+        {
+            this.BookAuthorGuid = Guid.NewGuid();
+        }
+
         [PrimaryKey]
         public Guid? BookAuthorGuid { get; set; }
 
         public Guid AuthorGuid { get; set; }
-        public Guid BookGuid { get; set; }
 
-        public BookAuthorModel()
-        {
-            BookAuthorGuid = Guid.NewGuid();
-        }
+        public Guid BookGuid { get; set; }
 
         public object Clone()
         {

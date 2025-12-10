@@ -1,9 +1,8 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
+﻿using System.Xml;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
-using System.Xml;
-using BookCollector.Resources.Localization;
 
 namespace BookCollector.Data.Spreadsheet
 {
@@ -11,7 +10,7 @@ namespace BookCollector.Data.Spreadsheet
     {
         public static string CreateSpreadsheet(string folderPath)
         {
-            var filename = $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", "")}Export.xlsx";
+            var filename = $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx";
             var filepath = $"{folderPath}/{filename}";
 
             // Create a spreadsheet document by supplying the filepath.
@@ -21,7 +20,7 @@ namespace BookCollector.Data.Spreadsheet
             var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
 
             // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
-            using (XmlTextWriter writer = new(coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+            using (XmlTextWriter writer = new (coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
             {
                 writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
                 writer.Flush();
@@ -43,23 +42,25 @@ namespace BookCollector.Data.Spreadsheet
             return filepath;
         }
 
-        #region Write
         public static void WriteToSpreadsheet(string filePath, List<List<string?>> itemsList, string tableName)
         {
             using SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(filePath, true);
             WorkbookPart workbookPart;
 
             if (spreadSheet.WorkbookPart == null)
+            {
                 workbookPart = spreadSheet.AddWorkbookPart();
+            }
             else
+            {
                 workbookPart = spreadSheet.WorkbookPart;
+            }
 
             // Insert a new worksheet.
             WorksheetPart worksheetPart = InsertWorksheet(workbookPart, tableName);
             SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
 
             int? rowValue = null;
-
 
             foreach (var items in itemsList)
             {
@@ -74,12 +75,12 @@ namespace BookCollector.Data.Spreadsheet
                 {
                     columnValue = SetNextColumn(columnValue);
 
-                    // Add the cell to the cell table 
+                    // Add the cell to the cell table
                     Cell? refCell = null;
-                    Cell newCell = new() { CellReference = $"{columnValue}{rowValue}" };
+                    Cell newCell = new () { CellReference = $"{columnValue}{rowValue}" };
                     row.InsertBefore(newCell, refCell);
 
-                    // Set the cell value 
+                    // Set the cell value
                     newCell.CellValue = new CellValue(item);
                     newCell.DataType = new EnumValue<CellValues>(CellValues.String);
                 }
@@ -89,50 +90,17 @@ namespace BookCollector.Data.Spreadsheet
             worksheetPart.Worksheet.Save();
         }
 
-        // Given a WorkbookPart, inserts a new worksheet.
-        private static WorksheetPart InsertWorksheet(WorkbookPart workbookPart, string sheetName)
-        {
-            // Add a new worksheet part to the workbook.
-            WorksheetPart newWorksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            newWorksheetPart.Worksheet = new Worksheet(new SheetData());
-            newWorksheetPart.Worksheet.Save();
-
-            Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
-            string relationshipId = workbookPart.GetIdOfPart(newWorksheetPart);
-
-            // Get a unique ID for the new sheet.
-            uint sheetId = 1;
-            if (sheets.Elements<Sheet>().Any())
-            {
-                sheetId = sheets.Elements<Sheet>().Select<Sheet, uint>(s =>
-                {
-                    if (s.SheetId is not null && s.SheetId.HasValue)
-                    {
-                        return s.SheetId.Value;
-                    }
-
-                    return 0;
-                }).Max() + 1;
-            }
-
-            // Append the new worksheet and associate it with the workbook.
-            Sheet sheet = new() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
-            sheets.Append(sheet);
-            workbookPart.Workbook.Save();
-
-            return newWorksheetPart;
-        }
-        #endregion
-
         public static List<List<string>> ReadSpreadSheet(string fileName, string sheetName)
         {
             List<List<string>> spreadsheetValues = [];
+
             // Open the spreadsheet document for read-only access.
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(fileName, false))
             {
                 // Retrieve a reference to the workbook part.
                 WorkbookPart? workbookPart = document.WorkbookPart;
-                // Find the sheet with the supplied name, and then use that 
+
+                // Find the sheet with the supplied name, and then use that
                 // Sheet object to retrieve a reference to the first worksheet.
                 Sheet? theSheet = workbookPart?.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName).FirstOrDefault();
 
@@ -141,6 +109,7 @@ namespace BookCollector.Data.Spreadsheet
                 {
                     return spreadsheetValues;
                 }
+
                 // Retrieve a reference to the worksheet part.
                 WorksheetPart worksheetPart = (WorksheetPart)workbookPart!.GetPartById(theSheet.Id!);
                 List<Row?>? rows = worksheetPart.Worksheet?.Descendants<Row?>()?.ToList();
@@ -178,7 +147,7 @@ namespace BookCollector.Data.Spreadsheet
                                         {
                                             if (!columnValue.Equals("A"))
                                             {
-                                                cellValues.Add("");
+                                                cellValues.Add(string.Empty);
                                                 columnIndex++;
                                                 columnValue = SetCurrentColumn(columnIndex);
                                             }
@@ -202,7 +171,7 @@ namespace BookCollector.Data.Spreadsheet
                                 {
                                     while (cellValues.Count <= columnCount)
                                     {
-                                        cellValues.Add("");
+                                        cellValues.Add(string.Empty);
                                     }
 
                                     spreadsheetValues.Add(cellValues);
@@ -216,19 +185,55 @@ namespace BookCollector.Data.Spreadsheet
             return spreadsheetValues;
         }
 
+        // Given a WorkbookPart, inserts a new worksheet.
+        private static WorksheetPart InsertWorksheet(WorkbookPart workbookPart, string sheetName)
+        {
+            // Add a new worksheet part to the workbook.
+            WorksheetPart newWorksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+            newWorksheetPart.Worksheet = new Worksheet(new SheetData());
+            newWorksheetPart.Worksheet.Save();
+
+            Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
+            string relationshipId = workbookPart.GetIdOfPart(newWorksheetPart);
+
+            // Get a unique ID for the new sheet.
+            uint sheetId = 1;
+            if (sheets.Elements<Sheet>().Any())
+            {
+                sheetId = sheets.Elements<Sheet>().Select<Sheet, uint>(s =>
+                {
+                    if (s.SheetId is not null && s.SheetId.HasValue)
+                    {
+                        return s.SheetId.Value;
+                    }
+
+                    return 0;
+                }).Max() + 1;
+            }
+
+            // Append the new worksheet and associate it with the workbook.
+            Sheet sheet = new () { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+            sheets.Append(sheet);
+            workbookPart.Workbook.Save();
+
+            return newWorksheetPart;
+        }
+
         private static string GetCellValue(Cell? theCell, WorkbookPart? workbookPart)
         {
             if (theCell is null || theCell.InnerText.Length < 0)
             {
                 return string.Empty;
             }
+
             string? value = theCell.InnerText;
-            // If the cell represents an integer number, you are done. 
-            // For dates, this code returns the serialized value that 
-            // represents the date. The code handles strings and 
-            // Booleans individually. For shared strings, the code 
-            // looks up the corresponding value in the shared string 
-            // table. For Booleans, the code converts the value into 
+
+            // If the cell represents an integer number, you are done.
+            // For dates, this code returns the serialized value that
+            // represents the date. The code handles strings and
+            // Booleans individually. For shared strings, the code
+            // looks up the corresponding value in the shared string
+            // table. For Booleans, the code converts the value into
             // the words TRUE or FALSE.
             if (theCell.DataType is not null)
             {
@@ -237,9 +242,10 @@ namespace BookCollector.Data.Spreadsheet
                     // For shared strings, look up the value in the
                     // shared strings table.
                     var stringTable = workbookPart?.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-                    // If the shared string table is missing, something 
+
+                    // If the shared string table is missing, something
                     // is wrong. Return the index that is in
-                    // the cell. Otherwise, look up the correct text in 
+                    // the cell. Otherwise, look up the correct text in
                     // the table.
                     if (stringTable is not null)
                     {
@@ -307,7 +313,7 @@ namespace BookCollector.Data.Spreadsheet
             var convertedInput = input;
             if (input > 26)
             {
-                double convert = ((double)input % (double)26) - 1;
+                double convert = ((double)input % 26.0) - 1.0;
                 convertedInput = (int)convert;
             }
 
@@ -341,7 +347,9 @@ namespace BookCollector.Data.Spreadsheet
                 _ => "A",
             };
             if (input > 26)
+            {
                 output = $"A{output}";
+            }
 
             return output;
         }
@@ -349,7 +357,9 @@ namespace BookCollector.Data.Spreadsheet
         private static int SetRow(int? input)
         {
             if (input == null)
+            {
                 return 1;
+            }
             else
             {
                 var output = (int)input + 1;

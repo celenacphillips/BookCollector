@@ -4,21 +4,20 @@ namespace BookCollector.Views.Groupings;
 
 public partial class SeriesView : ContentPage
 {
-    private SeriesViewModel ViewModel { get; set; }
-
     public SeriesView()
-	{
-        var viewModel = new SeriesViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.ViewModel = new SeriesViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private SeriesViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

@@ -4,21 +4,20 @@ namespace BookCollector.Views.Groupings;
 
 public partial class LocationsView : ContentPage
 {
-    private LocationsViewModel ViewModel { get; set; }
-
     public LocationsView()
-	{
-        var viewModel = new LocationsViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.ViewModel = new LocationsViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private LocationsViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

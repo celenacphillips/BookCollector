@@ -1,13 +1,8 @@
-﻿using BookCollector.Resources.Localization;
+﻿using BookCollector.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microcharts;
 using Microcharts.Maui;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
@@ -20,7 +15,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public int totalBooks;
 
         [ObservableProperty]
-        public string? totalBooksString;
+        public string? totalBooksstring;
 
         [ObservableProperty]
         public bool showSeries;
@@ -47,14 +42,23 @@ namespace BookCollector.ViewModels.BaseViewModels
         public string? topXLocations;
 
         public List<Color?>? ColorList { get; set; }
+
         public bool ShowFavorites { get; set; }
+
         public bool ShowRatings { get; set; }
+
         public bool ShowHiddenBooks { get; set; }
+
         public bool ShowHiddenCollections { get; set; }
+
         public bool ShowHiddenSeries { get; set; }
+
         public bool ShowHiddenLocations { get; set; }
+
         public bool ShowHiddenGenres { get; set; }
+
         public bool ShowHiddenAuthors { get; set; }
+
         public int MaxListNumber { get; set; }
 
         public void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
@@ -62,7 +66,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var textLight = (Color?)Application.Current?.Resources["TextLight"];
             var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
-            var section = (ChartView)View.FindByName(sectionName);
+            var section = (ChartView)this.View.FindByName(sectionName);
 
             section.Chart = null;
 
@@ -96,7 +100,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var textLight = (Color?)Application.Current?.Resources["TextLight"];
             var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
-            var section = (ChartView)View.FindByName(sectionName);
+            var section = (ChartView)this.View.FindByName(sectionName);
 
             section.Chart = null;
 
@@ -124,7 +128,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 BackgroundColor = SKColor.Empty,
                 LabelTextSize = 30,
                 ValueLabelTextSize = 30,
-                MaxValue = TotalBooks
+                MaxValue = this.TotalBooks,
             };
         }
 
@@ -137,28 +141,19 @@ namespace BookCollector.ViewModels.BaseViewModels
             var color5 = (Color?)Application.Current?.Resources["Color5"];
             var color6 = (Color?)Application.Current?.Resources["Color6"];
 
-            ColorList = [color1, color2, color3, color4, color5, color6];
+            this.ColorList = [color1, color2, color3, color4, color5, color6];
         }
 
         public void GetPreferences()
         {
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
-            ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
-            ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true  /* Default */);
-            ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true  /* Default */);
-            ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true  /* Default */);
-            ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
-            ShowFavorites = Preferences.Get("FavoritesOn", true  /* Default */);
-            ShowRatings = Preferences.Get("RatingsOn", true  /* Default */);
+            this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
+            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
+            this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
+            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
+            this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }
-    }
-
-    public class ChartValues
-    {
-        public Color? ColorValue { get; set; }
-
-        public string? LabelValue { get; set; }
-
-        public float Value { get; set; }
     }
 }

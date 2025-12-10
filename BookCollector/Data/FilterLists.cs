@@ -1,324 +1,145 @@
-﻿using BookCollector.Data.Models;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
+using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Core.Extensions;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Xml.Linq;
 
 namespace BookCollector.Data
 {
     public partial class FilterLists : BaseViewModel
     {
-        private static ObservableCollection<BookModel> FilterFavoriteBooks(ObservableCollection<BookModel> bookList, string favoritesOption)
-        {
-            var filterList = bookList;
-
-            filterList = favoritesOption switch
-            {
-                "Favorites" => bookList.Where(x => x.IsFavorite)
-                                                         .ToObservableCollection(),
-                "Non-Favorites" => bookList.Where(x => !x.IsFavorite)
-                                                         .ToObservableCollection(),
-                _ => bookList,
-            };
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookFormat(ObservableCollection<BookModel> bookList, string? formatOption)
-        {
-            var filterList = bookList;
-
-            if (!string.IsNullOrEmpty(formatOption) && !formatOption.Equals(AppStringResources.AllFormats))
-            {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookPublisher(ObservableCollection<BookModel> bookList, string? publisherOption)
-        {
-            var filterList = bookList;
-
-            if (!string.IsNullOrEmpty(publisherOption) && publisherOption.Equals(AppStringResources.NoPublisher))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublisher))
-                                     .ToObservableCollection();
-            }
-
-            if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
-            {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookPublishYear(ObservableCollection<BookModel> bookList, string? publishYearOption)
-        {
-            var filterList = bookList;
-
-            if (!string.IsNullOrEmpty(publishYearOption) && publishYearOption.Equals(AppStringResources.NoPublishYear))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
-                                     .ToObservableCollection();
-            }
-
-            if (!string.IsNullOrEmpty(publishYearOption) && !publishYearOption.Equals(AppStringResources.NoPublishYear) && !publishYearOption.Equals(AppStringResources.AllPublishYears))
-            {
-                var years = publishYearOption.Split(" - ");
-
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
-                                            int.Parse(years[0]) <= int.Parse(x.BookPublishYear) &&
-                                            int.Parse(years[1]) >= int.Parse(x.BookPublishYear))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookLanguage(ObservableCollection<BookModel> bookList, string? languageOption)
-        {
-            var filterList = bookList;
-
-            if (!string.IsNullOrEmpty(languageOption) && languageOption.Equals(AppStringResources.NoLanguage))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookLanguage))
-                                     .ToObservableCollection();
-            }
-
-            if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
-            {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookRating(ObservableCollection<BookModel> bookList, string ratingOption)
-        {
-            var filterList = bookList;
-
-            if (!ratingOption.Equals(AppStringResources.AllRatings))
-            {
-                filterList = bookList.Where(x => x.Rating == int.Parse(ratingOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookAuthor(ObservableCollection<BookModel> bookList,
-                                                                        string authorOption)
-        {
-            var filterList = bookList;
-
-            if (authorOption.Equals(AppStringResources.NoAuthor))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString))
-                                     .ToObservableCollection();
-            }
-
-            if (!authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
-            {
-                AuthorModel? author = null;
-
-                if (TestData.UseTestData)
-                {
-                    author = TestData.AuthorList.FirstOrDefault(x => x.FullName.Equals(authorOption));
-                }
-                else
-                {
-
-                }
-
-                if (author != null)
-                {
-                    filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(author.ReverseFullName))
-                                         .ToObservableCollection();
-                }
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookLocation(ObservableCollection<BookModel> bookList,
-                                                                          string locationOption)
-        {
-            var filterList = bookList;
-
-            if (locationOption.Equals(AppStringResources.NoLocation))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
-                                     .ToObservableCollection();
-            }
-
-            if (!locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
-            {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.Equals(locationOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        private static ObservableCollection<BookModel> FilterBookSeries(ObservableCollection<BookModel> bookList, string seriesOption)
-        {
-            var filterList = bookList;
-
-            if (seriesOption.Equals(AppStringResources.NoSeries))
-            {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookSeries))
-                                     .ToObservableCollection();
-            }
-
-            if (!seriesOption.Equals(AppStringResources.NoSeries) && !seriesOption.Equals(AppStringResources.AllSeries))
-            {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
-                                     .ToObservableCollection();
-            }
-
-            return filterList;
-        }
-
-        public static async Task<ObservableCollection<BookModel>> FilterBookList(ObservableCollection<BookModel> bookList,
-                                                                                 string? favoritesOption,
-                                                                                 string? formatOption,
-                                                                                 string? publisherOption,
-                                                                                 string? languageOption,
-                                                                                 string? ratingOption,
-                                                                                 string? publishYearOption,
-                                                                                 string? authorOption = null,
-                                                                                 string? locationOption = null,
-                                                                                 string? seriesOption = null)
-        {
-            var filteredList = bookList;
-
-            if(!string.IsNullOrEmpty(favoritesOption))
-                filteredList = FilterFavoriteBooks(filteredList, favoritesOption);
-
-            filteredList = FilterBookFormat(filteredList, formatOption);
-
-            filteredList = FilterBookPublisher(filteredList, publisherOption);
-
-            filteredList = FilterBookLanguage(filteredList, languageOption);
-
-            if (!string.IsNullOrEmpty(ratingOption))
-                filteredList = FilterBookRating(filteredList, ratingOption);
-
-            filteredList = FilterBookPublishYear(filteredList, publishYearOption);
-
-            if (!string.IsNullOrEmpty(authorOption))
-                filteredList = FilterBookAuthor(filteredList, authorOption);
-
-            if (!string.IsNullOrEmpty(locationOption))
-                filteredList = FilterBookLocation(filteredList, locationOption);
-
-            if (!string.IsNullOrEmpty(seriesOption))
-                filteredList = FilterBookSeries(filteredList, seriesOption);
-
-            return filteredList;
-        }
-
-        public static async Task<ObservableCollection<BookModel>> SortBookList(ObservableCollection<BookModel> bookList,
-                                                                               bool bookTitleChecked,
-                                                                               bool bookReadingDateChecked,
-                                                                               bool bookReadPercentageChecked,
-                                                                               bool bookPublisherChecked,
-                                                                               bool bookPublishYearChecked,
-                                                                               bool authorLastNameChecked,
-                                                                               bool bookFormatChecked,
-                                                                               bool bookPriceChecked,
-                                                                               bool ascendingChecked,
-                                                                               bool descendingChecked,
-                                                                               bool seriesOrderChecked = false)
-        {
+        public static async Task<ObservableCollection<BookModel>> SortBookList(
+            ObservableCollection<BookModel> bookList,
+            bool bookTitleChecked,
+            bool bookReadingDateChecked,
+            bool bookReadPercentageChecked,
+            bool bookPublisherChecked,
+            bool bookPublishYearChecked,
+            bool authorLastNameChecked,
+            bool bookFormatChecked,
+            bool bookPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked,
+            bool seriesOrderChecked = false)
+{
             var filteredList = bookList;
 
             if (bookTitleChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).ToObservableCollection();
+                }
             }
 
             if (bookReadingDateChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.StartDateValue).OrderBy(x => x.EndDateValue).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.StartDateValue).OrderByDescending(x => x.EndDateValue).ToObservableCollection();
+                }
             }
 
             if (bookReadPercentageChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.Progress).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.Progress).ToObservableCollection();
+                }
             }
 
             if (bookPublisherChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
+                }
             }
 
             if (bookPublishYearChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
+                }
             }
 
             if (authorLastNameChecked)
             {
                 if (ascendingChecked)
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListstring).ToObservableCollection();
+                }
 
                 if (descendingChecked)
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListstring).ToObservableCollection();
+                }
             }
 
             if (bookFormatChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
+                }
             }
 
             if (bookPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
+                }
             }
 
             if (seriesOrderChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookNumberInSeries).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookNumberInSeries).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -335,7 +156,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -367,7 +187,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -398,7 +217,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -429,7 +247,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -459,7 +276,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -490,7 +306,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -506,7 +321,6 @@ namespace BookCollector.Data
 
             count = filteredList != null ? filteredList.Count : 0;
 
-
             return count;
         }
 
@@ -521,7 +335,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -550,7 +363,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -564,7 +376,6 @@ namespace BookCollector.Data
             }
 
             count = filteredList != null ? filteredList.Count : 0;
-
 
             return count;
         }
@@ -581,7 +392,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -611,7 +421,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -641,7 +450,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -670,7 +478,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -698,7 +505,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (chapterList != null)
@@ -722,7 +528,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (chapterList != null)
@@ -742,7 +547,9 @@ namespace BookCollector.Data
             foreach (var book in bookList)
             {
                 if (!string.IsNullOrEmpty(book.BookPublisher) && !publisherList.Any(x => x.Equals(book.BookPublisher)))
+                {
                     publisherList.Add(book.BookPublisher);
+                }
             }
 
             return publisherList;
@@ -754,9 +561,9 @@ namespace BookCollector.Data
 
             foreach (var book in bookList)
             {
-                if (!string.IsNullOrEmpty(book.AuthorListString))
+                if (!string.IsNullOrEmpty(book.AuthorListstring))
                 {
-                    string[] authorNames = book.AuthorListString.Split(";");
+                    string[] authorNames = book.AuthorListstring.Split(";");
 
                     foreach (var authorName in authorNames)
                     {
@@ -764,10 +571,10 @@ namespace BookCollector.Data
                         {
                             string[] name = authorName.Split(",");
 
-                            AuthorModel author = new()
+                            AuthorModel author = new ()
                             {
                                 FirstName = name[1].Trim(),
-                                LastName = name[0].Trim()
+                                LastName = name[0].Trim(),
                             };
 
                             authorList.Add(author.FullName);
@@ -786,7 +593,9 @@ namespace BookCollector.Data
             foreach (var book in bookList)
             {
                 if (!string.IsNullOrEmpty(book.BookWhereToBuy) && !locationList.Any(x => x.Equals(book.BookWhereToBuy)))
+                {
                     locationList.Add(book.BookWhereToBuy);
+                }
             }
 
             return locationList;
@@ -799,7 +608,9 @@ namespace BookCollector.Data
             foreach (var book in bookList)
             {
                 if (!string.IsNullOrEmpty(book.BookSeries) && !seriesList.Any(x => x.Equals(book.BookSeries)))
+                {
                     seriesList.Add(book.BookSeries);
+                }
             }
 
             return seriesList;
@@ -817,7 +628,9 @@ namespace BookCollector.Data
                     var publishRange = $"{publishYearSubstring}0 - {publishYearSubstring}9";
 
                     if (!publishYearList.Any(x => x.Equals(publishRange)))
+                    {
                         publishYearList.Add(publishRange);
+                    }
                 }
             }
 
@@ -831,7 +644,9 @@ namespace BookCollector.Data
             foreach (var book in bookList)
             {
                 if (!string.IsNullOrEmpty(book.BookLanguage) && !languageList.Any(x => x.Equals(book.BookLanguage)))
+                {
                     languageList.Add(book.BookLanguage);
+                }
             }
 
             return languageList;
@@ -848,7 +663,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookAuthorList != null)
@@ -871,7 +685,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookAuthorList != null)
@@ -894,7 +707,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookAuthorList != null)
@@ -917,7 +729,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (genreList != null)
@@ -939,7 +750,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (locationList != null)
@@ -961,7 +771,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (seriesList != null)
@@ -983,7 +792,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (collectionList != null)
@@ -994,8 +802,9 @@ namespace BookCollector.Data
             return collection;
         }
 
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInCollectionList(Guid? inputGuid,
-                                                                                              bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInCollectionList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             ObservableCollection<BookModel>? filteredList = null;
@@ -1006,7 +815,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1035,7 +843,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1053,8 +860,9 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInGenreList(Guid? inputGuid,
-                                                                                         bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInGenreList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             ObservableCollection<BookModel>? filteredList = null;
@@ -1065,7 +873,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1094,7 +901,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1112,8 +918,9 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInSeriesList(Guid? inputGuid,
-                                                                                          bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInSeriesList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             ObservableCollection<BookModel>? filteredList = null;
@@ -1124,7 +931,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1153,7 +959,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1167,8 +972,9 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<ObservableCollection<BookModel>> GetAllBooksInAuthorList(ObservableCollection<BookAuthorModel>? bookAuthorList,
-                                                                                          bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>> GetAllBooksInAuthorList(
+            ObservableCollection<BookAuthorModel>? bookAuthorList,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             var filteredList = new ObservableCollection<BookModel>();
@@ -1179,7 +985,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null && bookAuthorList != null)
@@ -1204,8 +1009,9 @@ namespace BookCollector.Data
                                .ToObservableCollection();
         }
 
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAuthorList(string reverseAuthorName,
-                                                                                               bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAuthorList(
+            string reverseAuthorName,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             ObservableCollection<BookModel>? filteredList = null;
@@ -1216,13 +1022,12 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
             {
-                filteredList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString) ||
-                                                   (!string.IsNullOrEmpty(x.AuthorListString) && !x.AuthorListString.Contains(reverseAuthorName) ))
+                filteredList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListstring) ||
+                                                   (!string.IsNullOrEmpty(x.AuthorListstring) && !x.AuthorListstring.Contains(reverseAuthorName)))
                                        .OrderBy(x => x.ParsedTitle)
                                        .ToObservableCollection();
             }
@@ -1235,8 +1040,9 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInLocationList(Guid? inputGuid,
-                                                                                            bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInLocationList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
             ObservableCollection<BookModel>? filteredList = null;
@@ -1247,7 +1053,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1276,7 +1081,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -1305,7 +1109,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (collectionList != null)
@@ -1322,9 +1125,10 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenCollections,
-                                                                                   bool showHiddenBooks,
-                                                                                   int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(
+            bool showHiddenCollections,
+            bool showHiddenBooks,
+            int maxLimit)
         {
             ObservableCollection<CollectionModel>? collectionList = null;
             ObservableCollection<CollectionModel>? filteredList = null;
@@ -1338,7 +1142,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -1357,7 +1160,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
+                {
                     max = filteredList.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -1380,47 +1185,60 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoCollection,
-                    Count = filteredBookList.Count(x => x.BookCollectionGuid == null)
+                    Count = filteredBookList.Count(x => x.BookCollectionGuid == null),
                 });
             }
 
             return counts;
         }
 
-        public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(ObservableCollection<CollectionModel> collectionList,
-                                                                                            bool collectionNameChecked,
-                                                                                            bool totalBooksChecked,
-                                                                                            bool totalPriceChecked,
-                                                                                            bool ascendingChecked,
-                                                                                            bool descendingChecked)
+        public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(
+            ObservableCollection<CollectionModel> collectionList,
+            bool collectionNameChecked,
+            bool totalBooksChecked,
+            bool totalPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
         {
             var filteredList = collectionList;
 
             if (collectionNameChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedCollectionName).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
+                }
             }
 
             if (totalBooksChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedCollectionName).OrderBy(x => x.CollectionTotalBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedCollectionName).OrderByDescending(x => x.CollectionTotalBooks).ToObservableCollection();
+                }
             }
 
             if (totalPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedCollectionName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedCollectionName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -1437,7 +1255,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (genreList != null)
@@ -1454,9 +1271,10 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenGenres,
-                                                                              bool showHiddenBooks,
-                                                                              int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(
+            bool showHiddenGenres,
+            bool showHiddenBooks,
+            int maxLimit)
         {
             ObservableCollection<GenreModel>? genreList = null;
             ObservableCollection<GenreModel>? filteredList = null;
@@ -1470,7 +1288,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -1489,7 +1306,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
+                {
                     max = filteredList.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -1512,47 +1331,60 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoGenre,
-                    Count = filteredBookList.Count(x => x.BookGenreGuid == null)
+                    Count = filteredBookList.Count(x => x.BookGenreGuid == null),
                 });
             }
 
             return counts;
         }
 
-        public static async Task<ObservableCollection<GenreModel>> SortGenresList(ObservableCollection<GenreModel> genreList,
-                                                                                  bool genreNameChecked,
-                                                                                  bool totalBooksChecked,
-                                                                                  bool totalPriceChecked,
-                                                                                  bool ascendingChecked,
-                                                                                  bool descendingChecked)
+        public static async Task<ObservableCollection<GenreModel>> SortGenresList(
+            ObservableCollection<GenreModel> genreList,
+            bool genreNameChecked,
+            bool totalBooksChecked,
+            bool totalPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
         {
             var filteredList = genreList;
 
             if (genreNameChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedGenreName).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
+                }
             }
 
             if (totalBooksChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedGenreName).OrderBy(x => x.GenreTotalBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedGenreName).OrderByDescending(x => x.GenreTotalBooks).ToObservableCollection();
+                }
             }
 
             if (totalPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedGenreName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedGenreName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -1569,7 +1401,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (seriesList != null)
@@ -1586,9 +1417,10 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenSeries,
-                                                                              bool showHiddenBooks,
-                                                                              int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(
+            bool showHiddenSeries,
+            bool showHiddenBooks,
+            int maxLimit)
         {
             ObservableCollection<SeriesModel>? seriesList = null;
             ObservableCollection<SeriesModel>? filteredList = null;
@@ -1602,7 +1434,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -1621,7 +1452,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
+                {
                     max = filteredList.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -1644,47 +1477,60 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoSeries,
-                    Count = filteredBookList.Count(x => x.BookSeriesGuid == null)
+                    Count = filteredBookList.Count(x => x.BookSeriesGuid == null),
                 });
             }
 
             return counts;
         }
 
-        public static async Task<ObservableCollection<SeriesModel>> SortSeriesList(ObservableCollection<SeriesModel> seriesList,
-                                                                                   bool seriesNameChecked,
-                                                                                   bool totalBooksChecked,
-                                                                                   bool totalPriceChecked,
-                                                                                   bool ascendingChecked,
-                                                                                   bool descendingChecked)
+        public static async Task<ObservableCollection<SeriesModel>> SortSeriesList(
+            ObservableCollection<SeriesModel> seriesList,
+            bool seriesNameChecked,
+            bool totalBooksChecked,
+            bool totalPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
         {
             var filteredList = seriesList;
 
             if (seriesNameChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedSeriesName).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
+                }
             }
 
             if (totalBooksChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedSeriesName).OrderBy(x => x.SeriesTotalBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedSeriesName).OrderByDescending(x => x.SeriesTotalBooks).ToObservableCollection();
+                }
             }
 
             if (totalPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedSeriesName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedSeriesName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -1701,7 +1547,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (locationList != null)
@@ -1718,9 +1563,10 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenLocations,
-                                                                                 bool showHiddenBooks,
-                                                                                 int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(
+            bool showHiddenLocations,
+            bool showHiddenBooks,
+            int maxLimit)
         {
             ObservableCollection<LocationModel>? locationList = null;
             ObservableCollection<LocationModel>? filteredList = null;
@@ -1734,7 +1580,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -1749,10 +1594,13 @@ namespace BookCollector.Data
                 {
                     filteredList = filteredList.Where(x => !x.HideLocation).ToObservableCollection();
                 }
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
+                {
                     max = filteredList.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -1775,47 +1623,60 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoLocation,
-                    Count = filteredBookList.Count(x => x.BookLocationGuid == null)
+                    Count = filteredBookList.Count(x => x.BookLocationGuid == null),
                 });
             }
 
             return counts;
         }
 
-        public static async Task<ObservableCollection<LocationModel>> SortLocationsList(ObservableCollection<LocationModel> locationList,
-                                                                                        bool locationNameChecked,
-                                                                                        bool totalBooksChecked,
-                                                                                        bool totalPriceChecked,
-                                                                                        bool ascendingChecked,
-                                                                                        bool descendingChecked)
+        public static async Task<ObservableCollection<LocationModel>> SortLocationsList(
+            ObservableCollection<LocationModel> locationList,
+            bool locationNameChecked,
+            bool totalBooksChecked,
+            bool totalPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
         {
             var filteredList = locationList;
 
             if (locationNameChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedLocationName).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
+                }
             }
 
             if (totalBooksChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedLocationName).OrderBy(x => x.LocationTotalBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedLocationName).OrderByDescending(x => x.LocationTotalBooks).ToObservableCollection();
+                }
             }
 
             if (totalPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.ParsedLocationName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedLocationName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -1832,7 +1693,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (authorList != null)
@@ -1850,9 +1710,10 @@ namespace BookCollector.Data
             return filteredList;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenAuthors,
-                                                                               bool showHiddenBooks,
-                                                                               int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(
+            bool showHiddenAuthors,
+            bool showHiddenBooks,
+            int maxLimit)
         {
             ObservableCollection<AuthorModel>? authorList = null;
             ObservableCollection<AuthorModel>? filteredList = null;
@@ -1866,7 +1727,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -1885,7 +1745,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
+                {
                     max = filteredList.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -1908,47 +1770,60 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoAuthor,
-                    Count = filteredBookList.Count(x => string.IsNullOrEmpty(x.AuthorListString))
+                    Count = filteredBookList.Count(x => string.IsNullOrEmpty(x.AuthorListstring)),
                 });
             }
 
             return counts;
         }
 
-        public static async Task<ObservableCollection<AuthorModel>> SortAuthorList(ObservableCollection<AuthorModel> authorList,
-                                                                                   bool authorLastNameChecked,
-                                                                                   bool totalBooksChecked,
-                                                                                   bool totalPriceChecked,
-                                                                                   bool ascendingChecked,
-                                                                                   bool descendingChecked)
+        public static async Task<ObservableCollection<AuthorModel>> SortAuthorList(
+            ObservableCollection<AuthorModel> authorList,
+            bool authorLastNameChecked,
+            bool totalBooksChecked,
+            bool totalPriceChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
         {
             var filteredList = authorList;
 
             if (authorLastNameChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).ToObservableCollection();
+                }
             }
 
             if (totalBooksChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.AuthorTotalBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.AuthorTotalBooks).ToObservableCollection();
+                }
             }
 
             if (totalPriceChecked)
             {
                 if (ascendingChecked)
+                {
                     filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
 
                 if (descendingChecked)
+                {
                     filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                }
             }
 
             return filteredList;
@@ -1964,7 +1839,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2006,7 +1880,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2048,7 +1921,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2090,7 +1962,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2134,7 +2005,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -2165,7 +2035,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             if (bookList != null)
@@ -2196,7 +2065,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -2229,7 +2097,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -2261,7 +2128,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2286,7 +2152,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (list.Count < max)
+                {
                     max = list.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -2302,7 +2170,7 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoSeries,
-                    Count = filteredList2.Count
+                    Count = filteredList2.Count,
                 });
             }
 
@@ -2319,7 +2187,6 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
@@ -2344,7 +2211,9 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (list.Count < max)
+                {
                     max = list.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
@@ -2360,7 +2229,7 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoLocation,
-                    Count = filteredList2.Count
+                    Count = filteredList2.Count,
                 });
             }
 
@@ -2377,17 +2246,16 @@ namespace BookCollector.Data
             }
             else
             {
-
             }
 
             var counts = new List<CountModel>();
 
             if (bookList != null)
             {
-                var filteredList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString))
+                var filteredList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListstring))
                                          .ToObservableCollection();
 
-                var filteredList2 = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString)).ToObservableCollection();
+                var filteredList2 = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListstring)).ToObservableCollection();
 
                 if (!showHiddenBooks)
                 {
@@ -2395,7 +2263,7 @@ namespace BookCollector.Data
                     filteredList2 = filteredList2.Where(x => !x.HideBook).ToObservableCollection();
                 }
 
-                var authorList = filteredList.Select(x => x.AuthorListString)
+                var authorList = filteredList.Select(x => x.AuthorListstring)
                                          .Distinct()
                                          .ToObservableCollection();
 
@@ -2413,10 +2281,10 @@ namespace BookCollector.Data
                             {
                                 string[] name = authorName.Split(",");
 
-                                AuthorModel author1 = new()
+                                AuthorModel author1 = new ()
                                 {
                                     FirstName = name[1].Trim(),
-                                    LastName = name[0].Trim()
+                                    LastName = name[0].Trim(),
                                 };
 
                                 list.Add(author1);
@@ -2430,12 +2298,14 @@ namespace BookCollector.Data
                 var max = maxLimit;
 
                 if (list.Count < max)
+                {
                     max = list.Count;
+                }
 
                 for (int i = 0; i < max; i++)
                 {
-                    var filteredBookList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) &&
-                                                    x.AuthorListString.Contains(list[i].ReverseFullName)).ToObservableCollection();
+                    var filteredBookList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListstring) &&
+                                                    x.AuthorListstring.Contains(list[i].ReverseFullName)).ToObservableCollection();
 
                     if (!showHiddenBooks)
                     {
@@ -2454,11 +2324,249 @@ namespace BookCollector.Data
                 counts.Add(new CountModel()
                 {
                     Label = AppStringResources.NoAuthor,
-                    Count = filteredList2.Count
+                    Count = filteredList2.Count,
                 });
             }
 
             return counts;
+        }
+
+        public static async Task<ObservableCollection<BookModel>> FilterBookList(
+            ObservableCollection<BookModel> bookList,
+            string? favoritesOption,
+            string? formatOption,
+            string? publisherOption,
+            string? languageOption,
+            string? ratingOption,
+            string? publishYearOption,
+            string? authorOption = null,
+            string? locationOption = null,
+            string? seriesOption = null)
+{
+            var filteredList = bookList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteBooks(filteredList, favoritesOption);
+            }
+
+            filteredList = FilterBookFormat(filteredList, formatOption);
+
+            filteredList = FilterBookPublisher(filteredList, publisherOption);
+
+            filteredList = FilterBookLanguage(filteredList, languageOption);
+
+            if (!string.IsNullOrEmpty(ratingOption))
+            {
+                filteredList = FilterBookRating(filteredList, ratingOption);
+            }
+
+            filteredList = FilterBookPublishYear(filteredList, publishYearOption);
+
+            if (!string.IsNullOrEmpty(authorOption))
+            {
+                filteredList = FilterBookAuthor(filteredList, authorOption);
+            }
+
+            if (!string.IsNullOrEmpty(locationOption))
+            {
+                filteredList = FilterBookLocation(filteredList, locationOption);
+            }
+
+            if (!string.IsNullOrEmpty(seriesOption))
+            {
+                filteredList = FilterBookSeries(filteredList, seriesOption);
+            }
+
+            return filteredList;
+        }
+
+        private static ObservableCollection<BookModel> FilterFavoriteBooks(ObservableCollection<BookModel> bookList, string favoritesOption)
+        {
+            var filterList = bookList;
+
+            filterList = favoritesOption switch
+            {
+                "Favorites" => bookList.Where(x => x.IsFavorite)
+                                                         .ToObservableCollection(),
+                "Non-Favorites" => bookList.Where(x => !x.IsFavorite)
+                                                         .ToObservableCollection(),
+                _ => bookList,
+            };
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookFormat(
+            ObservableCollection<BookModel> bookList,
+            string? formatOption)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(formatOption) && !formatOption.Equals(AppStringResources.AllFormats))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookPublisher(
+            ObservableCollection<BookModel> bookList,
+            string? publisherOption)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(publisherOption) && publisherOption.Equals(AppStringResources.NoPublisher))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublisher))
+                                     .ToObservableCollection();
+            }
+
+            if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookPublishYear(
+            ObservableCollection<BookModel> bookList,
+            string? publishYearOption)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(publishYearOption) && publishYearOption.Equals(AppStringResources.NoPublishYear))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
+                                     .ToObservableCollection();
+            }
+
+            if (!string.IsNullOrEmpty(publishYearOption) && !publishYearOption.Equals(AppStringResources.NoPublishYear) && !publishYearOption.Equals(AppStringResources.AllPublishYears))
+            {
+                var years = publishYearOption.Split(" - ");
+
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
+                                            int.Parse(years[0]) <= int.Parse(x.BookPublishYear) &&
+                                            int.Parse(years[1]) >= int.Parse(x.BookPublishYear))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookLanguage(
+            ObservableCollection<BookModel> bookList,
+            string? languageOption)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(languageOption) && languageOption.Equals(AppStringResources.NoLanguage))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookLanguage))
+                                     .ToObservableCollection();
+            }
+
+            if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookRating(
+            ObservableCollection<BookModel> bookList,
+            string ratingOption)
+        {
+            var filterList = bookList;
+
+            if (!ratingOption.Equals(AppStringResources.AllRatings))
+            {
+                filterList = bookList.Where(x => x.Rating == int.Parse(ratingOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookAuthor(
+            ObservableCollection<BookModel> bookList,
+            string authorOption)
+        {
+            var filterList = bookList;
+
+            if (authorOption.Equals(AppStringResources.NoAuthor))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListstring))
+                                     .ToObservableCollection();
+            }
+
+            if (!authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
+            {
+                AuthorModel? author = null;
+
+                if (TestData.UseTestData)
+                {
+                    author = TestData.AuthorList.FirstOrDefault(x => x.FullName.Equals(authorOption));
+                }
+                else
+                {
+                }
+
+                if (author != null)
+                {
+                    filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListstring) && x.AuthorListstring.Contains(author.ReverseFullName))
+                                         .ToObservableCollection();
+                }
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookLocation(
+            ObservableCollection<BookModel> bookList,
+            string locationOption)
+        {
+            var filterList = bookList;
+
+            if (locationOption.Equals(AppStringResources.NoLocation))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
+                                     .ToObservableCollection();
+            }
+
+            if (!locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.Equals(locationOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookSeries(
+            ObservableCollection<BookModel> bookList,
+            string seriesOption)
+        {
+            var filterList = bookList;
+
+            if (seriesOption.Equals(AppStringResources.NoSeries))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookSeries))
+                                     .ToObservableCollection();
+            }
+
+            if (!seriesOption.Equals(AppStringResources.NoSeries) && !seriesOption.Equals(AppStringResources.AllSeries))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
         }
     }
 }

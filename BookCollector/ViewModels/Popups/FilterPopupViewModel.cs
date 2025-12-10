@@ -1,24 +1,14 @@
-﻿using BookCollector.Resources.Localization;
+﻿using System.Collections.ObjectModel;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Popups
 {
     public partial class FilterPopupViewModel : BaseViewModel
     {
-        public double PopupWidth { get; set; }
-        private Popup Popup { get; set; }
-
         [ObservableProperty]
         public bool favoriteVisible;
 
@@ -27,7 +17,6 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? favoriteOption;
-
 
         [ObservableProperty]
         public bool formatVisible;
@@ -38,7 +27,6 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? formatOption;
 
-
         [ObservableProperty]
         public bool authorVisible;
 
@@ -47,7 +35,6 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? authorOption;
-
 
         [ObservableProperty]
         public bool publisherVisible;
@@ -58,7 +45,6 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? publisherOption;
 
-
         [ObservableProperty]
         public bool publishYearVisible;
 
@@ -67,7 +53,6 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? publishYearOption;
-
 
         [ObservableProperty]
         public bool languageVisible;
@@ -78,7 +63,6 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? languageOption;
 
-
         [ObservableProperty]
         public bool ratingVisible;
 
@@ -87,7 +71,6 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? ratingOption;
-
 
         [ObservableProperty]
         public bool locationVisible;
@@ -98,7 +81,6 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? locationOption;
 
-
         [ObservableProperty]
         public bool seriesVisible;
 
@@ -108,110 +90,131 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? seriesOption;
 
-
         public FilterPopupViewModel(Popup popup, string viewTitle)
         {
-            Popup = popup;
-            ViewTitle = viewTitle;
-            PopupWidth = DeviceWidth - 50;
+            this.Popup = popup;
+            this.ViewTitle = viewTitle;
+            this.PopupWidth = this.DeviceWidth - 50;
         }
+
+        public double PopupWidth { get; set; }
+
+        private Popup Popup { get; set; }
 
         [RelayCommand]
         public async Task Close()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-            SetPreferences();
+            this.SetPreferences();
 
-            await Popup.CloseAsync(token: cts.Token);
+            await this.Popup.CloseAsync(token: cts.Token);
         }
 
         public void SetFavoritePicker()
         {
-            FavoritePicker = [AppStringResources.Both, AppStringResources.Favorites, AppStringResources.NonFavorites];
+            this.FavoritePicker = [AppStringResources.Both, AppStringResources.Favorites, AppStringResources.NonFavorites];
         }
 
         public void SetFormatPicker(ObservableCollection<string>? formats)
         {
-            FormatPicker = formats != null ? [..formats] : null;
-            FormatPicker?.Insert(0, AppStringResources.AllFormats);
+            this.FormatPicker = formats != null ? [..formats] : null;
+            this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
         }
 
         public void SetAuthorPicker(ObservableCollection<string>? authorNames)
         {
-            AuthorPicker = authorNames != null ? [..authorNames] : null;
-            AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
-            AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
+            this.AuthorPicker = authorNames != null ? [..authorNames] : null;
+            this.AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
+            this.AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
         }
 
         public void SetPublisherPicker(ObservableCollection<string>? publisherNames)
         {
-            PublisherPicker = publisherNames != null ? [..publisherNames] : null;
-            PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
-            PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
+            this.PublisherPicker = publisherNames != null ? [..publisherNames] : null;
+            this.PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
+            this.PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
         }
 
         public void SetPublishYearPicker(ObservableCollection<string>? publishYears)
         {
-            PublishYearPicker = publishYears != null ? [.. publishYears] : null;
-            PublishYearPicker?.Insert(0, AppStringResources.AllPublishYears);
-            PublishYearPicker?.Insert(1, AppStringResources.NoPublishYear);
+            this.PublishYearPicker = publishYears != null ? [.. publishYears] : null;
+            this.PublishYearPicker?.Insert(0, AppStringResources.AllPublishYears);
+            this.PublishYearPicker?.Insert(1, AppStringResources.NoPublishYear);
         }
 
         public void SetLanguagePicker(ObservableCollection<string>? languages)
         {
-            LanguagePicker = languages != null ? [..languages] : null;
-            LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
-            LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
+            this.LanguagePicker = languages != null ? [..languages] : null;
+            this.LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
+            this.LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
         }
 
         public void SetRatingPicker()
         {
-            RatingPicker = [AppStringResources.AllRatings, $"0", $"1", $"2", $"3", $"4", $"5"];
+            this.RatingPicker = [AppStringResources.AllRatings, $"0", $"1", $"2", $"3", $"4", $"5"];
         }
 
         public void SetLocationPicker(ObservableCollection<string>? locations)
         {
-            LocationPicker = locations != null ? [.. locations] : null;
-            LocationPicker?.Insert(0, AppStringResources.AllLocations);
-            LocationPicker?.Insert(1, AppStringResources.NoLocation);
+            this.LocationPicker = locations != null ? [.. locations] : null;
+            this.LocationPicker?.Insert(0, AppStringResources.AllLocations);
+            this.LocationPicker?.Insert(1, AppStringResources.NoLocation);
         }
 
         public void SetSeriesPicker(ObservableCollection<string>? series)
         {
-            SeriesPicker = series != null ? [.. series] : null;
-            SeriesPicker?.Insert(0, AppStringResources.AllSeries);
-            SeriesPicker?.Insert(1, AppStringResources.NoSeries);
+            this.SeriesPicker = series != null ? [.. series] : null;
+            this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
+            this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
         }
 
         private void SetPreferences()
         {
-            if (FavoriteVisible)
-                Preferences.Set($"{ViewTitle}_FavoriteSelection", FavoriteOption);
+            if (this.FavoriteVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOption);
+            }
 
-            if (FormatVisible)
-                Preferences.Set($"{ViewTitle}_FormatSelection", FormatOption);
+            if (this.FormatVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_FormatSelection", this.FormatOption);
+            }
 
-            if (AuthorVisible)
-                Preferences.Set($"{ViewTitle}_AuthorSelection", AuthorOption);
+            if (this.AuthorVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_AuthorSelection", this.AuthorOption);
+            }
 
-            if (PublisherVisible)
-                Preferences.Set($"{ViewTitle}_PublisherSelection", PublisherOption);
+            if (this.PublisherVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_PublisherSelection", this.PublisherOption);
+            }
 
-            if (PublishYearVisible)
-                Preferences.Set($"{ViewTitle}_PublishYearSelection", PublishYearOption);
+            if (this.PublishYearVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_PublishYearSelection", this.PublishYearOption);
+            }
 
-            if (LanguageVisible)
-                Preferences.Set($"{ViewTitle}_LanguageSelection", LanguageOption);
+            if (this.LanguageVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_LanguageSelection", this.LanguageOption);
+            }
 
-            if (RatingVisible)
-                Preferences.Set($"{ViewTitle}_RatingSelection", RatingOption);
+            if (this.RatingVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_RatingSelection", this.RatingOption);
+            }
 
-            if (LocationVisible)
-                Preferences.Set($"{ViewTitle}_LocationSelection", LocationOption);
+            if (this.LocationVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_LocationSelection", this.LocationOption);
+            }
 
-            if (SeriesVisible)
-                Preferences.Set($"{ViewTitle}_SeriesSelection", SeriesOption);
+            if (this.SeriesVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_SeriesSelection", this.SeriesOption);
+            }
         }
     }
 }

@@ -3,22 +3,12 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Book;
-using BookCollector.ViewModels.Series;
 using BookCollector.Views.Book;
-using BookCollector.Views.Collection;
-using BookCollector.Views.Genre;
-using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
-using BookCollector.Views.Series;
 using BookCollector.Views.WishListBook;
 using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Net;
-using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace BookCollector.ViewModels.WishListBook
 {
@@ -42,49 +32,49 @@ namespace BookCollector.ViewModels.WishListBook
         [ObservableProperty]
         public bool bookInfo1NotOpen;
 
+        public WishListBookEditViewModel(BookModel book, ContentPage view)
+        {
+            this.View = view;
+
+            this.EditedBook = (BookModel)book.Clone();
+            this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{this.EditedBook.BookTitle}")}";
+
+            this.PopupWidth = this.DeviceWidth - 50;
+        }
+
         public bool RemoveMainViewBefore { get; set; }
 
         public WishListBookMainView? MainViewBefore { get; set; }
 
         public double PopupWidth { get; set; }
 
-        public WishListBookEditViewModel(BookModel book, ContentPage view)
-        {
-            View = view;
-
-            EditedBook = (BookModel)book.Clone();
-            InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{EditedBook.BookTitle}")}";
-
-            PopupWidth = DeviceWidth - 50;
-        }
-
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                ValidateEntry();
+                this.ValidateEntry();
 
-                BookInfo1SectionValue = true;
-                AuthorListSectionValue = true;
-                BookInfoSectionValue = true;
-                SummarySectionValue = true;
-                CommentsSectionValue = true;
+                this.BookInfo1SectionValue = true;
+                this.AuthorListSectionValue = true;
+                this.BookInfoSectionValue = true;
+                this.SummarySectionValue = true;
+                this.CommentsSectionValue = true;
 
-                if (!string.IsNullOrEmpty(EditedBook.BookCoverFileLocation) && EditedBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation) && this.EditedBook.BookCover == null)
                 {
-                    var imageBytes = File.ReadAllBytes(EditedBook.BookCoverFileLocation);
+                    var imageBytes = File.ReadAllBytes(this.EditedBook.BookCoverFileLocation);
                     var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                    EditedBook.BookCover = imageSource;
+                    this.EditedBook.BookCover = imageSource;
                 }
 
-                if (!string.IsNullOrEmpty(EditedBook.BookCoverUrl) && EditedBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl) && this.EditedBook.BookCover == null)
                 {
                     if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
-                        var byteArray = DownloadImage(EditedBook.BookCoverUrl);
-                        EditedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                        var byteArray = DownloadImage(this.EditedBook.BookCoverUrl);
+                        this.EditedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                     }
                     else
                     {
@@ -92,68 +82,68 @@ namespace BookCollector.ViewModels.WishListBook
                     }
                 }
 
-                BookCover = EditedBook.BookCover;
+                this.BookCover = this.EditedBook.BookCover;
 
-                AuthorList = !string.IsNullOrEmpty(EditedBook.AuthorListString) ? ParseOutAuthorsFromString(EditedBook.AuthorListString) : [];
+                this.AuthorList = !string.IsNullOrEmpty(this.EditedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.EditedBook.AuthorListstring) : [];
 
                 Task.WaitAll(
-                [
-                    Task.Run (async () => EditedBook.SetCoverDisplay() ),
-                    Task.Run (async () => await EditedBook.SetBookPrice() ),
-                    Task.Run (async () => await BookInfo1Changed() ),
-                    Task.Run (async () => await ReadingDataChanged() ),
-                    Task.Run (async () => await ChapterListChanged() ),
-                    Task.Run (async () => await AuthorListChanged() ),
-                    Task.Run (async () => await BookInfoChanged() ),
-                    Task.Run (async () => await SummaryChanged() ),
-                    Task.Run (async () => await CommentsChanged() ),
+               [
+                    Task.Run(async () => this.EditedBook.SetCoverDisplay()),
+                    Task.Run(async () => await this.EditedBook.SetBookPrice()),
+                    Task.Run(() => this.BookInfo1Changed()),
+                    Task.Run(() => this.ReadingDataChanged()),
+                    Task.Run(() => this.ChapterListChanged()),
+                    Task.Run(() => this.AuthorListChanged()),
+                    Task.Run(() => this.BookInfoChanged()),
+                    Task.Run(() => this.SummaryChanged()),
+                    Task.Run(() => this.CommentsChanged()),
                 ]);
 
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public async Task BookSearch()
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
             var view = new BookSearchView();
             var bindingContext = new BookSearchViewModel(null, view)
             {
                 ViewTitle = $"{AppStringResources.BookSearch}",
-                SelectedBook = EditedBook
+                SelectedBook = this.EditedBook,
             };
             view.BindingContext = bindingContext;
 
             await Shell.Current.Navigation.PushModalAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task SaveBook()
         {
-            if (!BookTitleValid && BookFormatNotValid)
+            if (!this.BookTitleValid && this.BookFormatNotValid)
             {
-                if (!BookTitleValid)
+                if (!this.BookTitleValid)
                 {
                     await DisplayMessage(AppStringResources.BookTitleNotValid, null);
                 }
 
-                if (BookFormatNotValid)
+                if (this.BookFormatNotValid)
                 {
                     await DisplayMessage(AppStringResources.BookFormatNotValid, null);
                 }
@@ -161,49 +151,48 @@ namespace BookCollector.ViewModels.WishListBook
             else
             {
                 Task.WaitAll(
-                [
-                    Task.Run (async () => await EditedBook.SetPartOfSeries() ),
-                    Task.Run (async () => EditedBook.SetCoverDisplay() ),
-                    Task.Run (async () => await EditedBook.SetBookPrice() ),
-                    Task.Run (async () => await EditedBook.SetAuthorListString(AuthorList, false) ),
+               [
+                    Task.Run(async () => await this.EditedBook.SetPartOfSeries()),
+                    Task.Run(async () => this.EditedBook.SetCoverDisplay()),
+                    Task.Run(async () => await this.EditedBook.SetBookPrice()),
+                    Task.Run(async () => await this.EditedBook.SetAuthorListstring(this.AuthorList, false)),
                 ]);
 
 #if ANDROID
-                if (Platform.CurrentActivity != null &&
-                    Platform.CurrentActivity.Window != null)
+                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                {
                     Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                }
 #endif
 
-                if (!string.IsNullOrEmpty(ViewTitle) && ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
+                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewBook}"))
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.InsertWishListBook(EditedBook);
+                        TestData.InsertWishListBook(this.EditedBook);
                     }
                     else
                     {
-
                     }
                 }
                 else
                 {
                     if (TestData.UseTestData)
                     {
-                        TestData.UpdateWishListBook(EditedBook);
+                        TestData.UpdateWishListBook(this.EditedBook);
                     }
                     else
                     {
-
                     }
                 }
 
-                if (RemoveMainViewBefore)
+                if (this.RemoveMainViewBefore)
                 {
-                    Shell.Current.Navigation.RemovePage(MainViewBefore);
+                    Shell.Current.Navigation.RemovePage(this.MainViewBefore);
                 }
 
-                var view = new WishListBookMainView(EditedBook, $"{EditedBook.BookTitle}");
-                Shell.Current.Navigation.InsertPageBefore(view, View);
+                var view = new WishListBookMainView(this.EditedBook, $"{this.EditedBook.BookTitle}");
+                Shell.Current.Navigation.InsertPageBefore(view, this.View);
 
                 await Shell.Current.Navigation.PopAsync();
             }
@@ -212,8 +201,8 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public void BookInfo1Changed()
         {
-            BookInfo1Open = BookInfo1SectionValue;
-            BookInfo1NotOpen = !BookInfo1SectionValue;
+            this.BookInfo1Open = this.BookInfo1SectionValue;
+            this.BookInfo1NotOpen = !this.BookInfo1SectionValue;
         }
 
         [RelayCommand]
@@ -223,14 +212,14 @@ namespace BookCollector.ViewModels.WishListBook
 
             if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.UploadExistingFile))
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
                 PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.Photos>();
                 storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Photos>();
 
                 if (storageReadStatus == PermissionStatus.Granted)
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -239,79 +228,81 @@ namespace BookCollector.ViewModels.WishListBook
                         if (photos?.Count > 0)
                         {
                             var firstPhoto = photos.First();
-                            BookCover = ImageSource.FromFile(firstPhoto.FullPath);
-                            EditedBook.HasBookCover = true;
-                            EditedBook.HasNoBookCover = false;
+                            this.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
+                            this.EditedBook.HasBookCover = true;
+                            this.EditedBook.HasNoBookCover = false;
 
                             var directory = $"{FileSystem.AppDataDirectory}/BookCovers";
 
                             if (!Directory.Exists(directory))
+                            {
                                 Directory.CreateDirectory(directory);
+                            }
 
                             var fi = new FileInfo(firstPhoto.FullPath);
                             var filePath = $"{directory}/{fi.Name}";
                             File.Copy(firstPhoto.FullPath, filePath, true);
 
-                            EditedBook.BookCoverFileLocation = filePath;
+                            this.EditedBook.BookCoverFileLocation = filePath;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        SetIsBusyFalse();
+                        this.SetIsBusyFalse();
                         await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
                     }
 
-                    if (EditedBook.HasNoBookCover)
+                    if (this.EditedBook.HasNoBookCover)
+                    {
                         await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
+                    }
                 }
                 else
                 {
                     await DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
                 }
 
-
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
 
             if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.BookCoverUrl))
             {
-                var result = await View.ShowPopupAsync<string>(new BookCoverUrlPopup(PopupWidth, EditedBook.BookCoverUrl));
+                var result = await this.View.ShowPopupAsync<string>(new BookCoverUrlPopup(this.PopupWidth, this.EditedBook.BookCoverUrl));
                 var bookCoverUrl = result.Result;
 
                 if (!string.IsNullOrEmpty(bookCoverUrl))
                 {
-                    SetIsBusyTrue();
+                    this.SetIsBusyTrue();
 
                     if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
                         try
                         {
                             var byteArray = DownloadImage(bookCoverUrl);
-                            BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-                            EditedBook.BookCover = BookCover;
-                            EditedBook.HasBookCover = true;
-                            EditedBook.HasNoBookCover = false;
-                            EditedBook.BookCoverUrl = bookCoverUrl;
+                            this.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            this.EditedBook.BookCover = this.BookCover;
+                            this.EditedBook.HasBookCover = true;
+                            this.EditedBook.HasNoBookCover = false;
+                            this.EditedBook.BookCoverUrl = bookCoverUrl;
 
-                            SetIsBusyFalse();
+                            this.SetIsBusyFalse();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            SetIsBusyFalse();
-                            BookCover = null;
-                            EditedBook.BookCover = null;
-                            EditedBook.HasBookCover = false;
-                            EditedBook.HasNoBookCover = true;
-                            EditedBook.BookCoverUrl = null;
+                            this.SetIsBusyFalse();
+                            this.BookCover = null;
+                            this.EditedBook.BookCover = null;
+                            this.EditedBook.HasBookCover = false;
+                            this.EditedBook.HasNoBookCover = true;
+                            this.EditedBook.BookCoverUrl = null;
                             await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
                         }
                     }
                     else
                     {
                         await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
-                        SetIsBusyFalse();
+                        this.SetIsBusyFalse();
                     }
-
                 }
             }
         }
@@ -319,60 +310,64 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public void RemoveCoverPhoto()
         {
-            EditedBook.HasBookCover = false;
-            EditedBook.HasNoBookCover = true;
-            EditedBook.BookCover = null;
-            EditedBook.BookCoverUrl = null;
-            EditedBook.BookCoverFileLocation = null;
+            this.EditedBook.HasBookCover = false;
+            this.EditedBook.HasNoBookCover = true;
+            this.EditedBook.BookCover = null;
+            this.EditedBook.BookCoverUrl = null;
+            this.EditedBook.BookCoverFileLocation = null;
         }
 
         [RelayCommand]
         public void AddAuthor()
         {
-            AuthorList ??= [];
+            this.AuthorList ??= [];
 
-            AuthorList.Add(new AuthorModel());
+            this.AuthorList.Add(new AuthorModel());
         }
 
         [RelayCommand]
         public void RemoveAuthor(AuthorModel author)
         {
-            AuthorList?.Remove(author);
+            this.AuthorList?.Remove(author);
         }
 
         [RelayCommand]
         public void ValidateBookFormat()
         {
-            ValidateEntry();
+            this.ValidateEntry();
         }
 
         [RelayCommand]
         public void ValidateBookTitle()
         {
-            ValidateEntry();
+            this.ValidateEntry();
         }
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(EditedBook.BookTitle))
+            if (string.IsNullOrEmpty(this.EditedBook.BookTitle))
             {
-                var bookTitleEditor = View.FindByName<Editor>("BookTitleEditor");
+                var bookTitleEditor = this.View.FindByName<Editor>("BookTitleEditor");
                 bookTitleEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
                 bookTitleEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                BookTitleValid = false;
+                this.BookTitleValid = false;
             }
             else
             {
-                var bookTitleEditor = View.FindByName<Editor>("BookTitleEditor");
+                var bookTitleEditor = this.View.FindByName<Editor>("BookTitleEditor");
                 bookTitleEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 bookTitleEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                BookTitleValid = true;
+                this.BookTitleValid = true;
             }
 
-            if (string.IsNullOrEmpty(EditedBook.BookFormat))
-                BookFormatNotValid = true;
+            if (string.IsNullOrEmpty(this.EditedBook.BookFormat))
+            {
+                this.BookFormatNotValid = true;
+            }
             else
-                BookFormatNotValid = false;
+            {
+                this.BookFormatNotValid = false;
+            }
         }
     }
 }

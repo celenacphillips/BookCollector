@@ -39,7 +39,7 @@
                                Style="{DynamicResource SubTitle}"
                                Margin="20,0,0,0"
                                Grid.Column="0" Grid.Row="0"/>
-                        <Label Text="{Binding TotalBooksString}"
+                        <Label Text="{Binding TotalBooksstring}"
                                HorizontalOptions="End"
                                Margin="0,0,20,0"
                                TextColor="{DynamicResource Primary}"
@@ -50,10 +50,10 @@
                     <ScrollView>
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding SearchString}">
+                                       Text="{Binding Searchstring}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
-                                                                    CommandParameter="{Binding SearchString}"
+                                                                    CommandParameter="{Binding Searchstring}"
                                                                     EventName="TextChanged"
                                                                     BindingContext="{Binding BindingContext, Source={x:Reference ExistingBooksPage}}"/>
                                 </SearchBar.Behaviors>

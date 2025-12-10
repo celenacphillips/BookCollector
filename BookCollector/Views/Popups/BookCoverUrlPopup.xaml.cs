@@ -5,24 +5,24 @@ namespace BookCollector.Views.Popups;
 
 public partial class BookCoverUrlPopup : Popup<string?>
 {
-	public double PopupWidth { get; set; }
-
-	public string? BookCoverUrl { get; set; }
-
     public BookCoverUrlPopup(double popupWidth, string? bookCoverUrl)
-	{
-		this.PopupWidth = popupWidth;
-		this.BookCoverUrl = bookCoverUrl;
+    {
+        this.PopupWidth = popupWidth;
+        this.BookCoverUrl = bookCoverUrl;
 
-        BindingContext = this;
+        this.BindingContext = this;
 
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
-	public async void OnClose(object sender, EventArgs e)
-	{
+    public double PopupWidth { get; set; }
+
+    public string? BookCoverUrl { get; set; }
+
+    public async void OnClose(object sender, EventArgs e)
+    {
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await CloseAsync(this.BookCoverUrl, token: cts.Token);
+        await this.CloseAsync(this.BookCoverUrl, token: cts.Token);
     }
 }

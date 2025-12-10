@@ -34,7 +34,7 @@
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout>
-                    <Label Text="{Binding TotalBooksString}"
+                    <Label Text="{Binding TotalBooksstring}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{StaticResource Primary}"
@@ -44,10 +44,10 @@
                         <!-- This is needed to allow the refresh view to work. -->
                         <VerticalStackLayout  Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding SearchString}">
+                                       Text="{Binding Searchstring}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
-                                                                    CommandParameter="{Binding SearchString}"
+                                                                    CommandParameter="{Binding Searchstring}"
                                                                     EventName="TextChanged"
                                                                     BindingContext="{Binding BindingContext, Source={x:Reference GenreMainPage}}"/>
                                 </SearchBar.Behaviors>

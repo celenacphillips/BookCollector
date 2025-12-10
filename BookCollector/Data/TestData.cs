@@ -1,10 +1,6 @@
-﻿using BookCollector.Data.Models;
-using CommunityToolkit.Maui.Core.Extensions;
+﻿using System.Collections.ObjectModel;
+using BookCollector.Data.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DocumentFormat.OpenXml.Bibliography;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace BookCollector.Data
 {
@@ -20,11 +16,11 @@ namespace BookCollector.Data
         internal static ObservableCollection<BookAuthorModel> BookAuthorList = [];
         internal static ObservableCollection<BookModel> BookWishList = [];
 
-        public static bool UseTestData { get; set; }
-
         public TestData()
         {
         }
+
+        public static bool UseTestData { get; set; }
 
         public static void AddBooksToList()
         {
@@ -36,7 +32,7 @@ namespace BookCollector.Data
             AddLocationsToList();
 
             BookList =
-            [
+           [
                 new BookModel()
                 {
                     BookTitle = "Reading Book",
@@ -56,7 +52,7 @@ namespace BookCollector.Data
                     IsFavorite = true,
                     BookGenreGuid = GenreList[0].GenreGuid,
                     BookCollectionGuid = CollectionList[0].CollectionGuid,
-                    BookSeriesGuid = SeriesList[0].SeriesGuid
+                    BookSeriesGuid = SeriesList[0].SeriesGuid,
                 },
                 new BookModel()
                 {
@@ -98,50 +94,56 @@ namespace BookCollector.Data
 
             foreach (var chapter in ChapterList)
             {
-                chapter.BookGuid = (Guid)BookList[0].BookGuid;
-            }
-
-            BookAuthorList =
-            [
-                new BookAuthorModel()
+                if (BookList != null && BookList[0].BookGuid != null)
                 {
-                    BookGuid = (Guid)BookList[0].BookGuid,
-                    AuthorGuid = (Guid)AuthorList[0].AuthorGuid
-                },
-            ];
-
-            foreach (var book in BookList)
-            {
-                book.SetReadingProgress();
-                book.SetCoverDisplay();
-                using var _3 = book.SetAuthorListString();
+                    chapter.BookGuid = BookList[0].BookGuid.Value;
+                }
             }
 
-            var showHiddenBooks = Preferences.Get("HiddenBooksOn", true  /* Default */);
-
-            foreach (var author in AuthorList)
+            if (BookList != null && BookList[0].BookGuid != null && AuthorList != null && AuthorList[0].AuthorGuid != null)
             {
-                using var _ = author.SetTotalBooks(showHiddenBooks);
-            }
+                BookAuthorList =
+                [
+                    new BookAuthorModel()
+                    {
+                        BookGuid = BookList[0].BookGuid.Value,
+                        AuthorGuid = AuthorList[0].AuthorGuid.Value,
+                    },
+                ];
 
-            foreach (var series in SeriesList)
-            {
-                using var _ = series.SetTotalBooks(showHiddenBooks);
-            }
+                foreach (var book in BookList)
+                {
+                    book.SetReadingProgress();
+                    book.SetCoverDisplay();
+                    using var list = book.SetAuthorListstring();
+                }
 
-            foreach (var genre in GenreList)
-            {
-                using var _ = genre.SetTotalBooks(showHiddenBooks);
-            }
+                var showHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            foreach (var collection in CollectionList)
-            {
-                using var _ = collection.SetTotalBooks(showHiddenBooks);
-            }
+                foreach (var author in AuthorList)
+                {
+                    using var list = author.SetTotalBooks(showHiddenBooks);
+                }
 
-            foreach (var location in LocationList)
-            {
-                using var _ = location.SetTotalBooks(showHiddenBooks);
+                foreach (var series in SeriesList)
+                {
+                    using var list = series.SetTotalBooks(showHiddenBooks);
+                }
+
+                foreach (var genre in GenreList)
+                {
+                    using var list = genre.SetTotalBooks(showHiddenBooks);
+                }
+
+                foreach (var collection in CollectionList)
+                {
+                    using var list = collection.SetTotalBooks(showHiddenBooks);
+                }
+
+                foreach (var location in LocationList)
+                {
+                    using var list = location.SetTotalBooks(showHiddenBooks);
+                }
             }
         }
 
@@ -161,13 +163,14 @@ namespace BookCollector.Data
                 book.SetCoverDisplay();
                 InsertBook(book);
             }
-
         }
 
         public static void InsertBook(BookModel book)
         {
             if (book.BookGuid == null)
+            {
                 book.BookGuid = Guid.NewGuid();
+            }
 
             BookList.Add(book);
         }
@@ -180,7 +183,7 @@ namespace BookCollector.Data
         public static void AddWishListBooksToList()
         {
             BookWishList =
-            [
+           [
                 new BookModel()
                 {
                     BookTitle = "Book 1",
@@ -196,7 +199,7 @@ namespace BookCollector.Data
                     BookComments = "Comments",
                     BookSeries = "Series1",
                     BookNumberInSeries = 1,
-                    BookWhereToBuy = "website"
+                    BookWhereToBuy = "website",
                 },
                 new BookModel()
                 {
@@ -213,7 +216,7 @@ namespace BookCollector.Data
                     BookComments = "Comments",
                     BookSeries = "Series1",
                     BookNumberInSeries = 2,
-                    BookWhereToBuy = "website"
+                    BookWhereToBuy = "website",
                 },
                 new BookModel()
                 {
@@ -230,7 +233,7 @@ namespace BookCollector.Data
                     BookComments = "Comments",
                     BookSeries = "Series2",
                     BookNumberInSeries = 1,
-                    BookWhereToBuy = "website"
+                    BookWhereToBuy = "website",
                 },
             ];
 
@@ -261,7 +264,9 @@ namespace BookCollector.Data
         public static void InsertWishListBook(BookModel book)
         {
             if (book.BookGuid == null)
+            {
                 book.BookGuid = Guid.NewGuid();
+            }
 
             BookWishList.Add(book);
         }
@@ -274,7 +279,7 @@ namespace BookCollector.Data
         public static void AddChaptersToList()
         {
             ChapterList =
-            [
+           [
                 new ChapterModel()
                 {
                     ChapterName = "Chapter One",
@@ -287,6 +292,7 @@ namespace BookCollector.Data
                     PageRange = "5-10",
                     ChapterOrder = 1,
                 }
+
             ];
         }
 
@@ -309,7 +315,9 @@ namespace BookCollector.Data
         public static void InsertChapter(ChapterModel chapter)
         {
             if (chapter.ChapterGuid == null)
+            {
                 chapter.ChapterGuid = Guid.NewGuid();
+            }
 
             ChapterList.Add(chapter);
         }
@@ -338,7 +346,9 @@ namespace BookCollector.Data
         public static void InsertBookAuthor(BookAuthorModel bookAuthor)
         {
             if (bookAuthor.BookAuthorGuid == null)
+            {
                 bookAuthor.BookAuthorGuid = Guid.NewGuid();
+            }
 
             BookAuthorList.Add(bookAuthor);
         }
@@ -351,17 +361,18 @@ namespace BookCollector.Data
         public static void AddAuthorsToList()
         {
             AuthorList =
-            [
+           [
                 new AuthorModel()
                 {
                     FirstName = "First1",
-                    LastName = "Last1"
+                    LastName = "Last1",
                 },
                 new AuthorModel()
                 {
                     FirstName = "First2",
                     LastName = "Last2",
                 }
+
             ];
         }
 
@@ -384,7 +395,9 @@ namespace BookCollector.Data
         public static void InsertAuthor(AuthorModel author)
         {
             if (author.AuthorGuid == null)
+            {
                 author.AuthorGuid = Guid.NewGuid();
+            }
 
             AuthorList.Add(author);
         }
@@ -397,21 +410,24 @@ namespace BookCollector.Data
 
         public static void AddAuthorToBook(Guid? authorGuid, Guid? bookGuid)
         {
-            var existingBookAuthor = BookAuthorList.Where(x => x.AuthorGuid == authorGuid && x.BookGuid == bookGuid).ToList().FirstOrDefault();
-
-            if (existingBookAuthor == null)
+            if (authorGuid != null && bookGuid != null)
             {
-                var bookAuthor = new BookAuthorModel()
+                var existingBookAuthor = BookAuthorList.Where(x => x.AuthorGuid == authorGuid && x.BookGuid == bookGuid).ToList().FirstOrDefault();
+
+                if (existingBookAuthor == null)
                 {
-                    AuthorGuid = (Guid)authorGuid,
-                    BookGuid = (Guid)bookGuid,
-                };
+                    var bookAuthor = new BookAuthorModel()
+                    {
+                        AuthorGuid = (Guid)authorGuid,
+                        BookGuid = (Guid)bookGuid,
+                    };
 
-                UpdateBookAuthor(bookAuthor);
-            }
-            else
-            {
-                UpdateBookAuthor(existingBookAuthor);
+                    UpdateBookAuthor(bookAuthor);
+                }
+                else
+                {
+                    UpdateBookAuthor(existingBookAuthor);
+                }
             }
         }
 
@@ -426,25 +442,27 @@ namespace BookCollector.Data
 
                 var book = BookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
 
-                if (book != null && !string.IsNullOrEmpty(book.AuthorListString))
-                    book.AuthorListString = book.AuthorListString.Replace(author.ReverseFullName, string.Empty);
+                if (book != null && !string.IsNullOrEmpty(book.AuthorListstring))
+                {
+                    book.AuthorListstring = book.AuthorListstring.Replace(author.ReverseFullName, string.Empty);
+                }
             }
         }
 
         public static void AddSeriesToList()
         {
             SeriesList =
-            [
+           [
                 new SeriesModel()
                 {
                     SeriesName = "Series 1",
-                    TotalBooksInSeries = "5"
-
+                    TotalBooksInSeries = "5",
                 },
                 new SeriesModel()
                 {
                     SeriesName = "Series 2",
                 }
+
             ];
         }
 
@@ -467,7 +485,9 @@ namespace BookCollector.Data
         public static void InsertSeries(SeriesModel series)
         {
             if (series.SeriesGuid == null)
+            {
                 series.SeriesGuid = Guid.NewGuid();
+            }
 
             SeriesList.Add(series);
         }
@@ -486,15 +506,16 @@ namespace BookCollector.Data
         public static void AddGenresToList()
         {
             GenreList =
-            [
+           [
                 new GenreModel()
                 {
-                    GenreName = "Genre 1"
+                    GenreName = "Genre 1",
                 },
                 new GenreModel()
                 {
-                    GenreName = "Genre 2"
+                    GenreName = "Genre 2",
                 }
+
             ];
         }
 
@@ -517,7 +538,9 @@ namespace BookCollector.Data
         public static void InsertGenre(GenreModel genre)
         {
             if (genre.GenreGuid == null)
+            {
                 genre.GenreGuid = Guid.NewGuid();
+            }
 
             GenreList.Add(genre);
         }
@@ -536,15 +559,16 @@ namespace BookCollector.Data
         public static void AddCollectionsToList()
         {
             CollectionList =
-            [
+           [
                 new CollectionModel()
                 {
-                    CollectionName = "Collection 1"
+                    CollectionName = "Collection 1",
                 },
                 new CollectionModel()
                 {
-                    CollectionName = "Collection 2"
+                    CollectionName = "Collection 2",
                 }
+
             ];
         }
 
@@ -567,7 +591,9 @@ namespace BookCollector.Data
         public static void InsertCollection(CollectionModel collection)
         {
             if (collection.CollectionGuid == null)
+            {
                 collection.CollectionGuid = Guid.NewGuid();
+            }
 
             CollectionList.Add(collection);
         }
@@ -587,15 +613,16 @@ namespace BookCollector.Data
         public static void AddLocationsToList()
         {
             LocationList =
-            [
+           [
                 new LocationModel()
                 {
-                    LocationName = "Room 1"
+                    LocationName = "Room 1",
                 },
                 new LocationModel()
                 {
-                    LocationName = "Room 2"
+                    LocationName = "Room 2",
                 }
+
             ];
         }
 
@@ -618,7 +645,9 @@ namespace BookCollector.Data
         public static void InsertLocation(LocationModel location)
         {
             if (location.LocationGuid == null)
+            {
                 location.LocationGuid = Guid.NewGuid();
+            }
 
             LocationList.Add(location);
         }
@@ -638,32 +667,32 @@ namespace BookCollector.Data
         {
             foreach (var collection in CollectionList)
             {
-                using var _ = collection.SetTotalBooks(true);
+                using var variable = collection.SetTotalBooks(true);
             }
 
             foreach (var author in AuthorList)
             {
-                using var _ = author.SetTotalBooks(true);
+                using var variable = author.SetTotalBooks(true);
             }
 
             foreach (var series in SeriesList)
             {
-                using var _ = series.SetTotalBooks(true);
+                using var variable = series.SetTotalBooks(true);
             }
 
             foreach (var location in LocationList)
             {
-                using var _ = location.SetTotalBooks(true);
+                using var variable = location.SetTotalBooks(true);
             }
 
             foreach (var genre in GenreList)
             {
-                using var _ = genre.SetTotalBooks(true);
+                using var variable = genre.SetTotalBooks(true);
             }
 
             foreach (var book in BookList)
             {
-                using var _ = book.SetAuthorListString();
+                using var variable = book.SetAuthorListstring();
             }
         }
     }

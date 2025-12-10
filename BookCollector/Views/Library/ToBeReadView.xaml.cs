@@ -4,21 +4,20 @@ namespace BookCollector.Views.Library;
 
 public partial class ToBeReadView : ContentPage
 {
-    private ToBeReadViewModel ViewModel {  get; set; }
-
     public ToBeReadView()
-	{
-        var viewModel = new ToBeReadViewModel(this);
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.ViewModel = new ToBeReadViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private ToBeReadViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

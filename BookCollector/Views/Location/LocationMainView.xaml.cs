@@ -5,24 +5,23 @@ namespace BookCollector.Views.Location;
 
 public partial class LocationMainView : ContentPage
 {
-    private LocationMainViewModel ViewModel;
+    private LocationMainViewModel viewModel;
 
     public LocationMainView(LocationModel location, string viewTitle)
-	{
-        var viewModel = new LocationMainViewModel(location, this)
+    {
+        this.viewModel = new LocationMainViewModel(location, this)
         {
-            ViewTitle = viewTitle
+            ViewTitle = viewTitle,
         };
-        ViewModel = viewModel;
-        BindingContext = viewModel;
+        this.BindingContext = this.viewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var _ = ViewModel.SetViewModelData();
+        using var variable = this.viewModel.SetViewModelData();
     }
 }
