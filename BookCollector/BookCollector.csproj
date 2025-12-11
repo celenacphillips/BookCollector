@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-maccatalyst;net10.0-android36.0</TargetFrameworks>
+		<TargetFrameworks>net10.0-maccatalyst;net10.0-android36.0;net10.0-ios</TargetFrameworks>
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)'=='net10.0-android36.0'">23</SupportedOSPlatformVersion>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -48,6 +48,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
 		<NoWarn>1701;1702;1591</NoWarn>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<EnableIosPropertyPages>false</EnableIosPropertyPages>
+	</PropertyGroup>
+
 
 	<ItemGroup>
 		<!-- App Icon -->
