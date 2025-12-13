@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using BookCollector.Data;
+﻿using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -9,6 +8,8 @@ using BookCollector.Views.WishListBook;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.VariantTypes;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Main
 {
@@ -37,6 +38,8 @@ namespace BookCollector.ViewModels.Main
 
         public string? BookSeriesOption { get; set; }
 
+        public bool ShowHiddenWishlistBooks { get; set; }
+
         public async Task SetViewModelData()
         {
             try
@@ -48,7 +51,7 @@ namespace BookCollector.ViewModels.Main
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
                [
-                    Task.Run(async () => this.FullBookList = await FilterLists.GetBookWishList(this.ShowHiddenBook)),
+                    Task.Run(async () => this.FullBookList = await FilterLists.GetBookWishList(this.ShowHiddenWishlistBooks)),
                 ]);
 
                 if (this.FullBookList != null)
@@ -214,36 +217,64 @@ namespace BookCollector.ViewModels.Main
             }
         }
 
-        // TO DO
-        // Figure out how to share an item - 12/3/2025
         [RelayCommand]
         public async Task ShareList()
         {
-            await Share.Default.RequestAsync(new ShareTextRequest
-            {
-                Text = "Text",
-                Title = "Test",
-            });
+            var data = this.CreateShareWishList();
+            var filePath = $"{FileSystem.CacheDirectory}/{AppStringResources.Wishlist}.txt";
+            var title = AppStringResources.Wishlist;
 
-           /*
-             var bookList = string.Join("\n", books); // books is your List<string>
-            await Share.Default.RequestAsync(new ShareTextRequest
-            {
-                Text = bookList,
-                Title = "Share Book List"
-            });
+            File.WriteAllLines(filePath, data);
 
             await Share.Default.RequestAsync(new ShareFileRequest
             {
-                Title = "Share Screenshot",
-                File = new ShareFile(filePath)
+                Title = title,
+                File = new ShareFile(filePath),
             });
-             */
+
+            File.Delete(filePath);
+        }
+
+        private List<string> CreateShareWishList()
+        {
+            var wishList = new List<string>();
+            if (this.FilteredBookList != null)
+            {
+                foreach (var book in this.FilteredBookList)
+                {
+                    string? text;
+
+                    if (!string.IsNullOrEmpty(book.AuthorListstring))
+                    {
+                        var authorList = ParseOutAuthorsFromstring(book.AuthorListstring);
+
+                        text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", book.BookTitle).Replace("Author Name", authorList[0].FullName)}";
+
+                        if (authorList.Count > 1)
+                        {
+                            text += $", {AppStringResources.EtAl}";
+                        }
+                    }
+                    else
+                    {
+                        text = $"{AppStringResources.BookTitle.Replace("Book Title", book.BookTitle)}";
+                    }
+
+                    if (!string.IsNullOrEmpty(book.BookURL))
+                    {
+                        text += $" ({book.BookURL})";
+                    }
+
+                    wishList.Add(text);
+                }
+            }
+
+            return wishList;
         }
 
         private void GetPreferences()
         {
-            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
 
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
             this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);

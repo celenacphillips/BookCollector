@@ -148,5 +148,40 @@ namespace BookCollector.ViewModels.Book
                 }
             }
         }
+
+        [RelayCommand]
+        public async Task ShareList()
+        {
+            if (this.SelectedBook != null)
+            {
+                var title = this.SelectedBook.BookTitle;
+
+                string? text;
+                if (this.AuthorList != null)
+                {
+                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
+
+                    if (this.AuthorList.Count > 1)
+                    {
+                        text += $", {AppStringResources.EtAl}";
+                    }
+                }
+                else
+                {
+                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedBook.BookTitle)}";
+                }
+
+                if (!string.IsNullOrEmpty(this.SelectedBook.BookURL))
+                {
+                    text += $" ({this.SelectedBook.BookURL})";
+                }
+
+                await Share.Default.RequestAsync(new ShareTextRequest
+                {
+                    Text = text,
+                    Title = title,
+                });
+            }
+        }
     }
 }

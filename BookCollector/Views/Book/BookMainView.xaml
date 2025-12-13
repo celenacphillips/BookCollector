@@ -13,6 +13,8 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
+                     Command="{Binding ShareListCommand}"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.EditBook}"
                      Command="{Binding EditBookCommand}"
                      Order="Secondary"/>
@@ -73,7 +75,7 @@
                         <Label HorizontalTextAlignment="Center"
                                Margin="0,10,0,0">
                             <Label.FormattedText>
-                                <Formattedstring>
+                                <FormattedString>
                                     <Span Text="{Binding SelectedBook.BookTitle}"
                                           FontAttributes="Bold">
                                         <Span.GestureRecognizers>
@@ -81,7 +83,7 @@
                                                                   CommandParameter="{Binding SelectedBook.BookTitle}"/>
                                         </Span.GestureRecognizers>
                                     </Span>
-                                </Formattedstring>
+                                </FormattedString>
                             </Label.FormattedText>
                         </Label>
                         <!-- Book Title -->
@@ -105,7 +107,7 @@
                         <HorizontalStackLayout HorizontalOptions="Center">
                             <Label>
                                 <Label.FormattedText>
-                                    <Formattedstring>
+                                    <FormattedString>
                                         <Span Text="{Binding SelectedBook.BookFormat}"
                                               Style="{DynamicResource SubTitle}">
                                             <Span.GestureRecognizers>
@@ -113,7 +115,7 @@
                                                                       CommandParameter="{Binding SelectedBook.BookFormat}"/>
                                             </Span.GestureRecognizers>
                                         </Span>
-                                    </Formattedstring>
+                                    </FormattedString>
                                 </Label.FormattedText>
                             </Label>
                         </HorizontalStackLayout>
@@ -124,14 +126,14 @@
                                                IsVisible="{Binding SelectedBook.HasSeries}">
                             <Label>
                                 <Label.FormattedText>
-                                    <Formattedstring>
+                                    <FormattedString>
                                         <Span Text="{Binding SelectedBook.PartOfSeries}">
                                             <Span.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                       CommandParameter="{Binding SelectedBook.PartOfSeries}"/>
                                             </Span.GestureRecognizers>
                                         </Span>
-                                    </Formattedstring>
+                                    </FormattedString>
                                 </Label.FormattedText>
                             </Label>
                         </HorizontalStackLayout>
@@ -142,14 +144,14 @@
                                                IsVisible="{Binding SelectedBook.HasCollection}">
                             <Label>
                                 <Label.FormattedText>
-                                    <Formattedstring>
+                                    <FormattedString>
                                         <Span Text="{Binding SelectedBook.PartOfCollection}">
                                             <Span.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                       CommandParameter="{Binding SelectedBook.PartOfCollection}"/>
                                             </Span.GestureRecognizers>
                                         </Span>
-                                    </Formattedstring>
+                                    </FormattedString>
                                 </Label.FormattedText>
                             </Label>
                         </HorizontalStackLayout>
@@ -211,14 +213,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookStartDate}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookStartDate}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -231,14 +233,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookEndDate}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookEndDate}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -258,14 +260,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookPageTotal}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookPageTotal}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -278,14 +280,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookPageRead}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookPageRead}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -329,14 +331,14 @@
                                     </Grid>
                                     <Label HorizontalOptions="Center">
                                         <Label.FormattedText>
-                                            <Formattedstring>
+                                            <FormattedString>
                                                 <Span Text="{Binding SelectedBook.PageReadPercent}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                               CommandParameter="{Binding SelectedBook.PageReadPercent}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
-                                            </Formattedstring>
+                                            </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
@@ -401,14 +403,14 @@
                                             <HorizontalStackLayout  Padding="10">
                                                 <Label>
                                                     <Label.FormattedText>
-                                                        <Formattedstring>
+                                                        <FormattedString>
                                                             <Span Text="{Binding ChapterName}">
                                                                 <Span.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=TapCommand}"
                                                                                           CommandParameter="{Binding ChapterName}"/>
                                                                 </Span.GestureRecognizers>
                                                             </Span>
-                                                        </Formattedstring>
+                                                        </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
                                                 <Label Text=" : " />
@@ -477,14 +479,14 @@
                                             <HorizontalStackLayout Padding="10">
                                                 <Label>
                                                     <Label.FormattedText>
-                                                        <Formattedstring>
+                                                        <FormattedString>
                                                             <Span Text="{Binding FullName}">
                                                                 <Span.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=TapCommand}"
                                                                                           CommandParameter="{Binding FullName}"/>
                                                                 </Span.GestureRecognizers>
                                                             </Span>
-                                                        </Formattedstring>
+                                                        </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
                                             </HorizontalStackLayout>
@@ -536,14 +538,14 @@
                                            Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
-                                            <Formattedstring>
+                                            <FormattedString>
                                                 <Span Text="{Binding SelectedGenre.GenreName}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                               CommandParameter="{Binding SelectedGenre.GenreName}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
-                                            </Formattedstring>
+                                            </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
@@ -555,14 +557,14 @@
                                            Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
-                                            <Formattedstring>
+                                            <FormattedString>
                                                 <Span Text="{Binding SelectedLocation.LocationName}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                               CommandParameter="{Binding SelectedLocation.LocationName}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
-                                            </Formattedstring>
+                                            </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
@@ -581,14 +583,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookPublisher}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookPublisher}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -601,14 +603,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookPublishYear}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookPublishYear}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -621,14 +623,14 @@
                                            Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
-                                            <Formattedstring>
+                                            <FormattedString>
                                                 <Span Text="{Binding SelectedBook.BookIdentifier}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                               CommandParameter="{Binding SelectedBook.BookIdentifier}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
-                                            </Formattedstring>
+                                            </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
@@ -648,14 +650,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookLanguage}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookLanguage}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -668,14 +670,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookPrice}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookPrice}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -688,14 +690,14 @@
                                            Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
-                                            <Formattedstring>
+                                            <FormattedString>
                                                 <Span Text="{Binding SelectedBook.BookURL}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                               CommandParameter="{Binding SelectedBook.BookURL}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
-                                            </Formattedstring>
+                                            </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                 </VerticalStackLayout>
@@ -715,14 +717,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.LoanedTo}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.LoanedTo}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -735,14 +737,14 @@
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
-                                                <Formattedstring>
+                                                <FormattedString>
                                                     <Span Text="{Binding SelectedBook.BookLoanedOutOn}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                                   CommandParameter="{Binding SelectedBook.BookLoanedOutOn}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
-                                                </Formattedstring>
+                                                </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
@@ -801,14 +803,14 @@
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <Label>
                                     <Label.FormattedText>
-                                        <Formattedstring>
+                                        <FormattedString>
                                             <Span Text="{Binding SelectedBook.BookSummary}">
                                                 <Span.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                           CommandParameter="{Binding SelectedBook.BookSummary}"/>
                                                 </Span.GestureRecognizers>
                                             </Span>
-                                        </Formattedstring>
+                                        </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
                             </VerticalStackLayout>
@@ -853,14 +855,14 @@
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <Label>
                                     <Label.FormattedText>
-                                        <Formattedstring>
+                                        <FormattedString>
                                             <Span Text="{Binding SelectedBook.BookComments}">
                                                 <Span.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding TapCommand}"
                                                                           CommandParameter="{Binding SelectedBook.BookComments}"/>
                                                 </Span.GestureRecognizers>
                                             </Span>
-                                        </Formattedstring>
+                                        </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
                             </VerticalStackLayout>

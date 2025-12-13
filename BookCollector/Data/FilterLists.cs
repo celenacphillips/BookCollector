@@ -832,6 +832,42 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<double> GetAllBookPricesInCollectionList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+            var price = 0.0;
+
+            if (TestData.UseTestData)
+            {
+                bookList = TestData.BookList;
+            }
+            else
+            {
+            }
+
+            if (bookList != null)
+            {
+                filteredList = bookList.Where(x => x.BookCollectionGuid == inputGuid)
+                                       .OrderBy(x => x.ParsedTitle)
+                                       .ToObservableCollection();
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+
+            if (filteredList != null)
+            {
+                price = filteredList.Sum(x => x.BookPriceValue);
+            }
+
+            return price;
+        }
+
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutACollectionList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
@@ -890,6 +926,42 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static async Task<double> GetAllBookPricesInGenreList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+            var price = 0.0;
+
+            if (TestData.UseTestData)
+            {
+                bookList = TestData.BookList;
+            }
+            else
+            {
+            }
+
+            if (bookList != null)
+            {
+                filteredList = bookList.Where(x => x.BookGenreGuid == inputGuid)
+                                       .OrderBy(x => x.ParsedTitle)
+                                       .ToObservableCollection();
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+
+            if (filteredList != null)
+            {
+                price = filteredList.Sum(x => x.BookPriceValue);
+            }
+
+            return price;
+        }
+
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAGenreList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? bookList = null;
@@ -946,6 +1018,42 @@ namespace BookCollector.Data
             }
 
             return filteredList;
+        }
+
+        public static async Task<double> GetAllBookPricesInSeriesList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+            var price = 0.0;
+
+            if (TestData.UseTestData)
+            {
+                bookList = TestData.BookList;
+            }
+            else
+            {
+            }
+
+            if (bookList != null)
+            {
+                filteredList = bookList.Where(x => x.BookSeriesGuid == inputGuid)
+                                       .OrderBy(x => x.ParsedTitle)
+                                       .ToObservableCollection();
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+
+            if (filteredList != null)
+            {
+                price = filteredList.Sum(x => x.BookPriceValue);
+            }
+
+            return price;
         }
 
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutASeriesList(bool showHiddenBooks)
@@ -1009,6 +1117,49 @@ namespace BookCollector.Data
                                .ToObservableCollection();
         }
 
+        public static async Task<double> GetAllBookPricesInAuthorList(
+            ObservableCollection<BookAuthorModel>? bookAuthorList,
+            bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            var filteredList = new ObservableCollection<BookModel>();
+            var price = 0.0;
+
+            if (TestData.UseTestData)
+            {
+                bookList = TestData.BookList;
+            }
+            else
+            {
+            }
+
+            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+
+            var cultureInfo = new CultureInfo(cultureCode);
+
+            if (bookList != null && bookAuthorList != null)
+            {
+                foreach (var bookAuthor in bookAuthorList)
+                {
+                    var book = bookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                    if (book != null)
+                    {
+                        filteredList.Add(book);
+                    }
+                }
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList.Where(x => !x.HideBook).ToObservableCollection();
+            }
+
+            price = filteredList.Sum(x => x.BookPriceValue);
+
+            return price;
+        }
+
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAuthorList(
             string reverseAuthorName,
             bool showHiddenBooks)
@@ -1068,6 +1219,42 @@ namespace BookCollector.Data
             }
 
             return filteredList;
+        }
+
+        public static async Task<double> GetAllBookPricesInLocationList(
+            Guid? inputGuid,
+            bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+            var price = 0.0;
+
+            if (TestData.UseTestData)
+            {
+                bookList = TestData.BookList;
+            }
+            else
+            {
+            }
+
+            if (bookList != null)
+            {
+                filteredList = bookList.Where(x => x.BookLocationGuid == inputGuid)
+                                       .OrderBy(x => x.ParsedTitle)
+                                       .ToObservableCollection();
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+
+            if (filteredList != null)
+            {
+                price = filteredList.Sum(x => x.BookPriceValue);
+            }
+
+            return price;
         }
 
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutALocationList(bool showHiddenBooks)

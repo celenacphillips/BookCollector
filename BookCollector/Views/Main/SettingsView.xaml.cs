@@ -5,12 +5,6 @@ namespace BookCollector.Views.Main;
 
 public partial class SettingsView : ContentPage
 {
-    // TO DO:
-    // Add other languages - 11/12/2025
-    // Try to add color preview in the picker - 11/12/2025
-    // Add more currency options - 12/1/2025
-    // Try to add a color wheel instead of a dropdown picker - / 11/20/2025
-    // WishListBook Toggle - 12/8/2025
     public SettingsView()
     {
         var userAppTheme = Application.Current?.UserAppTheme;
@@ -57,6 +51,7 @@ public partial class SettingsView : ContentPage
         this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
         this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
         this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
+        this.HiddenWishlistBooksOn = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
 
         this.InitializeComponent();
         this.BindingContext = this;
@@ -100,6 +95,8 @@ public partial class SettingsView : ContentPage
 
     public bool HiddenLocationsOn { get; set; }
 
+    public bool HiddenWishlistBooksOn { get; set; }
+
     public void OnAppThemePickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
@@ -109,10 +106,6 @@ public partial class SettingsView : ContentPage
         {
             Application.Current?.UserAppTheme = item.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
             Preferences.Set("AppTheme", picker.SelectedItem.ToString());
-
-            // TO DO:
-            // Add ability to convert AppStringResources string to English string for the Preferences set
-            // If not, when someone changes the language, the default preference will be a different string.
         }
     }
 
@@ -144,10 +137,6 @@ public partial class SettingsView : ContentPage
     {
         var picker = (Picker)sender;
         Preferences.Set("Language", picker.SelectedItem.ToString());
-
-        // TO DO:
-        // Add ability to convert AppStringResources string to English string for the Preferences set
-        // If not, when someone changes the language, the default preference will be a different string.
     }
 
     public void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)
@@ -229,5 +218,10 @@ public partial class SettingsView : ContentPage
     public void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("HiddenLocationsOn", e.Value);
+    }
+
+    public void OnHiddenWishlistBooksToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set("HiddenWishlistBooksOn", e.Value);
     }
 }

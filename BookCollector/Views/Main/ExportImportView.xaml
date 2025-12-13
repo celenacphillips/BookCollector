@@ -142,6 +142,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <Label Text="{x:Static localization:AppStringResources.Books}"
@@ -223,6 +224,15 @@
                             <CheckBox Grid.Row="8" Grid.Column="1"
                                       HorizontalOptions="Start"
                                       IsChecked="{Binding LocationsChecked}"
+                                      Style="{DynamicResource ImportExportCheckbox}"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.BookCoverImages}"
+                                   Grid.Row="9" Grid.Column="0"
+                                   VerticalOptions="Center"/>
+
+                            <CheckBox Grid.Row="9" Grid.Column="1"
+                                      HorizontalOptions="Start"
+                                      IsChecked="{Binding ImagesChecked}"
                                       Style="{DynamicResource ImportExportCheckbox}"/>
                         </Grid>
 

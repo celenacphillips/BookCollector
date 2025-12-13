@@ -320,9 +320,6 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    
-                                    <!-- TO DO -->
-                                    <!-- Fix bug, when closing date picker, triggers OnAppearing - 12/8/2025 -->
                                     <!-- Reading Start Date -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="0">

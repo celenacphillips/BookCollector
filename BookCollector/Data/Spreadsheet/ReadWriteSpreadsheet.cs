@@ -137,8 +137,6 @@ namespace BookCollector.Data.Spreadsheet
 
                                 if (theCells != null)
                                 {
-                                    // TO DO
-                                    // There is a bug here for some books. It will add unnecessary empty cell values between the Image string.
                                     foreach (Cell theCell in theCells)
                                     {
                                         string columnValue = SetCurrentColumn(columnIndex);

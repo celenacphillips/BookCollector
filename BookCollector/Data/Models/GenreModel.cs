@@ -34,8 +34,6 @@ namespace BookCollector.Data.Models
 
         public int GenreTotalBooks { get; set; }
 
-        // TO DO
-        // Set value - 12/8/2025
         public double TotalCostOfBooks { get; set; }
 
         public int? ID { get; set; }
@@ -45,7 +43,7 @@ namespace BookCollector.Data.Models
             return this.MemberwiseClone();
         }
 
-        public async Task SetTotalBooks(bool showHiddenBooks)
+        public async void SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FilterLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
             var count = 0;
@@ -57,6 +55,11 @@ namespace BookCollector.Data.Models
 
             this.TotalBooksstring = StringManipulation.SetTotalBooksString(count);
             this.GenreTotalBooks = count;
+        }
+
+        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        {
+            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInGenreList(this.GenreGuid, showHiddenBooks);
         }
     }
 }

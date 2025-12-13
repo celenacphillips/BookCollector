@@ -23,6 +23,7 @@ namespace BookCollector.ViewModels.Groupings
 
             this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
             this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
+            this.ViewTitle = AppStringResources.Collections;
         }
 
         private bool ShowHiddenCollections { get; set; }
@@ -54,7 +55,8 @@ namespace BookCollector.ViewModels.Groupings
 
                     foreach (var collection in this.FullCollectionList)
                     {
-                        await collection.SetTotalBooks(this.ShowHiddenBook);
+                        collection.SetTotalBooks(this.ShowHiddenBook);
+                        collection.SetTotalCostOfBooks(this.ShowHiddenBook);
                     }
 
                     Task.WaitAll(

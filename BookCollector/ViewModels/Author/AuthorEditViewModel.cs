@@ -32,8 +32,10 @@ namespace BookCollector.ViewModels.Author
             {
                 this.SetIsBusyTrue();
 
-                this.AuthorFirstNameValid = !string.IsNullOrEmpty(this.EditedAuthor.FirstName);
-                this.AuthorLastNameValid = !string.IsNullOrEmpty(this.EditedAuthor.LastName);
+                //this.AuthorFirstNameValid = !string.IsNullOrEmpty(this.EditedAuthor.FirstName);
+                //this.AuthorLastNameValid = !string.IsNullOrEmpty(this.EditedAuthor.LastName);
+                this.ValidateFirstName();
+                this.ValidateLastName();
 
                 this.SetIsBusyFalse();
             }

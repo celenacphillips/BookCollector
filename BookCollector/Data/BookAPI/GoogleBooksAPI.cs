@@ -34,8 +34,8 @@ namespace BookCollector.Data.BookAPI
 
                         if (isbnResponse != null)
                         {
-                            isbnItems = isbnResponse.Items != null ? [.. isbnResponse.Items] : null;
-                            totalItems = isbnResponse.TotalItems;
+                            isbnItems = [.. isbnResponse.items];
+                            totalItems = isbnResponse.totalItems;
 
                             if (totalItems == 0)
                             {
@@ -47,10 +47,10 @@ namespace BookCollector.Data.BookAPI
                                 foreach (var item in isbnItems)
                                 {
                                     if (item.VolumeInfo?.ImageLinks != null &&
-                                        item.VolumeInfo.ImageLinks.Thumbnail != null)
+                                        item.VolumeInfo.ImageLinks.thumbnail != null)
                                     {
-                                        item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.Thumbnail}.jpg";
-                                        var byteArray = DownloadImage($"{item.VolumeInfo.ImageLinks.Thumbnail}.jpg");
+                                        item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.thumbnail}.jpg";
+                                        var byteArray = DownloadImage($"{item.VolumeInfo.ImageLinks.thumbnail}.jpg");
                                         item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
                                         item.VolumeInfo.HasBookCover = true;
                                     }
@@ -86,7 +86,7 @@ namespace BookCollector.Data.BookAPI
                         throw new Exception();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return (null, 0);
                 }

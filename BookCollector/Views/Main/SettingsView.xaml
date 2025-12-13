@@ -80,9 +80,7 @@
 
             <!-- Currency -->
             <HorizontalStackLayout Margin="10">
-                <!-- TO DO-->
-                <!-- Find currency icon - 12/1/2025 -->
-                <Image Source="{AppThemeBinding Light=Icons/language_icon_light.svg, Dark=Icons/language_icon_dark.svg}"
+                <Image Source="{AppThemeBinding Light=Icons/currency_icon_light.svg, Dark=Icons/currency_icon_dark.svg}"
                        HeightRequest="25"
                        WidthRequest="50"/>
                 <Label Text="{x:Static localization:AppStringResources.Currency}"
@@ -239,6 +237,20 @@
                 </Switch>
             </HorizontalStackLayout>
             <!-- Hidden Locations -->
+
+            <!-- Hidden Wishlist Books -->
+            <HorizontalStackLayout Margin="25,10">
+                <Label Text="{x:Static localization:AppStringResources.ShowHiddenWishlistBooks}"
+                       VerticalTextAlignment="Center"/>
+                <Switch IsToggled="{Binding HiddenWishlistBooksOn}"
+                        IsEnabled="True"
+                        Margin="5,-15" 
+                        HorizontalOptions="Center"
+                        VerticalOptions="Start"
+                        Toggled="OnHiddenWishlistBooksToggled">
+                </Switch>
+            </HorizontalStackLayout>
+            <!-- Hidden Wishlist Books -->
 
         </VerticalStackLayout>
     </ScrollView>

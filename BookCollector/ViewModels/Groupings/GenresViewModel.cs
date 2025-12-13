@@ -54,7 +54,8 @@ namespace BookCollector.ViewModels.Groupings
 
                     foreach (var genre in this.FullGenreList)
                     {
-                        await genre.SetTotalBooks(this.ShowHiddenBook);
+                        genre.SetTotalBooks(this.ShowHiddenBook);
+                        genre.SetTotalCostOfBooks(this.ShowHiddenBook);
                     }
 
                     Task.WaitAll(

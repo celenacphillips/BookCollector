@@ -56,7 +56,7 @@ namespace BookCollector.ViewModels.WishListBook
                     this.AuthorList = !string.IsNullOrEmpty(this.SelectedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.SelectedBook.AuthorListstring) : null;
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.SelectedBook.SetBookCheckpoints()),
                         Task.Run(async () => this.SelectedBook.SetCoverDisplay()),
                         Task.Run(async () => await this.SelectedBook.SetPartOfSeries()),
@@ -180,7 +180,7 @@ namespace BookCollector.ViewModels.WishListBook
                         this.SelectedBook.BookSeriesGuid = series.SeriesGuid;
 
                         Task.WaitAll(
-                       [
+                        [
                             Task.Run(async () => this.SelectedBook.SetReadingProgress()),
                         ]);
 
@@ -208,6 +208,41 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     await CanceledAction();
                 }
+            }
+        }
+
+        [RelayCommand]
+        public async Task ShareList()
+        {
+            if (this.SelectedBook != null)
+            {
+                var title = this.SelectedBook.BookTitle;
+
+                string? text;
+                if (this.AuthorList != null)
+                {
+                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
+
+                    if (this.AuthorList.Count > 1)
+                    {
+                        text += $", {AppStringResources.EtAl}";
+                    }
+                }
+                else
+                {
+                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedBook.BookTitle)}";
+                }
+
+                if (!string.IsNullOrEmpty(this.SelectedBook.BookURL))
+                {
+                    text += $" ({this.SelectedBook.BookURL})";
+                }
+
+                await Share.Default.RequestAsync(new ShareTextRequest
+                {
+                    Text = text,
+                    Title = title,
+                });
             }
         }
     }

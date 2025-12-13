@@ -32,13 +32,13 @@ namespace BookCollector.ViewModels.Statistics
 
                 Task.WaitAll(
                [
-                    Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllWishListBooks(this.ShowHiddenBooks)),
-                    Task.Run(async () => this.TotalBooks = await FilterLists.GetAllWishListBooksListCount(this.ShowHiddenBooks)),
-                    Task.Run(async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenBooks)),
-                    Task.Run(() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenBooks)),
+                    Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks)),
+                    Task.Run(async () => this.TotalBooks = await FilterLists.GetAllWishListBooksListCount(this.ShowHiddenWishlistBooks)),
+                    Task.Run(async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
+                    Task.Run(async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
+                    Task.Run(async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
+                    Task.Run(() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks)),
+                    Task.Run(() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks)),
                 ]);
 
                 this.SetUpSeriesChart(seriesCounts);

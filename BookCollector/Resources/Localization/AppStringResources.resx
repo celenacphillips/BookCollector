@@ -153,6 +153,9 @@
   <data name="ShowHiddenBooks" xml:space="preserve">
     <value>Show Hidden Books in lists</value>
   </data>
+  <data name="ShowHiddenWishlistBooks" xml:space="preserve">
+    <value>Show Hidden Books in Wishlist</value>
+  </data>
   <data name="SelectYourAppLanguage" xml:space="preserve">
     <value>Select your App Language</value>
   </data>
@@ -296,6 +299,9 @@
   </data>
   <data name="HideBook_Question" xml:space="preserve">
     <value>Hide Book when Settings &gt; Show Hidden Books is off?</value>
+  </data>
+  <data name="HideWishlistBook_Question" xml:space="preserve">
+    <value>Hide Book when Settings &gt; Show Hidden Wishlist Books is off?</value>
   </data>
   <data name="PartOfCollection" xml:space="preserve">
     <value>Part of blank Collection</value>
@@ -940,7 +946,7 @@
     <value>Table: x retrieved...</value>
   </data>
   <data name="BookGuid" xml:space="preserve">
-    <value>Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>Book Guid</value>
   </data>
   <data name="BookSeriesGuid" xml:space="preserve">
     <value>Book Series Guid</value>
@@ -1046,5 +1052,20 @@
   </data>
   <data name="CollectionNameNotValid" xml:space="preserve">
     <value>Collection Name not valid!</value>
+  </data>
+  <data name="BookTitleByAuthorName" xml:space="preserve">
+    <value>Book Title by Author Name</value>
+  </data>
+  <data name="EtAl" xml:space="preserve">
+    <value>Et al.</value>
+  </data>
+  <data name="BookGuid_Blank" xml:space="preserve">
+    <value>Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="BookCoverImages" xml:space="preserve">
+    <value>Book Cover Images</value>
+  </data>
+  <data name="ExistingBooks_Object" xml:space="preserve">
+    <value>ExistingBooks_Object</value>
   </data>
 </root>

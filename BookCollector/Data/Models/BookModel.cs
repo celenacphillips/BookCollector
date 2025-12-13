@@ -156,8 +156,6 @@ namespace BookCollector.Data.Models
             this.ThreeFourth = this.Half + this.Fourth;
         }
 
-        // TO DO
-        // Bug when adding date and going back to Main View - 12/8/2025
         public async Task SetDates()
         {
             if (!string.IsNullOrEmpty(this.BookStartDate))
@@ -298,13 +296,13 @@ namespace BookCollector.Data.Models
                                 BookGuid = this.BookGuid.Value,
                                 AuthorGuid = authorList[i].AuthorGuid.Value,
                             });
+                        }
 
-                            this.AuthorListstring += authorList[i].ReverseFullName;
+                        this.AuthorListstring += authorList[i].ReverseFullName;
 
-                            if (i != authorList.Count - 1)
-                            {
-                                this.AuthorListstring += "; ";
-                            }
+                        if (i != authorList.Count - 1)
+                        {
+                            this.AuthorListstring += "; ";
                         }
                     }
                     else

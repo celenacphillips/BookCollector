@@ -13,11 +13,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookTitleChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool collectionNameVisible;
 
         [ObservableProperty]
         public bool collectionNameChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool genreNameVisible;
@@ -25,11 +29,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool genreNameChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool seriesNameVisible;
 
         [ObservableProperty]
         public bool seriesNameChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool authorLastNameVisible;
@@ -37,11 +45,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool authorLastNameChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool locationNameVisible;
 
         [ObservableProperty]
         public bool locationNameChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool bookReadingDateVisible;
@@ -49,11 +61,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookReadingDateChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool totalBooksVisible;
 
         [ObservableProperty]
         public bool totalBooksChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool bookReadPercentageVisible;
@@ -61,11 +77,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookReadPercentageChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool bookPublisherVisible;
 
         [ObservableProperty]
         public bool bookPublisherChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool bookPublishYearVisible;
@@ -73,11 +93,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookPublishYearChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool bookFormatVisible;
 
         [ObservableProperty]
         public bool bookFormatChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool pageCountVisible;
@@ -85,11 +109,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool pageCountChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool totalPriceVisible;
 
         [ObservableProperty]
         public bool totalPriceChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool bookPriceVisible;
@@ -97,11 +125,15 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public bool bookPriceChecked;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool seriesOrderVisible;
 
         [ObservableProperty]
         public bool seriesOrderChecked;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool ascendingChecked;

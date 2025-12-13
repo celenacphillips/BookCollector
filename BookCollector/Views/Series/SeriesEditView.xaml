@@ -44,7 +44,7 @@
 
                         <Editor.Behaviors>
                             <toolkit:EventToCommandBehavior EventName="TextChanged"
-                                                            Command="{Binding ValidateBookTitleCommand}"
+                                                            Command="{Binding ValidateSeriesNameCommand}"
                                                             BindingContext="{Binding BindingContext, Source={x:Reference SeriesEditPage}}"/>
                         </Editor.Behaviors>
 

@@ -24,3 +24,7 @@ dotnet_diagnostic.SA1010.severity = none
 # removed because this is being flagged even with null checks around code
 # CS8629: Nullable value type may be null
 dotnet_diagnostic.CS8629.severity = none
+
+# removed because this is being flagged on parsed API data, and changing the casing breaks the retrieval of data
+# IDE1006: Naming rule violation: These words must begin with upper-case letters
+dotnet_diagnostic.IDE1006.severity = none

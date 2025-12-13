@@ -442,7 +442,7 @@
 
                                 <!-- Hide Book -->
                                 <VerticalStackLayout Margin="10">
-                                    <Label Text="{x:Static localization:AppStringResources.HideBook_Question}"
+                                    <Label Text="{x:Static localization:AppStringResources.HideWishlistBook_Question}"
                                        Style="{DynamicResource Header}"/>
                                     <Switch IsToggled="{Binding EditedBook.HideBook}"
                                         HorizontalOptions="Start"

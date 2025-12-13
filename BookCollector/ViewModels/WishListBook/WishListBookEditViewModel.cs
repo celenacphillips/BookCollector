@@ -87,7 +87,7 @@ namespace BookCollector.ViewModels.WishListBook
                 this.AuthorList = !string.IsNullOrEmpty(this.EditedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.EditedBook.AuthorListstring) : [];
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.EditedBook.SetCoverDisplay()),
                     Task.Run(async () => await this.EditedBook.SetBookPrice()),
                     Task.Run(() => this.BookInfo1Changed()),
@@ -151,7 +151,7 @@ namespace BookCollector.ViewModels.WishListBook
             else
             {
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => await this.EditedBook.SetPartOfSeries()),
                     Task.Run(async () => this.EditedBook.SetCoverDisplay()),
                     Task.Run(async () => await this.EditedBook.SetBookPrice()),

@@ -59,6 +59,8 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool ShowHiddenAuthors { get; set; }
 
+        public bool ShowHiddenWishlistBooks { get; set; }
+
         public int MaxListNumber { get; set; }
 
         public void SetUpPieChart(List<ChartValues> chartValues, string sectionName)
@@ -152,6 +154,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
             this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
             this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }

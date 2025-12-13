@@ -122,27 +122,32 @@ namespace BookCollector.Data
 
                 foreach (var author in AuthorList)
                 {
-                    using var list = author.SetTotalBooks(showHiddenBooks);
+                    author.SetTotalBooks(showHiddenBooks);
+                    author.SetTotalCostOfBooks(showHiddenBooks);
                 }
 
                 foreach (var series in SeriesList)
                 {
-                    using var list = series.SetTotalBooks(showHiddenBooks);
+                    series.SetTotalBooks(showHiddenBooks);
+                    series.SetTotalCostOfBooks(showHiddenBooks);
                 }
 
                 foreach (var genre in GenreList)
                 {
-                    using var list = genre.SetTotalBooks(showHiddenBooks);
+                    genre.SetTotalBooks(showHiddenBooks);
+                    genre.SetTotalCostOfBooks(showHiddenBooks);
                 }
 
                 foreach (var collection in CollectionList)
                 {
-                    using var list = collection.SetTotalBooks(showHiddenBooks);
+                    collection.SetTotalBooks(showHiddenBooks);
+                    collection.SetTotalCostOfBooks(showHiddenBooks);
                 }
 
                 foreach (var location in LocationList)
                 {
-                    using var list = location.SetTotalBooks(showHiddenBooks);
+                    location.SetTotalBooks(showHiddenBooks);
+                    location.SetTotalCostOfBooks(showHiddenBooks);
                 }
             }
         }
@@ -667,27 +672,32 @@ namespace BookCollector.Data
         {
             foreach (var collection in CollectionList)
             {
-                using var variable = collection.SetTotalBooks(true);
+                collection.SetTotalBooks(true);
+                collection.SetTotalCostOfBooks(true);
             }
 
             foreach (var author in AuthorList)
             {
-                using var variable = author.SetTotalBooks(true);
+                author.SetTotalBooks(true);
+                author.SetTotalCostOfBooks(true);
             }
 
             foreach (var series in SeriesList)
             {
-                using var variable = series.SetTotalBooks(true);
+                series.SetTotalBooks(true);
+                series.SetTotalCostOfBooks(true);
             }
 
             foreach (var location in LocationList)
             {
-                using var variable = location.SetTotalBooks(true);
+                location.SetTotalBooks(true);
+                location.SetTotalCostOfBooks(true);
             }
 
             foreach (var genre in GenreList)
             {
-                using var variable = genre.SetTotalBooks(true);
+                genre.SetTotalBooks(true);
+                genre.SetTotalCostOfBooks(true);
             }
 
             foreach (var book in BookList)

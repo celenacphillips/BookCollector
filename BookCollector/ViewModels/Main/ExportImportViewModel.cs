@@ -45,6 +45,8 @@ namespace BookCollector.ViewModels.Main
         [ObservableProperty]
         public string? finalOutput;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool booksChecked;
 
@@ -73,10 +75,17 @@ namespace BookCollector.ViewModels.Main
         public bool bookAuthorsChecked;
 
         [ObservableProperty]
+        public bool imagesChecked;
+
+        /********************************************************/
+
+        [ObservableProperty]
         public bool checkboxesVisible;
 
         [ObservableProperty]
         public bool outputVisible;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool exportEnabled;
@@ -117,6 +126,7 @@ namespace BookCollector.ViewModels.Main
             this.SeriesChecked = true;
             this.AuthorsChecked = true;
             this.LocationsChecked = true;
+            this.ImagesChecked = true;
 
             this.SetIsBusyFalse();
         }
@@ -155,11 +165,19 @@ namespace BookCollector.ViewModels.Main
                         }
                     }
 
-                    this.imageExportLocation = $"{exportLocation}/BookCovers";
-
-                    if (!Directory.Exists(this.imageExportLocation))
+                    if (!Directory.Exists(exportLocation))
                     {
-                        Directory.CreateDirectory(this.imageExportLocation);
+                        Directory.CreateDirectory(exportLocation);
+                    }
+
+                    if (this.ImagesChecked)
+                    {
+                        this.imageExportLocation = $"{exportLocation}/BookCovers";
+
+                        if (!Directory.Exists(this.imageExportLocation))
+                        {
+                            Directory.CreateDirectory(this.imageExportLocation);
+                        }
                     }
 
                     await Task.Delay(1);
@@ -308,7 +326,7 @@ namespace BookCollector.ViewModels.Main
             Guid? guid;
             var parsed = Guid.TryParse(input, out Guid guidParse);
 
-            if (guidParse == Guid.Empty)
+            if (!parsed || guidParse == Guid.Empty)
             {
                 guid = null;
             }
@@ -324,9 +342,10 @@ namespace BookCollector.ViewModels.Main
         {
             var parsed = int.TryParse(input, out int intParse);
 
-            if (intParse == 0)
+            if (!parsed || intParse == 0)
             {
                 double doubleParse = ParseDouble(input);
+                intParse = (int)doubleParse;
             }
 
             return intParse;
@@ -341,12 +360,22 @@ namespace BookCollector.ViewModels.Main
 
             var parsed = double.TryParse(input, out double doubleParse);
 
+            if (!parsed)
+            {
+                return 0;
+            }
+
             return doubleParse;
         }
 
         private static bool ParseBool(string input)
         {
             var parsed = bool.TryParse(input, out bool boolParse);
+
+            if (!parsed)
+            {
+                return false;
+            }
 
             return boolParse;
         }
@@ -405,7 +434,7 @@ namespace BookCollector.ViewModels.Main
                 {
                     new ()
                     {
-                        $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
+                        $"{AppStringResources.BookGuid_Blank.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookSeriesGuid.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookNumber.Replace(" ", string.Empty)}",
@@ -467,7 +496,7 @@ namespace BookCollector.ViewModels.Main
                             book.BookCoverUrl,
                         };
 
-                        if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                        if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                         {
                             var fi = new FileInfo(book.BookCoverFileLocation);
                             var exportLocation = $"{this.imageExportLocation}/{fi.Name}";
@@ -556,7 +585,7 @@ namespace BookCollector.ViewModels.Main
                                 BookCoverFileLocation = values[25],
                             };
 
-                            if (!string.IsNullOrEmpty(book.BookCoverUrl))
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
                             {
                                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                                 {
@@ -575,7 +604,7 @@ namespace BookCollector.ViewModels.Main
                                 }
                             }
 
-                            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                             {
                                 try
                                 {
@@ -661,7 +690,7 @@ namespace BookCollector.ViewModels.Main
                 {
                     new ()
                     {
-                        $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
+                        $"{AppStringResources.BookGuid_Blank.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookAuthors.Replace(" ", string.Empty)}",
                         $"{AppStringResources.BookSeries.Replace(" ", string.Empty)}",
@@ -709,7 +738,7 @@ namespace BookCollector.ViewModels.Main
                                 book.BookCoverUrl,
                             };
 
-                            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                             {
                                 var fi = new FileInfo(book.BookCoverFileLocation);
                                 var exportLocation = $"{this.imageExportLocation}/{fi.Name}";
@@ -800,7 +829,7 @@ namespace BookCollector.ViewModels.Main
                                 BookCoverFileLocation = values[17],
                             };
 
-                            if (!string.IsNullOrEmpty(book.BookCoverUrl))
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
                             {
                                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                                 {
@@ -819,7 +848,7 @@ namespace BookCollector.ViewModels.Main
                                 }
                             }
 
-                            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                             {
                                 try
                                 {
@@ -1538,8 +1567,7 @@ namespace BookCollector.ViewModels.Main
                         $"{AppStringResources.AuthorGuid.Replace(" ", string.Empty)}",
                         $"{AppStringResources.FirstName.Replace(" ", string.Empty)}",
                         $"{AppStringResources.LastName.Replace(" ", string.Empty)}",
-                        $"{AppStringResources.FullName.Replace(" ", string.Empty)}",
-                    },
+                    }
                 };
 
                 if (authorList != null)
@@ -1551,7 +1579,6 @@ namespace BookCollector.ViewModels.Main
                         author.AuthorGuid.ToString(),
                         author.FirstName,
                         author.LastName,
-                        author.FullName,
                     };
 
                         stringItems.Add(stringItem);

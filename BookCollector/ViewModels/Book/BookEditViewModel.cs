@@ -138,6 +138,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     var imageBytes = File.ReadAllBytes(this.EditedBook.BookCoverFileLocation);
                     var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    this.EditedBook.BookCover = imageSource;
                 }
 
                 if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl) && this.EditedBook.BookCover == null)
@@ -162,7 +163,7 @@ namespace BookCollector.ViewModels.Book
                 this.ChapterList = [];
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.ChapterList = await FilterLists.GetAllChaptersInBook(this.EditedBook.BookGuid)),
                     Task.Run(async () => this.SeriesList = await FilterLists.GetAllSeriesList(this.HiddenSeriesOn)),
                     Task.Run(async () => this.CollectionList = await FilterLists.GetAllCollectionsList(this.HiddenCollectionsOn)),
@@ -171,7 +172,7 @@ namespace BookCollector.ViewModels.Book
                 ]);
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.SelectedGenre = await FilterLists.GetGenreForBook(this.EditedBook.BookGenreGuid)),
                     Task.Run(async () => this.SelectedLocation = await FilterLists.GetLocationForBook(this.EditedBook.BookLocationGuid)),
                     Task.Run(async () => this.SelectedCollection = await FilterLists.GetCollectionForBook(this.EditedBook.BookCollectionGuid)),
@@ -225,7 +226,7 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task SaveBook()
         {
-            if (!this.BookTitleValid && this.BookFormatNotValid)
+            if (!this.BookTitleValid || this.BookFormatNotValid)
             {
                 if (!this.BookTitleValid)
                 {
@@ -259,7 +260,7 @@ namespace BookCollector.ViewModels.Book
                 }
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => await this.EditedBook.SetDates()),
                     Task.Run(async () => this.EditedBook.SetReadingProgress()),
                     Task.Run(async () => await this.EditedBook.SetPartOfSeries()),

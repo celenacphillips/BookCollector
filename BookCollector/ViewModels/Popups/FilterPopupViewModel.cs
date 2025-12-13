@@ -18,6 +18,8 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? favoriteOption;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool formatVisible;
 
@@ -26,6 +28,8 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? formatOption;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool authorVisible;
@@ -36,6 +40,8 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? authorOption;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool publisherVisible;
 
@@ -44,6 +50,8 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? publisherOption;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool publishYearVisible;
@@ -54,6 +62,8 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? publishYearOption;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool languageVisible;
 
@@ -62,6 +72,8 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? languageOption;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool ratingVisible;
@@ -72,6 +84,8 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? ratingOption;
 
+        /********************************************************/
+
         [ObservableProperty]
         public bool locationVisible;
 
@@ -80,6 +94,8 @@ namespace BookCollector.ViewModels.Popups
 
         [ObservableProperty]
         public string? locationOption;
+
+        /********************************************************/
 
         [ObservableProperty]
         public bool seriesVisible;

@@ -347,6 +347,8 @@ namespace BookCollector.ViewModels.Statistics
         {
             this.SetShowCollections(counts);
 
+            counts = [.. counts.OrderByDescending(x => x.Count)];
+
             if (this.ShowCollections)
             {
                 List<ChartValues> values = [];

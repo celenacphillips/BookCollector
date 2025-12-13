@@ -529,6 +529,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Cover Images.
+        /// </summary>
+        internal static string BookCoverImages {
+            get {
+                return ResourceManager.GetString("BookCoverImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Cover URL.
         /// </summary>
         internal static string BookCoverUrl {
@@ -601,11 +610,20 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to Book Guid.
         /// </summary>
         internal static string BookGuid {
             get {
                 return ResourceManager.GetString("BookGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        /// </summary>
+        internal static string BookGuid_Blank {
+            get {
+                return ResourceManager.GetString("BookGuid_Blank", resourceCulture);
             }
         }
         
@@ -840,6 +858,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookTitle {
             get {
                 return ResourceManager.GetString("BookTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Title by Author Name.
+        /// </summary>
+        internal static string BookTitleByAuthorName {
+            get {
+                return ResourceManager.GetString("BookTitleByAuthorName", resourceCulture);
             }
         }
         
@@ -1267,6 +1294,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Et al..
+        /// </summary>
+        internal static string EtAl {
+            get {
+                return ResourceManager.GetString("EtAl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExistingBooks_Object.
+        /// </summary>
+        internal static string ExistingBooks_Object {
+            get {
+                return ResourceManager.GetString("ExistingBooks_Object", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a list of books that aren&apos;t associated to &apos;grouping.&apos; Click a book to add it..
         /// </summary>
         internal static string ExistingBooksView_InfoText {
@@ -1560,6 +1605,15 @@ namespace BookCollector.Resources.Localization {
         internal static string HideSeries_Question {
             get {
                 return ResourceManager.GetString("HideSeries_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Book when Settings &gt; Show Hidden Wishlist Books is off?.
+        /// </summary>
+        internal static string HideWishlistBook_Question {
+            get {
+                return ResourceManager.GetString("HideWishlistBook_Question", resourceCulture);
             }
         }
         
@@ -2469,6 +2523,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ShowHiddenSeries {
             get {
                 return ResourceManager.GetString("ShowHiddenSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hidden Books in Wishlist.
+        /// </summary>
+        internal static string ShowHiddenWishlistBooks {
+            get {
+                return ResourceManager.GetString("ShowHiddenWishlistBooks", resourceCulture);
             }
         }
         

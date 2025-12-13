@@ -54,7 +54,8 @@ namespace BookCollector.ViewModels.Groupings
 
                     foreach (var location in this.FullLocationList)
                     {
-                        await location.SetTotalBooks(this.ShowHiddenBook);
+                        location.SetTotalBooks(this.ShowHiddenBook);
+                        location.SetTotalCostOfBooks(this.ShowHiddenBook);
                     }
 
                     Task.WaitAll(

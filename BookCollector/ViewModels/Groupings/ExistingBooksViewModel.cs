@@ -21,6 +21,7 @@ namespace BookCollector.ViewModels.Groupings
 
             this.CollectionViewHeight = this.DeviceHeight - this.SingleMenuBar;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
+            this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
         }
 
         private object? SelectedObject { get; set; }
