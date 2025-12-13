@@ -6,207 +6,205 @@
                xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Popups"
                x:DataType="viewModel:FilterPopupViewModel"
                x:Class="BookCollector.Views.Popups.FilterPopup"
-               CanBeDismissedByTappingOutsideOfPopup="True">
-    <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundDark}, Dark={StaticResource BackgroundLight}}"
-                         Padding="2"
-                         WidthRequest="{Binding PopupWidth}">
-        <VerticalStackLayout Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
-            
-            <Grid>
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               WidthRequest="{Binding PopupWidth}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0">
+
+    <VerticalStackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{x:Static localization:AppStringResources.FilterBy}"
+                   Style="{DynamicResource Header}"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Grid.Row="0" Grid.Column="0"/>
+
+            <Button Text="{x:Static localization:AppStringResources.Save}" 
+                    HorizontalOptions="End"
+                    Command="{Binding CloseCommand}"
+                    Margin="10,10,10,0"
+                    Grid.Row="0" Grid.Column="1"/>
+        </Grid>
+
+        <VerticalStackLayout Margin="20,10">
+
+            <!-- Favorite -->
+            <Grid IsVisible="{Binding FavoriteVisible}"
+                  Margin="0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*" />
                     <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Text="{x:Static localization:AppStringResources.FilterBy}"
-                       Style="{DynamicResource Header}"
-                       FontSize="Subtitle"
-                       HorizontalOptions="Center"
-                       VerticalOptions="End"
-                       Grid.Row="0" Grid.Column="0"/>
-
-                <Button Text="{x:Static localization:AppStringResources.Save}" 
-                        HorizontalOptions="End"
-                        Margin="10,10,10,0"
-                        Command="{Binding CloseCommand}"
+                <Label Text="{x:Static localization:AppStringResources.Favorite}"
+                        VerticalTextAlignment="Center"
+                        Grid.Row="0" Grid.Column="0"/>
+                <Picker ItemsSource="{Binding FavoritePicker}"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        SelectedItem="{Binding FavoriteOption}"
                         Grid.Row="0" Grid.Column="1"/>
             </Grid>
+            <!-- Favorite -->
 
-            <VerticalStackLayout Margin="20,10">
+            <!-- Author -->
+            <Grid IsVisible="{Binding AuthorVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
 
-                <!-- Favorite -->
-                <Grid IsVisible="{Binding FavoriteVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+                <Label Text="{x:Static localization:AppStringResources.Authors}"
+                        VerticalTextAlignment="Center"
+                        Grid.Row="0" Grid.Column="0"/>
+                <Picker ItemsSource="{Binding AuthorPicker}"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        SelectedItem="{Binding AuthorOption}"
+                        Grid.Row="0" Grid.Column="1"/>
+            </Grid>
+            <!-- Author -->
 
-                    <Label Text="{x:Static localization:AppStringResources.Favorite}"
+            <!-- Publisher -->
+            <Grid IsVisible="{Binding PublisherVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                        VerticalTextAlignment="Center"
+                        Grid.Row="0" Grid.Column="0"/>
+                <Picker ItemsSource="{Binding PublisherPicker}"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        SelectedItem="{Binding PublisherOption}"
+                        Grid.Row="0" Grid.Column="1"/>
+            </Grid>
+            <!-- Publisher -->
+
+            <!-- Publish Year -->
+            <Grid IsVisible="{Binding PublishYearVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                        VerticalTextAlignment="Center"
+                        Grid.Row="0" Grid.Column="0"/>
+                <Picker ItemsSource="{Binding PublishYearPicker}"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        SelectedItem="{Binding PublishYearOption}"
+                        Grid.Row="0" Grid.Column="1"/>
+            </Grid>
+            <!-- Publish Year -->
+
+            <!-- Format -->
+            <Grid IsVisible="{Binding FormatVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.BookFormat}"
                            VerticalTextAlignment="Center"
                            Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding FavoritePicker}"
-                            HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            SelectedItem="{Binding FavoriteOption}"
-                            Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Favorite -->
-
-                <!-- Author -->
-                <Grid IsVisible="{Binding AuthorVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Text="{x:Static localization:AppStringResources.Authors}"
-                           VerticalTextAlignment="Center"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding AuthorPicker}"
-                            HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            SelectedItem="{Binding AuthorOption}"
-                            Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Author -->
-
-                <!-- Publisher -->
-                <Grid IsVisible="{Binding PublisherVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                           VerticalTextAlignment="Center"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding PublisherPicker}"
-                            HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            SelectedItem="{Binding PublisherOption}"
-                            Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Publisher -->
-
-                <!-- Publish Year -->
-                <Grid IsVisible="{Binding PublishYearVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                           VerticalTextAlignment="Center"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding PublishYearPicker}"
-                            HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            SelectedItem="{Binding PublishYearOption}"
-                            Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Publish Year -->
-
-                <!-- Format -->
-                <Grid IsVisible="{Binding FormatVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Text="{x:Static localization:AppStringResources.BookFormat}"
-                           VerticalTextAlignment="Center"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding FormatPicker}"
+                <Picker ItemsSource="{Binding FormatPicker}"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             SelectedItem="{Binding FormatOption}"
                             Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Format -->
+            </Grid>
+            <!-- Format -->
 
-                <!-- Language -->
-                <Grid IsVisible="{Binding LanguageVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+            <!-- Language -->
+            <Grid IsVisible="{Binding LanguageVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
 
-                    <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
                            VerticalTextAlignment="Center"
                            Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding LanguagePicker}"
+                <Picker ItemsSource="{Binding LanguagePicker}"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             SelectedItem="{Binding LanguageOption}"
                             Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Language -->
+            </Grid>
+            <!-- Language -->
 
-                <!-- Rating -->
-                <Grid IsVisible="{Binding RatingVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+            <!-- Rating -->
+            <Grid IsVisible="{Binding RatingVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
 
-                    <Label Text="{x:Static localization:AppStringResources.BookRating}"
+                <Label Text="{x:Static localization:AppStringResources.BookRating}"
                            VerticalTextAlignment="Center"
                            Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding RatingPicker}"
+                <Picker ItemsSource="{Binding RatingPicker}"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             SelectedItem="{Binding RatingOption}"
                             Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Rating -->
+            </Grid>
+            <!-- Rating -->
 
-                <!-- Location -->
-                <Grid IsVisible="{Binding LocationVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+            <!-- Location -->
+            <Grid IsVisible="{Binding LocationVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
 
-                    <Label Text="{x:Static localization:AppStringResources.BookLocation}"
+                <Label Text="{x:Static localization:AppStringResources.BookLocation}"
                            VerticalTextAlignment="Center"
                            Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding LocationPicker}"
+                <Picker ItemsSource="{Binding LocationPicker}"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             SelectedItem="{Binding LocationOption}"
                             Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Locations -->
+            </Grid>
+            <!-- Locations -->
 
-                <!-- Series -->
-                <Grid IsVisible="{Binding SeriesVisible}"
-                      Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+            <!-- Series -->
+            <Grid IsVisible="{Binding SeriesVisible}"
+                  Margin="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
 
-                    <Label Text="{x:Static localization:AppStringResources.BookSeries}"
+                <Label Text="{x:Static localization:AppStringResources.BookSeries}"
                            VerticalTextAlignment="Center"
                            Grid.Row="0" Grid.Column="0"/>
-                    <Picker ItemsSource="{Binding SeriesPicker}"
+                <Picker ItemsSource="{Binding SeriesPicker}"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             SelectedItem="{Binding SeriesOption}"
                             Grid.Row="0" Grid.Column="1"/>
-                </Grid>
-                <!-- Series -->
+            </Grid>
+            <!-- Series -->
 
-            </VerticalStackLayout>
         </VerticalStackLayout>
     </VerticalStackLayout>
-    
 </toolkit:Popup>

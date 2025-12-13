@@ -4,21 +4,20 @@ namespace BookCollector.Views.Library;
 
 public partial class ReadView : ContentPage
 {
-    private ReadViewModel _viewModel {  get; set; }
+    public ReadView()
+    {
+        this.ViewModel = new ReadViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-	public ReadView()
-	{
-        ReadViewModel viewModel = new ReadViewModel(this);
-        _viewModel = viewModel;
-        BindingContext = viewModel;
+        this.InitializeComponent();
+    }
 
-        InitializeComponent();
-	}
+    private ReadViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

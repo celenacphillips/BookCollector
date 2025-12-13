@@ -1,16 +1,15 @@
-﻿using BarcodeScanner.Mobile;
+﻿using System.Collections.ObjectModel;
+using BarcodeScanner.Mobile;
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Views;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -20,7 +19,7 @@ namespace BookCollector.ViewModels.Book
         public string? input;
 
         [ObservableProperty]
-        public string totalItemsString;
+        public string totalItemsstring;
 
         [ObservableProperty]
         public int totalItems;
@@ -36,45 +35,45 @@ namespace BookCollector.ViewModels.Book
 
         public BookSearchViewModel(string? inputIsbn, ContentPage view)
         {
-            _view = view;
-            Input = inputIsbn;
-            TotalItemsString = $"{AppStringResources.TotalItems}: ";
-            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
+            this.View = view;
+            this.Input = inputIsbn;
+            this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
+            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await Search();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.Search();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public async Task Search()
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            TotalItems = 0;
-            IsbnItems = null;
+            this.TotalItems = 0;
+            this.IsbnItems = null;
 
-            if (string.IsNullOrEmpty(Input))
+            if (string.IsNullOrEmpty(this.Input))
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
                 await DisplayMessage($"{AppStringResources.NoISBNEntered}", null);
 
                 return;
             }
 
-            Input = Input.Trim().Replace("-", "").Replace(" ", "");
+            this.Input = this.Input.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
 
             if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
             {
                 try
                 {
-                    var (items, totalItems) = await GoogleBooksAPI.SearchAsync(Input);
+                    var (items, totalItems) = GoogleBooksAPI.Search(this.Input);
 
-                    SetIsBusyFalse();
+                    this.SetIsBusyFalse();
 
                     if (items == null ||
                         items.Count == 0 ||
@@ -84,21 +83,21 @@ namespace BookCollector.ViewModels.Book
                     }
                     else
                     {
-                        IsbnItems = items;
-                        TotalItems = totalItems;
+                        this.IsbnItems = items;
+                        this.TotalItems = totalItems;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
-                    SetIsBusyFalse();
-                    ShowAddISBN = true;
+                    this.SetIsBusyFalse();
+                    this.ShowAddISBN = true;
                 }
             }
             else
             {
                 await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", null);
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
@@ -108,12 +107,14 @@ namespace BookCollector.ViewModels.Book
 #if ANDROID
             Methods.SetSupportBarcodeFormat(BarcodeFormats.All);
 
-            bool allowed = await Methods.AskForRequiredPermission();
+            var allowed = await Methods.AskForRequiredPermission();
 
             if (allowed)
             {
-                BookScanView view = new();
-                view.ReturnViewModel = this;
+                BookScanView view = new ()
+                {
+                    ReturnViewModel = this,
+                };
 
                 await Shell.Current.Navigation.PushModalAsync(view);
             }
@@ -129,115 +130,125 @@ namespace BookCollector.ViewModels.Book
         {
             try
             {
-                SetData();
+                this.SetData();
                 await Shell.Current.Navigation.PopModalAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
             }
         }
 
         [RelayCommand]
-        public async Task BookSearch_BookCoverPopup(ImageSource imageSource)
+        public void BookSearch_BookCoverPopup(ImageSource imageSource)
         {
-            BookCover = imageSource;
-            _view.ShowPopup(new BookCoverPopup());
+            this.BookCover = imageSource;
+            this.View.ShowPopup(new BookCoverPopup(this.BookCover));
         }
 
         private void SetData()
         {
-            if (ShowAddISBN)
+            if (this.ShowAddISBN)
             {
-                if (SelectedBook != null)
+                if (this.SelectedBook != null)
                 {
-                    if (string.IsNullOrEmpty(SelectedBook.BookIdentifier))
+                    if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier))
                     {
-                        SelectedBook.BookIdentifier = Input;
+                        this.SelectedBook.BookIdentifier = this.Input;
                     }
                 }
 
                 return;
             }
 
-            if (SelectedBook != null && SelectedISBNItem != null)
+            if (this.SelectedBook != null && this.SelectedISBNItem != null)
             {
-                if (SelectedBook.BookCoverBytes == null)
+                if (string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation) || string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
                 {
-                    if (SelectedISBNItem.VolumeInfo.ImageLinks != null)
+                    if (this.SelectedISBNItem.VolumeInfo?.ImageLinks != null)
                     {
-                        SelectedBook.HasBookCover = true;
-                        SelectedBook.BookCoverBytes = SelectedISBNItem.VolumeInfo.ImageLinks.ImageByteArray;
+                        this.SelectedBook.HasBookCover = true;
+                        this.SelectedBook.BookCoverUrl = this.SelectedISBNItem.VolumeInfo.ImageLinks.ImageURL;
                     }
                     else
-                        SelectedBook.HasBookCover = false;
-
-                    SelectedBook.HasNoBookCover = !SelectedBook.HasBookCover;
-                }
-
-                if (string.IsNullOrEmpty(SelectedBook.BookTitle))
-                {
-                    SelectedBook.BookTitle = SelectedISBNItem.VolumeInfo.Title;
-
-                    if (!string.IsNullOrEmpty(SelectedISBNItem.VolumeInfo.Subtitle))
-                        SelectedBook.BookTitle += $": {SelectedISBNItem.VolumeInfo.Subtitle}";
-                }
-
-                if (string.IsNullOrEmpty(SelectedBook.AuthorListString))
-                {
-                    if (SelectedISBNItem.VolumeInfo.Authors != null)
                     {
-                        List<AuthorModel> authorList = new List<AuthorModel>();
+                        this.SelectedBook.HasBookCover = false;
+                    }
 
-                        foreach (var author in SelectedISBNItem.VolumeInfo.Authors)
+                    this.SelectedBook.HasNoBookCover = !this.SelectedBook.HasBookCover;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedBook.BookTitle))
+                {
+                    this.SelectedBook.BookTitle = this.SelectedISBNItem.VolumeInfo?.Title;
+
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.Subtitle))
+                    {
+                        this.SelectedBook.BookTitle += $": {this.SelectedISBNItem.VolumeInfo.Subtitle}";
+                    }
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedBook.AuthorListstring))
+                {
+                    if (this.SelectedISBNItem.VolumeInfo?.Authors != null)
+                    {
+                        List<AuthorModel> authorList = [];
+
+                        foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                         {
                             string firstName = author[..author.LastIndexOf(' ')];
-                            string lastName = author[(author.LastIndexOf(" ") + 1)..];
+                            string lastName = author[(author.LastIndexOf(' ') + 1) ..];
 
                             authorList.Add(
                                 new AuthorModel()
                                 {
                                     FirstName = firstName,
-                                    LastName = lastName
+                                    LastName = lastName,
                                 });
                         }
 
-                        SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
+                        var variable = this.SelectedBook.SetAuthorListstring(authorList.ToObservableCollection(), false);
                     }
                 }
 
-                if (string.IsNullOrEmpty(SelectedBook.BookPublisher))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookPublisher))
                 {
-                    SelectedBook.BookPublisher = SelectedISBNItem.VolumeInfo.Publisher;
+                    this.SelectedBook.BookPublisher = this.SelectedISBNItem.VolumeInfo?.Publisher;
                 }
 
-                if (string.IsNullOrEmpty(SelectedBook.BookPublishYear))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookPublishYear))
                 {
-                    if (SelectedISBNItem.VolumeInfo.PublishedDate.Contains("-"))
-                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo.PublishedDate.Substring(0, SelectedISBNItem.VolumeInfo.PublishedDate.IndexOf("-"));
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.PublishedDate) && this.SelectedISBNItem.VolumeInfo.PublishedDate.Contains('-'))
+                    {
+                        this.SelectedBook.BookPublishYear = this.SelectedISBNItem.VolumeInfo.PublishedDate[..this.SelectedISBNItem.VolumeInfo.PublishedDate.IndexOf('-')];
+                    }
                     else
-                        SelectedBook.BookPublishYear = SelectedISBNItem.VolumeInfo.PublishedDate;
+                    {
+                        this.SelectedBook.BookPublishYear = this.SelectedISBNItem.VolumeInfo?.PublishedDate;
+                    }
                 }
 
-                if (SelectedBook.BookPageTotal <= 0)
+                if (this.SelectedBook.BookPageTotal <= 0 && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
                 {
-                    SelectedBook.BookPageTotal = SelectedISBNItem.VolumeInfo.PageCount;
+                    this.SelectedBook.BookPageTotal = (int)this.SelectedISBNItem.VolumeInfo?.PageCount;
                 }
 
-                if (string.IsNullOrEmpty(SelectedBook.BookSummary))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookSummary) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
                 {
-                    SelectedBook.BookSummary = SelectedISBNItem.VolumeInfo.Description;
+                    this.SelectedBook.BookSummary = this.SelectedISBNItem.VolumeInfo?.Description;
                 }
 
-                if (string.IsNullOrEmpty(SelectedBook.BookLanguage))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookLanguage) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
                 {
-                    if (SelectedISBNItem.VolumeInfo.Language.Equals("en"))
-                        SelectedBook.BookLanguage = $"{AppStringResources.English}";
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.Language) && this.SelectedISBNItem.VolumeInfo.Language.Equals("en"))
+                    {
+                        this.SelectedBook.BookLanguage = $"{AppStringResources.English}";
+                    }
                 }
 
-                if (string.IsNullOrEmpty(SelectedBook.BookIdentifier))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier))
                 {
-                    SelectedBook.BookIdentifier = Input;
+                    this.SelectedBook.BookIdentifier = this.Input;
                 }
             }
         }

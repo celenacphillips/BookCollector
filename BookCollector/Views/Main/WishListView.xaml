@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.WishListBook"
              x:DataType="viewModel:WishListViewModel"
              x:Class="BookCollector.Views.Main.WishListView"
+             x:Name="WishListPage"
              Title="{x:Static localization:AppStringResources.Wishlist}">
 
     <ContentPage.ToolbarItems>
@@ -15,23 +16,23 @@
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/sort_icon_light.svg, Dark=Icons/sort_icon_dark.svg}"
                      Command="{Binding SortPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
-                     Command="{Binding ShareCommand}"
-                     IsEnabled="False"/>
+                     Command="{Binding ShareListCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/book_add_light.svg, Dark=Icons/book_add_dark.svg}"
                      Command="{Binding AddWishListBookCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                    <Label Text="{Binding TotalBooksString}"
+                    <Label Text="{Binding TotalBooksstring}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{DynamicResource Primary}"
@@ -42,11 +43,12 @@
 
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding SearchString}">
+                                       Text="{Binding Searchstring}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
-                                                                    CommandParameter="{Binding SearchString}"
-                                                                    EventName="TextChanged" />
+                                                                    CommandParameter="{Binding Searchstring}"
+                                                                    EventName="TextChanged"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference WishListPage}}"/>
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
@@ -58,15 +60,16 @@
             </RefreshView>
         </StackLayout>
 
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <!-- Activity Indicator -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
+        <!-- Activity Indicator -->
+    </Grid>
 </ContentPage>

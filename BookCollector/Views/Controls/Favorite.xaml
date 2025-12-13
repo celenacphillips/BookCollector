@@ -7,7 +7,7 @@
         <ImageButton HeightRequest="20"
                      WidthRequest="20"
                      x:Name="heart"
-                     Clicked="heart_Clicked"
+                     Clicked="Heart_Clicked"
                      Background="Transparent"/>
     </VerticalStackLayout>
 </ContentView>

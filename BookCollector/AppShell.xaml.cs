@@ -1,31 +1,34 @@
-﻿using BookCollector.Data;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels;
-using BookCollector.ViewModels.BaseViewModels;
-
-namespace BookCollector
+﻿namespace BookCollector
 {
+    using BookCollector.Data;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+
     public partial class AppShell : Shell
     {
-        public string Year { get; set; }
-
         public AppShell()
         {
-            Year = DateTime.Now.Year.ToString();
-            InitializeComponent();
+            this.Year = DateTime.Now.Year.ToString();
+            this.InitializeComponent();
 
-            RegisterRoutes();
+            AppShell.RegisterRoutes();
             BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
 
-            // Unit test data
-            //var testData = new TestData();
-            TestData.AddBooksToList();
-            TestData.AddWishListBooksToList();
+            TestData.UseTestData = true;
 
-            BindingContext = this;
+            if (TestData.UseTestData)
+            {
+                // var testData = new TestData();
+                TestData.AddBooksToList();
+                TestData.AddWishListBooksToList();
+            }
+
+            this.BindingContext = this;
         }
 
-        private void RegisterRoutes()
+        public string Year { get; set; }
+
+        private static void RegisterRoutes()
         {
             Routing.RegisterRoute("BookEditView", typeof(Views.Book.BookEditView));
             Routing.RegisterRoute("BookMainView", typeof(Views.Book.BookMainView));

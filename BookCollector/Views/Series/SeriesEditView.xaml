@@ -6,23 +6,18 @@
              x:Class="BookCollector.Views.Series.SeriesEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Series"
              x:DataType="viewModel:SeriesEditViewModel"
+             x:Name="SeriesEditPage"
              Title="{Binding ViewTitle}">
-
-    <ContentPage.Resources>
-        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
-            <Setter Property="TextColor" Value="{DynamicResource Warning}" />
-            <Setter Property="PlaceholderColor" Value="{DynamicResource Warning}" />
-        </Style>
-    </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
                      Command="{Binding SaveSeriesCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -36,7 +31,8 @@
                     <Editor Text="{Binding EditedSeries.SeriesName}"
                             Placeholder="{x:Static localization:AppStringResources.SeriesName}"
                             FontAttributes="Bold"
-                            HorizontalTextAlignment="Center">
+                            HorizontalTextAlignment="Center"
+                            x:Name="SeriesNameEditor">
 
                         <Editor.Keyboard>
                             <Keyboard x:FactoryMethod="Create">
@@ -47,11 +43,9 @@
                         </Editor.Keyboard>
 
                         <Editor.Behaviors>
-                            <toolkit:TextValidationBehavior x:Name="SeriesNameValidator"
-                                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                            MinimumLength="2"
-                                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
-                                                            IsValid="{Binding SeriesNameValid}"/>
+                            <toolkit:EventToCommandBehavior EventName="TextChanged"
+                                                            Command="{Binding ValidateSeriesNameCommand}"
+                                                            BindingContext="{Binding BindingContext, Source={x:Reference SeriesEditPage}}"/>
                         </Editor.Behaviors>
 
                     </Editor>
@@ -82,16 +76,19 @@
                 </VerticalStackLayout>
             </RefreshView>
         </StackLayout>
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <!-- Main Content -->
+
+        <!-- Activity Indicator -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
+        <!-- Activity Indicator -->
+    </Grid>
 
 </ContentPage>

@@ -7,177 +7,195 @@ using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Author;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
     public partial class AuthorsViewModel : AuthorBaseViewModel
     {
         [ObservableProperty]
-        public string? totalAuthorsString;
-
-        private bool ShowHiddenAuthors { get; set; }
-        private bool AuthorLastNameChecked { get; set; }
-        private bool TotalBooksChecked { get; set; }
-        private bool TotalPriceChecked { get; set; }
+        public string? totalAuthorsstring;
 
         public AuthorsViewModel(ContentPage view)
         {
-            _view = view;
-            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            InfoText = $"{AppStringResources.AuthorView_InfoText}";
-            ViewTitle = AppStringResources.Authors;
+            this.View = view;
+            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.InfoText = $"{AppStringResources.AuthorView_InfoText}";
+            this.ViewTitle = AppStringResources.Authors;
         }
+
+        private bool ShowHiddenAuthors { get; set; }
+
+        private bool TotalBooksChecked { get; set; }
+
+        private bool TotalPriceChecked { get; set; }
 
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                GetPreferences();
+                this.GetPreferences();
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullAuthorList = await FilterLists.GetAllAuthorsList(ShowHiddenAuthors) ),
+                    Task.Run(async () => this.FullAuthorList = await FilterLists.GetAllAuthorsList(this.ShowHiddenAuthors)),
                 ]);
 
-                TotalAuthorsCount = FullAuthorList.Count;
-
-                FilteredAuthorList = FullAuthorList;
-
-                foreach (var author in FullAuthorList)
+                if (this.FullAuthorList != null)
                 {
-                    author.SetTotalBooks(ShowHiddenBook);
+                    this.TotalAuthorsCount = this.FullAuthorList.Count;
+
+                    this.FilteredAuthorList = this.FullAuthorList;
+
+                    foreach (var author in this.FullAuthorList)
+                    {
+                        author.SetTotalBooks(this.ShowHiddenBook);
+                        author.SetTotalCostOfBooks(this.ShowHiddenBook);
+                    }
+
+                    Task.WaitAll(
+                    [
+                        Task.Run(async () => this.FilteredAuthorList = await FilterLists.SortAuthorList(
+                            this.FilteredAuthorList,
+                            this.AuthorLastNameChecked,
+                            this.TotalBooksChecked,
+                            this.TotalPriceChecked,
+                            this.AscendingChecked,
+                            this.DescendingChecked)),
+                    ]);
+
+                    this.FilteredAuthorsCount = this.FilteredAuthorList.Count;
+
+                    this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+
+                    this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
                 }
 
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FilteredAuthorList = await FilterLists.SortAuthorList(FilteredAuthorList,
-                                                                                                AuthorLastNameChecked,
-                                                                                                TotalBooksChecked,
-                                                                                                TotalPriceChecked,
-                                                                                                AscendingChecked,
-                                                                                                DescendingChecked) ),
-                ]);
-
-                FilteredAuthorsCount = FilteredAuthorList.Count;
-
-                TotalAuthorsString = StringManipulation.SetTotalAuthorsString(FilteredAuthorsCount, TotalAuthorsCount);
-
-                ShowCollectionViewFooter = FilteredAuthorsCount > 0;
-
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
-        public async Task SearchOnAuthor(string? input)
+        public void SearchOnAuthor(string? input)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            SearchString = input;
+            this.Searchstring = input;
 
-            if (!string.IsNullOrEmpty(SearchString))
-                FilteredAuthorList = FilteredAuthorList.Where(x => x.FullName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-            else
-                FilteredAuthorList = FullAuthorList;
+            if (this.FilteredAuthorList != null)
+            {
+                if (!string.IsNullOrEmpty(this.Searchstring))
+                {
+                    this.FilteredAuthorList = this.FilteredAuthorList.Where(x => x.FullName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                }
+                else
+                {
+                    this.FilteredAuthorList = this.FullAuthorList;
+                }
 
-            FilteredAuthorsCount = FilteredAuthorList.Count;
+                this.FilteredAuthorsCount = this.FilteredAuthorList != null ? this.FilteredAuthorList.Count : 0;
 
-            TotalAuthorsString = StringManipulation.SetTotalAuthorsString(FilteredAuthorsCount, TotalAuthorsCount);
+                this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+            }
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task PopupMenuAuthor(Guid? input)
         {
-            var selected = FilteredAuthorList.FirstOrDefault(x => x.AuthorGuid == input);
-            string? action = await PopupMenu(selected.FullName);
-
-            switch (action)
+            if (this.FilteredAuthorList != null)
             {
-                case "Edit":
-                    await EditAuthor(selected);
-                    break;
+                var selected = this.FilteredAuthorList.FirstOrDefault(x => x.AuthorGuid == input);
 
-                case "Delete":
-                    await DeleteAuthor(selected);
-                    break;
+                if (selected != null)
+                {
+                    var action = await PopupMenu(selected.FullName);
 
-                default:
-                    break;
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                    {
+                        await this.EditAuthor(selected);
+                    }
+
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
+                    {
+                        await this.DeleteAuthor(selected);
+                    }
+                }
             }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public async Task AddAuthor()
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            AuthorEditView view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
+            var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task EditAuthor(AuthorModel selected)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            AuthorEditView view = new AuthorEditView(selected, selected.FullName);
-            AuthorEditViewModel bindingContext = new AuthorEditViewModel(selected, view);
-            bindingContext.ViewTitle = $"{AppStringResources.EditAuthor}";
+            var view = new AuthorEditView(selected, selected.FullName);
+            var bindingContext = new AuthorEditViewModel(selected, view)
+            {
+                ViewTitle = $"{AppStringResources.EditAuthor}",
+            };
             view.BindingContext = bindingContext;
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task DeleteAuthor(AuthorModel selected)
         {
-            bool answer = await DeleteCheck(selected.FullName);
+            var answer = await DeleteCheck(selected.FullName);
 
             if (answer)
             {
                 try
                 {
-                    SetIsBusyTrue();
+                    this.SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteAuthor(selected);
+                    if (TestData.UseTestData)
+                    {
+                        TestData.DeleteAuthor(selected);
+                    }
+                    else
+                    {
+                    }
 
                     await ConfirmDelete(selected.FullName);
 
-                    await SetViewModelData();
+                    await this.SetViewModelData();
 
-                    SetIsBusyFalse();
+                    this.SetIsBusyFalse();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await CanceledAction();
                 }
@@ -191,36 +209,39 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task SortPopup()
         {
-            var popup = new SortPopup();
-            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            if (!string.IsNullOrEmpty(this.ViewTitle))
             {
-                AuthorLastNameVisible = true,
-                AuthorLastNameChecked = AuthorLastNameChecked,
-                TotalBooksVisible = true,
-                TotalBooksChecked = TotalBooksChecked,
-                TotalPriceVisible = true,
-                TotalPriceChecked = TotalPriceChecked,
-                AscendingChecked = AscendingChecked,
-                DescendingChecked = DescendingChecked,
-            };
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
+                {
+                    AuthorLastNameVisible = true,
+                    AuthorLastNameChecked = this.AuthorLastNameChecked,
+                    TotalBooksVisible = true,
+                    TotalBooksChecked = this.TotalBooksChecked,
+                    TotalPriceVisible = true,
+                    TotalPriceChecked = this.TotalPriceChecked,
+                    AscendingChecked = this.AscendingChecked,
+                    DescendingChecked = this.DescendingChecked,
+                };
 
-            popup.BindingContext = viewModel;
+                popup.BindingContext = viewModel;
 
-            await _view.ShowPopupAsync(popup);
-            await SetViewModelData();
+                await this.View.ShowPopupAsync(popup);
+                await this.SetViewModelData();
+            }
         }
 
         private void GetPreferences()
         {
-            ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true  /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            AuthorLastNameChecked = Preferences.Get($"{ViewTitle}_AuthorLastNameSelection", true  /* Default */);
-            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
-            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
-            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

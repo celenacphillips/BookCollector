@@ -13,6 +13,8 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
                      Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
+                     Command="{Binding ShareListCommand}"/>
         <ToolbarItem Text="{x:Static localization:AppStringResources.EditBook}"
                      Command="{Binding EditBookCommand}"
                      Order="Secondary"/>
@@ -21,11 +23,10 @@
                      Order="Secondary"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
+    <Grid>
         
         <!-- Main Content -->
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -171,13 +172,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}" 
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding ReadingDataOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding ReadingDataNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -213,10 +214,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookStartDate}">
+                                                    <Span Text="{Binding SelectedBook.StartDateValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookStartDate}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.StartDateValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -233,10 +234,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookEndDate}">
+                                                    <Span Text="{Binding SelectedBook.EndDateValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookEndDate}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.EndDateValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -365,13 +366,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding ChapterListOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding ChapterListNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -382,8 +383,21 @@
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <CollectionView ItemsSource="{Binding ChapterList}"
-                                                Margin="10"
-                                                EmptyView="{x:Static localization:AppStringResources.NoChaptersAvailable}">
+                                                MinimumHeightRequest="25"
+                                                Margin="10">
+
+                                    <CollectionView.EmptyView>
+                                        <ContentView>
+                                            <VerticalStackLayout HorizontalOptions="Center"
+                                                                 VerticalOptions="Start">
+                                                    <Label Text="{x:Static localization:AppStringResources.NoChaptersAvailable}"
+                                                           HorizontalTextAlignment="Center"
+                                                           VerticalTextAlignment="Center"
+                                                           Style="{DynamicResource SubTitle}"/>
+                                                </VerticalStackLayout>
+                                        </ContentView>
+                                    </CollectionView.EmptyView>
+                                    
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate x:DataType="dataModels:ChapterModel">
                                             <HorizontalStackLayout  Padding="10">
@@ -428,13 +442,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding AuthorListOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding AuthorListNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -445,8 +459,21 @@
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <CollectionView ItemsSource="{Binding AuthorList}"
-                                                Margin="10"
-                                                EmptyView="{x:Static localization:AppStringResources.NoAuthorsAvailable}">
+                                                MinimumHeightRequest="25"
+                                                Margin="10">
+
+                                    <CollectionView.EmptyView>
+                                        <Grid>
+                                            <VerticalStackLayout HorizontalOptions="Center"
+                                                                 VerticalOptions="Start">
+                                                <Label Text="{x:Static localization:AppStringResources.NoAuthorsAvailable}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalTextAlignment="Center"
+                                                       Style="{DynamicResource SubTitle}"/>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </CollectionView.EmptyView>
+
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate x:DataType="dataModels:AuthorModel">
                                             <HorizontalStackLayout Padding="10">
@@ -488,13 +515,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding BookInfoOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding BookInfoNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -711,10 +738,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookLoanedOutOn}">
+                                                    <Span Text="{Binding SelectedBook.LoanedOutOnValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookLoanedOutOn}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.LoanedOutOnValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -757,13 +784,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding SummaryOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding SummaryNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -809,13 +836,13 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImage &#709;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
                                            IsVisible="{Binding CommentsOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
                                            Grid.Row="0" Grid.Column="1"/>
 
-                                    <Image Source="{FontImage &#708;, Size=18, Color=White}"
+                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
                                            IsVisible="{Binding CommentsNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
@@ -852,16 +879,15 @@
         <!-- Main Content -->
         
         <!-- Activity Indicator -->
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           HorizontalOptions="CenterAndExpand"
-                           VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
         <!-- Activity Indicator -->
-    </AbsoluteLayout>
+    </Grid>
 </ContentPage>

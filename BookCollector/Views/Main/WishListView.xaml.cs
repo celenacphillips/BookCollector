@@ -4,21 +4,20 @@ namespace BookCollector.Views.Main;
 
 public partial class WishListView : ContentPage
 {
-	private WishListViewModel _viewModel { get; set; }
+    public WishListView()
+    {
+        this.ViewModel = new WishListViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-	public WishListView()
-	{
-		WishListViewModel viewModel = new WishListViewModel(this);
-		_viewModel = viewModel;
-		BindingContext = viewModel;
-
-		InitializeComponent();
+        this.InitializeComponent();
     }
 
-	// Need this to make sure new info populates when you
+    private WishListViewModel ViewModel { get; set; }
+
+    // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

@@ -4,22 +4,23 @@ namespace BookCollector.Views.Groupings;
 
 public partial class ExistingBooksView : ContentPage
 {
-    private ExistingBooksViewModel _viewModel;
+    private ExistingBooksViewModel viewModel;
 
     public ExistingBooksView(object selected, string viewTitle)
-	{
-        ExistingBooksViewModel viewModel = new ExistingBooksViewModel(selected, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.viewModel = new ExistingBooksViewModel(selected, this)
+        {
+            ViewTitle = viewTitle,
+        };
+        this.BindingContext = this.viewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     // Need this to make sure books populate when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.viewModel.SetViewModelData();
     }
 }

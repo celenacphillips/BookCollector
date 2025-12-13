@@ -153,6 +153,9 @@
   <data name="ShowHiddenBooks" xml:space="preserve">
     <value>Show Hidden Books in lists</value>
   </data>
+  <data name="ShowHiddenWishlistBooks" xml:space="preserve">
+    <value>Show Hidden Books in Wishlist</value>
+  </data>
   <data name="SelectYourAppLanguage" xml:space="preserve">
     <value>Select your App Language</value>
   </data>
@@ -268,7 +271,7 @@
     <value>Book Publish Year</value>
   </data>
   <data name="BookIdentifier" xml:space="preserve">
-    <value>Book Identifier</value>
+    <value>Book Identifier/ISBN</value>
   </data>
   <data name="BookLocation" xml:space="preserve">
     <value>Book Location</value>
@@ -296,6 +299,9 @@
   </data>
   <data name="HideBook_Question" xml:space="preserve">
     <value>Hide Book when Settings &gt; Show Hidden Books is off?</value>
+  </data>
+  <data name="HideWishlistBook_Question" xml:space="preserve">
+    <value>Hide Book when Settings &gt; Show Hidden Wishlist Books is off?</value>
   </data>
   <data name="PartOfCollection" xml:space="preserve">
     <value>Part of blank Collection</value>
@@ -373,7 +379,7 @@
     <value>Hide Location when Settings &gt; Show Hidden Location is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author when Settings &gt; ShowHidden Authors is off?</value>
+    <value>Hide Author when Settings &gt; Show Hidden Authors is off?</value>
   </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
@@ -890,5 +896,188 @@
   </data>
   <data name="BookFormatsByPrice" xml:space="preserve">
     <value>Book Formats By Price</value>
+  </data>
+  <data name="Export_Import" xml:space="preserve">
+    <value>Export/Import</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Export_Import_Question" xml:space="preserve">
+    <value>Would you like to import or export your data?</value>
+  </data>
+  <data name="ExportImportView_InfoText" xml:space="preserve">
+    <value>Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution).</value>
+  </data>
+  <data name="AreYouSureExport_Question" xml:space="preserve">
+    <value>Are you sure you want to export your data? This can take a while if you have a large amount of data and/or large images. Please be patient.</value>
+  </data>
+  <data name="AreYouSureImport_Question" xml:space="preserve">
+    <value>Are you sure you want to import data? This can take a while if you have a large amount of data and/or large images. Please be patient.</value>
+  </data>
+  <data name="ExportResultsStart" xml:space="preserve">
+    <value>Export Started. Please be patient.</value>
+  </data>
+  <data name="ImportResultsStart" xml:space="preserve">
+    <value>Import Started. Please be patient.</value>
+  </data>
+  <data name="ExportResultsFinish" xml:space="preserve">
+    <value>Export finished.</value>
+  </data>
+  <data name="ImportResultsFinish" xml:space="preserve">
+    <value>Import finished.</value>
+  </data>
+  <data name="ExportComplete" xml:space="preserve">
+    <value>Export completed.</value>
+  </data>
+  <data name="ImportComplete" xml:space="preserve">
+    <value>Import completed.</value>
+  </data>
+  <data name="Table_GettingItems" xml:space="preserve">
+    <value>Table: Getting items...</value>
+  </data>
+  <data name="ItemSkipped" xml:space="preserve">
+    <value>Item Skipped.</value>
+  </data>
+  <data name="Table_XRetrieved" xml:space="preserve">
+    <value>Table: x retrieved...</value>
+  </data>
+  <data name="BookGuid" xml:space="preserve">
+    <value>Book Guid</value>
+  </data>
+  <data name="BookSeriesGuid" xml:space="preserve">
+    <value>Book Series Guid</value>
+  </data>
+  <data name="BookCollectionGuid" xml:space="preserve">
+    <value>Book Collection Guid</value>
+  </data>
+  <data name="BookGenreGuid" xml:space="preserve">
+    <value>Book Genre Guid</value>
+  </data>
+  <data name="BookLocationGuid" xml:space="preserve">
+    <value>Book Location Guid</value>
+  </data>
+  <data name="Table_YExported" xml:space="preserve">
+    <value>Table: y/z exported...</value>
+  </data>
+  <data name="Table_XImported" xml:space="preserve">
+    <value>Table: x/z imported...</value>
+  </data>
+  <data name="BookAuthors" xml:space="preserve">
+    <value>Book Authors</value>
+  </data>
+  <data name="Chapters" xml:space="preserve">
+    <value>Chapters</value>
+  </data>
+  <data name="ChapterGuid" xml:space="preserve">
+    <value>Chapter Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="ChapterOrder" xml:space="preserve">
+    <value>Chapter Order</value>
+  </data>
+  <data name="ErrorSavingChapter" xml:space="preserve">
+    <value>Error saving chapter!</value>
+  </data>
+  <data name="CollectionGuid" xml:space="preserve">
+    <value>Collection Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="ErrorSavingCollection" xml:space="preserve">
+    <value>Error saving collection!</value>
+  </data>
+  <data name="GenreGuid" xml:space="preserve">
+    <value>Genre Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="ErrorSavingGenre" xml:space="preserve">
+    <value>Error saving genre!</value>
+  </data>
+  <data name="SeriesGuid" xml:space="preserve">
+    <value>Series Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="ErrorSavingSeries" xml:space="preserve">
+    <value>Error saving series!</value>
+  </data>
+  <data name="BookAuthorGuid" xml:space="preserve">
+    <value>Book Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="AuthorGuid" xml:space="preserve">
+    <value>Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="ErrorSavingBookAuthor" xml:space="preserve">
+    <value>Error saving book author!</value>
+  </data>
+  <data name="ErrorSavingAuthor" xml:space="preserve">
+    <value>Error saving author!</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="ErrorSavingLocation" xml:space="preserve">
+    <value>Error saving location!</value>
+  </data>
+  <data name="LocationGuid" xml:space="preserve">
+    <value>Location Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="Table_Waiting" xml:space="preserve">
+    <value>Table: Waiting...</value>
+  </data>
+  <data name="BookImportExportFileLocation" xml:space="preserve">
+    <value>Book Import Export File Location</value>
+  </data>
+  <data name="UploadExistingFile" xml:space="preserve">
+    <value>Upload Existing File</value>
+  </data>
+  <data name="PleaseConnectToInternetToFindBookCover" xml:space="preserve">
+    <value>Please connect to Internet to find book cover!</value>
+  </data>
+  <data name="BookTitleNotValid" xml:space="preserve">
+    <value>Book Title not valid.</value>
+  </data>
+  <data name="BookFormatNotValid" xml:space="preserve">
+    <value>Book Format not valid.</value>
+  </data>
+  <data name="SeriesNameNotValid" xml:space="preserve">
+    <value>Series Name not valid!</value>
+  </data>
+  <data name="LocationNameNotValid" xml:space="preserve">
+    <value>Location Name not valid!</value>
+  </data>
+  <data name="GenreNameNotValid" xml:space="preserve">
+    <value>Genre Name not valid!</value>
+  </data>
+  <data name="AuthorNameNotValid" xml:space="preserve">
+    <value>Author Name not valid!</value>
+  </data>
+  <data name="CollectionNameNotValid" xml:space="preserve">
+    <value>Collection Name not valid!</value>
+  </data>
+  <data name="BookTitleByAuthorName" xml:space="preserve">
+    <value>Book Title by Author Name</value>
+  </data>
+  <data name="EtAl" xml:space="preserve">
+    <value>Et al.</value>
+  </data>
+  <data name="BookGuid_Blank" xml:space="preserve">
+    <value>Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+  </data>
+  <data name="BookCoverImages" xml:space="preserve">
+    <value>Book Cover Images</value>
+  </data>
+  <data name="ExistingBooks_Object" xml:space="preserve">
+    <value>ExistingBooks_Object</value>
+  </data>
+  <data name="MainSettings" xml:space="preserve">
+    <value>Main Settings</value>
+  </data>
+  <data name="ToggleSettings" xml:space="preserve">
+    <value>Toggle Settings</value>
+  </data>
+  <data name="DeleteAllData_Question" xml:space="preserve">
+    <value>Delete All Data?</value>
+  </data>
+  <data name="WarningThisActionCannotBeUndone" xml:space="preserve">
+    <value>Warning! This action cannot be undone!</value>
   </data>
 </root>

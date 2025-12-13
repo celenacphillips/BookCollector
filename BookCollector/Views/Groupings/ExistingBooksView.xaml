@@ -7,6 +7,7 @@
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Groupings"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
              x:DataType="viewModel:ExistingBooksViewModel"
+             x:Name="ExistingBooksPage"
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
@@ -18,9 +19,10 @@
                      Command="{Binding InfoPopupCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All" >
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
@@ -37,7 +39,7 @@
                                Style="{DynamicResource SubTitle}"
                                Margin="20,0,0,0"
                                Grid.Column="0" Grid.Row="0"/>
-                        <Label Text="{Binding TotalBooksString}"
+                        <Label Text="{Binding TotalBooksstring}"
                                HorizontalOptions="End"
                                Margin="0,0,20,0"
                                TextColor="{DynamicResource Primary}"
@@ -48,11 +50,12 @@
                     <ScrollView>
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding SearchString}">
+                                       Text="{Binding Searchstring}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
-                                                                    CommandParameter="{Binding SearchString}"
-                                                                    EventName="TextChanged" />
+                                                                    CommandParameter="{Binding Searchstring}"
+                                                                    EventName="TextChanged"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference ExistingBooksPage}}"/>
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
@@ -64,16 +67,19 @@
             </RefreshView>
 
         </StackLayout>
-        <StackLayout IsVisible="{Binding IsBusy}"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Gray" Opacity="0.5">
+        <!-- Main Content -->
+        
+        <!-- Activity Indicator -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="Gray"
+              Opacity="0.5">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-    </AbsoluteLayout>
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+        </Grid>
+        <!-- Activity Indicator -->
+    </Grid>
 
 </ContentPage>

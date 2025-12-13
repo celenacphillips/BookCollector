@@ -1,8 +1,18 @@
 ﻿namespace BookCollector.Data.Enums
 {
+    /// <summary>
+    /// Types of Heart States.
+    /// </summary>
     public enum HeartState
     {
+        /// <summary>
+        /// Represents an empty heart.
+        /// </summary>
         Empty,
-        Full
+
+        /// <summary>
+        /// Represents a full heart.
+        /// </summary>
+        Full,
     }
 }

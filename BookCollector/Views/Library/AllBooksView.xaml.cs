@@ -4,20 +4,20 @@ namespace BookCollector.Views.Library;
 
 public partial class AllBooksView : ContentPage
 {
-    private AllBooksViewModel _viewModel { get; set; }
-	public AllBooksView()
-	{
-        AllBooksViewModel viewModel = new AllBooksViewModel(this);
-        _viewModel = viewModel;
-        BindingContext = viewModel;
+    public AllBooksView()
+    {
+        this.ViewModel = new AllBooksViewModel(this);
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private AllBooksViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

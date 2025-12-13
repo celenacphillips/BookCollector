@@ -1,24 +1,13 @@
-﻿using BookCollector.Data.Models;
+﻿using System.Collections.ObjectModel;
+using BookCollector.Data.Models;
 using BookCollector.Views.Location;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class LocationBaseViewModel : BookBaseViewModel
     {
-        [ObservableProperty]
-        public int totalLocationsCount;
-
-        [ObservableProperty]
-        public int filteredLocationsCount;
-
         [ObservableProperty]
         public static ObservableCollection<LocationModel>? fullLocationList;
 
@@ -26,17 +15,20 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<LocationModel>? filteredLocationList;
 
         [ObservableProperty]
-        public LocationModel? selectedLocation;
+        public int totalLocationsCount;
+
+        [ObservableProperty]
+        public int filteredLocationsCount;
 
         [RelayCommand]
         public async Task LocationSelectionChanged()
         {
-            if (SelectedLocation != null)
+            if (this.SelectedLocation != null && !string.IsNullOrEmpty(this.SelectedLocation.LocationName))
             {
-                LocationMainView view = new LocationMainView(SelectedLocation, SelectedLocation.LocationName);
+                var view = new LocationMainView(this.SelectedLocation, this.SelectedLocation.LocationName);
 
                 await Shell.Current.Navigation.PushAsync(view);
-                SelectedLocation = null;
+                this.SelectedLocation = null;
             }
         }
     }

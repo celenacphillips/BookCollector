@@ -4,8 +4,8 @@ namespace BookCollector.Views.Popups;
 
 public partial class SortPopup : Popup
 {
-	public SortPopup()
-	{
-		InitializeComponent();
-	}
+    public SortPopup()
+    {
+        this.InitializeComponent();
+    }
 }

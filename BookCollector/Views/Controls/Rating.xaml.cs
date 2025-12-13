@@ -1,16 +1,10 @@
-using BookCollector.Data;
 using BookCollector.Data.Enums;
-using System.Runtime.ConstrainedExecution;
-using System.Windows.Input;
 using Colors = Microsoft.Maui.Graphics.Colors;
 
 namespace BookCollector.Views.Controls;
 
 public partial class Rating : ContentView
 {
-    private readonly Rating _view;
-    private const int MAX_VALUE = 5;
-
     public static readonly BindableProperty CurrentValueProperty =
              BindableProperty.Create(
                  nameof(CurrentValue),
@@ -18,17 +12,20 @@ public partial class Rating : ContentView
                  typeof(Rating),
                  propertyChanged: OnRefreshControl);
 
-    public int CurrentValue
-    {
-        get => (int)GetValue(CurrentValueProperty);
-        set => SetValue(CurrentValueProperty, value);
-    }
+    private const int MAXVALUE = 5;
+    private readonly Rating view;
 
     public Rating()
     {
-        _view = this;
-        InitializeComponent();
-        SetStars();
+        this.view = this;
+        this.InitializeComponent();
+        this.SetStars();
+    }
+
+    public int CurrentValue
+    {
+        get => (int)this.GetValue(CurrentValueProperty);
+        set => this.SetValue(CurrentValueProperty, value);
     }
 
     private static void OnRefreshControl(BindableObject bindable, object oldValue, object newValue)
@@ -37,25 +34,57 @@ public partial class Rating : ContentView
         {
             rating.SetStars();
         }
+    }
 
+    private static ImageSource CreateStarLabel(StarState state)
+    {
+        return state switch
+        {
+            StarState.Empty => Application.Current?.UserAppTheme switch
+            {
+                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_empty_dark.svg"),
+                _ => ImageSource.FromFile("Icons/star_icon_empty_light.svg"),
+            },
+            StarState.Full => Application.Current?.UserAppTheme switch
+            {
+                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_full_dark.svg"),
+                _ => ImageSource.FromFile("Icons/star_icon_full_light.svg"),
+            },
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+    private static double ClampValue(double value)
+    {
+        if (value < 0)
+        {
+            return 0;
+        }
+
+        if (value > MAXVALUE)
+        {
+            return MAXVALUE;
+        }
+
+        return value;
     }
 
     private void SetStars()
     {
-        var starLayout = _view.starLayout;
+        var starLayout = this.view.starLayout;
         starLayout.Children.Clear();
 
-        var intValue = (int)ClampValue(CurrentValue);
+        var intValue = (int)ClampValue(this.CurrentValue);
 
-        for (int i = 1; i <= MAX_VALUE; i++)
+        for (int i = 1; i <= MAXVALUE; i++)
         {
             if (intValue >= i)
             {
-                starLayout.Add(CreateButton(StarState.Full, i));
+                starLayout.Add(this.CreateButton(StarState.Full, i));
             }
             else
             {
-                starLayout.Add(CreateButton(StarState.Empty, i));
+                starLayout.Add(this.CreateButton(StarState.Empty, i));
             }
         }
     }
@@ -65,55 +94,27 @@ public partial class Rating : ContentView
         return new ImageButton()
         {
             Source = CreateStarLabel(state),
-            Command = StarsClicked(index),
+            Command = this.StarsClicked(index),
             Background = Colors.Transparent,
         };
     }
 
-    private ICommand StarsClicked(int index)
+    private Command StarsClicked(int index)
     {
-        return new Command(() => stars_Clicked(index));
+        return new Command(() => this.Stars_Clicked(index));
     }
 
-    private ImageSource CreateStarLabel(StarState state)
+    private void Stars_Clicked(int index)
     {
-        return state switch
-        {
-            StarState.Empty => Application.Current.UserAppTheme switch
-            {
-                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_empty_dark.svg"),
-                _ => ImageSource.FromFile("Icons/star_icon_empty_light.svg"),
-            },
-            StarState.Full => Application.Current.UserAppTheme switch
-            {
-                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_full_dark.svg"),
-                _ => ImageSource.FromFile("Icons/star_icon_full_light.svg"),
-            },
-            _ => throw new NotImplementedException(),
-        };
+        this.CurrentValue = index;
+
+        this.SetStars();
     }
 
-    private void stars_Clicked(int index)
+    private void Stars_Clicked(object sender, EventArgs e)
     {
-        CurrentValue = index;
+        this.CurrentValue = 0;
 
-        SetStars();
-    }
-
-    private void stars_Clicked(object sender, EventArgs e)
-    {
-        CurrentValue = 0;
-
-        SetStars();
-    }
-    private double ClampValue(double value)
-    {
-        if (value < 0)
-            return 0;
-
-        if (value > MAX_VALUE)
-            return MAX_VALUE;
-
-        return value;
+        this.SetStars();
     }
 }

@@ -5,23 +5,24 @@ namespace BookCollector.Views.Genre;
 
 public partial class GenreEditView : ContentPage
 {
-    private GenreEditViewModel _viewModel { get; set; }
-
     public GenreEditView(GenreModel genre, string viewTitle, bool insertMainViewBefore = false)
-	{
-        GenreEditViewModel viewModel = new GenreEditViewModel(genre, this);
-        viewModel.ViewTitle = viewTitle;
-        viewModel.InsertMainViewBefore = insertMainViewBefore;
-        _viewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.ViewModel = new GenreEditViewModel(genre, this)
+        {
+            ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore,
+        };
+        this.BindingContext = this.ViewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
+
+    private GenreEditViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.ViewModel.SetViewModelData();
     }
 }

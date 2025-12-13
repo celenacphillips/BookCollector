@@ -5,22 +5,23 @@ namespace BookCollector.Views.Collection;
 
 public partial class CollectionMainView : ContentPage
 {
-    private CollectionMainViewModel _viewModel;
+    private CollectionMainViewModel viewModel;
 
     public CollectionMainView(CollectionModel collection, string viewTitle)
-	{
-        CollectionMainViewModel viewModel = new CollectionMainViewModel(collection, this);
-        viewModel.ViewTitle = viewTitle;
-        _viewModel = viewModel;
-        BindingContext = viewModel;
+    {
+        this.viewModel = new CollectionMainViewModel(collection, this)
+        {
+            ViewTitle = viewTitle,
+        };
+        this.BindingContext = this.viewModel;
 
-        InitializeComponent();
-	}
+        this.InitializeComponent();
+    }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        _viewModel.SetViewModelData();
+        using var variable = this.viewModel.SetViewModelData();
     }
 }

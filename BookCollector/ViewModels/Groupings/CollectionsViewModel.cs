@@ -2,226 +2,246 @@
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Collection;
 using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Collection;
-using BookCollector.Views.Groupings;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.Groupings
 {
     public partial class CollectionsViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
-        public string? totalCollectionsString;
-
-        private bool ShowHiddenCollections { get; set; }
-        private bool CollectionNameChecked { get; set; }
-        private bool TotalBooksChecked { get; set; }
-        private bool TotalPriceChecked { get; set; }
+        public string? totalCollectionsstring;
 
         public CollectionsViewModel(ContentPage view)
         {
-            _view = view;
+            this.View = view;
 
-            CollectionViewHeight = DeviceHeight - DoubleMenuBar;
-            InfoText = $"{AppStringResources.Collections}";
+            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
+            this.ViewTitle = AppStringResources.Collections;
         }
+
+        private bool ShowHiddenCollections { get; set; }
+
+        private bool CollectionNameChecked { get; set; }
+
+        private bool TotalBooksChecked { get; set; }
+
+        private bool TotalPriceChecked { get; set; }
 
         public async Task SetViewModelData()
         {
             try
             {
-                SetIsBusyTrue();
+                this.SetIsBusyTrue();
 
-                GetPreferences();
-
+                this.GetPreferences();
 
                 Task.WaitAll(
                 [
-                    Task.Run (async () => FullCollectionList = await FilterLists.GetAllCollectionsList(ShowHiddenCollections) ),
+                    Task.Run(async () => this.FullCollectionList = await FilterLists.GetAllCollectionsList(this.ShowHiddenCollections)),
                 ]);
 
-                TotalCollectionsCount = FullCollectionList.Count;
-
-                FilteredCollectionList = FullCollectionList;
-
-                foreach (var collection in FullCollectionList)
+                if (this.FullCollectionList != null)
                 {
-                    collection.SetTotalBooks(ShowHiddenBook);
+                    this.TotalCollectionsCount = this.FullCollectionList.Count;
+
+                    this.FilteredCollectionList = this.FullCollectionList;
+
+                    foreach (var collection in this.FullCollectionList)
+                    {
+                        collection.SetTotalBooks(this.ShowHiddenBook);
+                        collection.SetTotalCostOfBooks(this.ShowHiddenBook);
+                    }
+
+                    Task.WaitAll(
+                    [
+                        Task.Run(async () => this.FilteredCollectionList = await FilterLists.SortCollectionsList(
+                            this.FilteredCollectionList,
+                            this.CollectionNameChecked,
+                            this.TotalBooksChecked,
+                            this.TotalPriceChecked,
+                            this.AscendingChecked,
+                            this.DescendingChecked)),
+                    ]);
+
+                    this.FilteredCollectionsCount = this.FilteredCollectionList.Count;
+
+                    this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+
+                    this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
                 }
 
-                Task.WaitAll(
-                [
-                    Task.Run (async () => FilteredCollectionList = await FilterLists.SortCollectionsList(FilteredCollectionList,
-                                                                                                         CollectionNameChecked,
-                                                                                                         TotalBooksChecked,
-                                                                                                         TotalPriceChecked,
-                                                                                                         AscendingChecked,
-                                                                                                         DescendingChecked) ),
-                ]);
-
-                FilteredCollectionsCount = FilteredCollectionList.Count;
-
-                TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
-
-                ShowCollectionViewFooter = FilteredCollectionsCount > 0;
-
-
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                SetIsBusyFalse();
+                this.SetIsBusyFalse();
             }
         }
 
         [RelayCommand]
-        public async Task SearchOnCollection(string? input)
+        public void SearchOnCollection(string? input)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            SearchString = input;
+            this.Searchstring = input;
 
-            if (!string.IsNullOrEmpty(SearchString))
-                FilteredCollectionList = FilteredCollectionList.Where(x => x.CollectionName.Contains(SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-            else
-                FilteredCollectionList = FullCollectionList;
+            if (this.FilteredCollectionList != null)
+            {
+                if (!string.IsNullOrEmpty(this.Searchstring))
+                {
+                    this.FilteredCollectionList = this.FilteredCollectionList.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                }
+                else
+                {
+                    this.FilteredCollectionList = this.FullCollectionList;
+                }
 
-            FilteredCollectionsCount = FilteredCollectionList.Count;
+                this.FilteredCollectionsCount = this.FilteredCollectionList != null ? this.FilteredCollectionList.Count : 0;
 
-            TotalCollectionsString = StringManipulation.SetTotalCollectionsString(FilteredCollectionsCount, TotalCollectionsCount);
+                this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+            }
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task PopupMenuCollection(Guid? input)
         {
-            var selected = FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
-            string? action = await PopupMenu(selected.CollectionName);
-
-            switch (action)
+            if (this.FilteredCollectionList != null)
             {
-                case "Edit":
-                    await EditCollection(selected);
-                    break;
+                var selected = this.FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
 
-                case "Delete":
-                    await DeleteCollection(selected);
-                    break;
+                if (selected != null && !string.IsNullOrEmpty(selected.CollectionName))
+                {
+                    var action = await PopupMenu(selected.CollectionName);
 
-                default:
-                    break;
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                    {
+                        await this.EditCollection(selected);
+                    }
+
+                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
+                    {
+                        await this.DeleteCollection(selected);
+                    }
+                }
             }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
-            SetRefreshTrue();
-            await SetViewModelData();
-            SetRefreshFalse();
+            this.SetRefreshTrue();
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
         }
 
         [RelayCommand]
         public async Task AddCollection()
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}", true);
+            var view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
-
 
         [RelayCommand]
         public async Task EditCollection(CollectionModel selected)
         {
-            SetIsBusyTrue();
+            this.SetIsBusyTrue();
 
-            CollectionEditView view = new CollectionEditView(selected, $"{AppStringResources.EditCollection}", true);
+            var view = new CollectionEditView(selected, $"{AppStringResources.EditCollection}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
-            SetIsBusyFalse();
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task DeleteCollection(CollectionModel selected)
         {
-            bool answer = await DeleteCheck(selected.CollectionName);
-
-            if (answer)
+            if (!string.IsNullOrEmpty(selected.CollectionName))
             {
-                try
+                var answer = await DeleteCheck(selected.CollectionName);
+
+                if (answer)
                 {
-                    SetIsBusyTrue();
+                    try
+                    {
+                        this.SetIsBusyTrue();
 
-                    // Unit test data
-                    TestData.DeleteCollection(selected);
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteCollection(selected);
+                        }
+                        else
+                        {
+                        }
 
-                    await ConfirmDelete(selected.CollectionName);
+                        await ConfirmDelete(selected.CollectionName);
 
-                    await SetViewModelData();
+                        await this.SetViewModelData();
 
-                    SetIsBusyFalse();
+                        this.SetIsBusyFalse();
+                    }
+                    catch (Exception)
+                    {
+                        await CanceledAction();
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
                     await CanceledAction();
                 }
-            }
-            else
-            {
-                await CanceledAction();
             }
         }
 
         [RelayCommand]
         public async Task SortPopup()
         {
-            var popup = new SortPopup();
-            SortPopupViewModel viewModel = new SortPopupViewModel(popup, ViewTitle)
+            if (!string.IsNullOrEmpty(this.ViewTitle))
             {
-                CollectionNameVisible = true,
-                CollectionNameChecked = CollectionNameChecked,
-                TotalBooksVisible = true,
-                TotalBooksChecked = TotalBooksChecked,
-                TotalPriceVisible = true,
-                TotalPriceChecked = TotalPriceChecked,
-                AscendingChecked = AscendingChecked,
-                DescendingChecked = DescendingChecked,
-            };
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
+                {
+                    CollectionNameVisible = true,
+                    CollectionNameChecked = this.CollectionNameChecked,
+                    TotalBooksVisible = true,
+                    TotalBooksChecked = this.TotalBooksChecked,
+                    TotalPriceVisible = true,
+                    TotalPriceChecked = this.TotalPriceChecked,
+                    AscendingChecked = this.AscendingChecked,
+                    DescendingChecked = this.DescendingChecked,
+                };
 
-            popup.BindingContext = viewModel;
+                popup.BindingContext = viewModel;
 
-            await _view.ShowPopupAsync(popup);
-            await SetViewModelData();
+                await this.View.ShowPopupAsync(popup);
+                await this.SetViewModelData();
+            }
         }
 
         private void GetPreferences()
         {
-            ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true  /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true  /* Default */);
+            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            CollectionNameChecked = Preferences.Get($"{ViewTitle}_CollectionNameSelection", true  /* Default */);
-            TotalBooksChecked = Preferences.Get($"{ViewTitle}_TotalBooksSelection", false  /* Default */);
-            TotalPriceChecked = Preferences.Get($"{ViewTitle}_TotalPriceSelection", false  /* Default */);
+            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-            AscendingChecked = Preferences.Get($"{ViewTitle}_AscendingSelection", true  /* Default */);
-            DescendingChecked = Preferences.Get($"{ViewTitle}_DescendingSelection", false  /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

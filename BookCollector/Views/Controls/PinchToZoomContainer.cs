@@ -2,89 +2,92 @@
 
 public class PinchandPanContainer : ContentView
 {
-    double currentScale = 1;
-    double startScale = 1;
-    double xOffset = 0;
-    double yOffset = 0;
+    private double currentScale = 1;
+    private double startScale = 1;
+    private double xOffset = 0;
+    private double yOffset = 0;
 
-    double panX, panY;
+    private double panX;
+    private double panY;
 
     public PinchandPanContainer()
     {
-        PinchGestureRecognizer pinchGesture = new PinchGestureRecognizer();
-        pinchGesture.PinchUpdated += OnPinchUpdated;
-        GestureRecognizers.Add(pinchGesture);
+        var pinchGesture = new PinchGestureRecognizer();
+        pinchGesture.PinchUpdated += this.OnPinchUpdated;
+        this.GestureRecognizers.Add(pinchGesture);
 
-        PanGestureRecognizer panGesture = new PanGestureRecognizer();
-        panGesture.PanUpdated += OnPanUpdated;
-        GestureRecognizers.Add(panGesture);
+        var panGesture = new PanGestureRecognizer();
+        panGesture.PanUpdated += this.OnPanUpdated;
+        this.GestureRecognizers.Add(panGesture);
     }
 
-    void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+    public void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
         if (e.Status == GestureStatus.Started)
         {
             // Store the current scale factor applied to the wrapped user interface element,
             // and zero the components for the center point of the translate transform.
-            startScale = Content.Scale;
-            Content.AnchorX = 0;
-            Content.AnchorY = 0;
+            this.startScale = this.Content.Scale;
+            this.Content.AnchorX = 0;
+            this.Content.AnchorY = 0;
         }
+
         if (e.Status == GestureStatus.Running)
         {
             // Calculate the scale factor to be applied.
-            currentScale += (e.Scale - 1) * startScale;
-            currentScale = Math.Max(1, currentScale);
+            this.currentScale += (e.Scale - 1) * this.startScale;
+            this.currentScale = Math.Max(1, this.currentScale);
 
             // The ScaleOrigin is in relative coordinates to the wrapped user interface element,
             // so get the X pixel coordinate.
-            double renderedX = Content.X + xOffset;
-            double deltaX = renderedX / Width;
-            double deltaWidth = Width / (Content.Width * startScale);
+            double renderedX = this.Content.X + this.xOffset;
+            double deltaX = renderedX / this.Width;
+            double deltaWidth = this.Width / (this.Content.Width * this.startScale);
             double originX = (e.ScaleOrigin.X - deltaX) * deltaWidth;
 
             // The ScaleOrigin is in relative coordinates to the wrapped user interface element,
             // so get the Y pixel coordinate.
-            double renderedY = Content.Y + yOffset;
-            double deltaY = renderedY / Height;
-            double deltaHeight = Height / (Content.Height * startScale);
+            double renderedY = this.Content.Y + this.yOffset;
+            double deltaY = renderedY / this.Height;
+            double deltaHeight = this.Height / (this.Content.Height * this.startScale);
             double originY = (e.ScaleOrigin.Y - deltaY) * deltaHeight;
 
             // Calculate the transformed element pixel coordinates.
-            double targetX = xOffset - (originX * Content.Width) * (currentScale - startScale);
-            double targetY = yOffset - (originY * Content.Height) * (currentScale - startScale);
+            double targetX = this.xOffset - ((originX * this.Content.Width) * (this.currentScale - this.startScale));
+            double targetY = this.yOffset - ((originY * this.Content.Height) * (this.currentScale - this.startScale));
 
             // Apply translation based on the change in origin.
-            Content.TranslationX = Math.Clamp(targetX, -Content.Width * (currentScale - 1), 0);
-            Content.TranslationY = Math.Clamp(targetY, -Content.Height * (currentScale - 1), 0);
+            this.Content.TranslationX = Math.Clamp(targetX, -this.Content.Width * (this.currentScale - 1), 0);
+            this.Content.TranslationY = Math.Clamp(targetY, -this.Content.Height * (this.currentScale - 1), 0);
 
             // Apply scale factor
-            Content.Scale = currentScale;
+            this.Content.Scale = this.currentScale;
         }
+
         if (e.Status == GestureStatus.Completed)
         {
             // Store the translation delta's of the wrapped user interface element.
-            xOffset = Content.TranslationX;
-            yOffset = Content.TranslationY;
+            this.xOffset = this.Content.TranslationX;
+            this.yOffset = this.Content.TranslationY;
         }
     }
 
-    void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+    public void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         switch (e.StatusType)
         {
             case GestureStatus.Running:
                 // Translate and pan.
-                double boundsX = Content.Width;
-                double boundsY = Content.Height;
-                Content.TranslationX = Math.Clamp(panX + e.TotalX, -boundsX, boundsX);
-                Content.TranslationY = Math.Clamp(panY + e.TotalY, -boundsY, boundsY);
+                double boundsX = this.Content.Width;
+                double boundsY = this.Content.Height;
+                this.Content.TranslationX = Math.Clamp(this.panX + e.TotalX, -boundsX, boundsX);
+                this.Content.TranslationY = Math.Clamp(this.panY + e.TotalY, -boundsY, boundsY);
                 break;
 
             case GestureStatus.Completed:
                 // Store the translation applied during the pan
-                panX = Content.TranslationX;
-                panY = Content.TranslationY;
+                this.panX = this.Content.TranslationX;
+                this.panY = this.Content.TranslationY;
                 break;
         }
     }

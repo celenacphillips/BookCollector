@@ -28,7 +28,7 @@
                 <Label Text="{Binding LocationName}"
                        TextColor="{StaticResource Primary}"/>
 
-                <Label Text="{Binding TotalBooksString}"
+                <Label Text="{Binding TotalBooksstring}"
                        Style="{StaticResource SubTitle}"
                        FontSize="12"/>
             </VerticalStackLayout>

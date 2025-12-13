@@ -7,40 +7,43 @@ namespace BookCollector.Views.Book;
 
 public partial class BookScanView : ContentPage
 {
-    public BookSearchViewModel ReturnViewModel { get; set; }
-
-    public string? InputString { get; set; }
-
     public BookScanView()
     {
-        BindingContext = this;
+        this.BindingContext = this;
 
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
-    async void CameraView_OnDetected(object sender, OnDetectedEventArg e)
+    public BookSearchViewModel? ReturnViewModel { get; set; }
+
+    public string? Inputstring { get; set; }
+
+    public async void CameraView_OnDetected(object sender, OnDetectedEventArg e)
     {
         await Shell.Current.DisplaySnackbar(AppStringResources.BarcodeScanned);
 
         var result = e.BarcodeResults.Where(x => x.BarcodeType == BarcodeTypes.Isbn);
 
-        if (result.Count() == 1)
+        if (result != null && result.Count() == 1)
         {
             await Shell.Current.Navigation.PopModalAsync();
-            InputString = result.FirstOrDefault().RawValue;
-            await ScanSearch();
+            this.Inputstring = result.FirstOrDefault()?.RawValue;
+            await this.ScanSearch();
         }
         else
         {
             await Shell.Current.DisplaySnackbar(AppStringResources.PleaseScanABookBarcode);
 
-            barcodeScannerView.IsScanning = true;
+            this.barcodeScannerView.IsScanning = true;
         }
     }
 
     public async Task ScanSearch()
     {
-        ReturnViewModel.Input = InputString;
-        await ReturnViewModel.Search();
+        if (this.ReturnViewModel != null)
+        {
+            this.ReturnViewModel.Input = this.Inputstring;
+            await this.ReturnViewModel.Search();
+        }
     }
 }

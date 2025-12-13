@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.Settings.MainSettingsView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="{x:Static localization:AppStringResources.Settings}">
+
+    <ScrollView>
+        <VerticalStackLayout>
+
+            <Grid Margin="10">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- App Theme -->
+                <Image Source="{AppThemeBinding Light=Icons/theme_icon_light.svg, Dark=Icons/theme_icon_dark.svg}"
+                       HeightRequest="25"
+                       WidthRequest="50"
+                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.AppTheme}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="1"/>
+                <Picker ItemsSource="{Binding AppThemeList}"
+                        Title="{x:Static localization:AppStringResources.SelectYourAppTheme}"
+                        HorizontalTextAlignment="Center"
+                        SelectedItem="{Binding SelectedAppTheme}"
+                        TextColor="{DynamicResource Primary}"
+                        SelectedIndexChanged="OnAppThemePickerSelectedIndexChanged"
+                        Margin="0,10"
+                        Grid.Row="0" Grid.Column="2"/>
+                <!-- App Theme -->
+
+                <!-- Color -->
+                <Image Source="{AppThemeBinding Light=Icons/color_icon_light.svg, Dark=Icons/color_icon_dark.svg}"
+                       HeightRequest="25"
+                       WidthRequest="50"
+                       Grid.Row="1" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.Color}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="1"/>
+                <Picker ItemsSource="{Binding ColorList}"
+                        Title="{x:Static localization:AppStringResources.SelectYourAppColor}"
+                        HorizontalTextAlignment="Center"
+                        SelectedItem="{Binding SelectedColor}"
+                        TextColor="{DynamicResource Primary}"
+                        SelectedIndexChanged="OnColorPickerSelectedIndexChanged"
+                        Margin="0,10"
+                        Grid.Row="1" Grid.Column="2"/>
+                <!-- Color -->
+
+                <!-- Export Location -->
+                <ImageButton Source="Icons/export_icon_dark.svg"
+                             HeightRequest="50"
+                             WidthRequest="45"
+                             Padding="10"
+                             Clicked="OnExportLocationButtonClicked"
+                             Grid.Row="2" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.ExportLocation}"
+                       VerticalTextAlignment="Center"
+                       Margin="10,0"
+                       Grid.Row="2" Grid.Column="1"/>
+                <Label Text="{Binding SelectedExportLocation}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,10"
+                       FontAttributes="Italic"
+                       LineBreakMode="WordWrap"
+                       MaxLines="2"
+                       x:Name="SelectedExportLocationLabel"
+                       Grid.Row="2" Grid.Column="2"/>
+                <!-- Export Location -->
+
+                <!-- Language -->
+                <Image Source="{AppThemeBinding Light=Icons/language_icon_light.svg, Dark=Icons/language_icon_dark.svg}"
+                        HeightRequest="25"
+                        WidthRequest="50"
+                        Grid.Row="3" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.Language}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="3" Grid.Column="1"/>
+                <Picker ItemsSource="{Binding LanguageList}"
+                        Title="{x:Static localization:AppStringResources.SelectYourAppLanguage}"
+                        HorizontalTextAlignment="Center"
+                        SelectedItem="{Binding SelectedLanguage}"
+                        TextColor="{DynamicResource Primary}"
+                        SelectedIndexChanged="OnLanguagePickerSelectedIndexChanged"
+                        Margin="0,10"
+                        Grid.Row="3" Grid.Column="2"/>
+                <!-- Language -->
+
+                <!-- Currency -->
+                <Image Source="{AppThemeBinding Light=Icons/currency_icon_light.svg, Dark=Icons/currency_icon_dark.svg}"
+                        HeightRequest="25"
+                        WidthRequest="50"
+                        Grid.Row="4" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.Currency}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="4" Grid.Column="1"/>
+                <Picker ItemsSource="{Binding CurrencyList}"
+                        Title="{x:Static localization:AppStringResources.SelectYourAppCurrency}"
+                        HorizontalTextAlignment="Center"
+                        SelectedItem="{Binding SelectedCurrency}"
+                        TextColor="{DynamicResource Primary}"
+                        SelectedIndexChanged="OnCurrencyPickerSelectedIndexChanged"
+                        Margin="0,10"
+                        Grid.Row="4" Grid.Column="2"/>
+                <!-- Currency -->
+
+            </Grid>
+
+            <Label Background="{DynamicResource Primary}"></Label>
+            <Label Background="{DynamicResource Secondary}"></Label>
+            <Label Background="{DynamicResource Tertiary}"></Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

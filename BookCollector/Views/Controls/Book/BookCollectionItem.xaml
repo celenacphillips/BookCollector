@@ -52,7 +52,7 @@
                    VerticalTextAlignment="Center"
                    Grid.Row="0" Grid.Column="1"/>
 
-            <Label Text="{Binding AuthorListString}" 
+            <Label Text="{Binding AuthorListstring}" 
                    FontSize="10"
                    MaxLines="1"
                    LineBreakMode="TailTruncation"
@@ -60,7 +60,7 @@
                    VerticalTextAlignment="Start"
                    Grid.Row="1" Grid.Column="1"/>
 
-            <Label Text="{Binding PublisherPublishDateString}"
+            <Label Text="{Binding PublisherPublishDatestring}"
                    FontSize="10"
                    VerticalTextAlignment="Start"
                    Grid.Row="2" Grid.Column="1"/>
