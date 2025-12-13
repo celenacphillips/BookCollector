@@ -138,8 +138,21 @@
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 <CollectionView ItemsSource="{Binding AuthorList}"
-                                                Margin="10"
-                                                EmptyView="{x:Static localization:AppStringResources.NoAuthorsAvailable}">
+                                                MinimumHeightRequest="25"
+                                                Margin="10">
+
+                                    <CollectionView.EmptyView>
+                                        <Grid>
+                                            <VerticalStackLayout HorizontalOptions="Center"
+                                                                 VerticalOptions="Start">
+                                                <Label Text="{x:Static localization:AppStringResources.NoAuthorsAvailable}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalTextAlignment="Center"
+                                                       Style="{DynamicResource SubTitle}"/>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </CollectionView.EmptyView>
+
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate x:DataType="dataModels:AuthorModel">
                                             <HorizontalStackLayout Padding="10">
@@ -197,6 +210,25 @@
 
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                                <!-- Total Pages -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.TotalPages}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding SelectedBook.BookPageTotal}">
+                                                    <Span.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                              CommandParameter="{Binding SelectedBook.BookPageTotal}"/>
+                                                    </Span.GestureRecognizers>
+                                                </Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <!-- Total Pages -->
 
                                 <!-- Book Location -->
                                 <VerticalStackLayout Margin="10">

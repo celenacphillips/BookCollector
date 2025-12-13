@@ -179,6 +179,33 @@ namespace BookCollector.ViewModels.WishListBook
 
                         this.SelectedBook.BookSeriesGuid = series.SeriesGuid;
 
+                        if (!string.IsNullOrEmpty(this.SelectedBook.AuthorListstring))
+                        {
+                            string[] authorNames = this.SelectedBook.AuthorListstring.Split(";");
+
+                            foreach (var authorName in authorNames)
+                            {
+                                if (!string.IsNullOrEmpty(authorName.Trim()))
+                                {
+                                    string[] name = authorName.Split(",");
+
+                                    AuthorModel author = new ()
+                                    {
+                                        FirstName = name[1].Trim(),
+                                        LastName = name[0].Trim(),
+                                    };
+
+                                    if (TestData.UseTestData)
+                                    {
+                                        TestData.InsertAuthor(author, this.SelectedBook.BookGuid);
+                                    }
+                                    else
+                                    {
+                                    }
+                                }
+                            }
+                        }
+
                         Task.WaitAll(
                         [
                             Task.Run(async () => this.SelectedBook.SetReadingProgress()),

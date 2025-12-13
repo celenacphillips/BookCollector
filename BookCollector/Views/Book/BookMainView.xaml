@@ -214,10 +214,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookStartDate}">
+                                                    <Span Text="{Binding SelectedBook.StartDateValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookStartDate}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.StartDateValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -234,10 +234,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookEndDate}">
+                                                    <Span Text="{Binding SelectedBook.EndDateValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookEndDate}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.EndDateValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -738,10 +738,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookLoanedOutOn}">
+                                                    <Span Text="{Binding SelectedBook.LoanedOutOnValue, StringFormat='{0:MM/dd/yyyy}'}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookLoanedOutOn}"/>
+                                                                                  CommandParameter="{Binding SelectedBook.LoanedOutOnValue, StringFormat='{0:MM/dd/yyyy}'}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>

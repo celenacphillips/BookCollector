@@ -37,19 +37,19 @@ namespace BookCollector.ViewModels.Author
 
                     // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(this.SelectedAuthor.AuthorGuid)),
                     ]);
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, this.ShowHiddenBook)),
                     ]);
 
                     if (this.FullBookList != null)
                     {
                         Task.WaitAll(
-                       [
+                        [
                             Task.Run(async () => this.BookPublisherList = await FilterLists.GetAllPublishersInBookList(this.FullBookList)),
                             Task.Run(async () => this.BookLanguageList = await FilterLists.GetAllLanguagesInBookList(this.FullBookList)),
                             Task.Run(async () => this.BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(this.FullBookList)),
@@ -66,7 +66,7 @@ namespace BookCollector.ViewModels.Author
                         if (this.FilteredBookList != null)
                         {
                             Task.WaitAll(
-                           [
+                            [
                                 Task.Run(async () => this.FilteredBookList = await FilterLists.SortBookList(
                                     this.FilteredBookList,
                                     this.BookTitleChecked,

@@ -25,6 +25,8 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.SetIsBusyTrue();
 
+                    this.GetPreferences();
+
                     this.ReadingDataSectionValue = true;
                     this.ChapterListSectionValue = true;
                     this.AuthorListSectionValue = true;
@@ -57,10 +59,10 @@ namespace BookCollector.ViewModels.Book
 
                     this.BookCover = this.SelectedBook.BookCover;
 
-                    this.AuthorList = !string.IsNullOrEmpty(this.SelectedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.SelectedBook.AuthorListstring) : null;
+                    this.AuthorList = !string.IsNullOrEmpty(this.SelectedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.SelectedBook.AuthorListstring, this.HiddenAuthorsOn) : null;
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.ChapterList = await FilterLists.GetAllChaptersInBook(this.SelectedBook.BookGuid)),
                         Task.Run(async () => this.SelectedGenre = await FilterLists.GetGenreForBook(this.SelectedBook.BookGenreGuid)),
                         Task.Run(async () => this.SelectedLocation = await FilterLists.GetLocationForBook(this.SelectedBook.BookLocationGuid)),
@@ -68,7 +70,6 @@ namespace BookCollector.ViewModels.Book
                         Task.Run(async () => this.SelectedBook.SetCoverDisplay()),
                         Task.Run(async () => await this.SelectedBook.SetPartOfSeries()),
                         Task.Run(async () => await this.SelectedBook.SetPartOfCollection()),
-                        Task.Run(async () => await this.SelectedBook.SetDates()),
                         Task.Run(async () => await this.SelectedBook.SetBookPrice()),
                         Task.Run(() => this.ReadingDataChanged()),
                         Task.Run(() => this.ChapterListChanged()),
@@ -182,6 +183,11 @@ namespace BookCollector.ViewModels.Book
                     Title = title,
                 });
             }
+        }
+
+        private void GetPreferences()
+        {
+            this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
         }
     }
 }

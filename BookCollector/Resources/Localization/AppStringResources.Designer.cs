@@ -637,7 +637,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Identifier.
+        ///   Looks up a localized string similar to Book Identifier/ISBN.
         /// </summary>
         internal static string BookIdentifier {
             get {
@@ -1083,6 +1083,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete All Data?.
+        /// </summary>
+        internal static string DeleteAllData_Question {
+            get {
+                return ResourceManager.GetString("DeleteAllData_Question", resourceCulture);
             }
         }
         
@@ -1555,7 +1564,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Author when Settings &gt; ShowHidden Authors is off?.
+        ///   Looks up a localized string similar to Hide Author when Settings &gt; Show Hidden Authors is off?.
         /// </summary>
         internal static string HideAuthor_Question {
             get {
@@ -1776,6 +1785,15 @@ namespace BookCollector.Resources.Localization {
         internal static string LocationView_InfoText {
             get {
                 return ResourceManager.GetString("LocationView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main Settings.
+        /// </summary>
+        internal static string MainSettings {
+            get {
+                return ResourceManager.GetString("MainSettings", resourceCulture);
             }
         }
         
@@ -2698,6 +2716,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle Settings.
+        /// </summary>
+        internal static string ToggleSettings {
+            get {
+                return ResourceManager.GetString("ToggleSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Top Author.
         /// </summary>
         internal static string TopAuthor {
@@ -2865,6 +2892,15 @@ namespace BookCollector.Resources.Localization {
         internal static string UpNext_Question {
             get {
                 return ResourceManager.GetString("UpNext_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning! This action cannot be undone!.
+        /// </summary>
+        internal static string WarningThisActionCannotBeUndone {
+            get {
+                return ResourceManager.GetString("WarningThisActionCannotBeUndone", resourceCulture);
             }
         }
         

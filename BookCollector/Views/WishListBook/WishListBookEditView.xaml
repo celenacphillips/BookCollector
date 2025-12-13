@@ -316,6 +316,18 @@
                             <VerticalStackLayout Margin="0,-10"
                                              BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
 
+                                <!-- Total Pages -->
+                                <VerticalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.TotalPages}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Editor Text="{Binding EditedBook.BookPageTotal}"
+                                            HorizontalTextAlignment="Center"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges">
+                                    </Editor>
+                                </VerticalStackLayout>
+                                <!-- Total Pages -->
+
                                 <!-- Book Location -->
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.WhereToBuy}"

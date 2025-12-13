@@ -34,7 +34,7 @@ public partial class PagesReadPopup : Popup<int>
 
     public void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
     {
-        int value = (int)args.NewValue;
+        int value = (int)Math.Floor(args.NewValue);
         var label = this.FindByName<Label>("PagesReadLabel");
         label.Text = $"{value}";
     }

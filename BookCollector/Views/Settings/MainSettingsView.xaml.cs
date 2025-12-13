@@ -1,11 +1,11 @@
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
 
-namespace BookCollector.Views.Main;
+namespace BookCollector.Views.Settings;
 
-public partial class SettingsView : ContentPage
+public partial class MainSettingsView : ContentPage
 {
-    public SettingsView()
+    public MainSettingsView()
     {
         var userAppTheme = Application.Current?.UserAppTheme;
 
@@ -40,19 +40,6 @@ public partial class SettingsView : ContentPage
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
         this.SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2) ..];
 
-        this.CommentsOn = Preferences.Get("CommentsOn", true /* Default */);
-        this.ChaptersOn = Preferences.Get("ChaptersOn", true /* Default */);
-        this.FavoritesOn = Preferences.Get("FavoritesOn", true /* Default */);
-        this.RatingsOn = Preferences.Get("RatingsOn", true /* Default */);
-
-        this.HiddenBooksOn = Preferences.Get("HiddenBooksOn", true /* Default */);
-        this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-        this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
-        this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
-        this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-        this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
-        this.HiddenWishlistBooksOn = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
-
         this.InitializeComponent();
         this.BindingContext = this;
     }
@@ -74,28 +61,6 @@ public partial class SettingsView : ContentPage
     public string SelectedCurrency { get; set; }
 
     public string SelectedExportLocation { get; set; }
-
-    public bool CommentsOn { get; set; }
-
-    public bool ChaptersOn { get; set; }
-
-    public bool FavoritesOn { get; set; }
-
-    public bool RatingsOn { get; set; }
-
-    public bool HiddenBooksOn { get; set; }
-
-    public bool HiddenCollectionsOn { get; set; }
-
-    public bool HiddenGenresOn { get; set; }
-
-    public bool HiddenSeriesOn { get; set; }
-
-    public bool HiddenAuthorsOn { get; set; }
-
-    public bool HiddenLocationsOn { get; set; }
-
-    public bool HiddenWishlistBooksOn { get; set; }
 
     public void OnAppThemePickerSelectedIndexChanged(object sender, EventArgs e)
     {
@@ -168,60 +133,5 @@ public partial class SettingsView : ContentPage
             this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             Preferences.Set("ExportLocation", folder.Path);
         }
-    }
-
-    public void OnCommentsToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("CommentsOn", e.Value);
-    }
-
-    public void OnChaptersToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("ChaptersOn", e.Value);
-    }
-
-    public void OnFavoritesToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("FavoritesOn", e.Value);
-    }
-
-    public void OnRatingsToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("RatingsOn", e.Value);
-    }
-
-    public void OnHiddenBooksToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenBooksOn", e.Value);
-    }
-
-    public void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenCollectionsOn", e.Value);
-    }
-
-    public void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenGenresOn", e.Value);
-    }
-
-    public void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenSeriesOn", e.Value);
-    }
-
-    public void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenAuthorsOn", e.Value);
-    }
-
-    public void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenLocationsOn", e.Value);
-    }
-
-    public void OnHiddenWishlistBooksToggled(object sender, ToggledEventArgs e)
-    {
-        Preferences.Set("HiddenWishlistBooksOn", e.Value);
     }
 }

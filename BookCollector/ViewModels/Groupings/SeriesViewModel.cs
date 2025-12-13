@@ -42,7 +42,7 @@ namespace BookCollector.ViewModels.Groupings
                 this.GetPreferences();
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.FullSeriesList = await FilterLists.GetAllSeriesList(this.ShowHiddenSeries)),
                 ]);
 
@@ -59,7 +59,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.FilteredSeriesList = await FilterLists.SortSeriesList(
                             this.FilteredSeriesList,
                             this.SeriesNameChecked,

@@ -38,13 +38,15 @@
                                     Margin="10"
                                     Command="{Binding ExportCommand}"
                                     Grid.Row="0" Grid.Column="0"
-                                    IsEnabled="{Binding ExportEnabled}"/>
+                                    IsEnabled="{Binding ExportEnabled}"
+                                    BackgroundColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}"/>
 
                             <Button Text="{x:Static localization:AppStringResources.Import}"
                                     Margin="10"
                                     Command="{Binding ImportCommand}"
                                     Grid.Row="0" Grid.Column="1"
-                                    IsEnabled="{Binding ImportEnabled}"/>
+                                    IsEnabled="{Binding ImportEnabled}"
+                                    BackgroundColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}"/>
 
                         </Grid>
 
@@ -125,7 +127,7 @@
                         </Grid>
 
                         <Grid HorizontalOptions="Center"
-                                  IsVisible="{Binding CheckboxesVisible}">
+                              IsVisible="{Binding CheckboxesVisible}">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

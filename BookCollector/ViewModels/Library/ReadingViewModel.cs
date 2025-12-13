@@ -29,7 +29,7 @@ namespace BookCollector.ViewModels.Library
 
                 // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.FullBookList = await FilterLists.GetReadingBooksList(this.ShowHiddenBook)),
                 ]);
 
@@ -38,7 +38,7 @@ namespace BookCollector.ViewModels.Library
                     this.TotalBooksCount = this.FullBookList.Count;
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.BookPublisherList = await FilterLists.GetAllPublishersInBookList(this.FullBookList)),
                         Task.Run(async () => this.BookLanguageList = await FilterLists.GetAllLanguagesInBookList(this.FullBookList)),
                         Task.Run(async () => this.BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(this.FullBookList)),
@@ -55,7 +55,7 @@ namespace BookCollector.ViewModels.Library
                     if (this.FilteredBookList != null)
                     {
                         Task.WaitAll(
-                       [
+                        [
                             Task.Run(async () => this.FilteredBookList = await FilterLists.SortBookList(
                                 this.FilteredBookList,
                                 this.BookTitleChecked,

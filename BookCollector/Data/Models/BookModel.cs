@@ -138,6 +138,18 @@ namespace BookCollector.Data.Models
 
         public string? BookSeries { get; set; }
 
+        public static string? SetDate(string? input)
+        {
+            string? output = null;
+
+            if (!string.IsNullOrEmpty(input))
+            {
+                output = DateTime.Parse(input).ToString("MM/dd/yyy");
+            }
+
+            return output;
+        }
+
         public object Clone()
         {
             return this.MemberwiseClone();
@@ -146,7 +158,7 @@ namespace BookCollector.Data.Models
         public void SetReadingProgress()
         {
             this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
-            this.PageReadPercent = $"{Math.Round(this.Progress * 100, 2)}%";
+            this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
         public void SetBookCheckpoints()
@@ -154,24 +166,6 @@ namespace BookCollector.Data.Models
             this.Half = this.BookPageTotal / 2;
             this.Fourth = this.BookPageTotal / 4;
             this.ThreeFourth = this.Half + this.Fourth;
-        }
-
-        public async Task SetDates()
-        {
-            if (!string.IsNullOrEmpty(this.BookStartDate))
-            {
-                this.BookStartDate = this.StartDateValue?.ToShortDateString();
-            }
-
-            if (!string.IsNullOrEmpty(this.BookEndDate))
-            {
-                this.BookEndDate = this.EndDateValue?.ToShortDateString();
-            }
-
-            if (!string.IsNullOrEmpty(this.BookLoanedOutOn))
-            {
-                this.BookLoanedOutOn = this.LoanedOutOnValue?.ToShortDateString();
-            }
         }
 
         public async Task SetPartOfSeries()
@@ -328,6 +322,26 @@ namespace BookCollector.Data.Models
                         if (TestData.UseTestData)
                         {
                             TestData.UpdateChapter(chapter);
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task RemoveBookChapters(List<ChapterModel>? chaptersList)
+        {
+            if (chaptersList != null)
+            {
+                foreach (var chapter in chaptersList)
+                {
+                    if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
+                    {
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteChapter(chapter);
                         }
                         else
                         {

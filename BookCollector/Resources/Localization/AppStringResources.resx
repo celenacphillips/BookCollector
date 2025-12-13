@@ -271,7 +271,7 @@
     <value>Book Publish Year</value>
   </data>
   <data name="BookIdentifier" xml:space="preserve">
-    <value>Book Identifier</value>
+    <value>Book Identifier/ISBN</value>
   </data>
   <data name="BookLocation" xml:space="preserve">
     <value>Book Location</value>
@@ -379,7 +379,7 @@
     <value>Hide Location when Settings &gt; Show Hidden Location is off?</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author when Settings &gt; ShowHidden Authors is off?</value>
+    <value>Hide Author when Settings &gt; Show Hidden Authors is off?</value>
   </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
@@ -1067,5 +1067,17 @@
   </data>
   <data name="ExistingBooks_Object" xml:space="preserve">
     <value>ExistingBooks_Object</value>
+  </data>
+  <data name="MainSettings" xml:space="preserve">
+    <value>Main Settings</value>
+  </data>
+  <data name="ToggleSettings" xml:space="preserve">
+    <value>Toggle Settings</value>
+  </data>
+  <data name="DeleteAllData_Question" xml:space="preserve">
+    <value>Delete All Data?</value>
+  </data>
+  <data name="WarningThisActionCannotBeUndone" xml:space="preserve">
+    <value>Warning! This action cannot be undone!</value>
   </data>
 </root>

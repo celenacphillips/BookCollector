@@ -301,7 +301,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.UpNext_Question}"
                                            Style="{DynamicResource Header}"/>
                                     <Switch x:Name="UpNextToggle"
-                                            IsToggled="{Binding SelectedBook.UpNext}"
+                                            IsToggled="{Binding EditedBook.UpNext}"
                                             HorizontalOptions="Start"
                                             Margin="-10">
                                         <Switch.Behaviors>

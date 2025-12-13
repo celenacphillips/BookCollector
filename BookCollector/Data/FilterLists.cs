@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
-using BookCollector.Data.Models;
+﻿using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Core.Extensions;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace BookCollector.Data
 {
@@ -2529,7 +2530,7 @@ namespace BookCollector.Data
             string? authorOption = null,
             string? locationOption = null,
             string? seriesOption = null)
-{
+        {
             var filteredList = bookList;
 
             if (!string.IsNullOrEmpty(favoritesOption))
@@ -2550,6 +2551,7 @@ namespace BookCollector.Data
 
             filteredList = FilterBookPublishYear(filteredList, publishYearOption);
 
+            // For wishlist only
             if (!string.IsNullOrEmpty(authorOption))
             {
                 filteredList = FilterBookAuthor(filteredList, authorOption);
@@ -2685,30 +2687,47 @@ namespace BookCollector.Data
             string authorOption)
         {
             var filterList = bookList;
+            var newFilteredList = new ObservableCollection<BookModel>();
 
-            if (authorOption.Equals(AppStringResources.NoAuthor))
+            if (!string.IsNullOrEmpty(authorOption) && authorOption.Equals(AppStringResources.NoAuthor))
             {
                 filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListstring))
                                      .ToObservableCollection();
             }
 
-            if (!authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
+            if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                AuthorModel? author = null;
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListstring))
+                                     .ToObservableCollection();
 
-                if (TestData.UseTestData)
+                foreach (var book in filterList)
                 {
-                    author = TestData.AuthorList.FirstOrDefault(x => x.FullName.Equals(authorOption));
-                }
-                else
-                {
+                    if (!string.IsNullOrEmpty(book.AuthorListstring))
+                    {
+                        string[] authorNames = book.AuthorListstring.Split(";");
+
+                        foreach (var authorName in authorNames)
+                        {
+                            if (!string.IsNullOrEmpty(authorName.Trim()))
+                            {
+                                string[] name = authorName.Split(",");
+
+                                AuthorModel author = new ()
+                                {
+                                    FirstName = name[1].Trim(),
+                                    LastName = name[0].Trim(),
+                                };
+
+                                if (author.FullName.Equals(authorOption))
+                                {
+                                    newFilteredList.Add(book);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (author != null)
-                {
-                    filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListstring) && x.AuthorListstring.Contains(author.ReverseFullName))
-                                         .ToObservableCollection();
-                }
+                filterList = newFilteredList.Distinct().ToObservableCollection();
             }
 
             return filterList;

@@ -1,6 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using BookCollector.Data.Models;
+﻿using BookCollector.Data.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.Data
 {
@@ -191,7 +192,7 @@ namespace BookCollector.Data
            [
                 new BookModel()
                 {
-                    BookTitle = "Book 1",
+                    BookTitle = "Wishlist Book 1",
                     BookPageTotal = 100,
                     BookFormat = "Hardcover",
                     BookPublisher = "Publisher",
@@ -208,7 +209,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookTitle = "Book 2",
+                    BookTitle = "Wishlist Book 2",
                     BookPageTotal = 500,
                     BookFormat = "Hardcover",
                     BookPublisher = "Publisher1",
@@ -225,7 +226,7 @@ namespace BookCollector.Data
                 },
                 new BookModel()
                 {
-                    BookTitle = "Book 3",
+                    BookTitle = "Wishlist Book 3",
                     BookPageTotal = 450,
                     BookFormat = "Paperback",
                     BookPublisher = "Publisher2",
@@ -361,6 +362,16 @@ namespace BookCollector.Data
         public static void DeleteBookAuthor(BookAuthorModel bookAuthor)
         {
             BookAuthorList.Remove(bookAuthor);
+        }
+
+        public static void DeleteBookAuthor(Guid authorGuid, Guid bookGuid)
+        {
+            var bookAuthor = BookAuthorList.Where(x => x.AuthorGuid == authorGuid && x.BookGuid == bookGuid).ToList().FirstOrDefault();
+
+            if (bookAuthor != null)
+            {
+                BookAuthorList.Remove(bookAuthor);
+            }
         }
 
         public static void AddAuthorsToList()

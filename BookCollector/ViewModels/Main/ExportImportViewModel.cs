@@ -837,6 +837,7 @@ namespace BookCollector.ViewModels.Main
                                     {
                                         var byteArray = DownloadImage(book.BookCoverUrl);
                                         book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                                        book.HasBookCover = true;
                                     }
                                     catch (Exception)
                                     {
@@ -867,16 +868,21 @@ namespace BookCollector.ViewModels.Main
                                     {
                                         book.BookCoverFileLocation = filePath;
                                         book.BookCover = ImageSource.FromFile(filePath);
+                                        book.HasBookCover = true;
                                     }
                                     else
                                     {
                                         book.BookCoverFileLocation = null;
+                                        book.HasBookCover = false;
                                     }
                                 }
                                 catch (Exception)
                                 {
                                     book.BookCoverFileLocation = null;
+                                    book.HasBookCover = false;
                                 }
+
+                                book.HasNoBookCover = !book.HasBookCover;
                             }
 
                             if (TestData.UseTestData)

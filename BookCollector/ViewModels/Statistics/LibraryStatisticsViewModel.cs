@@ -72,7 +72,7 @@ namespace BookCollector.ViewModels.Statistics
                 List<CountModel> formatPriceCounts = [];
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.BooksReadCount = await FilterLists.GetBookCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
                     Task.Run(async () => this.PagesReadCount = await FilterLists.GetBookPageCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
                     Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllBooks(this.ShowHiddenBooks)),
@@ -349,6 +349,8 @@ namespace BookCollector.ViewModels.Statistics
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
+            counts = counts.Where(x => x.Count > 0).ToList();
+
             if (this.ShowCollections)
             {
                 List<ChartValues> values = [];
@@ -405,6 +407,8 @@ namespace BookCollector.ViewModels.Statistics
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
+            counts = counts.Where(x => x.Count > 0).ToList();
+
             if (this.ShowGenres)
             {
                 List<ChartValues> values = [];
@@ -441,253 +445,5 @@ namespace BookCollector.ViewModels.Statistics
         }
 
         /*********************** Genres Methods ***********************/
-
-        /*********************** Series Methods ***********************/
-        private void SetShowSeries(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowSeries = true;
-            }
-            else
-            {
-                this.ShowSeries = false;
-            }
-        }
-
-        private void SetUpSeriesChart(List<CountModel> counts)
-        {
-            this.SetShowSeries(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowSeries)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXSeries = AppStringResources.TopSeries;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "series");
-            }
-        }
-
-        /*********************** Series Methods ***********************/
-
-        /*********************** Authors Methods ***********************/
-        private void SetShowAuthors(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowAuthors = true;
-            }
-            else
-            {
-                this.ShowAuthors = false;
-            }
-        }
-
-        private void SetUpAuthorsChart(List<CountModel> counts)
-        {
-            this.SetShowAuthors(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowAuthors)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXAuthors = AppStringResources.TopAuthor;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "authors");
-            }
-        }
-
-        /*********************** Authors Methods ***********************/
-
-        /*********************** Locations Methods ***********************/
-        private void SetShowLocations(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowLocations = true;
-            }
-            else
-            {
-                this.ShowLocations = false;
-            }
-        }
-
-        private void SetUpLocationsChart(List<CountModel> counts)
-        {
-            this.SetShowLocations(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowLocations)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXLocations = AppStringResources.TopLocation;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "locations");
-            }
-        }
-
-        /*********************** Locations Methods ***********************/
-
-        /*********************** Formats Methods ***********************/
-        private void SetShowFormats(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowFormats = true;
-            }
-            else
-            {
-                this.ShowFormats = false;
-            }
-        }
-
-        private void SetUpFormatsChart(List<CountModel> counts)
-        {
-            this.SetShowFormats(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowFormats)
-            {
-                List<ChartValues> values = [];
-
-                for (int i = 0; i < counts.Count; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpPieChart(values, "formats");
-            }
-        }
-
-        /*********************** Formats Methods ***********************/
-
-        /*********************** Format Prices Methods ***********************/
-        private void SetShowFormatPrices(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.CountDouble > 0))
-            {
-                this.ShowFormatPrices = true;
-            }
-            else
-            {
-                this.ShowFormatPrices = false;
-            }
-        }
-
-        private void SetUpFormatPricesChart(List<CountModel> counts)
-        {
-            this.SetShowFormatPrices(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowFormatPrices)
-            {
-                List<ChartValues> values = [];
-
-                for (int i = 0; i < counts.Count; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = (float)counts[i].CountDouble,
-                        });
-                }
-
-                this.SetUpPieChart(values, "formatprices");
-            }
-        }
-
-        /*********************** Format Prices Methods ***********************/
     }
 }

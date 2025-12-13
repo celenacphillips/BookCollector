@@ -58,7 +58,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.FilteredAuthorList = await FilterLists.SortAuthorList(
                             this.FilteredAuthorList,
                             this.AuthorLastNameChecked,

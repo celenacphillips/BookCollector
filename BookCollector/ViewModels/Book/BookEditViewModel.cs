@@ -81,9 +81,11 @@ namespace BookCollector.ViewModels.Book
 
         private bool HiddenSeriesOn { get; set; }
 
-        private bool HiddenAuthorsOn { get; set; }
-
         private bool HiddenLocationsOn { get; set; }
+
+        private List<ChapterModel>? ChaptersToDelete { get; set; }
+
+        private List<AuthorModel>? AuthorsToDelete { get; set; }
 
         [RelayCommand]
         public static async Task AddSeries()
@@ -158,7 +160,7 @@ namespace BookCollector.ViewModels.Book
 
                 this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
 
-                this.AuthorList = !string.IsNullOrEmpty(this.EditedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.EditedBook.AuthorListstring) : [];
+                this.AuthorList = !string.IsNullOrEmpty(this.EditedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.EditedBook.AuthorListstring, this.HiddenAuthorsOn) : [];
 
                 this.ChapterList = [];
 
@@ -188,6 +190,9 @@ namespace BookCollector.ViewModels.Book
                     Task.Run(() => this.SummaryChanged()),
                     Task.Run(() => this.CommentsChanged()),
                 ]);
+
+                this.ChaptersToDelete = [];
+                this.AuthorsToDelete = [];
 
                 this.SetIsBusyFalse();
             }
@@ -245,6 +250,11 @@ namespace BookCollector.ViewModels.Book
                 this.EditedBook.BookGenreGuid = this.SelectedGenre?.GenreGuid;
                 this.EditedBook.BookLocationGuid = this.SelectedLocation?.LocationGuid;
 
+                if (this.EditedBook.UpNext == true && this.EditedBook.BookPageRead > 0)
+                {
+                    this.EditedBook.UpNext = false;
+                }
+
                 if (this.AuthorList != null)
                 {
                     foreach (var author in this.AuthorList)
@@ -259,9 +269,22 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
+                if (this.AuthorsToDelete != null)
+                {
+                    foreach (var author in this.AuthorsToDelete)
+                    {
+                        if (TestData.UseTestData)
+                        {
+                            TestData.DeleteBookAuthor((Guid)author.AuthorGuid, (Guid)this.EditedBook.BookGuid);
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+
                 Task.WaitAll(
                 [
-                    Task.Run(async () => await this.EditedBook.SetDates()),
                     Task.Run(async () => this.EditedBook.SetReadingProgress()),
                     Task.Run(async () => await this.EditedBook.SetPartOfSeries()),
                     Task.Run(async () => await this.EditedBook.SetPartOfCollection()),
@@ -269,6 +292,7 @@ namespace BookCollector.ViewModels.Book
                     Task.Run(async () => await this.EditedBook.SetBookPrice()),
                     Task.Run(async () => await this.EditedBook.SetAuthorListstring(this.AuthorList)),
                     Task.Run(async () => await this.EditedBook.SetBookChapters(this.ChapterList)),
+                    Task.Run(async () => await this.EditedBook.RemoveBookChapters(this.ChaptersToDelete)),
                 ]);
 
 #if ANDROID
@@ -497,6 +521,7 @@ namespace BookCollector.ViewModels.Book
         public void RemoveChapter(ChapterModel chapter)
         {
             this.ChapterList?.Remove(chapter);
+            this.ChaptersToDelete.Add(chapter);
         }
 
         [RelayCommand]
@@ -511,6 +536,7 @@ namespace BookCollector.ViewModels.Book
         public void RemoveAuthor(AuthorModel author)
         {
             this.AuthorList?.Remove(author);
+            this.AuthorsToDelete.Add(author);
         }
 
         [RelayCommand]

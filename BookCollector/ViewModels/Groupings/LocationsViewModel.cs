@@ -42,7 +42,7 @@ namespace BookCollector.ViewModels.Groupings
                 this.GetPreferences();
 
                 Task.WaitAll(
-               [
+                [
                     Task.Run(async () => this.FullLocationList = await FilterLists.GetAllLocationsList(this.ShowHiddenLocations)),
                 ]);
 
@@ -59,7 +59,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
 
                     Task.WaitAll(
-                   [
+                    [
                         Task.Run(async () => this.FilteredLocationList = await FilterLists.SortLocationsList(
                             this.FilteredLocationList,
                             this.LocationNameChecked,

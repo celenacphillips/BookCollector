@@ -110,4 +110,11 @@ public partial class Rating : ContentView
 
         this.SetStars();
     }
+
+    private void Stars_Clicked(object sender, EventArgs e)
+    {
+        this.CurrentValue = 0;
+
+        this.SetStars();
+    }
 }

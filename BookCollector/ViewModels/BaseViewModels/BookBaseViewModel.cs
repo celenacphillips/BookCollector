@@ -140,6 +140,8 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool ShowHiddenBook { get; set; }
 
+        internal bool HiddenAuthorsOn { get; set; }
+
         public bool ShowFavoriteBooks { get; set; }
 
         public bool ShowBookRatings { get; set; }
@@ -174,7 +176,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool BookPriceChecked { get; set; }
 
-        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromstring(string inputstring)
+        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromstring(string inputstring, bool showHiddenAuthors = true)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
@@ -187,6 +189,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     string[] name = authorName.Split(",");
 
                     AuthorModel? author = null;
+                    bool skip = false;
 
                     if (TestData.UseTestData)
                     {
@@ -199,13 +202,24 @@ namespace BookCollector.ViewModels.BaseViewModels
                     {
                     }
 
-                    author ??= new ()
-                    {
-                        FirstName = name[1].Trim(),
-                        LastName = name[0].Trim(),
-                    };
+                    //if (!showHiddenAuthors)
+                    //{
+                    //    if (author != null && author.HideAuthor)
+                    //    {
+                    //        skip = true;
+                    //    }
+                    //}
 
-                    authorList.Add(author);
+                    if (!skip)
+                    {
+                        author??= new ()
+                        {
+                            FirstName = name[1].Trim(),
+                            LastName = name[0].Trim(),
+                        };
+
+                        authorList.Add(author);
+                    }
                 }
             }
 
