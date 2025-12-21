@@ -1,3 +1,9 @@
+// <copyright file="MainSettingsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.Database;
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Storage;
 
@@ -5,14 +11,13 @@ namespace BookCollector.Views.Settings;
 
 public partial class MainSettingsView : ContentPage
 {
+    internal static BookCollectorDatabase Database;
+
     public MainSettingsView()
     {
-        var userAppTheme = Application.Current?.UserAppTheme;
+        Database = new BookCollectorDatabase();
 
-        if (userAppTheme == AppTheme.Unspecified)
-        {
-            userAppTheme = Application.Current?.PlatformAppTheme;
-        }
+        var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
 
         this.AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
         this.SelectedAppTheme = userAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
@@ -91,9 +96,16 @@ public partial class MainSettingsView : ContentPage
 
         Data.Colors.SetColors(hexCode);
 
-#if ANDROID
-        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
-#endif
+        if (DeviceInfo.Platform == DevicePlatform.Android)
+        {
+            try
+            {
+                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
+            }
+            catch
+            {
+            }
+        }
 
         Preferences.Set("AppColor", hexCode);
     }
@@ -132,6 +144,37 @@ public partial class MainSettingsView : ContentPage
             this.SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             Preferences.Set("ExportLocation", folder.Path);
+        }
+    }
+
+    public async void OnDeleteButtonClicked(object sender, EventArgs e)
+    {
+        var inputTitle = AppStringResources.DeleteAllData_Question;
+
+        var inputConfirm = AppStringResources.Yes;
+
+        var inputDeny = AppStringResources.No;
+
+        var inputMessage = AppStringResources.WarningThisActionCannotBeUndone;
+
+        var action = await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm, inputDeny);
+
+        if (action)
+        {
+            if (TestData.UseTestData)
+            {
+                TestData.DeleteAllData();
+            }
+            else
+            {
+                await Database.DropAllTables();
+            }
+
+            await Shell.Current.DisplayAlertAsync(AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, AppStringResources.OK);
+        }
+        else
+        {
+            await Shell.Current.DisplayAlertAsync(AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, AppStringResources.OK);
         }
     }
 }

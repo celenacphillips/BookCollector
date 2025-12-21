@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="LocationsViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -43,7 +48,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 Task.WaitAll(
                 [
-                    Task.Run(async () => this.FullLocationList = await FilterLists.GetAllLocationsList(this.ShowHiddenLocations)),
+                    Task.Run(async () => this.FullLocationList = await FillLists.GetAllLocationsList(this.ShowHiddenLocations)),
                 ]);
 
                 if (this.FullLocationList != null)
@@ -52,15 +57,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredLocationList = this.FullLocationList;
 
-                    foreach (var location in this.FullLocationList)
-                    {
-                        location.SetTotalBooks(this.ShowHiddenBook);
-                        location.SetTotalCostOfBooks(this.ShowHiddenBook);
-                    }
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredLocationList = await FilterLists.SortLocationsList(
+                        Task.Run(async () => this.FilteredLocationList = await SortLists.SortLocationsList(
                             this.FilteredLocationList,
                             this.LocationNameChecked,
                             this.TotalBooksChecked,
@@ -78,7 +77,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -185,6 +184,7 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
+                            await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
                         }
 
                         await ConfirmDelete(selected.LocationName);
@@ -193,7 +193,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }

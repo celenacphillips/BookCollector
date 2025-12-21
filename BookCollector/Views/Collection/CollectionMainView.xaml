@@ -34,7 +34,7 @@
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout>
-                    <Label Text="{Binding TotalBooksstring}"
+                    <Label Text="{Binding TotalBooksString}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{StaticResource Primary}"

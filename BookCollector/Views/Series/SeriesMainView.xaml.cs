@@ -1,3 +1,7 @@
+// <copyright file="SeriesMainView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Series;
 

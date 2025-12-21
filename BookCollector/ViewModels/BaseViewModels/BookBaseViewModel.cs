@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="BookBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
@@ -23,7 +27,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<string>? bookFormats;
 
         [ObservableProperty]
-        public string? totalBooksstring;
+        public string? totalBooksString;
 
         [ObservableProperty]
         public int totalBooksCount;
@@ -83,9 +87,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         public ObservableCollection<ChapterModel>? chapterList;
 
         [ObservableProperty]
-        public ObservableCollection<AuthorModel>? authorList;
-
-        [ObservableProperty]
         public bool bookInfoSectionValue;
 
         [ObservableProperty]
@@ -140,7 +141,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool ShowHiddenBook { get; set; }
 
-        internal bool HiddenAuthorsOn { get; set; }
+        public bool HiddenAuthorsOn { get; set; }
 
         public bool ShowFavoriteBooks { get; set; }
 
@@ -176,47 +177,47 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool BookPriceChecked { get; set; }
 
-        public static ObservableCollection<AuthorModel> ParseOutAuthorsFromstring(string inputstring, bool showHiddenAuthors = true)
+        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string inputstring, bool showHiddenAuthors = true)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
-            string[] authorNames = inputstring.Split(";");
+            var list = SplitStringIntoAuthorList(inputstring);
 
-            foreach (var authorName in authorNames)
+            foreach (var item in list)
             {
-                if (!string.IsNullOrEmpty(authorName.Trim()))
+                if (item != null)
                 {
-                    string[] name = authorName.Split(",");
-
                     AuthorModel? author = null;
                     bool skip = false;
 
                     if (TestData.UseTestData)
                     {
                         author = TestData.AuthorList.FirstOrDefault(x => !string.IsNullOrEmpty(x.FirstName) &&
-                                                                         x.FirstName.Equals(name[1].Trim()) &&
+                                                                         x.FirstName.Equals(item.FirstName) &&
                                                                          !string.IsNullOrEmpty(x.LastName) &&
-                                                                         x.LastName.Equals(name[0].Trim()));
+                                                                         x.LastName.Equals(item.LastName));
                     }
                     else
                     {
+                        author = await Database.GetAuthorByNameAsync(item.FirstName, item.LastName);
                     }
 
-                    //if (!showHiddenAuthors)
-                    //{
+                    // if (!showHiddenAuthors)
+                    // {
                     //    if (author != null && author.HideAuthor)
                     //    {
                     //        skip = true;
                     //    }
-                    //}
-
+                    // }
                     if (!skip)
                     {
-                        author??= new ()
+                        if (author == null)
                         {
-                            FirstName = name[1].Trim(),
-                            LastName = name[0].Trim(),
-                        };
+                            author = new AuthorModel();
+                        }
+
+                        author.FirstName = item.FirstName;
+                        author.LastName = item.LastName;
 
                         authorList.Add(author);
                     }
@@ -244,9 +245,12 @@ namespace BookCollector.ViewModels.BaseViewModels
                     this.FilteredBookList = this.FullBookList;
                 }
 
+                this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
+                this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+
                 this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
 
-                this.TotalBooksstring = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+                this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
             }
 
             this.SetIsBusyFalse();

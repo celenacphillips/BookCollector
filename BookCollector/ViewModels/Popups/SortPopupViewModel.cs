@@ -1,4 +1,8 @@
-﻿using BookCollector.ViewModels.BaseViewModels;
+﻿// <copyright file="SortPopupViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

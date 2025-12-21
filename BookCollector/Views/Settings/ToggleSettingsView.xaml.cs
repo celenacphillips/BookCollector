@@ -1,5 +1,6 @@
-using BookCollector.Resources.Localization;
-using CommunityToolkit.Maui.Storage;
+// <copyright file="ToggleSettingsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
 
 namespace BookCollector.Views.Settings;
 
@@ -23,6 +24,7 @@ public partial class ToggleSettingsView : ContentPage
         this.InitializeComponent();
         this.BindingContext = this;
     }
+
     public bool CommentsOn { get; set; }
 
     public bool ChaptersOn { get; set; }

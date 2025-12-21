@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="SeriesViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -43,7 +48,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 Task.WaitAll(
                 [
-                    Task.Run(async () => this.FullSeriesList = await FilterLists.GetAllSeriesList(this.ShowHiddenSeries)),
+                    Task.Run(async () => this.FullSeriesList = await FillLists.GetAllSeriesList(this.ShowHiddenSeries)),
                 ]);
 
                 if (this.FullSeriesList != null)
@@ -52,15 +57,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredSeriesList = this.FullSeriesList;
 
-                    foreach (var series in this.FullSeriesList)
-                    {
-                        series.SetTotalBooks(this.ShowHiddenBook);
-                        series.SetTotalCostOfBooks(this.ShowHiddenBook);
-                    }
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredSeriesList = await FilterLists.SortSeriesList(
+                        Task.Run(async () => this.FilteredSeriesList = await SortLists.SortSeriesList(
                             this.FilteredSeriesList,
                             this.SeriesNameChecked,
                             this.TotalBooksChecked,
@@ -78,7 +77,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -185,6 +184,7 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
+                            await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
                         }
 
                         await ConfirmDelete(selected.SeriesName);
@@ -193,7 +193,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }

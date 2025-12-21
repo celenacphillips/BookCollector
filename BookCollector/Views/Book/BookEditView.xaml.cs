@@ -1,7 +1,9 @@
+// <copyright file="BookEditView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Book;
-using BookCollector.ViewModels.WishListBook;
-using BookCollector.Views.WishListBook;
 
 namespace BookCollector.Views.Book;
 

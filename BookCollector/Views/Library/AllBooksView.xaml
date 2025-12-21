@@ -30,7 +30,7 @@
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                    <Label Text="{Binding TotalBooksstring}"
+                    <Label Text="{Binding TotalBooksString}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{DynamicResource Primary}"

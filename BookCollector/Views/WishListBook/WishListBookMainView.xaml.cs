@@ -1,5 +1,8 @@
+// <copyright file="WishListBookMainView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
-using BookCollector.ViewModels.Book;
 using BookCollector.ViewModels.WishListBook;
 
 namespace BookCollector.Views.WishListBook;
@@ -8,7 +11,7 @@ public partial class WishListBookMainView : ContentPage
 {
     private WishListBookMainViewModel viewModel;
 
-    public WishListBookMainView(BookModel book, string viewTitle)
+    public WishListBookMainView(WishlistBookModel book, string viewTitle)
     {
         this.viewModel = new WishListBookMainViewModel(book, this)
         {

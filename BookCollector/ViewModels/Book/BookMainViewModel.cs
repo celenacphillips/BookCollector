@@ -1,14 +1,28 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="BookMainViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Book;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
     public partial class BookMainViewModel : BookBaseViewModel
     {
+        [ObservableProperty]
+        public ObservableCollection<AuthorModel>? authorList;
+
+        [ObservableProperty]
+        public ObservableCollection<AuthorModel>? selectedAuthorList;
+
         public BookMainViewModel(BookModel book, ContentPage view)
         {
             this.View = view;
@@ -59,13 +73,12 @@ namespace BookCollector.ViewModels.Book
 
                     this.BookCover = this.SelectedBook.BookCover;
 
-                    this.AuthorList = !string.IsNullOrEmpty(this.SelectedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.SelectedBook.AuthorListstring, this.HiddenAuthorsOn) : null;
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.ChapterList = await FilterLists.GetAllChaptersInBook(this.SelectedBook.BookGuid)),
-                        Task.Run(async () => this.SelectedGenre = await FilterLists.GetGenreForBook(this.SelectedBook.BookGenreGuid)),
-                        Task.Run(async () => this.SelectedLocation = await FilterLists.GetLocationForBook(this.SelectedBook.BookLocationGuid)),
+                        Task.Run(async () => this.ChapterList = await FillLists.GetAllChaptersInBook(this.SelectedBook.BookGuid)),
+                        Task.Run(async () => this.SelectedGenre = await GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid)),
+                        Task.Run(async () => this.SelectedLocation = await GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid)),
+                        Task.Run(async () => this.SelectedAuthorList = await FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid, this.HiddenAuthorsOn)),
                         Task.Run(async () => this.SelectedBook.SetBookCheckpoints()),
                         Task.Run(async () => this.SelectedBook.SetCoverDisplay()),
                         Task.Run(async () => await this.SelectedBook.SetPartOfSeries()),
@@ -81,7 +94,7 @@ namespace BookCollector.ViewModels.Book
 
                     this.SetIsBusyFalse();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     this.SetIsBusyFalse();
                 }
@@ -130,6 +143,7 @@ namespace BookCollector.ViewModels.Book
                         }
                         else
                         {
+                            await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
                         }
 
                         await ConfirmDelete(this.SelectedBook.BookTitle);
@@ -138,7 +152,7 @@ namespace BookCollector.ViewModels.Book
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }

@@ -1,4 +1,8 @@
-﻿using System.Xml;
+﻿// <copyright file="ReadWriteSpreadsheet.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Xml;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;

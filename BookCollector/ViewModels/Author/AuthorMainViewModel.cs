@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="AuthorMainViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
@@ -33,26 +36,18 @@ namespace BookCollector.ViewModels.Author
 
                     this.GetPreferences();
 
-                    ObservableCollection<BookAuthorModel>? bookAuthorList = [];
-
-                    // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                     Task.WaitAll(
                     [
-                        Task.Run(async () => bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(this.SelectedAuthor.AuthorGuid)),
-                    ]);
-
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, this.ShowHiddenBook)),
+                        Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksInAuthorList(this.SelectedAuthor.AuthorGuid, this.ShowHiddenBook)),
                     ]);
 
                     if (this.FullBookList != null)
                     {
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.BookPublisherList = await FilterLists.GetAllPublishersInBookList(this.FullBookList)),
-                            Task.Run(async () => this.BookLanguageList = await FilterLists.GetAllLanguagesInBookList(this.FullBookList)),
-                            Task.Run(async () => this.BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookPublisherList = await FillLists.GetAllPublishersInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookLanguageList = await FillLists.GetAllLanguagesInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookPublishYearList = await FillLists.GetAllPublisherYearsInBookList(this.FullBookList)),
                             Task.Run(async () => this.FilteredBookList = await FilterLists.FilterBookList(
                                 this.FullBookList,
                                 this.FavoriteBooksOption,
@@ -67,7 +62,7 @@ namespace BookCollector.ViewModels.Author
                         {
                             Task.WaitAll(
                             [
-                                Task.Run(async () => this.FilteredBookList = await FilterLists.SortBookList(
+                                Task.Run(async () => this.FilteredBookList = await SortLists.SortBookList(
                                     this.FilteredBookList,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
@@ -77,6 +72,7 @@ namespace BookCollector.ViewModels.Author
                                     this.AuthorLastNameChecked,
                                     this.BookFormatChecked,
                                     this.BookPriceChecked,
+                                    this.PageCountChecked,
                                     this.AscendingChecked,
                                     this.DescendingChecked)),
                             ]);
@@ -84,15 +80,19 @@ namespace BookCollector.ViewModels.Author
                     }
 
                     this.TotalBooksCount = this.FullBookList != null ? this.FullBookList.Count : 0;
+
+                    this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
+                    this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+
                     this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
 
-                    this.TotalBooksstring = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+                    this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                     this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
 
                     this.SetIsBusyFalse();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     this.SetIsBusyFalse();
                 }
@@ -116,7 +116,7 @@ namespace BookCollector.ViewModels.Author
 
                 var newBook = new BookModel()
                 {
-                    AuthorListstring = this.SelectedAuthor.ReverseFullName,
+                    SelectedAuthor = this.SelectedAuthor,
                 };
 
                 var view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");

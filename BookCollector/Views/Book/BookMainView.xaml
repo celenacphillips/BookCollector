@@ -458,7 +458,7 @@
 
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
-                                <CollectionView ItemsSource="{Binding AuthorList}"
+                                <CollectionView ItemsSource="{Binding SelectedAuthorList}"
                                                 MinimumHeightRequest="25"
                                                 Margin="10">
 

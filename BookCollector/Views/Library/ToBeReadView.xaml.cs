@@ -1,3 +1,7 @@
+// <copyright file="ToBeReadView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Library;
 
 namespace BookCollector.Views.Library;

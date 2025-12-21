@@ -1,3 +1,7 @@
+// <copyright file="BookScanView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BarcodeScanner.Mobile;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Book;

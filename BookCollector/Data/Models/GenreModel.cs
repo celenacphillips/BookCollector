@@ -1,26 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="GenreModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
 
 namespace BookCollector.Data.Models
 {
-    public partial class GenreModel : ObservableObject, ICloneable
+    public partial class GenreModel : GenreDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? genreName;
-
-        [ObservableProperty]
-        public string? totalBooksstring;
-
-        [ObservableProperty]
-        public bool hideGenre;
-
         public GenreModel()
         {
-            this.GenreGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? GenreGuid { get; set; }
+        public GenreModel(GenreDatabaseModel dbModel)
+        {
+            this.GenreGuid = dbModel.GenreGuid;
+            this.GenreName = dbModel.GenreName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideGenre = dbModel.HideGenre;
+            this.GenreTotalBooks = dbModel.GenreTotalBooks;
+        }
 
         public string? ParsedGenreName
         {
@@ -32,12 +32,6 @@ namespace BookCollector.Data.Models
                         : this.GenreName;
         }
 
-        public int GenreTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
-        public int? ID { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
@@ -45,7 +39,7 @@ namespace BookCollector.Data.Models
 
         public async void SetTotalBooks(bool showHiddenBooks)
         {
-            var list = await FilterLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
             var count = 0;
 
             if (list != null)
@@ -53,13 +47,13 @@ namespace BookCollector.Data.Models
                 count = list.Count;
             }
 
-            this.TotalBooksstring = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksString(count);
             this.GenreTotalBooks = count;
         }
 
         public async void SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInGenreList(this.GenreGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInGenreList(this.GenreGuid, showHiddenBooks);
         }
     }
 }

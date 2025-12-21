@@ -1,5 +1,12 @@
-﻿namespace BookCollector
+﻿// <copyright file="App.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+namespace BookCollector
 {
+    /// <summary>
+    /// App class.
+    /// </summary>
     public partial class App : Application
     {
         public App()
@@ -20,11 +27,11 @@
             var savedTheme = Preferences.Get("AppTheme", "System" /* Default */);
 
             Current?.UserAppTheme = savedTheme switch
-                {
-                    "Light" => AppTheme.Light,
-                    "Dark" => AppTheme.Dark,
-                    _ => AppTheme.Unspecified // Follows system
-                };
+            {
+                "Light" => AppTheme.Light,
+                "Dark" => AppTheme.Dark,
+                _ => AppTheme.Unspecified // Follows system
+            };
         }
 
         private static void GetColor()

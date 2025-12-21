@@ -1,11 +1,15 @@
-﻿using BookCollector.Data.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
-using DocumentFormat.OpenXml.Bibliography;
+﻿// <copyright file="TestData.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using System.Collections.ObjectModel;
+using BookCollector.Data.Models;
+using BookCollector.ViewModels.BaseViewModels;
+using CommunityToolkit.Maui.Core.Extensions;
 
 namespace BookCollector.Data
 {
-    public partial class TestData : ObservableObject
+    public partial class TestData : BaseViewModel
     {
         internal static ObservableCollection<BookModel> BookList = [];
         internal static ObservableCollection<ChapterModel> ChapterList = [];
@@ -15,7 +19,7 @@ namespace BookCollector.Data
         internal static ObservableCollection<CollectionModel> CollectionList = [];
         internal static ObservableCollection<LocationModel> LocationList = [];
         internal static ObservableCollection<BookAuthorModel> BookAuthorList = [];
-        internal static ObservableCollection<BookModel> BookWishList = [];
+        internal static ObservableCollection<WishlistBookModel> BookWishList = [];
 
         public TestData()
         {
@@ -23,7 +27,7 @@ namespace BookCollector.Data
 
         public static bool UseTestData { get; set; }
 
-        public static void AddBooksToList()
+        public static async void AddBooksToList()
         {
             AddChaptersToList();
             AddAuthorsToList();
@@ -33,7 +37,7 @@ namespace BookCollector.Data
             AddLocationsToList();
 
             BookList =
-           [
+            [
                 new BookModel()
                 {
                     BookTitle = "Reading Book",
@@ -116,15 +120,15 @@ namespace BookCollector.Data
                 {
                     book.SetReadingProgress();
                     book.SetCoverDisplay();
-                    using var list = book.SetAuthorListstring();
+                    using var list = book.SetAuthorListString();
                 }
 
                 var showHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
                 foreach (var author in AuthorList)
                 {
-                    author.SetTotalBooks(showHiddenBooks);
-                    author.SetTotalCostOfBooks(showHiddenBooks);
+                    author.SetTotalBooks(true);
+                    author.SetTotalCostOfBooks(true);
                 }
 
                 foreach (var series in SeriesList)
@@ -189,8 +193,8 @@ namespace BookCollector.Data
         public static void AddWishListBooksToList()
         {
             BookWishList =
-           [
-                new BookModel()
+            [
+                new WishlistBookModel()
                 {
                     BookTitle = "Wishlist Book 1",
                     BookPageTotal = 100,
@@ -207,7 +211,7 @@ namespace BookCollector.Data
                     BookNumberInSeries = 1,
                     BookWhereToBuy = "website",
                 },
-                new BookModel()
+                new WishlistBookModel()
                 {
                     BookTitle = "Wishlist Book 2",
                     BookPageTotal = 500,
@@ -224,7 +228,7 @@ namespace BookCollector.Data
                     BookNumberInSeries = 2,
                     BookWhereToBuy = "website",
                 },
-                new BookModel()
+                new WishlistBookModel()
                 {
                     BookTitle = "Wishlist Book 3",
                     BookPageTotal = 450,
@@ -249,7 +253,7 @@ namespace BookCollector.Data
             }
         }
 
-        public static void UpdateWishListBook(BookModel book)
+        public static void UpdateWishListBook(WishlistBookModel book)
         {
             var oldBook = BookWishList.Where(x => x.BookGuid == book.BookGuid).ToList().FirstOrDefault();
 
@@ -261,13 +265,12 @@ namespace BookCollector.Data
             }
             else
             {
-                book.SetReadingProgress();
                 book.SetCoverDisplay();
                 InsertWishListBook(book);
             }
         }
 
-        public static void InsertWishListBook(BookModel book)
+        public static void InsertWishListBook(WishlistBookModel book)
         {
             if (book.BookGuid == null)
             {
@@ -277,7 +280,7 @@ namespace BookCollector.Data
             BookWishList.Add(book);
         }
 
-        public static void DeleteWishListBook(BookModel book)
+        public static void DeleteWishListBook(WishlistBookModel book)
         {
             BookWishList.Remove(book);
         }
@@ -458,9 +461,9 @@ namespace BookCollector.Data
 
                 var book = BookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
 
-                if (book != null && !string.IsNullOrEmpty(book.AuthorListstring))
+                if (book != null && !string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    book.AuthorListstring = book.AuthorListstring.Replace(author.ReverseFullName, string.Empty);
+                    book.AuthorListString = book.AuthorListString.Replace(author.ReverseFullName, string.Empty);
                 }
             }
         }
@@ -679,7 +682,7 @@ namespace BookCollector.Data
             }
         }
 
-        public static void DataCleanup()
+        public static async void DataCleanup()
         {
             foreach (var collection in CollectionList)
             {
@@ -713,8 +716,1180 @@ namespace BookCollector.Data
 
             foreach (var book in BookList)
             {
-                using var variable = book.SetAuthorListstring();
+                using var variable = book.SetAuthorListString();
             }
+
+            // foreach (var book in BookWishList)
+            // {
+            //    using var variable = book.SetAuthorListString();
+            // }
+        }
+
+        public static ObservableCollection<BookModel>? GetReadingBooks(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) || (x.UpNext == true))
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetToBeReadBooks(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookPageRead == 0 && x.UpNext == false)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetReadBooks(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooks(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooks(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<WishlistBookModel>();
+            var filteredList = new ObservableCollection<WishlistBookModel>();
+
+            bookList = BookWishList
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<ChapterModel>? GetAllChaptersInBook(Guid? inputGuid)
+        {
+            var chapterList = new ObservableCollection<ChapterModel>();
+
+            chapterList = ChapterList
+                    .Where(x => x.BookGuid == inputGuid)
+                    .OrderBy(x => x.ChapterOrder)
+                    .ToObservableCollection();
+
+            return chapterList;
+        }
+
+        public static ObservableCollection<ChapterModel>? GetAllChapters()
+        {
+            var chapterList = new ObservableCollection<ChapterModel>();
+
+            chapterList = ChapterList
+                    .OrderBy(x => x.ChapterOrder)
+                    .ToObservableCollection();
+
+            return chapterList;
+        }
+
+        public static ObservableCollection<BookAuthorModel>? GetAllBookAuthorsForBook(Guid? inputGuid)
+        {
+            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
+
+            bookAuthorList = BookAuthorList
+                    .Where(x => x.BookGuid == inputGuid)
+                    .OrderBy(x => x.BookGuid)
+                    .ToObservableCollection();
+
+            return bookAuthorList;
+        }
+
+        public static ObservableCollection<Guid>? GetAllAuthorGuidsForBook(Guid? inputGuid)
+        {
+            var authorGuidList = new ObservableCollection<Guid>();
+
+            authorGuidList = BookAuthorList
+                    .Where(x => x.BookGuid == inputGuid)
+                    .Select(x => x.AuthorGuid)
+                    .Distinct()
+                    .ToObservableCollection();
+
+            return authorGuidList;
+        }
+
+        public static ObservableCollection<BookAuthorModel>? GetAllBookAuthors()
+        {
+            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
+
+            bookAuthorList = BookAuthorList
+                    .OrderBy(x => x.BookGuid)
+                    .ToObservableCollection();
+
+            return bookAuthorList;
+        }
+
+        public static ObservableCollection<BookAuthorModel>? GetAllBookAuthorsForAuthor(Guid? inputGuid)
+        {
+            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
+
+            bookAuthorList = BookAuthorList
+                    .Where(x => x.AuthorGuid == inputGuid)
+                    .OrderBy(x => x.BookGuid)
+                    .ToObservableCollection();
+
+            return bookAuthorList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksInCollectionList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookCollectionGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutACollectionList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookCollectionGuid == null)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksInGenreList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookGenreGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutAGenreList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookGenreGuid == null)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksInSeriesList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookSeriesGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutASeriesList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookSeriesGuid == null)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksInLocationList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookLocationGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutALocationList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = null;
+
+            bookList = BookList
+                    .Where(x => x.BookSeriesGuid == null)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<CollectionModel>? GetAllCollectionsList(bool showHiddenCollections)
+        {
+            ObservableCollection<CollectionModel>? collectionList = null;
+            ObservableCollection<CollectionModel>? filteredList = null;
+
+            collectionList = CollectionList
+                    .OrderBy(x => x.ParsedCollectionName)
+                    .ToObservableCollection();
+
+            if (!showHiddenCollections)
+            {
+                filteredList = collectionList?
+                    .Where(x => !x.HideCollection)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = collectionList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<GenreModel>? GetAllGenresList(bool showHiddenGenres)
+        {
+            ObservableCollection<GenreModel>? genreList = null;
+            ObservableCollection<GenreModel>? filteredList = null;
+
+            genreList = GenreList
+                    .OrderBy(x => x.ParsedGenreName)
+                    .ToObservableCollection();
+
+            if (!showHiddenGenres)
+            {
+                filteredList = genreList?
+                    .Where(x => !x.HideGenre)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = genreList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<SeriesModel>? GetAllSeriesList(bool showHiddenSeries)
+        {
+            ObservableCollection<SeriesModel>? seriesList = null;
+            ObservableCollection<SeriesModel>? filteredList = null;
+
+            seriesList = SeriesList
+                    .OrderBy(x => x.ParsedSeriesName)
+                    .ToObservableCollection();
+
+            if (!showHiddenSeries)
+            {
+                filteredList = seriesList?.Where(x => !x.HideSeries).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = seriesList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<LocationModel>? GetAllLocationsList(bool showHiddenLocations)
+        {
+            ObservableCollection<LocationModel>? locationList = null;
+            ObservableCollection<LocationModel>? filteredList = null;
+
+            locationList = LocationList
+                    .OrderBy(x => x.ParsedLocationName)
+                    .ToObservableCollection();
+
+            if (!showHiddenLocations)
+            {
+                filteredList = locationList?.Where(x => !x.HideLocation).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = locationList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksInAuthorList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = [];
+
+            bookList = BookList;
+
+            var bookAuthorList = BookAuthorList?
+                                        .Where(x => x.AuthorGuid == inputGuid)
+                                        .ToObservableCollection();
+
+            if (bookList != null && bookAuthorList != null)
+            {
+                foreach (var bookAuthor in bookAuthorList)
+                {
+                    var book = bookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                    if (book != null)
+                    {
+                        filteredList.Add(book);
+                    }
+                }
+            }
+
+            filteredList = filteredList
+                .OrderBy(x => x.ParsedTitle)
+                .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?
+                    .Where(x => !x.HideBook)
+                    .ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutAuthorList(string reverseAuthorName, bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? bookList = null;
+            ObservableCollection<BookModel>? filteredList = [];
+
+            bookList = BookList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString) || (!string.IsNullOrEmpty(x.AuthorListString) && !x.AuthorListString.Contains(reverseAuthorName)))
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<AuthorModel>? GetAllAuthorsList(bool showHiddenAuthors)
+        {
+            ObservableCollection<AuthorModel>? authorList = null;
+            ObservableCollection<AuthorModel>? filteredList = [];
+
+            authorList = AuthorList
+                    .OrderBy(x => x.LastName)
+                    .OrderBy(x => x.FirstName)
+                    .ToObservableCollection();
+
+            if (!showHiddenAuthors)
+            {
+                filteredList = authorList?.Where(x => !x.HideAuthor).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = authorList;
+            }
+
+            return filteredList;
+        }
+
+        public static GenreModel? GetGenreForBook(Guid? inputGuid)
+        {
+            return GenreList.FirstOrDefault(x => x.GenreGuid == inputGuid);
+        }
+
+        public static LocationModel? GetLocationForBook(Guid? inputGuid)
+        {
+            return LocationList.FirstOrDefault(x => x.LocationGuid == inputGuid);
+        }
+
+        public static SeriesModel? GetSeriesForBook(Guid? inputGuid)
+        {
+            return SeriesList.FirstOrDefault(x => x.SeriesGuid == inputGuid);
+        }
+
+        public static CollectionModel? GetCollectionForBook(Guid? inputGuid)
+        {
+            return CollectionList.FirstOrDefault(x => x.CollectionGuid == inputGuid);
+        }
+
+        public static ObservableCollection<BookModel>? GetBooksListByFavorite(bool showHiddenBooks, bool favoriteValue)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.IsFavorite == favoriteValue)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetBooksListByRating(bool showHiddenBooks, int starRating)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.Rating == starRating)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBookPricesInCollectionList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookCollectionGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBookPricesInGenreList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookGenreGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBookPricesInSeriesList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookSeriesGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBookPricesInLocationList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => x.BookLocationGuid == inputGuid)
+                    .OrderBy(x => x.ParsedTitle)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?.Where(x => !x.HideBook).ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksReadInYear(int year, bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList?
+                    .Where(x => !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithPrices(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<BookModel>();
+            var filteredList = new ObservableCollection<BookModel>();
+
+            bookList = BookList
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList
+                    .Where(x => !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithPrices(bool showHiddenBooks)
+        {
+            var bookList = new ObservableCollection<WishlistBookModel>();
+            var filteredList = new ObservableCollection<WishlistBookModel>();
+
+            bookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = bookList
+                    .Where(x => !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = bookList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBookPricesInAuthorList(Guid? inputGuid, bool showHiddenBooks)
+        {
+            var filteredList = new ObservableCollection<BookModel>();
+
+            var bookAuthorList = BookAuthorList?
+                                        .Where(x => x.AuthorGuid == inputGuid)
+                                        .ToObservableCollection();
+
+            if (BookList != null && bookAuthorList != null)
+            {
+                foreach (var bookAuthor in bookAuthorList)
+                {
+                    var book = BookList.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                    if (book != null)
+                    {
+                        filteredList.Add(book);
+                    }
+                }
+            }
+
+            filteredList = filteredList
+                .OrderBy(x => x.ParsedTitle)
+                .ToObservableCollection();
+
+            if (!showHiddenBooks)
+            {
+                filteredList = filteredList?
+                    .Where(x => !x.HideBook)
+                    .ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<AuthorModel>? GetAllAuthorsWithBooks(bool showHiddenAuthors)
+        {
+            ObservableCollection<AuthorModel>? authorList = null;
+            ObservableCollection<AuthorModel>? filteredList = null;
+
+            authorList = AuthorList
+                    .Where(x => x.AuthorTotalBooks != 0)
+                    .OrderByDescending(x => x.AuthorTotalBooks)
+                    .ToObservableCollection();
+
+            if (!showHiddenAuthors)
+            {
+                filteredList = authorList
+                    .Where(x => !x.HideAuthor)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = authorList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutAuthorsList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<CollectionModel>? GetAllCollectionsWithBooks(bool showHiddenCollections)
+        {
+            ObservableCollection<CollectionModel>? collectionList = null;
+            ObservableCollection<CollectionModel>? filteredList = null;
+
+            collectionList = CollectionList
+                    .Where(x => x.CollectionTotalBooks != 0)
+                    .OrderByDescending(x => x.CollectionTotalBooks)
+                    .ToObservableCollection();
+
+            if (!showHiddenCollections)
+            {
+                filteredList = collectionList
+                    .Where(x => !x.HideCollection)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = collectionList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutCollections(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookCollectionGuid == null && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookCollectionGuid == null)
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<GenreModel>? GetAllGenresWithBooks(bool showHiddenGenres)
+        {
+            ObservableCollection<GenreModel>? genreList = null;
+            ObservableCollection<GenreModel>? filteredList = null;
+
+            genreList = GenreList
+                    .Where(x => x.GenreTotalBooks != 0)
+                    .OrderByDescending(x => x.GenreTotalBooks)
+                    .ToObservableCollection();
+
+            if (!showHiddenGenres)
+            {
+                filteredList = genreList
+                    .Where(x => !x.HideGenre)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = genreList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutGenres(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookGenreGuid == null && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookGenreGuid == null)
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<SeriesModel>? GetAllSeriesWithBooks(bool showHiddenSeries)
+        {
+            ObservableCollection<SeriesModel>? seriesList = null;
+            ObservableCollection<SeriesModel>? filteredList = null;
+
+            seriesList = SeriesList
+                    .Where(x => x.SeriesTotalBooks != 0)
+                    .OrderByDescending(x => x.SeriesTotalBooks)
+                    .ToObservableCollection();
+
+            if (!showHiddenSeries)
+            {
+                filteredList = seriesList
+                    .Where(x => !x.HideSeries)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = seriesList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutSeries(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookSeriesGuid == null && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookSeriesGuid == null)
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<LocationModel>? GetAllLocationsWithBooks(bool showHiddenLocations)
+        {
+            ObservableCollection<LocationModel>? locationList = null;
+            ObservableCollection<LocationModel>? filteredList = null;
+
+            locationList = LocationList
+                    .Where(x => x.LocationTotalBooks != 0)
+                    .OrderByDescending(x => x.LocationTotalBooks)
+                    .ToObservableCollection();
+
+            if (!showHiddenLocations)
+            {
+                filteredList = locationList
+                    .Where(x => !x.HideLocation)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredList = locationList;
+            }
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<BookModel>? GetAllBooksWithoutLocations(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookLocationGuid == null && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookList
+                    .Where(x => x.BookLocationGuid == null)
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithLocations(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithoutLocations(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.BookWhereToBuy) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static List<string?>? GetAllWishlistBookLocations(bool showHiddenBooks)
+        {
+            List<string?>? filteredList = null;
+
+            var locationList = GetAllWishlistBooksWithLocations(showHiddenBooks);
+            filteredList = locationList?.Select(x => x.BookWhereToBuy)
+                .Distinct()
+                .ToList();
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithSeries(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.BookSeries) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.BookSeries))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithoutSeries(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.BookSeries) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.BookSeries))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static List<string?>? GetAllWishlistBookSeries(bool showHiddenBooks)
+        {
+            List<string?>? filteredList = null;
+
+            var seriesList = GetAllWishlistBooksWithSeries(showHiddenBooks);
+            filteredList = seriesList?.Select(x => x.BookSeries)
+                .Distinct()
+                .ToList();
+
+            return filteredList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithAuthors(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.AuthorListString) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => !string.IsNullOrEmpty(x.AuthorListString))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static ObservableCollection<WishlistBookModel>? GetAllWishlistBooksWithoutAuthors(bool showHiddenBooks)
+        {
+            ObservableCollection<WishlistBookModel>? filteredBookList = null;
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString) && !x.HideBook)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                filteredBookList = BookWishList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString))
+                    .ToObservableCollection();
+            }
+
+            return filteredBookList;
+        }
+
+        public static List<string?>? GetAllWishlistBookAuthors(bool showHiddenBooks)
+        {
+            List<string?>? filteredList = null;
+
+            var authorList = GetAllWishlistBooksWithAuthors(showHiddenBooks);
+            filteredList = authorList?.Select(x => x.AuthorListString)
+                .Distinct()
+                .ToList();
+
+            return filteredList;
+        }
+
+        public static void DeleteAllData()
+        {
+            BookList.Clear();
+            AuthorList.Clear();
+            BookAuthorList.Clear();
+            GenreList.Clear();
+            SeriesList.Clear();
+            LocationList.Clear();
+            CollectionList.Clear();
+            BookWishList.Clear();
         }
     }
 }

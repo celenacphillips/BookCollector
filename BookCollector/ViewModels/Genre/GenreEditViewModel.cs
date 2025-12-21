@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="GenreEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -35,7 +40,7 @@ namespace BookCollector.ViewModels.Genre
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -57,25 +62,13 @@ namespace BookCollector.ViewModels.Genre
                 }
 #endif
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewGenre}"))
+                if (TestData.UseTestData)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertGenre(this.EditedGenre);
-                    }
-                    else
-                    {
-                    }
+                    TestData.UpdateGenre(this.EditedGenre);
                 }
                 else
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateGenre(this.EditedGenre);
-                    }
-                    else
-                    {
-                    }
+                    this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
                 }
 
                 if (this.InsertMainViewBefore)
@@ -113,9 +106,11 @@ namespace BookCollector.ViewModels.Genre
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var genreNameEditor = this.View.FindByName<Editor>("GenreNameEditor");
-                genreNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                genreNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                genreNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                genreNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.GenreNameValid = true;
             }
         }

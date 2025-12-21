@@ -1,4 +1,8 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="GenreMainViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -35,7 +39,7 @@ namespace BookCollector.ViewModels.Genre
                     // Need a first Task.WaitAll so that anything dependent on this data will have the correct data.
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksInGenreList(this.SelectedGenre.GenreGuid, this.ShowHiddenBook)),
+                        Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksInGenreList(this.SelectedGenre.GenreGuid, this.ShowHiddenBook)),
                     ]);
 
                     if (this.FullBookList != null)
@@ -44,9 +48,9 @@ namespace BookCollector.ViewModels.Genre
 
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.BookPublisherList = await FilterLists.GetAllPublishersInBookList(this.FullBookList)),
-                            Task.Run(async () => this.BookLanguageList = await FilterLists.GetAllLanguagesInBookList(this.FullBookList)),
-                            Task.Run(async () => this.BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookPublisherList = await FillLists.GetAllPublishersInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookLanguageList = await FillLists.GetAllLanguagesInBookList(this.FullBookList)),
+                            Task.Run(async () => this.BookPublishYearList = await FillLists.GetAllPublisherYearsInBookList(this.FullBookList)),
                             Task.Run(async () => this.FilteredBookList = await FilterLists.FilterBookList(
                                 this.FullBookList,
                                 this.FavoriteBooksOption,
@@ -61,7 +65,7 @@ namespace BookCollector.ViewModels.Genre
                         {
                             Task.WaitAll(
                             [
-                                Task.Run(async () => this.FilteredBookList = await FilterLists.SortBookList(
+                                Task.Run(async () => this.FilteredBookList = await SortLists.SortBookList(
                                     this.FilteredBookList,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
@@ -71,13 +75,17 @@ namespace BookCollector.ViewModels.Genre
                                     this.AuthorLastNameChecked,
                                     this.BookFormatChecked,
                                     this.BookPriceChecked,
+                                    this.PageCountChecked,
                                     this.AscendingChecked,
                                     this.DescendingChecked)),
                             ]);
 
+                            this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
+                            this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+
                             this.FilteredBooksCount = this.FilteredBookList.Count;
 
-                            this.TotalBooksstring = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+                            this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
                         }
@@ -85,7 +93,7 @@ namespace BookCollector.ViewModels.Genre
 
                     this.SetIsBusyFalse();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     this.SetIsBusyFalse();
                 }

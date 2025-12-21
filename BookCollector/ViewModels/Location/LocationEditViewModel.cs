@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="LocationEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -35,7 +40,7 @@ namespace BookCollector.ViewModels.Location
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -57,25 +62,13 @@ namespace BookCollector.ViewModels.Location
                 }
 #endif
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewLocation}"))
+                if (TestData.UseTestData)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertLocation(this.EditedLocation);
-                    }
-                    else
-                    {
-                    }
+                    TestData.UpdateLocation(this.EditedLocation);
                 }
                 else
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateLocation(this.EditedLocation);
-                    }
-                    else
-                    {
-                    }
+                    this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
                 }
 
                 if (this.InsertMainViewBefore)
@@ -113,9 +106,11 @@ namespace BookCollector.ViewModels.Location
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var locationNameEditor = this.View.FindByName<Editor>("LocationNameEditor");
-                locationNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                locationNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                locationNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                locationNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.LocationNameValid = true;
             }
         }

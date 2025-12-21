@@ -205,6 +205,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All data has been deleted..
+        /// </summary>
+        internal static string AllDataHasBeenDeleted {
+            get {
+                return ResourceManager.GetString("AllDataHasBeenDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Formats.
         /// </summary>
         internal static string AllFormats {
@@ -376,11 +385,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to Author Full Name.
+        /// </summary>
+        internal static string AuthorFullName {
+            get {
+                return ResourceManager.GetString("AuthorFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Author Guid.
         /// </summary>
         internal static string AuthorGuid {
             get {
                 return ResourceManager.GetString("AuthorGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AuthorGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        /// </summary>
+        internal static string AuthorGuid_Blank {
+            get {
+                return ResourceManager.GetString("AuthorGuid_Blank", resourceCulture);
             }
         }
         
@@ -484,7 +511,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to BookAuthorGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string BookAuthorGuid {
             get {
@@ -619,7 +646,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to BookGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string BookGuid_Blank {
             get {
@@ -916,7 +943,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chapter Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to ChapterGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string ChapterGuid {
             get {
@@ -988,7 +1015,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Collection Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to CollectionGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string CollectionGuid {
             get {
@@ -1047,6 +1074,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Color {
             get {
                 return ResourceManager.GetString("Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Author.
+        /// </summary>
+        internal static string CreateNewAuthor {
+            get {
+                return ResourceManager.GetString("CreateNewAuthor", resourceCulture);
             }
         }
         
@@ -1492,7 +1528,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Genre Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to GenreGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string GenreGuid {
             get {
@@ -1560,6 +1596,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Hardcover {
             get {
                 return ResourceManager.GetString("Hardcover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide?.
+        /// </summary>
+        internal static string Hide_Question {
+            get {
+                return ResourceManager.GetString("Hide_Question", resourceCulture);
             }
         }
         
@@ -1735,7 +1780,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to LocationGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string LocationGuid {
             get {
@@ -2338,6 +2383,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select an Author.
+        /// </summary>
+        internal static string SelectAnAuthor {
+            get {
+                return ResourceManager.GetString("SelectAnAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select a Series.
         /// </summary>
         internal static string SelectASeries {
@@ -2401,7 +2455,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Series Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
+        ///   Looks up a localized string similar to SeriesGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string SeriesGuid {
             get {

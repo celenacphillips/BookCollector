@@ -1,89 +1,78 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="BookModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using System.Globalization;
+using BookCollector.Data.Database;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableObject, ICloneable
+    public partial class BookModel : BookDatabaseModel, ICloneable
     {
         [ObservableProperty]
-        public string? bookTitle;
-        [ObservableProperty]
-        public double? bookNumberInSeries;
-        [ObservableProperty]
-        public string? bookPublisher;
-        [ObservableProperty]
-        public string? bookPublishYear;
-        [ObservableProperty]
-        public string? bookIdentifier;
-        [ObservableProperty]
-        public string? bookFormat;
-        [ObservableProperty]
-        public string? bookLanguage;
-        [ObservableProperty]
-        public string? bookPrice;
-        [ObservableProperty]
-        public string? bookSummary;
-        [ObservableProperty]
-        public int bookPageRead;
-        [ObservableProperty]
-        public int bookPageTotal;
-        [ObservableProperty]
-        public double progress;
-        [ObservableProperty]
-        public string? pageReadPercent;
-        [ObservableProperty]
-        public string? bookStartDate;
-        [ObservableProperty]
-        public string? bookEndDate;
-        [ObservableProperty]
-        public string? bookComments;
-        [ObservableProperty]
-        public string? bookCoverUrl;
-        [ObservableProperty]
-        public bool hasBookCover;
-        [ObservableProperty]
-        public bool hasNoBookCover;
-        [ObservableProperty]
-        public bool hasSeries;
-        [ObservableProperty]
-        public bool hasCollection;
-        [ObservableProperty]
-        public string? bookURL;
-        [ObservableProperty]
-        public string? bookWhereToBuy;
-        [ObservableProperty]
-        public string? loanedTo;
-        [ObservableProperty]
-        public string? bookLoanedOutOn;
-        [ObservableProperty]
-        public bool upNext;
-        [ObservableProperty]
-        public bool hideBook;
-        [ObservableProperty]
-        public int half;
-        [ObservableProperty]
-        public int fourth;
-        [ObservableProperty]
-        public int threeFourth;
-        [ObservableProperty]
-        public string? partOfSeries;
-        [ObservableProperty]
-        public string? partOfCollection;
-        [ObservableProperty]
         public ImageSource? bookCover;
-        [ObservableProperty]
-        public string? bookCoverFileLocation;
+
+        internal static BookCollectorDatabase Database;
 
         public BookModel()
         {
-            this.BookGuid = Guid.NewGuid();
+            Database = new BookCollectorDatabase();
         }
 
-        [PrimaryKey]
-        public Guid? BookGuid { get; set; }
+        public BookModel(BookDatabaseModel dbModel)
+        {
+            this.BookGuid = dbModel.BookGuid;
+            this.BookTitle = dbModel.BookTitle;
+            this.BookNumberInSeries = dbModel.BookNumberInSeries;
+            this.BookPublisher = dbModel.BookPublisher;
+            this.BookPublishYear = dbModel.BookPublishYear;
+            this.BookFormat = dbModel.BookFormat;
+            this.BookLanguage = dbModel.BookLanguage;
+            this.BookPrice = dbModel.BookPrice;
+            this.BookSummary = dbModel.BookSummary;
+            this.BookPageRead = dbModel.BookPageRead;
+            this.BookPageTotal = dbModel.BookPageTotal;
+            this.Progress = dbModel.Progress;
+            this.PageReadPercent = dbModel.PageReadPercent;
+            this.BookStartDate = dbModel.BookStartDate;
+            this.BookEndDate = dbModel.BookEndDate;
+            this.BookComments = dbModel.BookComments;
+            this.BookCoverUrl = dbModel.BookCoverUrl;
+            this.HasBookCover = dbModel.HasBookCover;
+            this.HasNoBookCover = dbModel.HasNoBookCover;
+            this.HasSeries = dbModel.HasSeries;
+            this.HasCollection = dbModel.HasCollection;
+            this.BookURL = dbModel.BookURL;
+            this.BookWhereToBuy = dbModel.BookWhereToBuy;
+            this.LoanedTo = dbModel.LoanedTo;
+            this.BookLoanedOutOn = dbModel.BookLoanedOutOn;
+            this.UpNext = dbModel.UpNext;
+            this.HideBook = dbModel.HideBook;
+            this.Half = dbModel.Half;
+            this.Fourth = dbModel.Fourth;
+            this.ThreeFourth = dbModel.ThreeFourth;
+            this.PartOfSeries = dbModel.PartOfSeries;
+            this.PartOfCollection = dbModel.PartOfCollection;
+            this.BookCoverFileLocation = dbModel.BookCoverFileLocation;
+            this.BookSeriesGuid = dbModel.BookSeriesGuid;
+            this.BookCollectionGuid = dbModel.BookCollectionGuid;
+            this.BookGenreGuid = dbModel.BookGenreGuid;
+            this.BookLocationGuid = dbModel.BookLocationGuid;
+            this.AuthorListString = dbModel.AuthorListString;
+            this.IsFavorite = dbModel.IsFavorite;
+            this.Rating = dbModel.Rating;
+            this.BookAuthors = dbModel.BookAuthors;
+            this.BookSeries = dbModel.BookSeries;
+            this.BookIdentifier = dbModel.BookIdentifier;
+        }
+
+        public AuthorModel? SelectedAuthor { get; set; }
 
         public string PublisherPublishDatestring
         {
@@ -119,24 +108,6 @@ namespace BookCollector.Data.Models
         {
             get => !string.IsNullOrEmpty(this.BookLoanedOutOn) ? DateTime.Parse(this.BookLoanedOutOn) : null;
         }
-
-        public Guid? BookSeriesGuid { get; set; }
-
-        public Guid? BookCollectionGuid { get; set; }
-
-        public Guid? BookGenreGuid { get; set; }
-
-        public Guid? BookLocationGuid { get; set; }
-
-        public string? AuthorListstring { get; set; }
-
-        public bool IsFavorite { get; set; }
-
-        public int Rating { get; set; }
-
-        public string? BookAuthors { get; set; }
-
-        public string? BookSeries { get; set; }
 
         public static string? SetDate(string? input)
         {
@@ -175,7 +146,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookSeriesGuid != null)
             {
-                var series = await FilterLists.GetSeriesForBook(this.BookSeriesGuid);
+                var series = await GetItems.GetSeriesForBook(this.BookSeriesGuid);
 
                 if (series != null)
                 {
@@ -219,7 +190,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookCollectionGuid != null)
             {
-                var collection = await FilterLists.GetCollectionForBook(this.BookCollectionGuid);
+                var collection = await GetItems.GetCollectionForBook(this.BookCollectionGuid);
 
                 if (collection != null)
                 {
@@ -234,47 +205,67 @@ namespace BookCollector.Data.Models
         {
             this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
             this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
+
+            BaseViewModel.SetBookCover(this);
         }
 
-        public async Task SetAuthorListstring()
+        public async Task SetAuthorListString()
         {
-            ObservableCollection<AuthorModel>? authorList = null;
-            ObservableCollection<BookAuthorModel>? bookAuthorList = await FilterLists.GetAllBookAuthorsForBook(this.BookGuid);
+            Database = Database ?? new BookCollectorDatabase();
+
+            ObservableCollection<AuthorModel>? authorList = [];
+            ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
 
             if (TestData.UseTestData)
             {
-                authorList = TestData.AuthorList;
+                if (authorGuidList != null && authorGuidList.Count > 0)
+                {
+                    foreach (var authorGuid in authorGuidList)
+                    {
+                        var author = TestData.AuthorList.FirstOrDefault(x => x.AuthorGuid == authorGuid);
+
+                        if (author != null)
+                        {
+                            authorList.Add(author);
+                        }
+                    }
+                }
             }
             else
             {
+                if (authorGuidList != null && authorGuidList.Count > 0)
+                {
+                    var list = await Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
+                    authorList = list.ToObservableCollection();
+                }
             }
 
-            if (bookAuthorList != null && bookAuthorList.Any(x => x.BookGuid == this.BookGuid) && authorList != null)
+            if (authorList != null)
             {
-                this.AuthorListstring = string.Empty;
+                this.AuthorListString = string.Empty;
 
-                for (int i = 0; i < bookAuthorList.Count; i++)
+                for (int i = 0; i < authorList.Count; i++)
                 {
-                    var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
+                    var author = authorList[i];
 
                     if (author != null)
                     {
-                        this.AuthorListstring += author.ReverseFullName;
+                        this.AuthorListString += author.ReverseFullName;
 
-                        if (i != bookAuthorList.Count - 1)
+                        if (i != authorList.Count - 1)
                         {
-                            this.AuthorListstring += "; ";
+                            this.AuthorListString += "; ";
                         }
                     }
                 }
             }
         }
 
-        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListstring(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
+        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
         {
             var bookAuthorList = new ObservableCollection<BookAuthorModel>();
 
-            this.AuthorListstring = string.Empty;
+            this.AuthorListString = string.Empty;
 
             if (authorList != null)
             {
@@ -292,16 +283,16 @@ namespace BookCollector.Data.Models
                             });
                         }
 
-                        this.AuthorListstring += authorList[i].ReverseFullName;
+                        this.AuthorListString += authorList[i].ReverseFullName;
 
                         if (i != authorList.Count - 1)
                         {
-                            this.AuthorListstring += "; ";
+                            this.AuthorListString += "; ";
                         }
                     }
                     else
                     {
-                        this.AuthorListstring = this.AuthorListstring[.. (this.AuthorListstring.LastIndexOf("; ") - 1)];
+                        this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
                     }
                 }
             }
@@ -311,6 +302,8 @@ namespace BookCollector.Data.Models
 
         public async Task SetBookChapters(ObservableCollection<ChapterModel>? chaptersList)
         {
+            Database = Database ?? new BookCollectorDatabase();
+
             if (chaptersList != null)
             {
                 foreach (var chapter in chaptersList)
@@ -325,6 +318,7 @@ namespace BookCollector.Data.Models
                         }
                         else
                         {
+                            await Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                         }
                     }
                 }
@@ -333,6 +327,8 @@ namespace BookCollector.Data.Models
 
         public async Task RemoveBookChapters(List<ChapterModel>? chaptersList)
         {
+            Database = Database ?? new BookCollectorDatabase();
+
             if (chaptersList != null)
             {
                 foreach (var chapter in chaptersList)
@@ -345,6 +341,7 @@ namespace BookCollector.Data.Models
                         }
                         else
                         {
+                            await Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                         }
                     }
                 }

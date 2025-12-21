@@ -1,5 +1,9 @@
-﻿using BarcodeScanner.Mobile;
-using BookCollector.Views.Controls;
+﻿// <copyright file="MauiProgram.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BarcodeScanner.Mobile;
+using BookCollector.Data.Database;
 using CommunityToolkit.Maui;
 using Maui.NullableDateTimePicker;
 using Microcharts.Maui;
@@ -30,7 +34,9 @@ namespace BookCollector
 
             #if DEBUG
             builder.Logging.AddDebug();
-            #endif
+#endif
+
+            builder.Services.AddSingleton<BookCollectorDatabase>();
 
             return builder.Build();
         }

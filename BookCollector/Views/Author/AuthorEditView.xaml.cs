@@ -1,3 +1,7 @@
+// <copyright file="AuthorEditView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Author;
 
@@ -5,11 +9,12 @@ namespace BookCollector.Views.Author;
 
 public partial class AuthorEditView : ContentPage
 {
-    public AuthorEditView(AuthorModel author, string viewTitle)
+    public AuthorEditView(AuthorModel author, string viewTitle, bool insertMainViewBefore = false)
     {
         this.ViewModel = new AuthorEditViewModel(author, this)
         {
             ViewTitle = viewTitle,
+            InsertMainViewBefore = insertMainViewBefore,
         };
         this.BindingContext = this.ViewModel;
 

@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="AuthorEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -26,20 +31,20 @@ namespace BookCollector.ViewModels.Author
             this.EditedAuthor = (AuthorModel)author.Clone();
         }
 
+        public bool InsertMainViewBefore { get; set; }
+
         public void SetViewModelData()
         {
             try
             {
                 this.SetIsBusyTrue();
 
-                //this.AuthorFirstNameValid = !string.IsNullOrEmpty(this.EditedAuthor.FirstName);
-                //this.AuthorLastNameValid = !string.IsNullOrEmpty(this.EditedAuthor.LastName);
                 this.ValidateFirstName();
                 this.ValidateLastName();
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -64,29 +69,21 @@ namespace BookCollector.ViewModels.Author
                 }
 #endif
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewAuthor}"))
+                if (TestData.UseTestData)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertAuthor(this.EditedAuthor);
-                    }
-                    else
-                    {
-                    }
+                    TestData.UpdateAuthor(this.EditedAuthor);
                 }
                 else
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateAuthor(this.EditedAuthor);
-                    }
-                    else
-                    {
-                    }
+                    this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
                 }
 
-                var view = new AuthorMainView(this.EditedAuthor, $"{this.EditedAuthor.FullName}");
-                Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                if (this.InsertMainViewBefore)
+                {
+                    var view = new AuthorMainView(this.EditedAuthor, $"{this.EditedAuthor.FullName}");
+                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                }
+
                 await Shell.Current.Navigation.PopAsync();
             }
         }
@@ -111,9 +108,11 @@ namespace BookCollector.ViewModels.Author
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var firstNameEditor = this.View.FindByName<Editor>("FirstNameEditor");
-                firstNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                firstNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                firstNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                firstNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.AuthorFirstNameValid = true;
             }
         }
@@ -130,9 +129,11 @@ namespace BookCollector.ViewModels.Author
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var lastNameEditor = this.View.FindByName<Editor>("LastNameEditor");
-                lastNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                lastNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                lastNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                lastNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.AuthorLastNameValid = true;
             }
         }

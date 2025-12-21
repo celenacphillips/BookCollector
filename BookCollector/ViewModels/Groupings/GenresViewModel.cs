@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="GenresViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -43,7 +48,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 Task.WaitAll(
                 [
-                    Task.Run(async () => this.FullGenreList = await FilterLists.GetAllGenresList(this.ShowHiddenGenres)),
+                    Task.Run(async () => this.FullGenreList = await FillLists.GetAllGenresList(this.ShowHiddenGenres)),
                 ]);
 
                 if (this.FullGenreList != null)
@@ -52,15 +57,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredGenreList = this.FullGenreList;
 
-                    foreach (var genre in this.FullGenreList)
-                    {
-                        genre.SetTotalBooks(this.ShowHiddenBook);
-                        genre.SetTotalCostOfBooks(this.ShowHiddenBook);
-                    }
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredGenreList = await FilterLists.SortGenresList(
+                        Task.Run(async () => this.FilteredGenreList = await SortLists.SortGenresList(
                             this.FilteredGenreList,
                             this.GenreNameChecked,
                             this.TotalBooksChecked,
@@ -78,7 +77,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -185,6 +184,7 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
+                            await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
                         }
 
                         await ConfirmDelete(selected.GenreName);
@@ -193,7 +193,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }

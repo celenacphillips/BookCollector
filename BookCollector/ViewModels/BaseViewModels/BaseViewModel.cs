@@ -1,4 +1,10 @@
-﻿using BookCollector.Resources.Localization;
+﻿// <copyright file="BaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.Database;
+using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Extensions;
@@ -9,9 +15,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
-        [ObservableProperty]
-        public static bool showCollectionViewFooter;
-
         [ObservableProperty]
         public bool isRefreshing;
 
@@ -29,6 +32,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         [ObservableProperty]
         public string? searchstring;
+
+        internal static BookCollectorDatabase Database;
+
+        [ObservableProperty]
+        internal static bool showCollectionViewFooter;
 
         public BaseViewModel()
         {
@@ -136,6 +144,53 @@ namespace BookCollector.ViewModels.BaseViewModels
             return new HttpClient().GetByteArrayAsync(imageURL).Result;
         }
 
+        public static T ConvertTo<T>(object source)
+            where T : new()
+        {
+            var destination = new T();
+            if (source != null)
+            {
+                var sourceProps = source.GetType().GetProperties();
+                var destProps = typeof(T).GetProperties();
+
+                foreach (var sourceProp in sourceProps)
+                {
+                    var destProp = destProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.PropertyType == sourceProp.PropertyType);
+                    if (destProp != null && destProp.SetMethod != null)
+                    {
+                        destProp.SetValue(destination, sourceProp.GetValue(source));
+                    }
+                }
+            }
+
+            return destination;
+        }
+
+        public static List<AuthorModel> SplitStringIntoAuthorList(string input)
+        {
+            var list = new List<AuthorModel>();
+
+            string[] authorNames = input.Split(";");
+
+            foreach (var authorName in authorNames)
+            {
+                if (!string.IsNullOrEmpty(authorName.Trim()))
+                {
+                    string[] name = authorName.Split(",");
+
+                    AuthorModel author1 = new ()
+                    {
+                        FirstName = name[1].Trim(),
+                        LastName = name[0].Trim(),
+                    };
+
+                    list.Add(author1);
+                }
+            }
+
+            return list;
+        }
+
         [RelayCommand]
         public void InfoPopup()
         {
@@ -163,6 +218,54 @@ namespace BookCollector.ViewModels.BaseViewModels
         public void SetRefreshFalse()
         {
             this.IsRefreshing = false;
+        }
+
+        public static void SetBookCover(BookModel book)
+        {
+            if (!string.IsNullOrEmpty(book.BookCoverFileLocation) && book.BookCover == null)
+            {
+                var imageBytes = File.ReadAllBytes(book.BookCoverFileLocation);
+                var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                book.BookCover = imageSource;
+            }
+
+            if (!string.IsNullOrEmpty(book.BookCoverUrl) && book.BookCover == null)
+            {
+                if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    var byteArray = DownloadImage(book.BookCoverUrl);
+                    book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                }
+                else
+                {
+                    book.HasBookCover = false;
+                    book.HasNoBookCover = true;
+                }
+            }
+        }
+
+        public void SetBookCover(WishlistBookModel book)
+        {
+            if (!string.IsNullOrEmpty(book.BookCoverFileLocation) && book.BookCover == null)
+            {
+                var imageBytes = File.ReadAllBytes(book.BookCoverFileLocation);
+                var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                book.BookCover = imageSource;
+            }
+
+            if (!string.IsNullOrEmpty(book.BookCoverUrl) && book.BookCover == null)
+            {
+                if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    var byteArray = DownloadImage(book.BookCoverUrl);
+                    book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                }
+                else
+                {
+                    book.HasBookCover = false;
+                    book.HasNoBookCover = true;
+                }
+            }
         }
     }
 }

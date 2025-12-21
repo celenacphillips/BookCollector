@@ -1,4 +1,7 @@
-﻿using ObjCRuntime;
+﻿// <copyright file="Program.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using UIKit;
 
 namespace BookCollector

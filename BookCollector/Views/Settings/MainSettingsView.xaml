@@ -23,6 +23,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <!-- App Theme -->
@@ -118,6 +119,18 @@
                         Margin="0,10"
                         Grid.Row="4" Grid.Column="2"/>
                 <!-- Currency -->
+
+                <!-- Delete -->
+                <ImageButton Source="Icons/delete_icon_dark.svg"
+                             HeightRequest="50"
+                             WidthRequest="45"
+                             Padding="10"
+                             Clicked="OnDeleteButtonClicked"
+                             Grid.Row="5" Grid.Column="0"/>
+                <Label Text="{x:Static localization:AppStringResources.DeleteAllData_Question}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="5" Grid.Column="2"/>
+                <!-- Delete -->
 
             </Grid>
 

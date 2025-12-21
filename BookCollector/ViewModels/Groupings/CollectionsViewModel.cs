@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="CollectionsViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -44,7 +49,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 Task.WaitAll(
                 [
-                    Task.Run(async () => this.FullCollectionList = await FilterLists.GetAllCollectionsList(this.ShowHiddenCollections)),
+                    Task.Run(async () => this.FullCollectionList = await FillLists.GetAllCollectionsList(this.ShowHiddenCollections)),
                 ]);
 
                 if (this.FullCollectionList != null)
@@ -53,15 +58,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredCollectionList = this.FullCollectionList;
 
-                    foreach (var collection in this.FullCollectionList)
-                    {
-                        collection.SetTotalBooks(this.ShowHiddenBook);
-                        collection.SetTotalCostOfBooks(this.ShowHiddenBook);
-                    }
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredCollectionList = await FilterLists.SortCollectionsList(
+                        Task.Run(async () => this.FilteredCollectionList = await SortLists.SortCollectionsList(
                             this.FilteredCollectionList,
                             this.CollectionNameChecked,
                             this.TotalBooksChecked,
@@ -79,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -186,6 +185,7 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
+                            await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
                         }
 
                         await ConfirmDelete(selected.CollectionName);
@@ -194,7 +194,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }

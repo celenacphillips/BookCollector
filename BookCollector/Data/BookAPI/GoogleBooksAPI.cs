@@ -1,10 +1,16 @@
-﻿using System.Collections.ObjectModel;
-using System.Net;
+﻿// <copyright file="GoogleBooksAPI.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.ViewModels.BaseViewModels;
 using Newtonsoft.Json;
 
 namespace BookCollector.Data.BookAPI
 {
+    /// <summary>
+    /// Google Books API class.
+    /// </summary>
     public class GoogleBooksAPI : BaseViewModel
     {
         public static (ObservableCollection<Item>?, int) Search(string input)

@@ -1,28 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="SeriesModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
 
 namespace BookCollector.Data.Models
 {
-    public partial class SeriesModel : ObservableObject, ICloneable
+    public partial class SeriesModel : SeriesDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? seriesName;
-        [ObservableProperty]
-        public string? totalBooksstring;
-        [ObservableProperty]
-        public string? totalBooksInSeries;
-        [ObservableProperty]
-        public bool hideSeries;
-
         public SeriesModel()
         {
-            this.SeriesGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? SeriesGuid { get; set; }
-
-        public int? ID { get; set; }
+        public SeriesModel(SeriesDatabaseModel dbModel)
+        {
+            this.SeriesGuid = dbModel.SeriesGuid;
+            this.SeriesName = dbModel.SeriesName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideSeries = dbModel.HideSeries;
+            this.SeriesTotalBooks = dbModel.SeriesTotalBooks;
+            this.TotalBooksInSeries = dbModel.TotalBooksInSeries;
+        }
 
         public string? ParsedSeriesName
         {
@@ -34,10 +33,6 @@ namespace BookCollector.Data.Models
                         : this.SeriesName;
         }
 
-        public int SeriesTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
@@ -45,7 +40,7 @@ namespace BookCollector.Data.Models
 
         public async void SetTotalBooks(bool showHiddenBooks)
         {
-            var list = await FilterLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
             var count = 0;
 
             if (list != null)
@@ -53,7 +48,7 @@ namespace BookCollector.Data.Models
                 count = list.Count;
             }
 
-            this.TotalBooksstring = !string.IsNullOrEmpty(this.TotalBooksInSeries) ?
+            this.TotalBooksString = !string.IsNullOrEmpty(this.TotalBooksInSeries) ?
                                     StringManipulation.SetTotalBooksString(count, int.Parse(this.TotalBooksInSeries)) :
                                     StringManipulation.SetTotalBooksString(count);
             this.SeriesTotalBooks = count;
@@ -61,7 +56,7 @@ namespace BookCollector.Data.Models
 
         public async void SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInSeriesList(this.SeriesGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInSeriesList(this.SeriesGuid, showHiddenBooks);
         }
     }
 }

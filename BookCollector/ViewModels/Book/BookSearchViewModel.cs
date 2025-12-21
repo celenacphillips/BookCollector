@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="BookSearchViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BarcodeScanner.Mobile;
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
@@ -87,7 +91,7 @@ namespace BookCollector.ViewModels.Book
                         this.TotalItems = totalItems;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
                     this.SetIsBusyFalse();
@@ -133,7 +137,7 @@ namespace BookCollector.ViewModels.Book
                 this.SetData();
                 await Shell.Current.Navigation.PopModalAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
             }
@@ -188,7 +192,7 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
-                if (string.IsNullOrEmpty(this.SelectedBook.AuthorListstring))
+                if (string.IsNullOrEmpty(this.SelectedBook.AuthorListString))
                 {
                     if (this.SelectedISBNItem.VolumeInfo?.Authors != null)
                     {
@@ -207,7 +211,7 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
-                        var variable = this.SelectedBook.SetAuthorListstring(authorList.ToObservableCollection(), false);
+                        var variable = this.SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
                     }
                 }
 

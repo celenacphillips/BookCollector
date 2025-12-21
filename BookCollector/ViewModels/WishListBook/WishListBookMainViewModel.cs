@@ -1,26 +1,39 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="WishListBookMainViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.WishListBook;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.WishListBook
 {
     public partial class WishListBookMainViewModel : BookBaseViewModel
     {
-        public WishListBookMainViewModel(BookModel book, ContentPage view)
+        [ObservableProperty]
+        public WishlistBookModel? selectedWishlistBook;
+
+        [ObservableProperty]
+        public ObservableCollection<AuthorModel>? authorList;
+
+        public WishListBookMainViewModel(WishlistBookModel book, ContentPage view)
         {
             this.View = view;
 
-            this.SelectedBook = book;
-            this.InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book", $"{this.SelectedBook.BookTitle}")}";
+            this.SelectedWishlistBook = book;
+            this.InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book", $"{this.SelectedWishlistBook.BookTitle}")}";
             this.AuthorList = [];
         }
 
         public async Task SetViewModelData()
         {
-            if (this.SelectedBook != null)
+            if (this.SelectedWishlistBook != null)
             {
                 try
                 {
@@ -31,19 +44,19 @@ namespace BookCollector.ViewModels.WishListBook
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation) && this.SelectedBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverFileLocation) && this.SelectedWishlistBook.BookCover == null)
                     {
-                        var imageBytes = File.ReadAllBytes(this.SelectedBook.BookCoverFileLocation);
+                        var imageBytes = File.ReadAllBytes(this.SelectedWishlistBook.BookCoverFileLocation);
                         var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                        this.SelectedBook.BookCover = imageSource;
+                        this.SelectedWishlistBook.BookCover = imageSource;
                     }
 
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl) && this.SelectedBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverUrl) && this.SelectedWishlistBook.BookCover == null)
                     {
                         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
-                            var byteArray = DownloadImage(this.SelectedBook.BookCoverUrl);
-                            this.SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            var byteArray = DownloadImage(this.SelectedWishlistBook.BookCoverUrl);
+                            this.SelectedWishlistBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
                         }
                         else
                         {
@@ -51,25 +64,23 @@ namespace BookCollector.ViewModels.WishListBook
                         }
                     }
 
-                    this.BookCover = this.SelectedBook.BookCover;
-
-                    this.AuthorList = !string.IsNullOrEmpty(this.SelectedBook.AuthorListstring) ? ParseOutAuthorsFromstring(this.SelectedBook.AuthorListstring) : null;
+                    this.BookCover = this.SelectedWishlistBook.BookCover;
 
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.SelectedBook.SetBookCheckpoints()),
-                        Task.Run(async () => this.SelectedBook.SetCoverDisplay()),
-                        Task.Run(async () => await this.SelectedBook.SetPartOfSeries()),
-                        Task.Run(async () => await this.SelectedBook.SetBookPrice()),
+                        Task.Run(async () => this.SelectedWishlistBook.SetCoverDisplay()),
+                        Task.Run(async () => await this.SelectedWishlistBook.SetPartOfSeries()),
+                        Task.Run(async () => await this.SelectedWishlistBook.SetBookPrice()),
                         Task.Run(() => this.AuthorListChanged()),
                         Task.Run(() => this.BookInfoChanged()),
                         Task.Run(() => this.SummaryChanged()),
                         Task.Run(() => this.CommentsChanged()),
+                        Task.Run(async () => this.AuthorList = !string.IsNullOrEmpty(this.SelectedWishlistBook.AuthorListString) ? await ParseOutAuthorsFromstring(this.SelectedWishlistBook.AuthorListString) : null),
                     ]);
 
                     this.SetIsBusyFalse();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     this.SetIsBusyFalse();
                 }
@@ -87,11 +98,11 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task EditBook()
         {
-            if (this.SelectedBook != null)
+            if (this.SelectedWishlistBook != null)
             {
                 this.SetIsBusyTrue();
 
-                var view = new WishListBookEditView(this.SelectedBook, $"{AppStringResources.EditBook}", true, (WishListBookMainView)this.View);
+                var view = new WishListBookEditView(this.SelectedWishlistBook, $"{AppStringResources.EditBook}", true, (WishListBookMainView)this.View);
 
                 await Shell.Current.Navigation.PushAsync(view);
 
@@ -102,9 +113,9 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task DeleteBook()
         {
-            if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
+            if (this.SelectedWishlistBook != null && !string.IsNullOrEmpty(this.SelectedWishlistBook.BookTitle))
             {
-                var answer = await DeleteCheck(this.SelectedBook.BookTitle);
+                var answer = await DeleteCheck(this.SelectedWishlistBook.BookTitle);
 
                 if (answer)
                 {
@@ -114,19 +125,20 @@ namespace BookCollector.ViewModels.WishListBook
 
                         if (TestData.UseTestData)
                         {
-                            TestData.DeleteWishListBook(this.SelectedBook);
+                            TestData.DeleteWishListBook(this.SelectedWishlistBook);
                         }
                         else
                         {
+                            await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
                         }
 
-                        await ConfirmDelete(this.SelectedBook.BookTitle);
+                        await ConfirmDelete(this.SelectedWishlistBook.BookTitle);
 
                         await Shell.Current.Navigation.PopAsync();
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         await CanceledAction();
                     }
@@ -141,9 +153,9 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task AddToLibrary()
         {
-            if (this.SelectedBook != null)
+            if (this.SelectedWishlistBook != null)
             {
-                var answer = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureYouWantToMoveBookToYourLibrary_Question.Replace("book", this.SelectedBook.BookTitle), null, null);
+                var answer = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureYouWantToMoveBookToYourLibrary_Question.Replace("book", this.SelectedWishlistBook.BookTitle), null, null);
 
                 if (answer)
                 {
@@ -151,73 +163,77 @@ namespace BookCollector.ViewModels.WishListBook
                     {
                         this.SetIsBusyTrue();
 
-                        SeriesModel? series = null;
-
-                        if (TestData.UseTestData)
+                        if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookSeries))
                         {
-                            series = TestData.SeriesList.SingleOrDefault(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(this.SelectedBook.BookSeries));
-                        }
-                        else
-                        {
-                        }
-
-                        if (series == null)
-                        {
-                            series = new SeriesModel()
-                            {
-                                SeriesName = this.SelectedBook.BookSeries,
-                            };
+                            SeriesModel? series = null;
 
                             if (TestData.UseTestData)
                             {
-                                TestData.InsertSeries(series);
+                                series = TestData.SeriesList.SingleOrDefault(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(this.SelectedWishlistBook.BookSeries));
                             }
                             else
                             {
+                                series = await Database.GetSeriesByNameAsync(this.SelectedWishlistBook.BookSeries);
                             }
-                        }
 
-                        this.SelectedBook.BookSeriesGuid = series.SeriesGuid;
-
-                        if (!string.IsNullOrEmpty(this.SelectedBook.AuthorListstring))
-                        {
-                            string[] authorNames = this.SelectedBook.AuthorListstring.Split(";");
-
-                            foreach (var authorName in authorNames)
+                            if (series == null || series.SeriesGuid == null)
                             {
-                                if (!string.IsNullOrEmpty(authorName.Trim()))
+                                series = new SeriesModel()
                                 {
-                                    string[] name = authorName.Split(",");
+                                    SeriesName = this.SelectedWishlistBook.BookSeries,
+                                };
 
-                                    AuthorModel author = new ()
-                                    {
-                                        FirstName = name[1].Trim(),
-                                        LastName = name[0].Trim(),
-                                    };
-
-                                    if (TestData.UseTestData)
-                                    {
-                                        TestData.InsertAuthor(author, this.SelectedBook.BookGuid);
-                                    }
-                                    else
-                                    {
-                                    }
+                                if (TestData.UseTestData)
+                                {
+                                    TestData.InsertSeries(series);
+                                }
+                                else
+                                {
+                                    series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
                                 }
                             }
-                        }
 
-                        Task.WaitAll(
-                        [
-                            Task.Run(async () => this.SelectedBook.SetReadingProgress()),
-                        ]);
+                            this.SelectedWishlistBook.BookSeriesGuid = series.SeriesGuid;
+                        }
 
                         if (TestData.UseTestData)
                         {
-                            TestData.InsertBook(this.SelectedBook);
-                            TestData.DeleteWishListBook(this.SelectedBook);
+                            TestData.InsertBook(ConvertTo<BookModel>(this.SelectedWishlistBook));
+                            TestData.DeleteWishListBook(this.SelectedWishlistBook);
                         }
                         else
                         {
+                            this.SelectedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedWishlistBook)));
+                            await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
+                        }
+
+                        if (!string.IsNullOrEmpty(this.SelectedWishlistBook.AuthorListString))
+                        {
+                            var authorList = SplitStringIntoAuthorList(this.SelectedWishlistBook.AuthorListString);
+
+                            foreach (var author in authorList)
+                            {
+                                var addAuthor = author;
+
+                                if (TestData.UseTestData)
+                                {
+                                    TestData.AddAuthorToBook(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
+                                }
+                                else
+                                {
+                                    var existingAuthor = await Database.GetAuthorByNameAsync(addAuthor.FirstName, addAuthor.LastName);
+
+                                    if (existingAuthor != null && existingAuthor.AuthorGuid != null)
+                                    {
+                                        addAuthor = existingAuthor;
+                                    }
+                                    else
+                                    {
+                                        addAuthor.AuthorGuid = Guid.NewGuid();
+                                        await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedBook.BookGuid);
+                                    }
+                                }
+                            }
                         }
 
                         await DisplayMessage(AppStringResources.AddToLibrary, AppStringResources.BookWasAddedToLibrary);
@@ -226,7 +242,7 @@ namespace BookCollector.ViewModels.WishListBook
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         this.SetIsBusyFalse();
                     }
@@ -241,14 +257,14 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task ShareList()
         {
-            if (this.SelectedBook != null)
+            if (this.SelectedWishlistBook != null)
             {
-                var title = this.SelectedBook.BookTitle;
+                var title = this.SelectedWishlistBook.BookTitle;
 
                 string? text;
                 if (this.AuthorList != null)
                 {
-                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
+                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedWishlistBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
 
                     if (this.AuthorList.Count > 1)
                     {
@@ -257,12 +273,12 @@ namespace BookCollector.ViewModels.WishListBook
                 }
                 else
                 {
-                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedBook.BookTitle)}";
+                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedWishlistBook.BookTitle)}";
                 }
 
-                if (!string.IsNullOrEmpty(this.SelectedBook.BookURL))
+                if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookURL))
                 {
-                    text += $" ({this.SelectedBook.BookURL})";
+                    text += $" ({this.SelectedWishlistBook.BookURL})";
                 }
 
                 await Share.Default.RequestAsync(new ShareTextRequest

@@ -4,6 +4,9 @@
 # SA1307: Accessible fields must begin with upper-case letter
 dotnet_diagnostic.SA1307.severity = none
 
+# SA1300: Element must begin with upper-case letter
+dotnet_diagnostic.SA1300.severity = none
+
 # removed because .NET MAUI ObservableProperty objects must be public
 # SA1401: Fields must be private
 dotnet_diagnostic.SA1401.severity = none
@@ -28,3 +31,6 @@ dotnet_diagnostic.CS8629.severity = none
 # removed because this is being flagged on parsed API data, and changing the casing breaks the retrieval of data
 # IDE1006: Naming rule violation: These words must begin with upper-case letters
 dotnet_diagnostic.IDE1006.severity = none
+
+dotnet_diagnostic.CA2200.severity = none
+dotnet_diagnostic.CS0168.severity = none

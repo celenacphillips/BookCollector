@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="ExistingBooksViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -43,21 +48,21 @@ namespace BookCollector.ViewModels.Groupings
                     case "Collection":
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksWithoutACollectionList(this.ShowHiddenBook)),
+                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutACollectionList(this.ShowHiddenBook)),
                         ]);
                         break;
 
                     case "Genre":
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksWithoutAGenreList(this.ShowHiddenBook)),
+                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutAGenreList(this.ShowHiddenBook)),
                         ]);
                         break;
 
                     case "Series":
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksWithoutASeriesList(this.ShowHiddenBook)),
+                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutASeriesList(this.ShowHiddenBook)),
                         ]);
                         break;
 
@@ -68,7 +73,7 @@ namespace BookCollector.ViewModels.Groupings
                         {
                             Task.WaitAll(
                             [
-                                Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, this.ShowHiddenBook)),
+                                Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, this.ShowHiddenBook)),
                             ]);
                         }
 
@@ -77,7 +82,7 @@ namespace BookCollector.ViewModels.Groupings
                     case "Location":
                         Task.WaitAll(
                         [
-                            Task.Run(async () => this.FullBookList = await FilterLists.GetAllBooksWithoutALocationList(this.ShowHiddenBook)),
+                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutALocationList(this.ShowHiddenBook)),
                         ]);
                         break;
 
@@ -92,9 +97,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.BookPublisherList = await FilterLists.GetAllPublishersInBookList(this.FullBookList)),
-                        Task.Run(async () => this.BookLanguageList = await FilterLists.GetAllLanguagesInBookList(this.FullBookList)),
-                        Task.Run(async () => this.BookPublishYearList = await FilterLists.GetAllPublisherYearsInBookList(this.FullBookList)),
+                        Task.Run(async () => this.BookPublisherList = await FillLists.GetAllPublishersInBookList(this.FullBookList)),
+                        Task.Run(async () => this.BookLanguageList = await FillLists.GetAllLanguagesInBookList(this.FullBookList)),
+                        Task.Run(async () => this.BookPublishYearList = await FillLists.GetAllPublisherYearsInBookList(this.FullBookList)),
                         Task.Run(async () => this.FilteredBookList = await FilterLists.FilterBookList(
                             this.FullBookList,
                             this.FavoriteBooksOption,
@@ -105,9 +110,11 @@ namespace BookCollector.ViewModels.Groupings
                             this.BookPublishYearOption)),
                     ]);
 
+                    this.BookSearchOnTitle(this.Searchstring);
+
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredBookList = await FilterLists.SortBookList(
+                        Task.Run(async () => this.FilteredBookList = await SortLists.SortBookList(
                             this.FilteredBookList,
                             this.BookTitleChecked,
                             this.BookReadingDateChecked,
@@ -117,20 +124,24 @@ namespace BookCollector.ViewModels.Groupings
                             this.AuthorLastNameChecked,
                             this.BookFormatChecked,
                             this.BookPriceChecked,
+                            this.PageCountChecked,
                             this.AscendingChecked,
                             this.DescendingChecked)),
                     ]);
 
+                    this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
+                    this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+
                     this.FilteredBooksCount = this.FilteredBookList.Count;
 
-                    this.TotalBooksstring = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+                    this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                     this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
                 }
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -286,14 +297,7 @@ namespace BookCollector.ViewModels.Groupings
                     case "Author":
                         var author = (AuthorModel?)this.SelectedObject;
 
-                        if (!string.IsNullOrEmpty(this.SelectedBook.AuthorListstring))
-                        {
-                            this.SelectedBook.AuthorListstring += $"; {author?.ReverseFullName}";
-                        }
-                        else
-                        {
-                            this.SelectedBook.AuthorListstring = $"{author?.ReverseFullName}";
-                        }
+                        this.SelectedBook.SelectedAuthor = author;
 
                         if (TestData.UseTestData)
                         {
@@ -301,7 +305,10 @@ namespace BookCollector.ViewModels.Groupings
                         }
                         else
                         {
+                            await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
                         }
+
+                        await this.SelectedBook.SetAuthorListString();
 
                         break;
 
@@ -312,6 +319,14 @@ namespace BookCollector.ViewModels.Groupings
 
                     default:
                         break;
+                }
+
+                if (TestData.UseTestData)
+                {
+                }
+                else
+                {
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
                 }
 
                 var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}");

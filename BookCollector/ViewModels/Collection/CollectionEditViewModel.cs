@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="CollectionEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -35,7 +40,7 @@ namespace BookCollector.ViewModels.Collection
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -57,25 +62,13 @@ namespace BookCollector.ViewModels.Collection
                 }
 #endif
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewCollection}"))
+                if (TestData.UseTestData)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertCollection(this.EditedCollection);
-                    }
-                    else
-                    {
-                    }
+                    TestData.UpdateCollection(this.EditedCollection);
                 }
                 else
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateCollection(this.EditedCollection);
-                    }
-                    else
-                    {
-                    }
+                    this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
                 }
 
                 if (this.InsertMainViewBefore)
@@ -113,9 +106,11 @@ namespace BookCollector.ViewModels.Collection
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var collectionNameEditor = this.View.FindByName<Editor>("CollectionNameEditor");
-                collectionNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                collectionNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                collectionNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                collectionNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.CollectionNameValid = true;
             }
         }

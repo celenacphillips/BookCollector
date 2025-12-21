@@ -1,3 +1,7 @@
+// <copyright file="LibraryStatisticsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Statistics;
 
 namespace BookCollector.Views.Statistics;

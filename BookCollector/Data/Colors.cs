@@ -1,5 +1,12 @@
-﻿namespace BookCollector.Data
+﻿// <copyright file="Colors.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+namespace BookCollector.Data
 {
+    /// <summary>
+    /// Colors class.
+    /// </summary>
     public class Colors
     {
         public static void SetColors(string hexcode)

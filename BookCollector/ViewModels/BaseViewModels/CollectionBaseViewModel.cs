@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="CollectionBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;

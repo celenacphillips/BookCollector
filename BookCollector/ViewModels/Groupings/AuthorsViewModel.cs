@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="AuthorsViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
@@ -42,7 +47,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 Task.WaitAll(
                 [
-                    Task.Run(async () => this.FullAuthorList = await FilterLists.GetAllAuthorsList(this.ShowHiddenAuthors)),
+                    Task.Run(async () => this.FullAuthorList = await FillLists.GetAllAuthorsList(this.ShowHiddenAuthors)),
                 ]);
 
                 if (this.FullAuthorList != null)
@@ -51,15 +56,9 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredAuthorList = this.FullAuthorList;
 
-                    foreach (var author in this.FullAuthorList)
-                    {
-                        author.SetTotalBooks(this.ShowHiddenBook);
-                        author.SetTotalCostOfBooks(this.ShowHiddenBook);
-                    }
-
                     Task.WaitAll(
                     [
-                        Task.Run(async () => this.FilteredAuthorList = await FilterLists.SortAuthorList(
+                        Task.Run(async () => this.FilteredAuthorList = await SortLists.SortAuthorList(
                             this.FilteredAuthorList,
                             this.AuthorLastNameChecked,
                             this.TotalBooksChecked,
@@ -77,7 +76,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -146,7 +145,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SetIsBusyTrue();
 
-            var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
+            var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}", true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -158,12 +157,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SetIsBusyTrue();
 
-            var view = new AuthorEditView(selected, selected.FullName);
-            var bindingContext = new AuthorEditViewModel(selected, view)
-            {
-                ViewTitle = $"{AppStringResources.EditAuthor}",
-            };
-            view.BindingContext = bindingContext;
+            var view = new AuthorEditView(selected, selected.FullName, true);
 
             await Shell.Current.Navigation.PushAsync(view);
 
@@ -187,6 +181,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
                     else
                     {
+                        await Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
                     }
 
                     await ConfirmDelete(selected.FullName);
@@ -195,7 +190,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.SetIsBusyFalse();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await CanceledAction();
                 }

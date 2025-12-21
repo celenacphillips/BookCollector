@@ -15,7 +15,7 @@
     <VerticalStackLayout>
         <Grid HeightRequest="100"
               Margin="10"
-              x:DataType="dataModels:BookModel">
+              x:DataType="dataModels:WishlistBookModel">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="85" />
@@ -52,7 +52,7 @@
                    VerticalTextAlignment="Center"
                    Grid.Row="0" Grid.Column="1"/>
 
-            <Label Text="{Binding AuthorListstring}" 
+            <Label Text="{Binding AuthorListString}" 
                    FontSize="10"
                    MaxLines="1"
                    LineBreakMode="TailTruncation"

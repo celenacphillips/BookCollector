@@ -1,4 +1,8 @@
-﻿namespace BookCollector.Data.Enums
+﻿// <copyright file="HeartEnum.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+namespace BookCollector.Data.Enums
 {
     /// <summary>
     /// Types of Heart States.

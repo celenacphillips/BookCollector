@@ -9,6 +9,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:BookEditViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             xmlns:author="clr-namespace:BookCollector.ViewModels.Author"
              x:Name="BookEditPage"
              Title="{Binding ViewTitle}">
 
@@ -579,66 +580,48 @@
 
                             <VerticalStackLayout Margin="0,-10"
                                              BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
-                                
-                                <CollectionView ItemsSource="{Binding AuthorList}"
+
+                                <HorizontalStackLayout Margin="10">
+                                    <Label Text="{x:Static localization:AppStringResources.CreateNewAuthor}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Button Text="+"
+                                            Style="{DynamicResource AddButton}"
+                                            Margin="5,-20"
+                                            Command="{Binding AddNewAuthorCommand}"/>
+                                </HorizontalStackLayout>
+
+                                <CollectionView ItemsSource="{Binding AuthorPickers}"
                                                 Margin="10">
                                     <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="dataModels:AuthorModel">
-                                            
-                                            <Grid HorizontalOptions="Fill">
-                                                
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
+                                        <DataTemplate  x:DataType="author:AuthorPicker">
+ 
+                                            <Grid Margin="0,0,0,10">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="4*" />
-                                                    <ColumnDefinition Width="4*" />
+                                                    <ColumnDefinition Width="8*" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <Label Text="{x:Static localization:AppStringResources.FirstName}"
-                                                       Grid.Row="0" Grid.Column="0"
-                                                       Style="{DynamicResource SubTitle}"/>
+                                                <VerticalStackLayout Margin="10"
+                                                                     Grid.Row="0" Grid.Column="0">
+                                                    <HorizontalStackLayout>
+                                                        <Label Text="{x:Static localization:AppStringResources.AuthorFullName}"
+                                                               Style="{DynamicResource Header}"/>
+                                                    </HorizontalStackLayout>
 
-                                                <Label Text="{x:Static localization:AppStringResources.LastName}"
-                                                       Grid.Row="0" Grid.Column="1"
-                                                       Style="{DynamicResource SubTitle}"/>
-
-                                                <Editor Text="{Binding FirstName}"
-                                                        Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
-                                                        HorizontalTextAlignment="Center"
-                                                        AutoSize="TextChanges"
-                                                        Grid.Row="1" Grid.Column="0">
-                                                    <Editor.Keyboard>
-                                                        <Keyboard x:FactoryMethod="Create">
-                                                            <x:Arguments>
-                                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                            </x:Arguments>
-                                                        </Keyboard>
-                                                    </Editor.Keyboard>
-                                                </Editor>
-
-                                                <Editor Text="{Binding LastName}"
-                                                        Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
-                                                        HorizontalTextAlignment="Center"
-                                                        AutoSize="TextChanges"
-                                                        Grid.Row="1" Grid.Column="1">
-                                                    <Editor.Keyboard>
-                                                        <Keyboard x:FactoryMethod="Create">
-                                                            <x:Arguments>
-                                                                <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                            </x:Arguments>
-                                                        </Keyboard>
-                                                    </Editor.Keyboard>
-                                                </Editor>
+                                                    <Picker ItemsSource="{Binding AuthorList}"
+                                                            ItemDisplayBinding="{Binding FullName}"
+                                                            SelectedItem="{Binding SelectedAuthor}"
+                                                            Title="{x:Static localization:AppStringResources.SelectAnAuthor}"
+                                                            HorizontalTextAlignment="Center"/>
+                                                </VerticalStackLayout>
 
                                                 <Button Text="-"
-                                                        Style="{DynamicResource MinusButton}"
-                                                        Grid.Row="1" Grid.Column="2"
+                                                        Style="{DynamicResource MinusButton}" 
+                                                        Grid.Row="0" Grid.Column="1"
                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=RemoveAuthorCommand}"
                                                         CommandParameter="{Binding .}"/>
                                             </Grid>
+
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>

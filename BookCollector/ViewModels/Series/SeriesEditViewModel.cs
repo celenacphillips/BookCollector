@@ -1,4 +1,9 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="SeriesEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -35,7 +40,7 @@ namespace BookCollector.ViewModels.Series
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -57,25 +62,13 @@ namespace BookCollector.ViewModels.Series
                 }
 #endif
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewSeries}"))
+                if (TestData.UseTestData)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertSeries(this.EditedSeries);
-                    }
-                    else
-                    {
-                    }
+                    TestData.UpdateSeries(this.EditedSeries);
                 }
                 else
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateSeries(this.EditedSeries);
-                    }
-                    else
-                    {
-                    }
+                    this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
                 }
 
                 if (this.InsertMainViewBefore)
@@ -113,9 +106,11 @@ namespace BookCollector.ViewModels.Series
             }
             else
             {
+                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
+
                 var seriesNameEditor = this.View.FindByName<Editor>("SeriesNameEditor");
-                seriesNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                seriesNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                seriesNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
+                seriesNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.SeriesNameValid = true;
             }
         }

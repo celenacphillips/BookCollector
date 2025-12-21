@@ -1,4 +1,7 @@
-using BookCollector.Data.Models;
+// <copyright file="CollectionsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Groupings;
 
 namespace BookCollector.Views.Groupings;

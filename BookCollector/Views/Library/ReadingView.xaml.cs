@@ -1,3 +1,7 @@
+// <copyright file="ReadingView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Library;
 
 namespace BookCollector.Views.Library;
@@ -8,9 +12,17 @@ public partial class ReadingView : ContentPage
     {
         // Put on first view to set the status bar to whatever color the user wants the app to be.
         var savedColor = Preferences.Get("AppColor", "#336699" /* Default */);
-#if ANDROID
-        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(savedColor));
-#endif
+
+        if (DeviceInfo.Platform == DevicePlatform.Android)
+        {
+            try
+            {
+                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(savedColor));
+            }
+            catch
+            {
+            }
+        }
 
         this.ViewModel = new ReadingViewModel(this);
         this.BindingContext = this.ViewModel;

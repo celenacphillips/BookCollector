@@ -1,12 +1,15 @@
+// <copyright file="WishListBookEditView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
-using BookCollector.ViewModels.Book;
 using BookCollector.ViewModels.WishListBook;
 
 namespace BookCollector.Views.WishListBook;
 
 public partial class WishListBookEditView : ContentPage
 {
-    public WishListBookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, WishListBookMainView? mainViewBefore = null)
+    public WishListBookEditView(WishlistBookModel book, string viewTitle, bool removeMainViewBefore = false, WishListBookMainView? mainViewBefore = null)
     {
         this.ViewModel = new WishListBookEditViewModel(book, this)
         {

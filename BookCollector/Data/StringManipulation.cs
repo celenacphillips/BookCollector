@@ -1,4 +1,8 @@
-﻿using BookCollector.Resources.Localization;
+﻿// <copyright file="StringManipulation.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Resources.Localization;
 
 namespace BookCollector.Data
 {

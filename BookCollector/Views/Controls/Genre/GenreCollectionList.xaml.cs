@@ -1,3 +1,7 @@
+// <copyright file="GenreCollectionList.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 namespace BookCollector.Views.Controls.Genre;
 
 public partial class GenreCollectionList : ContentView

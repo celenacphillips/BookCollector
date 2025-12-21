@@ -1,3 +1,7 @@
+// <copyright file="WishListView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Main;
 
 namespace BookCollector.Views.Main;

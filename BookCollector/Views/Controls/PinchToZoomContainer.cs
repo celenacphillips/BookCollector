@@ -1,4 +1,8 @@
-﻿namespace BookCollector.Views.Controls;
+﻿// <copyright file="PinchToZoomContainer.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+namespace BookCollector.Views.Controls;
 
 public class PinchandPanContainer : ContentView
 {
