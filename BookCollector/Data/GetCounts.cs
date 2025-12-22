@@ -532,6 +532,8 @@ namespace BookCollector.Data
 
             if (filteredList != null && filteredBookList != null)
             {
+                filteredList = [.. filteredList.OrderByDescending(x => x.AuthorTotalBooks)];
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
@@ -581,6 +583,8 @@ namespace BookCollector.Data
 
             if (filteredList != null && filteredBookList != null)
             {
+                filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
@@ -630,6 +634,8 @@ namespace BookCollector.Data
 
             if (filteredList != null && filteredBookList != null)
             {
+                filteredList = [.. filteredList.OrderByDescending(x => x.GenreTotalBooks)];
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
@@ -679,6 +685,8 @@ namespace BookCollector.Data
 
             if (filteredList != null && filteredBookList != null)
             {
+                filteredList = [.. filteredList.OrderByDescending(x => x.SeriesTotalBooks)];
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
@@ -728,6 +736,8 @@ namespace BookCollector.Data
 
             if (filteredList != null && filteredBookList != null)
             {
+                filteredList = [.. filteredList.OrderByDescending(x => x.LocationTotalBooks)];
+
                 var max = maxLimit;
 
                 if (filteredList.Count < max)
@@ -781,6 +791,8 @@ namespace BookCollector.Data
 
             if (filteredList1 != null && list != null && filteredList2 != null)
             {
+                // filteredList1 = [.. filteredList1.OrderByDescending(x => x.CollectionTotalBooks)];
+
                 var max = maxLimit;
 
                 if (list.Count < max)
@@ -836,6 +848,8 @@ namespace BookCollector.Data
 
             if (filteredList1 != null && list != null && filteredList2 != null)
             {
+                // filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
+
                 var max = maxLimit;
 
                 if (list.Count < max)
@@ -891,6 +905,8 @@ namespace BookCollector.Data
 
             if (filteredList1 != null && authorStringList != null && filteredList2 != null)
             {
+                // filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
+
                 var list = new List<AuthorModel>();
 
                 foreach (var authorString in authorStringList)

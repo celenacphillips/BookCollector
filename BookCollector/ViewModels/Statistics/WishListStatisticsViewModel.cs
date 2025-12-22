@@ -25,19 +25,22 @@ namespace BookCollector.ViewModels.Statistics
             {
                 this.SetIsBusyTrue();
 
-                var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
-                var cultureInfo = new CultureInfo(cultureCode);
-                this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                if (string.IsNullOrEmpty(this.CostBooks))
+                {
+                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureInfo = new CultureInfo(cultureCode);
+                    this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                }
 
                 this.GetPreferences();
 
                 var cost = GetCounts.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks);
                 var total = GetCounts.GetAllWishListBooksListCount(this.ShowHiddenWishlistBooks);
-                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
-                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
-                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
-                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.ShowHiddenBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.ShowHiddenBooks, this.MaxListNumber);
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenBooks);
 
                 this.GetColors();
 
@@ -58,16 +61,11 @@ namespace BookCollector.ViewModels.Statistics
                 var formatsCounts = formats.Result;
                 var formatPricesCounts = formatPrices.Result;
 
-                var loadDataTasks = new Task[]
-                {
-                    Task.Run(() => this.SetUpSeriesChart(seriesCounts)),
-                    Task.Run(() => this.SetUpAuthorsChart(authorsCounts)),
-                    Task.Run(() => this.SetUpLocationsChart(locationsCounts)),
-                    Task.Run(() => this.SetUpFormatsChart(formatsCounts)),
-                    Task.Run(() => this.SetUpFormatPricesChart(formatPricesCounts)),
-                };
-
-                await Task.WhenAll(loadDataTasks);
+                this.SetUpSeriesChart(seriesCounts);
+                this.SetUpAuthorsChart(authorsCounts);
+                this.SetUpLocationsChart(locationsCounts);
+                this.SetUpFormatsChart(formatsCounts);
+                this.SetUpFormatPricesChart(formatPricesCounts);
 
                 this.SetIsBusyFalse();
             }

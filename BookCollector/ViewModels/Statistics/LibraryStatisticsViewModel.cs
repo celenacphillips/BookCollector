@@ -62,9 +62,12 @@ namespace BookCollector.ViewModels.Statistics
             {
                 this.SetIsBusyTrue();
 
-                var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
-                var cultureInfo = new CultureInfo(cultureCode);
-                this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                if (string.IsNullOrEmpty(this.CostBooks))
+                {
+                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureInfo = new CultureInfo(cultureCode);
+                    this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                }
 
                 this.GetPreferences();
 
@@ -140,21 +143,16 @@ namespace BookCollector.ViewModels.Statistics
                 var formatsCounts = formats.Result;
                 var formatPricesCounts = formatPrices.Result;
 
-                var loadDataTasks = new Task[]
-                {
-                    Task.Run(() => this.SetUpReadingStatusChart(toBeRead, reading, read)),
-                    Task.Run(() => this.SetUpFavoritesChart(favorite, nonFavorite)),
-                    Task.Run(() => this.SetUpRatingsChart(zero, one, two, three, four, five)),
-                    Task.Run(() => this.SetUpCollectionsChart(collectionCounts)),
-                    Task.Run(() => this.SetUpGenresChart(genresCounts)),
-                    Task.Run(() => this.SetUpSeriesChart(seriesCounts)),
-                    Task.Run(() => this.SetUpAuthorsChart(authorsCounts)),
-                    Task.Run(() => this.SetUpLocationsChart(locationsCounts)),
-                    Task.Run(() => this.SetUpFormatsChart(formatsCounts)),
-                    Task.Run(() => this.SetUpFormatPricesChart(formatPricesCounts)),
-                };
-
-                await Task.WhenAll(loadDataTasks);
+                this.SetUpReadingStatusChart(toBeRead, reading, read);
+                this.SetUpFavoritesChart(favorite, nonFavorite);
+                this.SetUpRatingsChart(zero, one, two, three, four, five);
+                this.SetUpCollectionsChart(collectionCounts);
+                this.SetUpGenresChart(genresCounts);
+                this.SetUpSeriesChart(seriesCounts);
+                this.SetUpAuthorsChart(authorsCounts);
+                this.SetUpLocationsChart(locationsCounts);
+                this.SetUpFormatsChart(formatsCounts);
+                this.SetUpFormatPricesChart(formatPricesCounts);
 
                 this.SetIsBusyFalse();
             }

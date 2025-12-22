@@ -172,7 +172,8 @@ namespace BookCollector.ViewModels.Book
                     if (this.SelectedISBNItem.VolumeInfo?.ImageLinks != null)
                     {
                         this.SelectedBook.HasBookCover = true;
-                        this.SelectedBook.BookCoverUrl = this.SelectedISBNItem.VolumeInfo.ImageLinks.ImageURL;
+
+                        this.SelectedBook.BookCoverUrl = $"{this.SelectedISBNItem.VolumeInfo.ImageLinks.thumbnail}.jpg";
                     }
                     else
                     {

@@ -40,6 +40,15 @@ namespace BookCollector.Data.BookAPI
 
                         if (isbnResponse != null)
                         {
+                            foreach (var item in isbnResponse.items)
+                            {
+                                if (item.volumeInfo.imageLinks.thumbnail.StartsWith("http://"))
+                                {
+                                    item.volumeInfo.imageLinks.thumbnail = item.volumeInfo.imageLinks.thumbnail.Replace("http://", "https://");
+                                }
+                            }
+
+
                             isbnItems = [.. isbnResponse.items];
                             totalItems = isbnResponse.totalItems;
 
@@ -55,7 +64,6 @@ namespace BookCollector.Data.BookAPI
                                     if (item.VolumeInfo?.ImageLinks != null &&
                                         item.VolumeInfo.ImageLinks.thumbnail != null)
                                     {
-                                        item.VolumeInfo.ImageLinks.ImageURL = $"{item.VolumeInfo.ImageLinks.thumbnail}.jpg";
                                         var byteArray = DownloadImage($"{item.VolumeInfo.ImageLinks.thumbnail}.jpg");
                                         item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
                                         item.VolumeInfo.HasBookCover = true;
