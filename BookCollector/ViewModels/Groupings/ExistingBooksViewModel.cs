@@ -46,24 +46,21 @@ namespace BookCollector.ViewModels.Groupings
                 switch (this.SelectedObjectType)
                 {
                     case "Collection":
-                        Task.WaitAll(
-                        [
-                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutACollectionList(this.ShowHiddenBook)),
-                        ]);
+                        var fullList1 = FillLists.GetAllBooksWithoutACollectionList(this.ShowHiddenBook);
+                        await Task.WhenAll(fullList1);
+                        this.FullBookList = fullList1.Result;
                         break;
 
                     case "Genre":
-                        Task.WaitAll(
-                        [
-                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutAGenreList(this.ShowHiddenBook)),
-                        ]);
+                        var fullList2 = FillLists.GetAllBooksWithoutAGenreList(this.ShowHiddenBook);
+                        await Task.WhenAll(fullList2);
+                        this.FullBookList = fullList2.Result;
                         break;
 
                     case "Series":
-                        Task.WaitAll(
-                        [
-                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutASeriesList(this.ShowHiddenBook)),
-                        ]);
+                        var fullList3 = FillLists.GetAllBooksWithoutASeriesList(this.ShowHiddenBook);
+                        await Task.WhenAll(fullList3);
+                        this.FullBookList = fullList3.Result;
                         break;
 
                     case "Author":
@@ -71,19 +68,17 @@ namespace BookCollector.ViewModels.Groupings
 
                         if (author != null)
                         {
-                            Task.WaitAll(
-                            [
-                                Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, this.ShowHiddenBook)),
-                            ]);
+                            var fullList4 = FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, this.ShowHiddenBook);
+                            await Task.WhenAll(fullList4);
+                            this.FullBookList = fullList4.Result;
                         }
 
                         break;
 
                     case "Location":
-                        Task.WaitAll(
-                        [
-                            Task.Run(async () => this.FullBookList = await FillLists.GetAllBooksWithoutALocationList(this.ShowHiddenBook)),
-                        ]);
+                        var fullList5 = FillLists.GetAllBooksWithoutALocationList(this.ShowHiddenBook);
+                        await Task.WhenAll(fullList5);
+                        this.FullBookList = fullList5.Result;
                         break;
 
                     default:
@@ -95,48 +90,60 @@ namespace BookCollector.ViewModels.Groupings
                     this.TotalBooksCount = this.FullBookList.Count;
                     this.FilteredBookList = this.FullBookList;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.BookPublisherList = await FillLists.GetAllPublishersInBookList(this.FullBookList)),
-                        Task.Run(async () => this.BookLanguageList = await FillLists.GetAllLanguagesInBookList(this.FullBookList)),
-                        Task.Run(async () => this.BookPublishYearList = await FillLists.GetAllPublisherYearsInBookList(this.FullBookList)),
-                        Task.Run(async () => this.FilteredBookList = await FilterLists.FilterBookList(
+                    var bookPublishers = FillLists.GetAllPublishersInBookList(this.FullBookList);
+                    var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FullBookList);
+                    var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FullBookList);
+                    var filteredList = FilterLists.FilterBookList(
                             this.FullBookList,
                             this.FavoriteBooksOption,
                             this.BookFormatOption,
                             this.BookPublisherOption,
                             this.BookLanguageOption,
                             this.BookRatingOption,
-                            this.BookPublishYearOption)),
-                    ]);
+                            this.BookPublishYearOption,
+                            this.Searchstring);
 
-                    this.BookSearchOnTitle(this.Searchstring);
+                    await Task.WhenAll(filteredList);
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredBookList = await SortLists.SortBookList(
-                            this.FilteredBookList,
-                            this.BookTitleChecked,
-                            this.BookReadingDateChecked,
-                            this.BookReadPercentageChecked,
-                            this.BookPublisherChecked,
-                            this.BookPublishYearChecked,
-                            this.AuthorLastNameChecked,
-                            this.BookFormatChecked,
-                            this.BookPriceChecked,
-                            this.PageCountChecked,
-                            this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
+                    this.FilteredBookList = filteredList.Result;
 
-                    this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
-                    this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+                    var sortList = SortLists.SortBookList(
+                                this.FilteredBookList,
+                                this.BookTitleChecked,
+                                this.BookReadingDateChecked,
+                                this.BookReadPercentageChecked,
+                                this.BookPublisherChecked,
+                                this.BookPublishYearChecked,
+                                this.AuthorLastNameChecked,
+                                this.BookFormatChecked,
+                                this.BookPriceChecked,
+                                this.PageCountChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
+                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
+                    };
 
                     this.FilteredBooksCount = this.FilteredBookList.Count;
 
                     this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                     this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+
+                    await Task.WhenAll(sortList);
+
+                    this.FilteredBookList = sortList.Result;
+
+                    await Task.WhenAll(loadDataTasks);
+
+                    await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
+
+                    this.BookPublisherList = bookPublishers.Result;
+                    this.BookLanguageList = bookLanguages.Result;
+                    this.BookPublishYearList = bookPublishYears.Result;
                 }
 
                 this.SetIsBusyFalse();

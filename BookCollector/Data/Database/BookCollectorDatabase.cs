@@ -26,18 +26,20 @@ namespace BookCollector.Data.Database
 
             try
             {
-                Task.WaitAll(
-                [
-                    Task.Run(async () => await this.database.CreateTableAsync<AuthorDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<BookAuthorModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<BookDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<WishlistBookDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<ChapterDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<CollectionDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<GenreDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<LocationDatabaseModel>()),
-                    Task.Run(async () => await this.database.CreateTableAsync<SeriesDatabaseModel>()),
-                ]);
+                var loadDataTasks = new Task[]
+                {
+                    Task.Run(() => this.database.CreateTableAsync<AuthorDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<BookAuthorModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<BookDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<WishlistBookDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<ChapterDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<CollectionDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<GenreDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<LocationDatabaseModel>()),
+                    Task.Run(() => this.database.CreateTableAsync<SeriesDatabaseModel>()),
+                };
+
+                await Task.WhenAll(loadDataTasks);
             }
             catch (Exception ex)
             {
@@ -1643,10 +1645,12 @@ namespace BookCollector.Data.Database
         {
             await this.Init();
 
-            Task.WaitAll(
-            [
-                Task.Run(async () => await this.CleanupBooks()),
-            ]);
+            var loadDataTasks = new Task[]
+            {
+                Task.Run(() => this.CleanupBooks()),
+            };
+
+            await Task.WhenAll(loadDataTasks);
         }
 
         /*********************** Cleanup Methods ***********************/

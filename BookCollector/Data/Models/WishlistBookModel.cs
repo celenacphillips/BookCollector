@@ -34,7 +34,6 @@ namespace BookCollector.Data.Models
             this.BookLanguage = dbModel.BookLanguage;
             this.BookPrice = dbModel.BookPrice;
             this.BookSummary = dbModel.BookSummary;
-            this.BookPageRead = dbModel.BookPageRead;
             this.BookPageTotal = dbModel.BookPageTotal;
             this.Progress = dbModel.Progress;
             this.PageReadPercent = dbModel.PageReadPercent;

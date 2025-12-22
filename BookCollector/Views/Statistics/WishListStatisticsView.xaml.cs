@@ -20,6 +20,6 @@ public partial class WishListStatisticsView : ContentPage
 
     protected override void OnAppearing()
     {
-        using var variable = this.viewModel.SetViewModelData();
+        var variable = this.viewModel.SetViewModelData();
     }
 }

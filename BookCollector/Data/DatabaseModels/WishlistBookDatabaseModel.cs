@@ -28,8 +28,6 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public string? bookSummary;
         [ObservableProperty]
-        public int bookPageRead;
-        [ObservableProperty]
         public int bookPageTotal;
         [ObservableProperty]
         public double progress;

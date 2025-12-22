@@ -348,7 +348,7 @@ namespace BookCollector.Data.Models
             }
         }
 
-        public async Task SetBookPrice()
+        public void SetBookPrice()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
 

@@ -146,7 +146,16 @@ namespace BookCollector.ViewModels.Book
 
                 this.GetPreferences();
 
-                this.ValidateEntry();
+                var chapters = FillLists.GetAllChaptersInBook(this.EditedBook.BookGuid);
+                var series = FillLists.GetAllSeriesList(this.HiddenSeriesOn);
+                var collections = FillLists.GetAllCollectionsList(this.HiddenCollectionsOn);
+                var genres = FillLists.GetAllGenresList(this.HiddenGenresOn);
+                var locations = FillLists.GetAllLocationsList(this.HiddenLocationsOn);
+                var authors = FillLists.GetAllAuthorsList(this.HiddenAuthorsOn);
+                var bookAuthorList = FillLists.GetAllBookAuthorsForBook(this.EditedBook.BookGuid);
+
+                this.ChaptersToDelete = [];
+                this.AuthorsToDelete = [];
 
                 this.BookInfo1SectionValue = true;
                 this.ReadingDataSectionValue = true;
@@ -158,6 +167,7 @@ namespace BookCollector.ViewModels.Book
 
                 this.BookIsRead = this.EditedBook.BookPageRead == this.EditedBook.BookPageTotal && this.EditedBook.BookPageTotal != 0;
                 this.ShowUpNext = this.EditedBook.BookPageRead == 0;
+                this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
 
                 if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation) && this.EditedBook.BookCover == null)
                 {
@@ -191,23 +201,35 @@ namespace BookCollector.ViewModels.Book
 
                 this.BookCover = this.EditedBook.BookCover;
 
-                this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
+                var loadDataTasks = new Task[]
+                {
+                    Task.Run(() => this.ValidateEntry()),
+                    Task.Run(() => this.EditedBook.SetBookPrice()),
+                    Task.Run(() => this.EditedBook.SetBookCheckpoints()),
+                    Task.Run(() => this.EditedBook.SetCoverDisplay()),
+                    Task.Run(() => BookModel.SetDate(this.EditedBook.BookStartDate)),
+                    Task.Run(() => BookModel.SetDate(this.EditedBook.BookEndDate)),
+                    Task.Run(() => BookModel.SetDate(this.EditedBook.BookLoanedOutOn)),
+                    Task.Run(() => this.BookInfo1Changed()),
+                    Task.Run(() => this.ReadingDataChanged()),
+                    Task.Run(() => this.ChapterListChanged()),
+                    Task.Run(() => this.AuthorListChanged()),
+                    Task.Run(() => this.BookInfoChanged()),
+                    Task.Run(() => this.SummaryChanged()),
+                    Task.Run(() => this.CommentsChanged()),
+                };
 
-                this.ChapterList = [];
+                await Task.WhenAll(chapters, series, collections, genres, locations, authors, bookAuthorList);
+
+                this.ChapterList = chapters.Result;
+                this.SeriesList = series.Result;
+                this.CollectionList = collections.Result;
+                this.GenreList = genres.Result;
+                this.LocationList = locations.Result;
+                this.AuthorList = authors.Result;
+                var bookAuthors = bookAuthorList.Result;
+
                 this.AuthorPickers = [];
-
-                var bookAuthors = new ObservableCollection<BookAuthorModel>();
-
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.ChapterList = await FillLists.GetAllChaptersInBook(this.EditedBook.BookGuid)),
-                    Task.Run(async () => this.SeriesList = await FillLists.GetAllSeriesList(this.HiddenSeriesOn)),
-                    Task.Run(async () => this.CollectionList = await FillLists.GetAllCollectionsList(this.HiddenCollectionsOn)),
-                    Task.Run(async () => this.GenreList = await FillLists.GetAllGenresList(this.HiddenGenresOn)),
-                    Task.Run(async () => this.LocationList = await FillLists.GetAllLocationsList(this.HiddenLocationsOn)),
-                    Task.Run(async () => this.AuthorList = await FillLists.GetAllAuthorsList(this.HiddenAuthorsOn)),
-                    Task.Run(async () => bookAuthors = await FillLists.GetAllBookAuthorsForBook(this.EditedBook.BookGuid)),
-                ]);
 
                 if (bookAuthors != null && bookAuthors.Count > 0)
                 {
@@ -237,29 +259,12 @@ namespace BookCollector.ViewModels.Book
                     });
                 }
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.SelectedGenre = this.GenreList != null ? this.GenreList.FirstOrDefault(x => x.GenreGuid == this.EditedBook.BookGenreGuid) : null),
-                    Task.Run(async () => this.SelectedLocation = this.LocationList != null ? this.LocationList.FirstOrDefault(x => x.LocationGuid == this.EditedBook.BookLocationGuid) : null),
-                    Task.Run(async () => this.SelectedCollection = this.CollectionList != null ? this.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.EditedBook.BookCollectionGuid) : null),
-                    Task.Run(async () => this.SelectedSeries = this.SeriesList != null ? this.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.EditedBook.BookSeriesGuid) : null),
-                    Task.Run(async () => this.EditedBook.SetBookCheckpoints()),
-                    Task.Run(async () => this.EditedBook.SetCoverDisplay()),
-                    Task.Run(async () => BookModel.SetDate(this.EditedBook.BookStartDate)),
-                    Task.Run(async () => BookModel.SetDate(this.EditedBook.BookEndDate)),
-                    Task.Run(async () => BookModel.SetDate(this.EditedBook.BookLoanedOutOn)),
-                    Task.Run(async () => await this.EditedBook.SetBookPrice()),
-                    Task.Run(() => this.BookInfo1Changed()),
-                    Task.Run(() => this.ReadingDataChanged()),
-                    Task.Run(() => this.ChapterListChanged()),
-                    Task.Run(() => this.AuthorListChanged()),
-                    Task.Run(() => this.BookInfoChanged()),
-                    Task.Run(() => this.SummaryChanged()),
-                    Task.Run(() => this.CommentsChanged()),
-                ]);
+                this.SelectedGenre = this.GenreList != null ? this.GenreList.FirstOrDefault(x => x.GenreGuid == this.EditedBook.BookGenreGuid) : null;
+                this.SelectedLocation = this.LocationList != null ? this.LocationList.FirstOrDefault(x => x.LocationGuid == this.EditedBook.BookLocationGuid) : null;
+                this.SelectedCollection = this.CollectionList != null ? this.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.EditedBook.BookCollectionGuid) : null;
+                this.SelectedSeries = this.SeriesList != null ? this.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.EditedBook.BookSeriesGuid) : null;
 
-                this.ChaptersToDelete = [];
-                this.AuthorsToDelete = [];
+                await Task.WhenAll(loadDataTasks);
 
                 this.SetIsBusyFalse();
             }
@@ -314,10 +319,23 @@ namespace BookCollector.ViewModels.Book
                 }
                 else
                 {
+                    this.SetIsBusyTrue();
+
                     this.EditedBook.BookSeriesGuid = this.SelectedSeries?.SeriesGuid;
                     this.EditedBook.BookCollectionGuid = this.SelectedCollection?.CollectionGuid;
                     this.EditedBook.BookGenreGuid = this.SelectedGenre?.GenreGuid;
                     this.EditedBook.BookLocationGuid = this.SelectedLocation?.LocationGuid;
+
+                    var dataTasks = new Task[]
+                    {
+                        Task.Run(() => this.EditedBook.SetReadingProgress()),
+                        Task.Run(() => this.EditedBook.SetCoverDisplay()),
+                        Task.Run(() => this.EditedBook.SetPartOfSeries()),
+                        Task.Run(() => this.EditedBook.SetPartOfCollection()),
+                        Task.Run(() => this.EditedBook.SetBookPrice()),
+                        Task.Run(() => this.EditedBook.SetBookChapters(this.ChapterList)),
+                        Task.Run(() => this.EditedBook.RemoveBookChapters(this.ChaptersToDelete)),
+                    };
 
                     if (this.EditedBook.UpNext == true && this.EditedBook.BookPageRead > 0)
                     {
@@ -360,22 +378,13 @@ namespace BookCollector.ViewModels.Book
                         await this.EditedBook.SetAuthorListString(authorList, false);
                     }
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.EditedBook.SetReadingProgress()),
-                        Task.Run(async () => await this.EditedBook.SetPartOfSeries()),
-                        Task.Run(async () => await this.EditedBook.SetPartOfCollection()),
-                        Task.Run(async () => this.EditedBook.SetCoverDisplay()),
-                        Task.Run(async () => await this.EditedBook.SetBookPrice()),
-                        Task.Run(async () => await this.EditedBook.SetBookChapters(this.ChapterList)),
-                        Task.Run(async () => await this.EditedBook.RemoveBookChapters(this.ChaptersToDelete)),
-                    ]);
+                    await Task.WhenAll(dataTasks);
 
 #if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
 #endif
 
                     if (TestData.UseTestData)
@@ -409,6 +418,8 @@ namespace BookCollector.ViewModels.Book
                     Shell.Current.Navigation.InsertPageBefore(view, this.View);
 
                     await Shell.Current.Navigation.PopAsync();
+
+                    this.SetIsBusyFalse();
                 }
             }
             catch (Exception ex)

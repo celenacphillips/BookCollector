@@ -25,6 +25,6 @@ public partial class ExistingBooksView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var variable = this.viewModel.SetViewModelData();
+        var variable = this.viewModel.SetViewModelData();
     }
 }

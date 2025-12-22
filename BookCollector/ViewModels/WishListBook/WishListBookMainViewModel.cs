@@ -39,6 +39,8 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     this.SetIsBusyTrue();
 
+                    var authors = ParseOutAuthorsFromstring(this.SelectedWishlistBook.AuthorListString);
+
                     this.AuthorListSectionValue = true;
                     this.BookInfoSectionValue = true;
                     this.SummarySectionValue = true;
@@ -66,17 +68,22 @@ namespace BookCollector.ViewModels.WishListBook
 
                     this.BookCover = this.SelectedWishlistBook.BookCover;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.SelectedWishlistBook.SetCoverDisplay()),
-                        Task.Run(async () => await this.SelectedWishlistBook.SetPartOfSeries()),
-                        Task.Run(async () => await this.SelectedWishlistBook.SetBookPrice()),
+                    var loadDataTasks = new Task[]
+                    {
                         Task.Run(() => this.AuthorListChanged()),
                         Task.Run(() => this.BookInfoChanged()),
                         Task.Run(() => this.SummaryChanged()),
                         Task.Run(() => this.CommentsChanged()),
-                        Task.Run(async () => this.AuthorList = !string.IsNullOrEmpty(this.SelectedWishlistBook.AuthorListString) ? await ParseOutAuthorsFromstring(this.SelectedWishlistBook.AuthorListString) : null),
-                    ]);
+                        Task.Run(() => this.SelectedWishlistBook.SetCoverDisplay()),
+                        Task.Run(() => this.SelectedWishlistBook.SetPartOfSeries()),
+                        Task.Run(() => this.SelectedWishlistBook.SetBookPrice()),
+                    };
+
+                    await Task.WhenAll(authors);
+
+                    this.AuthorList = authors.Result;
+
+                    await Task.WhenAll(loadDataTasks);
 
                     this.SetIsBusyFalse();
                 }

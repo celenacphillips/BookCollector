@@ -46,33 +46,35 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.GetPreferences();
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.FullLocationList = await FillLists.GetAllLocationsList(this.ShowHiddenLocations)),
-                ]);
+                var fullList = FillLists.GetAllLocationsList(this.ShowHiddenLocations);
+
+                await Task.WhenAll(fullList);
+
+                this.FullLocationList = fullList.Result;
 
                 if (this.FullLocationList != null)
                 {
-                    this.TotalLocationsCount = this.FullLocationList.Count;
-
                     this.FilteredLocationList = this.FullLocationList;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredLocationList = await SortLists.SortLocationsList(
+                    var sortList = SortLists.SortLocationsList(
                             this.FilteredLocationList,
                             this.LocationNameChecked,
                             this.TotalBooksChecked,
                             this.TotalPriceChecked,
                             this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
+                            this.DescendingChecked);
+
+                    this.TotalLocationsCount = this.FullLocationList.Count;
 
                     this.FilteredLocationsCount = this.FilteredLocationList.Count;
 
-                    this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
+                    this.TotalLocationsstring = StringManipulation.SetTotalCollectionsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                     this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
+
+                    await Task.WhenAll(sortList);
+
+                    this.FilteredLocationList = sortList.Result;
                 }
 
                 this.SetIsBusyFalse();

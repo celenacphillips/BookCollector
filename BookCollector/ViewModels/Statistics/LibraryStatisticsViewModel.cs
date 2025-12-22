@@ -8,6 +8,8 @@ using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Drawing;
+using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -60,28 +62,99 @@ namespace BookCollector.ViewModels.Statistics
             {
                 this.SetIsBusyTrue();
 
+                var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                var cultureInfo = new CultureInfo(cultureCode);
+                this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+
                 this.GetPreferences();
+
+                var cost = GetCounts.GetPriceOfAllBooks(this.ShowHiddenBooks);
+                var total = GetCounts.GetAllBooksListCount(this.ShowHiddenBooks);
+                var bookReadCount = GetCounts.GetBookCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks);
+                var pageReadCount = GetCounts.GetBookPageCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks);
+                var toBeReadCount = GetCounts.GetToBeReadBooksListCount(this.ShowHiddenBooks);
+                var readingCount = GetCounts.GetReadingBooksListCount(this.ShowHiddenBooks);
+                var readCount = GetCounts.GetReadBooksListCount(this.ShowHiddenBooks);
+                var favoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true);
+                var nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false);
+                var zeroCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0);
+                var oneCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1);
+                var twoCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2);
+                var threeCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3);
+                var fourCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4);
+                var fiveCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5);
+                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber);
+                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber);
+                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
+                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
 
                 this.GetColors();
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.BooksReadCount = await GetCounts.GetBookCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
-                    Task.Run(async () => this.PagesReadCount = await GetCounts.GetBookPageCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
-                    Task.Run(async () => this.CostBooks = await GetCounts.GetPriceOfAllBooks(this.ShowHiddenBooks)),
-                    Task.Run(async () => this.TotalBooks = await GetCounts.GetAllBooksListCount(this.ShowHiddenBooks)),
-                ]);
+                await Task.WhenAll(
+                    cost,
+                    total,
+                    bookReadCount,
+                    pageReadCount,
+                    toBeReadCount,
+                    readingCount,
+                    readCount,
+                    favoriteCount,
+                    nonFavoriteCount,
+                    zeroCount,
+                    oneCount,
+                    twoCount,
+                    threeCount,
+                    fourCount,
+                    fiveCount,
+                    collections,
+                    genres,
+                    series,
+                    authors,
+                    locations,
+                    formats,
+                    formatPrices);
 
-                this.SetUpReadingStatusChart();
-                this.SetUpFavoritesChart();
-                this.SetUpRatingsChart();
-                this.SetUpCollectionsChart();
-                this.SetUpGenresChart();
-                this.SetUpSeriesChart();
-                this.SetUpAuthorsChart();
-                this.SetUpLocationsChart();
-                this.SetUpFormatsChart();
-                this.SetUpFormatPricesChart();
+                this.CostBooks = cost.Result;
+                this.TotalBooks = total.Result;
+                this.BooksReadCount = bookReadCount.Result;
+                this.PagesReadCount = pageReadCount.Result;
+                var toBeRead = toBeReadCount.Result;
+                var reading = readingCount.Result;
+                var read = readCount.Result;
+                var favorite = favoriteCount.Result;
+                var nonFavorite = nonFavoriteCount.Result;
+                var zero = zeroCount.Result;
+                var one = oneCount.Result;
+                var two = twoCount.Result;
+                var three = threeCount.Result;
+                var four = fourCount.Result;
+                var five = fiveCount.Result;
+                var collectionCounts = collections.Result;
+                var genresCounts = genres.Result;
+                var seriesCounts = series.Result;
+                var authorsCounts = authors.Result;
+                var locationsCounts = locations.Result;
+                var formatsCounts = formats.Result;
+                var formatPricesCounts = formatPrices.Result;
+
+                var loadDataTasks = new Task[]
+                {
+                    Task.Run(() => this.SetUpReadingStatusChart(toBeRead, reading, read)),
+                    Task.Run(() => this.SetUpFavoritesChart(favorite, nonFavorite)),
+                    Task.Run(() => this.SetUpRatingsChart(zero, one, two, three, four, five)),
+                    Task.Run(() => this.SetUpCollectionsChart(collectionCounts)),
+                    Task.Run(() => this.SetUpGenresChart(genresCounts)),
+                    Task.Run(() => this.SetUpSeriesChart(seriesCounts)),
+                    Task.Run(() => this.SetUpAuthorsChart(authorsCounts)),
+                    Task.Run(() => this.SetUpLocationsChart(locationsCounts)),
+                    Task.Run(() => this.SetUpFormatsChart(formatsCounts)),
+                    Task.Run(() => this.SetUpFormatPricesChart(formatPricesCounts)),
+                };
+
+                await Task.WhenAll(loadDataTasks);
 
                 this.SetIsBusyFalse();
             }
@@ -100,19 +173,8 @@ namespace BookCollector.ViewModels.Statistics
         }
 
         /*********************** Reading Status Methods ***********************/
-        private List<CountModel> SetShowReadingStatus()
+        private List<CountModel> SetShowReadingStatus(int toBeRead, int reading, int read)
         {
-            int toBeRead = 0;
-            int reading = 0;
-            int read = 0;
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => toBeRead = await GetCounts.GetToBeReadBooksListCount(this.ShowHiddenBooks)),
-                Task.Run(async () => reading = await GetCounts.GetReadingBooksListCount(this.ShowHiddenBooks)),
-                Task.Run(async () => read = await GetCounts.GetReadBooksListCount(this.ShowHiddenBooks)),
-            ]);
-
             List<CountModel> counts = [];
 
             if (toBeRead > 0 ||
@@ -145,9 +207,9 @@ namespace BookCollector.ViewModels.Statistics
             return counts;
         }
 
-        private async void SetUpReadingStatusChart()
+        private void SetUpReadingStatusChart(int toBeRead, int reading, int read)
         {
-            List<CountModel> counts = this.SetShowReadingStatus();
+            List<CountModel> counts = this.SetShowReadingStatus(toBeRead, reading, read);
 
             if (this.ShowReadingStatus)
             {
@@ -171,17 +233,8 @@ namespace BookCollector.ViewModels.Statistics
         /*********************** Reading Status Methods ***********************/
 
         /*********************** Favorites Methods ***********************/
-        private List<CountModel> SetShowFavorites()
+        private List<CountModel> SetShowFavorites(int favorite, int nonFavorite)
         {
-            int favorite = 0;
-            int nonFavorite = 0;
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => favorite = await GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true)),
-                Task.Run(async () => nonFavorite = await GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false)),
-            ]);
-
             List<CountModel> counts = [];
 
             if (this.ShowFavorites)
@@ -215,9 +268,9 @@ namespace BookCollector.ViewModels.Statistics
             return counts;
         }
 
-        private async void SetUpFavoritesChart()
+        private void SetUpFavoritesChart(int favorite, int nonFavorite)
         {
-            List<CountModel> counts = this.SetShowFavorites();
+            List<CountModel> counts = this.SetShowFavorites(favorite, nonFavorite);
 
             if (this.ShowFavoritesStatus)
             {
@@ -241,25 +294,8 @@ namespace BookCollector.ViewModels.Statistics
         /*********************** Favorites Methods ***********************/
 
         /*********************** Ratings Methods ***********************/
-        private List<CountModel> SetShowRatings()
+        private List<CountModel> SetShowRatings(int zero, int one, int two, int three, int four, int five)
         {
-            int zero = 0;
-            int one = 0;
-            int two = 0;
-            int three = 0;
-            int four = 0;
-            int five = 0;
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => zero = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0)),
-                Task.Run(async () => one = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1)),
-                Task.Run(async () => two = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2)),
-                Task.Run(async () => three = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3)),
-                Task.Run(async () => four = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4)),
-                Task.Run(async () => five = await GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5)),
-            ]);
-
             List<CountModel> counts = [];
 
             if (this.ShowRatings)
@@ -317,9 +353,9 @@ namespace BookCollector.ViewModels.Statistics
             return counts;
         }
 
-        private async void SetUpRatingsChart()
+        private void SetUpRatingsChart(int zero, int one, int two, int three, int four, int five)
         {
-            List<CountModel> counts = this.SetShowRatings();
+            List<CountModel> counts = this.SetShowRatings(zero, one, two, three, four, five);
 
             if (this.ShowRatings)
             {
@@ -355,15 +391,8 @@ namespace BookCollector.ViewModels.Statistics
             }
         }
 
-        private async void SetUpCollectionsChart()
+        private void SetUpCollectionsChart(List<CountModel> counts)
         {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber)),
-            ]);
-
             this.SetShowCollections(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
@@ -420,15 +449,8 @@ namespace BookCollector.ViewModels.Statistics
             }
         }
 
-        private async void SetUpGenresChart()
+        private void SetUpGenresChart(List<CountModel> counts)
         {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber)),
-            ]);
-
             this.SetShowGenres(counts);
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
@@ -471,301 +493,5 @@ namespace BookCollector.ViewModels.Statistics
         }
 
         /*********************** Genres Methods ***********************/
-
-        /*********************** Series Methods ***********************/
-        internal void SetShowSeries(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowSeries = true;
-            }
-            else
-            {
-                this.ShowSeries = false;
-            }
-        }
-
-        internal async void SetUpSeriesChart()
-        {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber)),
-            ]);
-
-            this.SetShowSeries(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            counts = counts.Where(x => x.Count > 0).ToList();
-
-            if (this.ShowSeries)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXSeries = AppStringResources.TopXSeries.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXSeries = AppStringResources.TopSeries;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "series");
-            }
-        }
-
-        /*********************** Series Methods ***********************/
-
-        /*********************** Authors Methods ***********************/
-        internal void SetShowAuthors(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowAuthors = true;
-            }
-            else
-            {
-                this.ShowAuthors = false;
-            }
-        }
-
-        internal async void SetUpAuthorsChart()
-        {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber)),
-            ]);
-
-            this.SetShowAuthors(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            counts = counts.Where(x => x.Count > 0).ToList();
-
-            if (this.ShowAuthors)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXAuthors = AppStringResources.TopXAuthors.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXAuthors = AppStringResources.TopAuthor;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "authors");
-            }
-        }
-
-        /*********************** Authors Methods ***********************/
-
-        /*********************** Locations Methods ***********************/
-        internal void SetShowLocations(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowLocations = true;
-            }
-            else
-            {
-                this.ShowLocations = false;
-            }
-        }
-
-        internal async void SetUpLocationsChart()
-        {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber)),
-            ]);
-
-            this.SetShowLocations(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            counts = counts.Where(x => x.Count > 0).ToList();
-
-            if (this.ShowLocations)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                if (max != 1)
-                {
-                    this.TopXLocations = AppStringResources.TopXLocations.Replace("x", $"{max}");
-                }
-                else
-                {
-                    this.TopXLocations = AppStringResources.TopLocation;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpBarChart(values, "locations");
-            }
-        }
-
-        /*********************** Locations Methods ***********************/
-
-        /*********************** Formats Methods ***********************/
-        internal void SetShowFormats(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.Count > 0))
-            {
-                this.ShowFormats = true;
-            }
-            else
-            {
-                this.ShowFormats = false;
-            }
-        }
-
-        internal async void SetUpFormatsChart()
-        {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks)),
-            ]);
-
-            this.SetShowFormats(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.Count)];
-
-            if (this.ShowFormats)
-            {
-                List<ChartValues> values = [];
-
-                var max = this.MaxListNumber;
-
-                if (counts.Count < max)
-                {
-                    max = counts.Count;
-                }
-
-                for (int i = 0; i < max; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = counts[i].Count,
-                        });
-                }
-
-                this.SetUpPieChart(values, "formats");
-            }
-        }
-
-        /*********************** Formats Methods ***********************/
-
-        /*********************** Format Prices Methods ***********************/
-        internal void SetShowFormatPrices(List<CountModel> counts)
-        {
-            if (counts.Any(x => x.CountDouble > 0))
-            {
-                this.ShowFormatPrices = true;
-            }
-            else
-            {
-                this.ShowFormatPrices = false;
-            }
-        }
-
-        internal async void SetUpFormatPricesChart()
-        {
-            List<CountModel> counts = [];
-
-            Task.WaitAll(
-            [
-                Task.Run(async () => counts = await GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks)),
-            ]);
-
-            this.SetShowFormatPrices(counts);
-
-            counts = [.. counts.OrderByDescending(x => x.CountDouble)];
-
-            if (this.ShowFormatPrices)
-            {
-                List<ChartValues> values = [];
-
-                for (int i = 0; i < counts.Count; i++)
-                {
-                    values.Add(
-                        new ChartValues()
-                        {
-                            ColorValue = this.ColorList?[i],
-                            LabelValue = counts[i].Label,
-                            Value = (float)counts[i].CountDouble,
-                        });
-                }
-
-                this.SetUpPieChart(values, "formatprices");
-            }
-        }
-
-        /*********************** Format Prices Methods ***********************/
     }
 }

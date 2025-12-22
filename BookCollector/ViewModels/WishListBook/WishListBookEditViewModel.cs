@@ -15,7 +15,6 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace BookCollector.ViewModels.WishListBook
 {
@@ -64,7 +63,7 @@ namespace BookCollector.ViewModels.WishListBook
             {
                 this.SetIsBusyTrue();
 
-                this.ValidateEntry();
+                var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
 
                 this.BookInfo1SectionValue = true;
                 this.AuthorListSectionValue = true;
@@ -104,10 +103,11 @@ namespace BookCollector.ViewModels.WishListBook
 
                 this.BookCover = this.EditedWishlistBook.BookCover;
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.EditedWishlistBook.SetCoverDisplay()),
-                    Task.Run(async () => await this.EditedWishlistBook.SetBookPrice()),
+                var loadDataTasks = new Task[]
+                {
+                    Task.Run(() => this.ValidateEntry()),
+                    Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
+                    Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
                     Task.Run(() => this.BookInfo1Changed()),
                     Task.Run(() => this.ReadingDataChanged()),
                     Task.Run(() => this.ChapterListChanged()),
@@ -115,8 +115,13 @@ namespace BookCollector.ViewModels.WishListBook
                     Task.Run(() => this.BookInfoChanged()),
                     Task.Run(() => this.SummaryChanged()),
                     Task.Run(() => this.CommentsChanged()),
-                    Task.Run(async () => this.AuthorList = !string.IsNullOrEmpty(this.EditedWishlistBook.AuthorListString) ? await ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString) : []),
-                ]);
+                };
+
+                await Task.WhenAll(authors);
+
+                this.AuthorList = authors.Result;
+
+                await Task.WhenAll(loadDataTasks);
 
                 this.SetIsBusyFalse();
             }
@@ -169,13 +174,17 @@ namespace BookCollector.ViewModels.WishListBook
             }
             else
             {
-                Task.WaitAll(
-                [
-                    Task.Run(async () => await this.EditedWishlistBook.SetPartOfSeries()),
-                    Task.Run(async () => this.EditedWishlistBook.SetCoverDisplay()),
-                    Task.Run(async () => await this.EditedWishlistBook.SetBookPrice()),
-                    Task.Run(async () => await this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
-                ]);
+                this.SetIsBusyTrue();
+
+                var dataTasks = new Task[]
+                {
+                    Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
+                    Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
+                    Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
+                    Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
+                };
+
+                await Task.WhenAll(dataTasks);
 
 #if ANDROID
                 if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
@@ -202,6 +211,8 @@ namespace BookCollector.ViewModels.WishListBook
                 Shell.Current.Navigation.InsertPageBefore(view, this.View);
 
                 await Shell.Current.Navigation.PopAsync();
+
+                this.SetIsBusyFalse();
             }
         }
 

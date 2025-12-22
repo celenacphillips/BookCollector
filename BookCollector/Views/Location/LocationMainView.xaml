@@ -33,7 +33,7 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout>
+                <VerticalStackLayout IsVisible="{Binding IsVisible}">
                     <Label Text="{Binding TotalBooksString}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"

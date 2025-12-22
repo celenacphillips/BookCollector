@@ -46,33 +46,35 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.GetPreferences();
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.FullGenreList = await FillLists.GetAllGenresList(this.ShowHiddenGenres)),
-                ]);
+                var fullList = FillLists.GetAllGenresList(this.ShowHiddenGenres);
+
+                await Task.WhenAll(fullList);
+
+                this.FullGenreList = fullList.Result;
 
                 if (this.FullGenreList != null)
                 {
-                    this.TotalGenresCount = this.FullGenreList.Count;
-
                     this.FilteredGenreList = this.FullGenreList;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredGenreList = await SortLists.SortGenresList(
+                    var sortList = SortLists.SortGenresList(
                             this.FilteredGenreList,
                             this.GenreNameChecked,
                             this.TotalBooksChecked,
                             this.TotalPriceChecked,
                             this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
+                            this.DescendingChecked);
+
+                    this.TotalGenresCount = this.FullGenreList.Count;
 
                     this.FilteredGenresCount = this.FilteredGenreList.Count;
 
-                    this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
+                    this.TotalGenresstring = StringManipulation.SetTotalCollectionsString(this.FilteredGenresCount, this.TotalGenresCount);
 
                     this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
+
+                    await Task.WhenAll(sortList);
+
+                    this.FilteredGenreList = sortList.Result;
                 }
 
                 this.SetIsBusyFalse();

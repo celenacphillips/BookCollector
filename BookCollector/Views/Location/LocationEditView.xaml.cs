@@ -27,6 +27,6 @@ public partial class LocationEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var variable = this.ViewModel.SetViewModelData();
+        var variable = this.ViewModel.SetViewModelData();
     }
 }

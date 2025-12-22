@@ -605,7 +605,7 @@
                                                                      Grid.Row="0" Grid.Column="0">
                                                     <HorizontalStackLayout>
                                                         <Label Text="{x:Static localization:AppStringResources.AuthorFullName}"
-                                                               Style="{DynamicResource Header}"/>
+                                                               Style="{DynamicResource SubTitle}"/>
                                                     </HorizontalStackLayout>
 
                                                     <Picker ItemsSource="{Binding AuthorList}"

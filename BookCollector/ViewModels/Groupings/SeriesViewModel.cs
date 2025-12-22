@@ -45,34 +45,35 @@ namespace BookCollector.ViewModels.Groupings
                 this.SetIsBusyTrue();
 
                 this.GetPreferences();
+                var fullList = FillLists.GetAllSeriesList(this.ShowHiddenSeries);
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.FullSeriesList = await FillLists.GetAllSeriesList(this.ShowHiddenSeries)),
-                ]);
+                await Task.WhenAll(fullList);
+
+                this.FullSeriesList = fullList.Result;
 
                 if (this.FullSeriesList != null)
                 {
-                    this.TotalSeriesCount = this.FullSeriesList.Count;
-
                     this.FilteredSeriesList = this.FullSeriesList;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredSeriesList = await SortLists.SortSeriesList(
+                    var sortList = SortLists.SortSeriesList(
                             this.FilteredSeriesList,
                             this.SeriesNameChecked,
                             this.TotalBooksChecked,
                             this.TotalPriceChecked,
                             this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
+                            this.DescendingChecked);
+
+                    this.TotalSeriesCount = this.FullSeriesList.Count;
 
                     this.FilteredSeriesCount = this.FilteredSeriesList.Count;
 
-                    this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
+                    this.TotalSeriesstring = StringManipulation.SetTotalCollectionsString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
                     this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
+
+                    await Task.WhenAll(sortList);
+
+                    this.FilteredSeriesList = sortList.Result;
                 }
 
                 this.SetIsBusyFalse();

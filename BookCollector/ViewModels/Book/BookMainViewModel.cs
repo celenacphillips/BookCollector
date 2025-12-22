@@ -6,7 +6,6 @@ using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -41,6 +40,11 @@ namespace BookCollector.ViewModels.Book
 
                     this.GetPreferences();
 
+                    var chapters = FillLists.GetAllChaptersInBook(this.SelectedBook.BookGuid);
+                    var genre = GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid);
+                    var location = GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid);
+                    var authors = FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid, this.HiddenAuthorsOn);
+
                     this.ReadingDataSectionValue = true;
                     this.ChapterListSectionValue = true;
                     this.AuthorListSectionValue = true;
@@ -73,24 +77,29 @@ namespace BookCollector.ViewModels.Book
 
                     this.BookCover = this.SelectedBook.BookCover;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.ChapterList = await FillLists.GetAllChaptersInBook(this.SelectedBook.BookGuid)),
-                        Task.Run(async () => this.SelectedGenre = await GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid)),
-                        Task.Run(async () => this.SelectedLocation = await GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid)),
-                        Task.Run(async () => this.SelectedAuthorList = await FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid, this.HiddenAuthorsOn)),
-                        Task.Run(async () => this.SelectedBook.SetBookCheckpoints()),
-                        Task.Run(async () => this.SelectedBook.SetCoverDisplay()),
-                        Task.Run(async () => await this.SelectedBook.SetPartOfSeries()),
-                        Task.Run(async () => await this.SelectedBook.SetPartOfCollection()),
-                        Task.Run(async () => await this.SelectedBook.SetBookPrice()),
+                    var loadDataTasks = new Task[]
+                    {
                         Task.Run(() => this.ReadingDataChanged()),
                         Task.Run(() => this.ChapterListChanged()),
                         Task.Run(() => this.AuthorListChanged()),
                         Task.Run(() => this.BookInfoChanged()),
                         Task.Run(() => this.SummaryChanged()),
                         Task.Run(() => this.CommentsChanged()),
-                    ]);
+                        Task.Run(() => this.SelectedBook.SetBookCheckpoints()),
+                        Task.Run(() => this.SelectedBook.SetCoverDisplay()),
+                        Task.Run(() => this.SelectedBook.SetPartOfSeries()),
+                        Task.Run(() => this.SelectedBook.SetPartOfCollection()),
+                        Task.Run(() => this.SelectedBook.SetBookPrice()),
+                    };
+
+                    await Task.WhenAll(chapters, genre, location, authors);
+
+                    this.ChapterList = chapters.Result;
+                    this.SelectedGenre = genre.Result;
+                    this.SelectedLocation = location.Result;
+                    this.SelectedAuthorList = authors.Result;
+
+                    await Task.WhenAll(loadDataTasks);
 
                     this.SetIsBusyFalse();
                 }

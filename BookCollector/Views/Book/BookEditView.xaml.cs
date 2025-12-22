@@ -20,6 +20,12 @@ public partial class BookEditView : ContentPage
         this.BindingContext = this.ViewModel;
 
         this.InitializeComponent();
+
+        // Need this to make sure the stepper doesn't set pages read
+        // to 100 if over 100. 100 is default.
+        var stepper = (Stepper)this.FindByName("PageReadStepper");
+        stepper.Maximum = book.BookPageTotal;
+        stepper.Value = book.BookPageRead;
     }
 
     private BookEditViewModel ViewModel { get; set; }
@@ -28,6 +34,6 @@ public partial class BookEditView : ContentPage
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        using var variable = this.ViewModel.SetViewModelData();
+        var variable = this.ViewModel.SetViewModelData();
     }
 }

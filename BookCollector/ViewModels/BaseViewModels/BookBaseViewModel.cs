@@ -177,49 +177,52 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public bool BookPriceChecked { get; set; }
 
-        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string inputstring, bool showHiddenAuthors = true)
+        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string? inputstring, bool showHiddenAuthors = true)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
-            var list = SplitStringIntoAuthorList(inputstring);
-
-            foreach (var item in list)
+            if (!string.IsNullOrEmpty(inputstring))
             {
-                if (item != null)
+                var list = SplitStringIntoAuthorList(inputstring);
+
+                foreach (var item in list)
                 {
-                    AuthorModel? author = null;
-                    bool skip = false;
+                    if (item != null)
+                    {
+                        AuthorModel? author = null;
+                        bool skip = false;
 
-                    if (TestData.UseTestData)
-                    {
-                        author = TestData.AuthorList.FirstOrDefault(x => !string.IsNullOrEmpty(x.FirstName) &&
-                                                                         x.FirstName.Equals(item.FirstName) &&
-                                                                         !string.IsNullOrEmpty(x.LastName) &&
-                                                                         x.LastName.Equals(item.LastName));
-                    }
-                    else
-                    {
-                        author = await Database.GetAuthorByNameAsync(item.FirstName, item.LastName);
-                    }
-
-                    // if (!showHiddenAuthors)
-                    // {
-                    //    if (author != null && author.HideAuthor)
-                    //    {
-                    //        skip = true;
-                    //    }
-                    // }
-                    if (!skip)
-                    {
-                        if (author == null)
+                        if (TestData.UseTestData)
                         {
-                            author = new AuthorModel();
+                            author = TestData.AuthorList.FirstOrDefault(x => !string.IsNullOrEmpty(x.FirstName) &&
+                                                                             x.FirstName.Equals(item.FirstName) &&
+                                                                             !string.IsNullOrEmpty(x.LastName) &&
+                                                                             x.LastName.Equals(item.LastName));
+                        }
+                        else
+                        {
+                            author = await Database.GetAuthorByNameAsync(item.FirstName, item.LastName);
                         }
 
-                        author.FirstName = item.FirstName;
-                        author.LastName = item.LastName;
+                        // if (!showHiddenAuthors)
+                        // {
+                        //    if (author != null && author.HideAuthor)
+                        //    {
+                        //        skip = true;
+                        //    }
+                        // }
+                        if (!skip)
+                        {
+                            if (author == null)
+                            {
+                                author = new AuthorModel();
+                            }
 
-                        authorList.Add(author);
+                            author.FirstName = item.FirstName;
+                            author.LastName = item.LastName;
+
+                            authorList.Add(author);
+                        }
                     }
                 }
             }
@@ -236,17 +239,16 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (this.FilteredBookList != null)
             {
-                if (!string.IsNullOrEmpty(this.Searchstring))
-                {
-                    this.FilteredBookList = this.FilteredBookList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-                }
-                else
-                {
-                    this.FilteredBookList = this.FullBookList;
-                }
+                this.FilteredBookList = FilterLists.FilterOnSearchString(FilteredBookList, this.Searchstring);
 
-                this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay());
-                this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress());
+                //if (!string.IsNullOrEmpty(this.Searchstring))
+                //{
+                //    this.FilteredBookList = FilterLists.FilterOnSearchString(FilteredBookList, this.Searchstring);
+                //}
+                //else
+                //{
+                //    this.FilteredBookList = this.FullBookList;
+                //}
 
                 this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
 

@@ -199,15 +199,16 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void SetIsBusyTrue()
         {
-            GC.Collect();
+            // GC.Collect();
             this.IsBusy = true;
-            this.IsVisible = false;
+            this.IsVisible = true;
         }
 
         public void SetIsBusyFalse()
         {
             this.IsBusy = false;
             this.IsVisible = true;
+            GC.Collect();
         }
 
         public void SetRefreshTrue()

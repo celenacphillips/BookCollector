@@ -45,33 +45,35 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.GetPreferences();
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.FullAuthorList = await FillLists.GetAllAuthorsList(this.ShowHiddenAuthors)),
-                ]);
+                var fullList = FillLists.GetAllAuthorsList(this.ShowHiddenAuthors);
+
+                await Task.WhenAll(fullList);
+
+                this.FullAuthorList = fullList.Result;
 
                 if (this.FullAuthorList != null)
                 {
-                    this.TotalAuthorsCount = this.FullAuthorList.Count;
-
                     this.FilteredAuthorList = this.FullAuthorList;
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredAuthorList = await SortLists.SortAuthorList(
+                    var sortList = SortLists.SortAuthorList(
                             this.FilteredAuthorList,
                             this.AuthorLastNameChecked,
                             this.TotalBooksChecked,
                             this.TotalPriceChecked,
                             this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
+                            this.DescendingChecked);
+
+                    this.TotalAuthorsCount = this.FullAuthorList.Count;
 
                     this.FilteredAuthorsCount = this.FilteredAuthorList.Count;
 
-                    this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+                    this.TotalAuthorsstring = StringManipulation.SetTotalCollectionsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                     this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
+
+                    await Task.WhenAll(sortList);
+
+                    this.FilteredAuthorList = sortList.Result;
                 }
 
                 this.SetIsBusyFalse();

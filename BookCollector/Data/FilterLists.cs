@@ -10,7 +10,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 
 namespace BookCollector.Data
 {
-    public partial class FilterLists : BaseViewModel
+    public partial class FilterLists : BookBaseViewModel
     {
         public static async Task<ObservableCollection<BookModel>> FilterBookList(
             ObservableCollection<BookModel> bookList,
@@ -19,9 +19,12 @@ namespace BookCollector.Data
             string? publisherOption,
             string? languageOption,
             string? ratingOption,
-            string? publishYearOption)
+            string? publishYearOption,
+            string? searchString)
         {
             var filteredList = bookList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
 
             if (!string.IsNullOrEmpty(favoritesOption))
             {
@@ -73,6 +76,18 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        public static ObservableCollection<BookModel> FilterOnSearchString(ObservableCollection<BookModel> bookList, string? searchString)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
         private static ObservableCollection<BookModel> FilterFavoriteBooks(ObservableCollection<BookModel> bookList, string favoritesOption)
         {
             var filterList = bookList;
@@ -85,6 +100,7 @@ namespace BookCollector.Data
                                                          .ToObservableCollection(),
                 _ => bookList,
             };
+
             return filterList;
         }
 
