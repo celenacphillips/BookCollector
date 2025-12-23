@@ -245,7 +245,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
         }
 
-        public void SetBookCover(WishlistBookModel book)
+        public static void SetBookCover(WishlistBookModel book)
         {
             if (!string.IsNullOrEmpty(book.BookCoverFileLocation) && book.BookCover == null)
             {

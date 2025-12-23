@@ -56,6 +56,16 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     this.FilteredLocationList = this.FullLocationList;
 
+                    this.SearchOnLocation(this.Searchstring);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredLocationList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
+                        Task.Run(() => this.FilteredLocationList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
+                    };
+
+                    await Task.WhenAll(loadDataTasks);
+
                     var sortList = SortLists.SortLocationsList(
                             this.FilteredLocationList,
                             this.LocationNameChecked,
@@ -68,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredLocationsCount = this.FilteredLocationList.Count;
 
-                    this.TotalLocationsstring = StringManipulation.SetTotalCollectionsString(this.FilteredLocationsCount, this.TotalLocationsCount);
+                    this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                     this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
 
@@ -92,11 +102,11 @@ namespace BookCollector.ViewModels.Groupings
 
             this.Searchstring = input;
 
-            if (this.FilteredLocationList != null)
+            if (this.FilteredLocationList != null && this.FullLocationList != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredLocationList = this.FilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredLocationList = this.FullLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

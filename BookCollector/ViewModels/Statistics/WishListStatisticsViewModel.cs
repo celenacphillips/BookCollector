@@ -2,12 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using System.Globalization;
 using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.Input;
-using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
 {

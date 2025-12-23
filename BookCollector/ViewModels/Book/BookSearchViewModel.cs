@@ -75,7 +75,7 @@ namespace BookCollector.ViewModels.Book
             {
                 try
                 {
-                    var (items, totalItems) = GoogleBooksAPI.Search(this.Input);
+                    var (items, totalItems) = await GoogleBooksAPI.Search(this.Input);
 
                     this.SetIsBusyFalse();
 

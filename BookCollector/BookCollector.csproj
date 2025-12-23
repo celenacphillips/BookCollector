@@ -301,6 +301,9 @@
 		<MauiXaml Update="Views\Controls\Genre\GenreCollectionList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\LoadingControl.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Location\LocationCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

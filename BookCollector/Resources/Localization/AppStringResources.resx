@@ -1098,4 +1098,16 @@
   <data name="CreateNewAuthor" xml:space="preserve">
     <value>Create New Author</value>
   </data>
+  <data name="CleaningUpTheData" xml:space="preserve">
+    <value>Cleaning up the data...</value>
+  </data>
+  <data name="ErrorParsingDataFromBook" xml:space="preserve">
+    <value>Error parsing data from book! Please contact support!</value>
+  </data>
+  <data name="UnableToOverwriteFile" xml:space="preserve">
+    <value>Unable to Overwrite File</value>
+  </data>
+  <data name="UnableToOverwriteFile_PleaseDelete" xml:space="preserve">
+    <value>Unable to overwrite file. Please delete filePath and try again.</value>
+  </data>
 </root>

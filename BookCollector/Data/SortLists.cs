@@ -160,7 +160,7 @@ namespace BookCollector.Data
 
             return filteredList;
         }
-        
+
         public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(
             ObservableCollection<CollectionModel> collectionList,
             bool collectionNameChecked,

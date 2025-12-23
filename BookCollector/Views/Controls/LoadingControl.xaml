@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Controls.LoadingControl"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
+             x:DataType="viewModel:BaseViewModel">
+    
+    <Grid IsVisible="{Binding IsBusy}"
+          BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
+          Opacity="0.8">
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Opacity="1"/>
+    </Grid>
+</ContentView>

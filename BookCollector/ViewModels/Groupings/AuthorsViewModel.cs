@@ -55,6 +55,16 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     this.FilteredAuthorList = this.FullAuthorList;
 
+                    this.SearchOnAuthor(this.Searchstring);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredAuthorList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
+                        Task.Run(() => this.FilteredAuthorList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
+                    };
+
+                    await Task.WhenAll(loadDataTasks);
+
                     var sortList = SortLists.SortAuthorList(
                             this.FilteredAuthorList,
                             this.AuthorLastNameChecked,
@@ -67,7 +77,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredAuthorsCount = this.FilteredAuthorList.Count;
 
-                    this.TotalAuthorsstring = StringManipulation.SetTotalCollectionsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+                    this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                     this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
 
@@ -91,11 +101,11 @@ namespace BookCollector.ViewModels.Groupings
 
             this.Searchstring = input;
 
-            if (this.FilteredAuthorList != null)
+            if (this.FilteredAuthorList != null && this.FullAuthorList != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredAuthorList = this.FilteredAuthorList.Where(x => x.FullName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredAuthorList = this.FullAuthorList.Where(x => x.FullName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

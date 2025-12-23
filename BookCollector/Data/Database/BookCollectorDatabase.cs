@@ -263,6 +263,7 @@ namespace BookCollector.Data.Database
                 await this.Init();
 
                 var bookAuthorGuids = await this.database.Table<BookAuthorModel>()
+                    .Where(x => x.BookGuid == bookGuid)
                     .ToListAsync();
 
                 return [.. bookAuthorGuids
@@ -369,6 +370,7 @@ namespace BookCollector.Data.Database
             foreach (var book in allBooks)
             {
                 await ConvertTo<BookModel>(book).SetAuthorListString();
+                await this.SaveBookAsync(book);
             }
         }
 

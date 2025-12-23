@@ -107,6 +107,19 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredBookList = filteredList.Result;
 
+                    var sortTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
+                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetAuthorListString())),
+                    };
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
+                    };
+
+                    await Task.WhenAll(sortTasks);
+
                     var sortList = SortLists.SortBookList(
                                 this.FilteredBookList,
                                 this.BookTitleChecked,
@@ -120,12 +133,6 @@ namespace BookCollector.ViewModels.Groupings
                                 this.PageCountChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
-
-                    var loadDataTasks = new Task[]
-                    {
-                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
-                        Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
-                    };
 
                     this.FilteredBooksCount = this.FilteredBookList.Count;
 

@@ -55,6 +55,16 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     this.FilteredSeriesList = this.FullSeriesList;
 
+                    this.SearchOnSeries(this.Searchstring);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredSeriesList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
+                        Task.Run(() => this.FilteredSeriesList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
+                    };
+
+                    await Task.WhenAll(loadDataTasks);
+
                     var sortList = SortLists.SortSeriesList(
                             this.FilteredSeriesList,
                             this.SeriesNameChecked,
@@ -67,7 +77,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredSeriesCount = this.FilteredSeriesList.Count;
 
-                    this.TotalSeriesstring = StringManipulation.SetTotalCollectionsString(this.FilteredSeriesCount, this.TotalSeriesCount);
+                    this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
                     this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
 
@@ -91,11 +101,11 @@ namespace BookCollector.ViewModels.Groupings
 
             this.Searchstring = input;
 
-            if (this.FilteredSeriesList != null)
+            if (this.FilteredSeriesList != null && this.FullSeriesList != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredSeriesList = this.FilteredSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredSeriesList = this.FullSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

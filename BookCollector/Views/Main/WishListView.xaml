@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Main"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.WishListBook"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:WishListViewModel"
              x:Class="BookCollector.Views.Main.WishListView"
              x:Name="WishListPage"
@@ -61,15 +62,7 @@
         </StackLayout>
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 </ContentPage>

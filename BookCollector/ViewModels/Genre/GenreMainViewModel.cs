@@ -36,7 +36,7 @@ namespace BookCollector.ViewModels.Genre
 
                     this.GetPreferences();
 
-                    var fullList = FillLists.GetReadingBooksList(this.ShowHiddenBook);
+                    var fullList = FillLists.GetAllBooksInGenreList(this.SelectedGenre.GenreGuid, this.ShowHiddenBook);
 
                     await Task.WhenAll(fullList);
 
@@ -65,6 +65,19 @@ namespace BookCollector.ViewModels.Genre
 
                         if (this.FilteredBookList != null)
                         {
+                            var sortTasks = new Task[]
+                            {
+                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
+                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetAuthorListString())),
+                            };
+
+                            var loadDataTasks = new Task[]
+                            {
+                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
+                            };
+
+                            await Task.WhenAll(sortTasks);
+
                             var sortList = SortLists.SortBookList(
                                     this.FilteredBookList,
                                     this.BookTitleChecked,
@@ -78,12 +91,6 @@ namespace BookCollector.ViewModels.Genre
                                     this.PageCountChecked,
                                     this.AscendingChecked,
                                     this.DescendingChecked);
-
-                            var loadDataTasks = new Task[]
-                            {
-                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
-                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
-                            };
 
                             this.FilteredBooksCount = this.FilteredBookList.Count;
 

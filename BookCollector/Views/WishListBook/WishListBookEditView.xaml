@@ -7,6 +7,7 @@
              xmlns:ndtp="clr-namespace:Maui.NullableDateTimePicker;assembly=Maui.NullableDateTimePicker"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.WishListBook"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:WishListBookEditViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              x:Name="WishListBookEditPage"
@@ -581,15 +582,7 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 </ContentPage>

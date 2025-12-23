@@ -197,7 +197,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = this.IsBusy;
                     this.CheckboxesVisible = !this.IsBusy;
 
-                    var filePath = ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -230,6 +230,7 @@ namespace BookCollector.ViewModels.Main
                     this.ImportEnabled = !this.IsBusy;
                     this.ExportEnabled = !this.IsBusy;
                     this.RefreshEnabled = !this.IsBusy;
+                    await this.SetViewModelData();
                 }
             }
             else
@@ -291,15 +292,20 @@ namespace BookCollector.ViewModels.Main
                         await this.ReadBooksFromSpreadsheet();
                         await this.ReadBookAuthorsFromSpreadsheet();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DataCleanup();
-                        }
-                        else
-                        {
-                            await Database.DataCleanup();
-                        }
+                        //var finalLabel = (Label)this.View.FindByName("finalOutput");
+                        //finalLabel.TextColor = this.busyColor;
 
+                        //if (TestData.UseTestData)
+                        //{
+                        //    TestData.DataCleanup();
+                        //}
+                        //else
+                        //{
+                        //    this.FinalOutput = AppStringResources.CleaningUpTheData;
+                        //    await Database.DataCleanup();
+                        //}
+
+                        //finalLabel.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
                         await DisplayMessage(AppStringResources.ImportComplete, null);
@@ -516,16 +522,46 @@ namespace BookCollector.ViewModels.Main
                             book.BookCoverUrl,
                         };
 
+                        var booksImageExport = $"{this.imageExportLocation}/BookCovers";
+
+                        if (!Directory.Exists(booksImageExport))
+                        {
+                            Directory.CreateDirectory(booksImageExport);
+                        }
+
                         if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                         {
+                            var bookCoverFile = $"{booksImageExport}/BookCoverFiles";
+
+                            if (!Directory.Exists(bookCoverFile))
+                            {
+                                Directory.CreateDirectory(bookCoverFile);
+                            }
+
                             var fi = new FileInfo(book.BookCoverFileLocation);
-                            var exportLocation = $"{this.imageExportLocation}/{fi.Name}";
+                            var exportLocation = $"{bookCoverFile}/{fi.Name}";
                             File.Copy(book.BookCoverFileLocation, exportLocation, true);
                             stringItem.Add(exportLocation);
                         }
                         else
                         {
                             stringItem.Add(string.Empty);
+                        }
+
+                        if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
+                        {
+                            var bookCoverFile = $"{booksImageExport}/BookCoverDownloads";
+
+                            if (!Directory.Exists(bookCoverFile))
+                            {
+                                Directory.CreateDirectory(bookCoverFile);
+                            }
+
+                            var byteArray = DownloadImage(book.BookCoverUrl);
+
+                            var fi = new FileInfo(book.BookCoverUrl);
+                            var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                            File.WriteAllBytes(exportLocation, byteArray);
                         }
 
                         stringItems.Add(stringItem);
@@ -563,7 +599,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -664,6 +700,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                             }
+
+                            importCount++;
+                            this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -762,16 +801,46 @@ namespace BookCollector.ViewModels.Main
                                 book.BookCoverUrl,
                             };
 
+                            var wishlistBooksImageExport = $"{this.imageExportLocation}/WishlistBookCovers";
+
+                            if (!Directory.Exists(wishlistBooksImageExport))
+                            {
+                                Directory.CreateDirectory(wishlistBooksImageExport);
+                            }
+
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
                             {
+                                var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverFiles";
+
+                                if (!Directory.Exists(bookCoverFile))
+                                {
+                                    Directory.CreateDirectory(bookCoverFile);
+                                }
+
                                 var fi = new FileInfo(book.BookCoverFileLocation);
-                                var exportLocation = $"{this.imageExportLocation}/{fi.Name}";
+                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
                                 File.Copy(book.BookCoverFileLocation, exportLocation, true);
                                 stringItem.Add(exportLocation);
                             }
                             else
                             {
                                 stringItem.Add(string.Empty);
+                            }
+
+                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
+                            {
+                                var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverDownloads";
+
+                                if (!Directory.Exists(bookCoverFile))
+                                {
+                                    Directory.CreateDirectory(bookCoverFile);
+                                }
+
+                                var byteArray = DownloadImage(book.BookCoverUrl);
+
+                                var fi = new FileInfo(book.BookCoverUrl);
+                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                File.WriteAllBytes(exportLocation, byteArray);
                             }
 
                             stringItems.Add(stringItem);
@@ -819,7 +888,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -918,6 +987,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
                             }
+
+                            importCount++;
+                            this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1022,7 +1094,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1051,6 +1123,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
                             }
+
+                            importCount++;
+                            this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1151,7 +1226,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1178,6 +1253,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
                             }
+
+                            importCount++;
+                            this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1278,7 +1356,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1305,6 +1383,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
                             }
+
+                            importCount++;
+                            this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1407,7 +1488,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1435,6 +1516,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
                             }
+
+                            importCount++;
+                            this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1535,7 +1619,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1562,6 +1646,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveBookAuthorAsync(bookAuthor);
                             }
+
+                            importCount++;
+                            this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1664,7 +1751,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1692,6 +1779,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
                             }
+
+                            importCount++;
+                            this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)
@@ -1792,7 +1882,7 @@ namespace BookCollector.ViewModels.Main
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
 
-                var importCount = valuesList.Count;
+                var importCount = 0;
 
                 this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
 
@@ -1819,6 +1909,9 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
                             }
+
+                            importCount++;
+                            this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
                         }
                     }
                     catch (Exception ex)

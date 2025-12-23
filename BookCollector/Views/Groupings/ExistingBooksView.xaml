@@ -6,6 +6,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Groupings"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:ExistingBooksViewModel"
              x:Name="ExistingBooksPage"
              Title="{Binding ViewTitle}">
@@ -68,17 +69,9 @@
 
         </StackLayout>
         <!-- Main Content -->
-        
-        <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 

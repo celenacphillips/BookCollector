@@ -76,7 +76,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var section = (ChartView)this.View.FindByName(sectionName);
 
-            section.Chart = null;
+            section.ClearValue(ChartView.ChartProperty);
 
             List<ChartEntry> entries = [];
 
@@ -110,7 +110,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var section = (ChartView)this.View.FindByName(sectionName);
 
-            section.Chart = null;
+            section.ClearValue(ChartView.ChartProperty);
 
             List<ChartEntry> entries = [];
 

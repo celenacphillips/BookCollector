@@ -57,6 +57,16 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     this.FilteredCollectionList = this.FullCollectionList;
 
+                    this.SearchOnCollection(this.Searchstring);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredCollectionList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
+                        Task.Run(() => this.FilteredCollectionList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
+                    };
+
+                    await Task.WhenAll(loadDataTasks);
+
                     var sortList = SortLists.SortCollectionsList(
                             this.FilteredCollectionList,
                             this.CollectionNameChecked,
@@ -93,11 +103,11 @@ namespace BookCollector.ViewModels.Groupings
 
             this.Searchstring = input;
 
-            if (this.FilteredCollectionList != null)
+            if (this.FilteredCollectionList != null && this.FullCollectionList != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredCollectionList = this.FilteredCollectionList.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredCollectionList = this.FullCollectionList.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

@@ -231,24 +231,23 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         [RelayCommand]
-        public void BookSearchOnTitle(string? input)
+        public async void BookSearchOnTitle(string? input)
         {
             this.SetIsBusyTrue();
 
             this.Searchstring = input;
 
-            if (this.FilteredBookList != null)
+            if (this.FilteredBookList != null && this.FullBookList != null)
             {
-                this.FilteredBookList = FilterLists.FilterOnSearchString(FilteredBookList, this.Searchstring);
-
-                //if (!string.IsNullOrEmpty(this.Searchstring))
-                //{
-                //    this.FilteredBookList = FilterLists.FilterOnSearchString(FilteredBookList, this.Searchstring);
-                //}
-                //else
-                //{
-                //    this.FilteredBookList = this.FullBookList;
-                //}
+                this.FilteredBookList = await FilterLists.FilterBookList(
+                                this.FullBookList,
+                                this.FavoriteBooksOption,
+                                this.BookFormatOption,
+                                this.BookPublisherOption,
+                                this.BookLanguageOption,
+                                this.BookRatingOption,
+                                this.BookPublishYearOption,
+                                this.Searchstring);
 
                 this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
 

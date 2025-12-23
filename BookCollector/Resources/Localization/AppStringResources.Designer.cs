@@ -997,6 +997,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cleaning up the data....
+        /// </summary>
+        internal static string CleaningUpTheData {
+            get {
+                return ResourceManager.GetString("CleaningUpTheData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click to Search.
         /// </summary>
         internal static string ClickToSearch {
@@ -1254,6 +1263,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ErrorDownloadingImage {
             get {
                 return ResourceManager.GetString("ErrorDownloadingImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing data from book! Please contact support!.
+        /// </summary>
+        internal static string ErrorParsingDataFromBook {
+            get {
+                return ResourceManager.GetString("ErrorParsingDataFromBook", resourceCulture);
             }
         }
         
@@ -2928,6 +2946,24 @@ namespace BookCollector.Resources.Localization {
         internal static string TwoStars {
             get {
                 return ResourceManager.GetString("TwoStars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Overwrite File.
+        /// </summary>
+        internal static string UnableToOverwriteFile {
+            get {
+                return ResourceManager.GetString("UnableToOverwriteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to overwrite file. Please delete filePath and try again..
+        /// </summary>
+        internal static string UnableToOverwriteFile_PleaseDelete {
+            get {
+                return ResourceManager.GetString("UnableToOverwriteFile_PleaseDelete", resourceCulture);
             }
         }
         

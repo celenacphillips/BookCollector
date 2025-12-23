@@ -92,8 +92,20 @@ namespace BookCollector.ViewModels.Main
 
                     if (this.FilteredWishlistBookList != null)
                     {
-                        var sortList = SortLists.SortBookList(
-                                this.FilteredBookList,
+                        var sortTasks = new Task[]
+                        {
+                            //Task.Run(() => this.FullWishlistBookList.ToList().ForEach(x => x.SetAuthorListString())),
+                        };
+
+                        var loadDataTasks = new Task[]
+                        {
+                            Task.Run(() => this.FullWishlistBookList.ToList().ForEach(x => x.SetCoverDisplay())),
+                        };
+
+                        await Task.WhenAll(sortTasks);
+
+                        var sortList = SortLists.SortWishlistBookList(
+                                this.FullWishlistBookList,
                                 this.BookTitleChecked,
                                 this.BookReadingDateChecked,
                                 this.BookReadPercentageChecked,
@@ -106,12 +118,6 @@ namespace BookCollector.ViewModels.Main
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        var loadDataTasks = new Task[]
-                        {
-                            Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
-                            Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
-                        };
-
                         this.FilteredBooksCount = this.FilteredWishlistBookList.Count;
 
                         this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
@@ -119,6 +125,9 @@ namespace BookCollector.ViewModels.Main
                         this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
 
                         await Task.WhenAll(sortList);
+
+                        this.FullWishlistBookList = sortList.Result;
+
                         await Task.WhenAll(loadDataTasks);
                     }
 

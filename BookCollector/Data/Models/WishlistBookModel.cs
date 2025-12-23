@@ -2,12 +2,13 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using System.Globalization;
 using BookCollector.Data.Database;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace BookCollector.Data.Models
 {
@@ -152,6 +153,8 @@ namespace BookCollector.Data.Models
         {
             this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
             this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
+
+            BaseViewModel.SetBookCover(this);
         }
 
         public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)

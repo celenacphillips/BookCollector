@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Xml;
+using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -10,40 +12,56 @@ using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
 
 namespace BookCollector.Data.Spreadsheet
 {
-    public class ReadWriteSpreadsheet
+    public class ReadWriteSpreadsheet : BaseViewModel
     {
-        public static string CreateSpreadsheet(string folderPath)
+        public static async Task<string> CreateSpreadsheet(string folderPath)
         {
             var filename = $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx";
             var filepath = $"{folderPath}/{filename}";
 
-            // Create a spreadsheet document by supplying the filepath.
-            // By default, AutoSave = true, Editable = true, and Type = xlsx.
-            SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook);
-
-            var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
-
-            // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
-            using (XmlTextWriter writer = new (coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+            try
             {
-                writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
-                writer.Flush();
+                // Create a spreadsheet document by supplying the filepath.
+                // By default, AutoSave = true, Editable = true, and Type = xlsx.
+                SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook);
+
+                var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
+
+                // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
+                using (XmlTextWriter writer = new (coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+                {
+                    writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
+                    writer.Flush();
+                }
+
+                // Add a WorkbookPart to the document.
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                workbookpart.Workbook = new Workbook();
+
+                // Add a WorksheetPart to the WorkbookPart.
+                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                workbookpart.Workbook.Save();
+
+                // Close the document.
+                spreadsheetDocument.Close();
+
+                return filepath;
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                if (ex.Message.Equals($"Access to the path '{filepath}' is denied."))
+                {
+                    await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
+                }
 
-            // Add a WorkbookPart to the document.
-            WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
-            workbookpart.Workbook = new Workbook();
-
-            // Add a WorksheetPart to the WorkbookPart.
-            WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
-            worksheetPart.Worksheet = new Worksheet(new SheetData());
-
-            workbookpart.Workbook.Save();
-
-            // Close the document.
-            spreadsheetDocument.Close();
-
-            return filepath;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public static void WriteToSpreadsheet(string filePath, List<List<string?>> itemsList, string tableName)

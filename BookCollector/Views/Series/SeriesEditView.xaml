@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Series.SeriesEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Series"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:SeriesEditViewModel"
              x:Name="SeriesEditPage"
              Title="{Binding ViewTitle}">
@@ -79,15 +80,7 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 

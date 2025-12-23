@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using Newtonsoft.Json;
 
@@ -13,8 +15,11 @@ namespace BookCollector.Data.BookAPI
     /// </summary>
     public class GoogleBooksAPI : BaseViewModel
     {
-        public static (ObservableCollection<Item>?, int) Search(string input)
+        public static async Task<(ObservableCollection<Item>?, int)> Search(string input)
         {
+            var items = new ObservableCollection<Item>();
+            var totalItemCount = 0;
+
             HttpClient client = new ()
             {
                 BaseAddress = new Uri("https://www.googleapis.com/books/v1/volumes?q=isbn:"),
@@ -27,9 +32,6 @@ namespace BookCollector.Data.BookAPI
 
             if (response.IsSuccessStatusCode)
             {
-                var isbnItems = new ObservableCollection<Item>();
-                var totalItems = 0;
-
                 var result = response.Content.ReadAsStringAsync().Result;
 
                 try
@@ -48,18 +50,17 @@ namespace BookCollector.Data.BookAPI
                                 }
                             }
 
+                            items = [.. isbnResponse.items];
+                            totalItemCount = isbnResponse.totalItems;
 
-                            isbnItems = [.. isbnResponse.items];
-                            totalItems = isbnResponse.totalItems;
-
-                            if (totalItems == 0)
+                            if (totalItemCount == 0)
                             {
                                 throw new Exception();
                             }
 
-                            if (isbnItems != null)
+                            if (items != null)
                             {
-                                foreach (var item in isbnItems)
+                                foreach (var item in items)
                                 {
                                     if (item.VolumeInfo?.ImageLinks != null &&
                                         item.VolumeInfo.ImageLinks.thumbnail != null)
@@ -93,21 +94,30 @@ namespace BookCollector.Data.BookAPI
                             }
                         }
 
-                        return (isbnItems, totalItems);
+                        return (items, totalItemCount);
                     }
                     else
                     {
                         throw new Exception();
                     }
                 }
+                catch (AggregateException ex)
+                {
+                    if (ex.InnerException.InnerException.Message.Contains("Cleartext HTTP traffic"))
+                    {
+                        await DisplayMessage(AppStringResources.ErrorParsingDataFromBook, null);
+                    }
+
+                    return (items, totalItemCount);
+                }
                 catch (Exception ex)
                 {
-                    return (null, 0);
+                    return (items, totalItemCount);
                 }
             }
             else
             {
-                return (null, 0);
+                return (items, totalItemCount);
             }
         }
     }

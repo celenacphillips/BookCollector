@@ -56,6 +56,16 @@ namespace BookCollector.ViewModels.Groupings
                 {
                     this.FilteredGenreList = this.FullGenreList;
 
+                    this.SearchOnGenre(this.Searchstring);
+
+                    var loadDataTasks = new Task[]
+                    {
+                        Task.Run(() => this.FilteredGenreList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
+                        Task.Run(() => this.FilteredGenreList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
+                    };
+
+                    await Task.WhenAll(loadDataTasks);
+
                     var sortList = SortLists.SortGenresList(
                             this.FilteredGenreList,
                             this.GenreNameChecked,
@@ -68,7 +78,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     this.FilteredGenresCount = this.FilteredGenreList.Count;
 
-                    this.TotalGenresstring = StringManipulation.SetTotalCollectionsString(this.FilteredGenresCount, this.TotalGenresCount);
+                    this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
 
                     this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
 
@@ -92,11 +102,11 @@ namespace BookCollector.ViewModels.Groupings
 
             this.Searchstring = input;
 
-            if (this.FilteredGenreList != null)
+            if (this.FilteredGenreList != null && this.FullGenreList != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredGenreList = this.FilteredGenreList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredGenreList = this.FullGenreList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

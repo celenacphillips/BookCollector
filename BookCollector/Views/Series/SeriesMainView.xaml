@@ -7,6 +7,7 @@
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Series"
              x:DataType="viewModel:SeriesMainViewModel"
              xmlns:bookControls="clr-namespace:BookCollector.Views.Controls.Book"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:Name="SeriesMainPage"
              Title="{Binding ViewTitle}">
 
@@ -64,15 +65,7 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
     
