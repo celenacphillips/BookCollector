@@ -113,6 +113,9 @@ namespace BookCollector.ViewModels.Library
             }
             catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
                 this.SetIsBusyFalse();
             }
         }

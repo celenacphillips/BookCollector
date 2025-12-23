@@ -53,38 +53,50 @@ namespace BookCollector.ViewModels.Author
         [RelayCommand]
         public async Task SaveAuthor()
         {
-            this.ValidateFirstName();
-            this.ValidateLastName();
-
-            if (!this.AuthorFirstNameValid || !this.AuthorLastNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (TestData.UseTestData)
+                this.ValidateFirstName();
+                this.ValidateLastName();
+
+                if (!this.AuthorFirstNameValid || !this.AuthorLastNameValid)
                 {
-                    TestData.UpdateAuthor(this.EditedAuthor);
+                    await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
                 }
                 else
                 {
-                    this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
-                }
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new AuthorMainView(this.EditedAuthor, $"{this.EditedAuthor.FullName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-                }
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateAuthor(this.EditedAuthor);
+                    }
+                    else
+                    {
+                        this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
+                    }
 
-                await Shell.Current.Navigation.PopAsync();
+                    if (this.InsertMainViewBefore)
+                    {
+                        var view = new AuthorMainView(this.EditedAuthor, $"{this.EditedAuthor.FullName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    }
+
+                    await Shell.Current.Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 

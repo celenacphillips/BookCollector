@@ -90,6 +90,9 @@ namespace BookCollector.ViewModels.Groupings
             }
             catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
                 this.SetIsBusyFalse();
             }
         }
@@ -211,6 +214,9 @@ namespace BookCollector.ViewModels.Groupings
                 }
                 else
                 {
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
                     await CanceledAction();
                 }
             }

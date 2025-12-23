@@ -49,35 +49,47 @@ namespace BookCollector.ViewModels.Series
         [RelayCommand]
         public async Task SaveSeries()
         {
-            if (!this.SeriesNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (TestData.UseTestData)
+                if (!this.SeriesNameValid)
                 {
-                    TestData.UpdateSeries(this.EditedSeries);
+                    await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
                 }
                 else
                 {
-                    this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
-                }
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new SeriesMainView(this.EditedSeries, $"{this.EditedSeries.SeriesName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-                }
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateSeries(this.EditedSeries);
+                    }
+                    else
+                    {
+                        this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
+                    }
 
-                await Shell.Current.Navigation.PopAsync();
+                    if (this.InsertMainViewBefore)
+                    {
+                        var view = new SeriesMainView(this.EditedSeries, $"{this.EditedSeries.SeriesName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    }
+
+                    await Shell.Current.Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 

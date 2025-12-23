@@ -34,7 +34,7 @@ namespace BookCollector
 
             #if DEBUG
             builder.Logging.AddDebug();
-#endif
+            #endif
 
             builder.Services.AddSingleton<BookCollectorDatabase>();
 

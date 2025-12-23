@@ -226,6 +226,9 @@ namespace BookCollector.ViewModels.Main
                 catch (Exception ex)
                 {
                     await CanceledAction();
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = !this.IsBusy;
                     this.ExportEnabled = !this.IsBusy;
@@ -292,20 +295,6 @@ namespace BookCollector.ViewModels.Main
                         await this.ReadBooksFromSpreadsheet();
                         await this.ReadBookAuthorsFromSpreadsheet();
 
-                        //var finalLabel = (Label)this.View.FindByName("finalOutput");
-                        //finalLabel.TextColor = this.busyColor;
-
-                        //if (TestData.UseTestData)
-                        //{
-                        //    TestData.DataCleanup();
-                        //}
-                        //else
-                        //{
-                        //    this.FinalOutput = AppStringResources.CleaningUpTheData;
-                        //    await Database.DataCleanup();
-                        //}
-
-                        //finalLabel.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
                         await DisplayMessage(AppStringResources.ImportComplete, null);
@@ -321,6 +310,9 @@ namespace BookCollector.ViewModels.Main
                 catch (Exception ex)
                 {
                     await CanceledAction();
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = !this.IsBusy;
                     this.ExportEnabled = !this.IsBusy;
@@ -674,7 +666,13 @@ namespace BookCollector.ViewModels.Main
 
                                     var fi = new FileInfo(book.BookCoverFileLocation);
                                     var filePath = $"{directory}/{fi.Name}";
-                                    File.Copy(book.BookCoverFileLocation, filePath, true);
+
+                                    if (!File.Exists(filePath))
+                                    {
+                                        var fileBytes = File.ReadAllBytes(book.BookCoverFileLocation);
+                                        File.WriteAllBytes(filePath, fileBytes);
+                                        // File.Copy(book.BookCoverFileLocation, filePath, true);
+                                    }
 
                                     if (File.Exists(filePath))
                                     {

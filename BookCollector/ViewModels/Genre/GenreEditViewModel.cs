@@ -49,35 +49,47 @@ namespace BookCollector.ViewModels.Genre
         [RelayCommand]
         public async Task SaveGenre()
         {
-            if (!this.GenreNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.GenreNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (TestData.UseTestData)
+                if (!this.GenreNameValid)
                 {
-                    TestData.UpdateGenre(this.EditedGenre);
+                    await DisplayMessage(AppStringResources.GenreNameNotValid, null);
                 }
                 else
                 {
-                    this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
-                }
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new GenreMainView(this.EditedGenre, $"{this.EditedGenre.GenreName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-                }
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateGenre(this.EditedGenre);
+                    }
+                    else
+                    {
+                        this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
+                    }
 
-                await Shell.Current.Navigation.PopAsync();
+                    if (this.InsertMainViewBefore)
+                    {
+                        var view = new GenreMainView(this.EditedGenre, $"{this.EditedGenre.GenreName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    }
+
+                    await Shell.Current.Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 

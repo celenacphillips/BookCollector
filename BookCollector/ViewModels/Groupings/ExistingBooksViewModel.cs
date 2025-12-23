@@ -157,6 +157,9 @@ namespace BookCollector.ViewModels.Groupings
             }
             catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
                 this.SetIsBusyFalse();
             }
         }
@@ -287,69 +290,79 @@ namespace BookCollector.ViewModels.Groupings
 
         private async Task AddBookToGrouping()
         {
-            this.SetIsBusyTrue();
-
-            if (this.SelectedBook != null)
+            try
             {
-                switch (this.SelectedObjectType)
+                this.SetIsBusyTrue();
+
+                if (this.SelectedBook != null)
                 {
-                    case "Collection":
-                        var collection = (CollectionModel?)this.SelectedObject;
-                        this.SelectedBook.BookCollectionGuid = collection?.CollectionGuid;
-                        break;
+                    switch (this.SelectedObjectType)
+                    {
+                        case "Collection":
+                            var collection = (CollectionModel?)this.SelectedObject;
+                            this.SelectedBook.BookCollectionGuid = collection?.CollectionGuid;
+                            break;
 
-                    case "Genre":
-                        var genre = (GenreModel?)this.SelectedObject;
-                        this.SelectedBook.BookGenreGuid = genre?.GenreGuid;
-                        break;
+                        case "Genre":
+                            var genre = (GenreModel?)this.SelectedObject;
+                            this.SelectedBook.BookGenreGuid = genre?.GenreGuid;
+                            break;
 
-                    case "Series":
-                        var series = (SeriesModel?)this.SelectedObject;
-                        this.SelectedBook.BookSeriesGuid = series?.SeriesGuid;
-                        break;
+                        case "Series":
+                            var series = (SeriesModel?)this.SelectedObject;
+                            this.SelectedBook.BookSeriesGuid = series?.SeriesGuid;
+                            break;
 
-                    case "Author":
-                        var author = (AuthorModel?)this.SelectedObject;
+                        case "Author":
+                            var author = (AuthorModel?)this.SelectedObject;
 
-                        this.SelectedBook.SelectedAuthor = author;
+                            this.SelectedBook.SelectedAuthor = author;
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.AddAuthorToBook(author?.AuthorGuid, this.SelectedBook.BookGuid);
-                        }
-                        else
-                        {
-                            await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
-                        }
+                            if (TestData.UseTestData)
+                            {
+                                TestData.AddAuthorToBook(author?.AuthorGuid, this.SelectedBook.BookGuid);
+                            }
+                            else
+                            {
+                                await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
+                            }
 
-                        await this.SelectedBook.SetAuthorListString();
+                            await this.SelectedBook.SetAuthorListString();
 
-                        break;
+                            break;
 
-                    case "Location":
-                        var location = (LocationModel?)this.SelectedObject;
-                        this.SelectedBook.BookLocationGuid = location?.LocationGuid;
-                        break;
+                        case "Location":
+                            var location = (LocationModel?)this.SelectedObject;
+                            this.SelectedBook.BookLocationGuid = location?.LocationGuid;
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
+
+                    if (TestData.UseTestData)
+                    {
+                    }
+                    else
+                    {
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+                    }
+
+                    var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}");
+                    await Shell.Current.Navigation.PushAsync(view);
+
+                    await DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
                 }
 
-                if (TestData.UseTestData)
-                {
-                }
-                else
-                {
-                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
-                }
-
-                var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}");
-                await Shell.Current.Navigation.PushAsync(view);
-
-                await DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
+                this.SetIsBusyFalse();
             }
-
-            this.SetIsBusyFalse();
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
+            }
         }
 
         private void SetSelectedObjectType()

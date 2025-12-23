@@ -49,35 +49,47 @@ namespace BookCollector.ViewModels.Collection
         [RelayCommand]
         public async Task SaveCollection()
         {
-            if (!this.CollectionNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (TestData.UseTestData)
+                if (!this.CollectionNameValid)
                 {
-                    TestData.UpdateCollection(this.EditedCollection);
+                    await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
                 }
                 else
                 {
-                    this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
-                }
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
 
-                if (this.InsertMainViewBefore)
-                {
-                    CollectionMainView view = new CollectionMainView(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-                }
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateCollection(this.EditedCollection);
+                    }
+                    else
+                    {
+                        this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
+                    }
 
-                await Shell.Current.Navigation.PopAsync();
+                    if (this.InsertMainViewBefore)
+                    {
+                        CollectionMainView view = new CollectionMainView(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    }
+
+                    await Shell.Current.Navigation.PopAsync();
+                }
+            }
+            catch(Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 

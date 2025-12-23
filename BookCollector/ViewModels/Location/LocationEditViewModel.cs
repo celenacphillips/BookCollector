@@ -49,35 +49,47 @@ namespace BookCollector.ViewModels.Location
         [RelayCommand]
         public async Task SaveLocation()
         {
-            if (!this.LocationNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.LocationNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (TestData.UseTestData)
+                if (!this.LocationNameValid)
                 {
-                    TestData.UpdateLocation(this.EditedLocation);
+                    await DisplayMessage(AppStringResources.LocationNameNotValid, null);
                 }
                 else
                 {
-                    this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
-                }
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new LocationMainView(this.EditedLocation, $"{this.EditedLocation.LocationName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-                }
+                    if (TestData.UseTestData)
+                    {
+                        TestData.UpdateLocation(this.EditedLocation);
+                    }
+                    else
+                    {
+                        this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
+                    }
 
-                await Shell.Current.Navigation.PopAsync();
+                    if (this.InsertMainViewBefore)
+                    {
+                        var view = new LocationMainView(this.EditedLocation, $"{this.EditedLocation.LocationName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    }
+
+                    await Shell.Current.Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 

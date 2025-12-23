@@ -94,6 +94,9 @@ namespace BookCollector.ViewModels.Book
                 catch (Exception ex)
                 {
                     await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
                     this.SetIsBusyFalse();
                     this.ShowAddISBN = true;
                 }
@@ -140,6 +143,9 @@ namespace BookCollector.ViewModels.Book
             catch (Exception ex)
             {
                 await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
             }
         }
 

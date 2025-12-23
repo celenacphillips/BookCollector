@@ -69,6 +69,9 @@ namespace BookCollector.ViewModels.Statistics
             }
             catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
                 this.SetIsBusyFalse();
             }
         }
