@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
@@ -324,7 +325,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         [RelayCommand]
-        public void BookCoverPopup()
+        public async Task BookCoverPopup()
         {
             this.View.ShowPopup(new BookCoverPopup(this.BookCover));
         }

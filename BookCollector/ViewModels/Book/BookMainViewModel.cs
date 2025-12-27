@@ -2,6 +2,7 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using System.Collections.ObjectModel;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -10,7 +11,6 @@ using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -55,19 +55,21 @@ namespace BookCollector.ViewModels.Book
                     this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
                     this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
 
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation) && this.SelectedBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
                     {
-                        var imageBytes = File.ReadAllBytes(this.SelectedBook.BookCoverFileLocation);
-                        var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                        this.SelectedBook.BookCover = imageSource;
+                        this.SelectedBook.BookCover = ImageSource.FromFile(this.SelectedBook.BookCoverFileLocation);
                     }
 
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl) && this.SelectedBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl))
                     {
                         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
-                            var byteArray = DownloadImage(this.SelectedBook.BookCoverUrl);
-                            this.SelectedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            this.SelectedBook.BookCover = new UriImageSource
+                            {
+                                Uri = new Uri(this.SelectedBook.BookCoverUrl),
+                                CachingEnabled = true,
+                                CacheValidity = TimeSpan.FromDays(1),
+                            };
                         }
                         else
                         {

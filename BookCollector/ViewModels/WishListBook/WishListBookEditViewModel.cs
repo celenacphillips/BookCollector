@@ -71,29 +71,21 @@ namespace BookCollector.ViewModels.WishListBook
                 this.SummarySectionValue = true;
                 this.CommentsSectionValue = true;
 
-                if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverFileLocation) && this.EditedWishlistBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverFileLocation))
                 {
-                    var imageBytes = File.ReadAllBytes(this.EditedWishlistBook.BookCoverFileLocation);
-                    var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                    this.EditedWishlistBook.BookCover = imageSource;
+                    this.EditedWishlistBook.BookCover = ImageSource.FromFile(this.EditedWishlistBook.BookCoverFileLocation);
                 }
 
-                if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverUrl) && this.EditedWishlistBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverUrl))
                 {
                     if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
-                        var byteArray = DownloadImage(this.EditedWishlistBook.BookCoverUrl);
-                        this.EditedWishlistBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-
-                        var directory = Path.Combine(FileSystem.AppDataDirectory, "BookCovers");
-
-                        if (!Directory.Exists(directory))
+                        this.EditedWishlistBook.BookCover = new UriImageSource
                         {
-                            Directory.CreateDirectory(directory);
-
-                            var filePath = Path.Combine(directory, $"{this.EditedWishlistBook.BookGuid}.jpg");
-                            File.WriteAllBytes(filePath, byteArray);
-                        }
+                            Uri = new Uri(this.EditedWishlistBook.BookCoverUrl),
+                            CachingEnabled = true,
+                            CacheValidity = TimeSpan.FromDays(1),
+                        };
                     }
                     else
                     {
@@ -314,8 +306,12 @@ namespace BookCollector.ViewModels.WishListBook
                     {
                         try
                         {
-                            var byteArray = DownloadImage(bookCoverUrl);
-                            this.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            this.BookCover = new UriImageSource
+                            {
+                                Uri = new Uri(bookCoverUrl),
+                                CachingEnabled = true,
+                                CacheValidity = TimeSpan.FromDays(1),
+                            };
                             this.EditedWishlistBook.BookCover = this.BookCover;
                             this.EditedWishlistBook.HasBookCover = true;
                             this.EditedWishlistBook.HasNoBookCover = false;

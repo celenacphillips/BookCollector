@@ -2950,6 +2950,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find book with api..
+        /// </summary>
+        internal static string UnableToFindBook {
+            get {
+                return ResourceManager.GetString("UnableToFindBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to Overwrite File.
         /// </summary>
         internal static string UnableToOverwriteFile {

@@ -199,7 +199,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void SetIsBusyTrue()
         {
-            // GC.Collect();
+            GC.Collect();
             this.IsBusy = true;
             this.IsVisible = true;
         }
@@ -208,7 +208,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             this.IsBusy = false;
             this.IsVisible = true;
-            GC.Collect();
         }
 
         public void SetRefreshTrue()
@@ -223,19 +222,21 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static void SetBookCover(BookModel book)
         {
-            if (!string.IsNullOrEmpty(book.BookCoverFileLocation) && book.BookCover == null)
+            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
             {
-                var imageBytes = File.ReadAllBytes(book.BookCoverFileLocation);
-                var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                book.BookCover = imageSource;
+                book.BookCover = ImageSource.FromFile(book.BookCoverFileLocation);
             }
 
-            if (!string.IsNullOrEmpty(book.BookCoverUrl) && book.BookCover == null)
+            if (!string.IsNullOrEmpty(book.BookCoverUrl))
             {
                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                 {
-                    var byteArray = DownloadImage(book.BookCoverUrl);
-                    book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    book.BookCover = new UriImageSource
+                    {
+                        Uri = new Uri(book.BookCoverUrl),
+                        CachingEnabled = true,
+                        CacheValidity = TimeSpan.FromDays(1),
+                    };
                 }
                 else
                 {
@@ -247,19 +248,21 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static void SetBookCover(WishlistBookModel book)
         {
-            if (!string.IsNullOrEmpty(book.BookCoverFileLocation) && book.BookCover == null)
+            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
             {
-                var imageBytes = File.ReadAllBytes(book.BookCoverFileLocation);
-                var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                book.BookCover = imageSource;
+                book.BookCover = ImageSource.FromFile(book.BookCoverFileLocation);
             }
 
-            if (!string.IsNullOrEmpty(book.BookCoverUrl) && book.BookCover == null)
+            if (!string.IsNullOrEmpty(book.BookCoverUrl))
             {
                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                 {
-                    var byteArray = DownloadImage(book.BookCoverUrl);
-                    book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                    book.BookCover = new UriImageSource
+                    {
+                        Uri = new Uri(book.BookCoverUrl),
+                        CachingEnabled = true,
+                        CacheValidity = TimeSpan.FromDays(1),
+                    };
                 }
                 else
                 {

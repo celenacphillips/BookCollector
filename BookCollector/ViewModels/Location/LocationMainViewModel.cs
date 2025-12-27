@@ -34,6 +34,8 @@ namespace BookCollector.ViewModels.Location
                 {
                     this.SetIsBusyTrue();
 
+                    this.FilteredBookList = null;
+
                     this.GetPreferences();
 
                     var fullList = FillLists.GetAllBooksInLocationList(this.SelectedLocation.LocationGuid, this.ShowHiddenBook);

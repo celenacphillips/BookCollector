@@ -514,46 +514,49 @@ namespace BookCollector.ViewModels.Main
                             book.BookCoverUrl,
                         };
 
-                        var booksImageExport = $"{this.imageExportLocation}/BookCovers";
-
-                        if (!Directory.Exists(booksImageExport))
+                        if (this.ImagesChecked)
                         {
-                            Directory.CreateDirectory(booksImageExport);
-                        }
+                            var booksImageExport = $"{this.imageExportLocation}/BookCovers";
 
-                        if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
-                        {
-                            var bookCoverFile = $"{booksImageExport}/BookCoverFiles";
-
-                            if (!Directory.Exists(bookCoverFile))
+                            if (!Directory.Exists(booksImageExport))
                             {
-                                Directory.CreateDirectory(bookCoverFile);
+                                Directory.CreateDirectory(booksImageExport);
                             }
 
-                            var fi = new FileInfo(book.BookCoverFileLocation);
-                            var exportLocation = $"{bookCoverFile}/{fi.Name}";
-                            File.Copy(book.BookCoverFileLocation, exportLocation, true);
-                            stringItem.Add(exportLocation);
-                        }
-                        else
-                        {
-                            stringItem.Add(string.Empty);
-                        }
-
-                        if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
-                        {
-                            var bookCoverFile = $"{booksImageExport}/BookCoverDownloads";
-
-                            if (!Directory.Exists(bookCoverFile))
+                            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
                             {
-                                Directory.CreateDirectory(bookCoverFile);
+                                var bookCoverFile = $"{booksImageExport}/BookCoverFiles";
+
+                                if (!Directory.Exists(bookCoverFile))
+                                {
+                                    Directory.CreateDirectory(bookCoverFile);
+                                }
+
+                                var fi = new FileInfo(book.BookCoverFileLocation);
+                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                File.Copy(book.BookCoverFileLocation, exportLocation, true);
+                                stringItem.Add(exportLocation);
+                            }
+                            else
+                            {
+                                stringItem.Add(string.Empty);
                             }
 
-                            var byteArray = DownloadImage(book.BookCoverUrl);
+                            if (!string.IsNullOrEmpty(book.BookCoverUrl))
+                            {
+                                var bookCoverFile = $"{booksImageExport}/BookCoverDownloads";
 
-                            var fi = new FileInfo(book.BookCoverUrl);
-                            var exportLocation = $"{bookCoverFile}/{fi.Name}";
-                            File.WriteAllBytes(exportLocation, byteArray);
+                                if (!Directory.Exists(bookCoverFile))
+                                {
+                                    Directory.CreateDirectory(bookCoverFile);
+                                }
+
+                                var byteArray = DownloadImage(book.BookCoverUrl);
+
+                                var fi = new FileInfo(book.BookCoverUrl);
+                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                File.WriteAllBytes(exportLocation, byteArray);
+                            }
                         }
 
                         stringItems.Add(stringItem);
@@ -640,8 +643,12 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     try
                                     {
-                                        var byteArray = DownloadImage(book.BookCoverUrl);
-                                        book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                                        book.BookCover = new UriImageSource
+                                        {
+                                            Uri = new Uri(book.BookCoverUrl),
+                                            CachingEnabled = true,
+                                            CacheValidity = TimeSpan.FromDays(1),
+                                        };
                                     }
                                     catch (Exception ex)
                                     {
@@ -799,46 +806,49 @@ namespace BookCollector.ViewModels.Main
                                 book.BookCoverUrl,
                             };
 
-                            var wishlistBooksImageExport = $"{this.imageExportLocation}/WishlistBookCovers";
-
-                            if (!Directory.Exists(wishlistBooksImageExport))
+                            if (this.ImagesChecked)
                             {
-                                Directory.CreateDirectory(wishlistBooksImageExport);
-                            }
+                                var wishlistBooksImageExport = $"{this.imageExportLocation}/WishlistBookCovers";
 
-                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileLocation))
-                            {
-                                var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverFiles";
-
-                                if (!Directory.Exists(bookCoverFile))
+                                if (!Directory.Exists(wishlistBooksImageExport))
                                 {
-                                    Directory.CreateDirectory(bookCoverFile);
+                                    Directory.CreateDirectory(wishlistBooksImageExport);
                                 }
 
-                                var fi = new FileInfo(book.BookCoverFileLocation);
-                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
-                                File.Copy(book.BookCoverFileLocation, exportLocation, true);
-                                stringItem.Add(exportLocation);
-                            }
-                            else
-                            {
-                                stringItem.Add(string.Empty);
-                            }
-
-                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
-                            {
-                                var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverDownloads";
-
-                                if (!Directory.Exists(bookCoverFile))
+                                if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
                                 {
-                                    Directory.CreateDirectory(bookCoverFile);
+                                    var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverFiles";
+
+                                    if (!Directory.Exists(bookCoverFile))
+                                    {
+                                        Directory.CreateDirectory(bookCoverFile);
+                                    }
+
+                                    var fi = new FileInfo(book.BookCoverFileLocation);
+                                    var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                    File.Copy(book.BookCoverFileLocation, exportLocation, true);
+                                    stringItem.Add(exportLocation);
+                                }
+                                else
+                                {
+                                    stringItem.Add(string.Empty);
                                 }
 
-                                var byteArray = DownloadImage(book.BookCoverUrl);
+                                if (!string.IsNullOrEmpty(book.BookCoverUrl))
+                                {
+                                    var bookCoverFile = $"{wishlistBooksImageExport}/BookCoverDownloads";
 
-                                var fi = new FileInfo(book.BookCoverUrl);
-                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
-                                File.WriteAllBytes(exportLocation, byteArray);
+                                    if (!Directory.Exists(bookCoverFile))
+                                    {
+                                        Directory.CreateDirectory(bookCoverFile);
+                                    }
+
+                                    var byteArray = DownloadImage(book.BookCoverUrl);
+
+                                    var fi = new FileInfo(book.BookCoverUrl);
+                                    var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                    File.WriteAllBytes(exportLocation, byteArray);
+                                }
                             }
 
                             stringItems.Add(stringItem);
@@ -927,8 +937,12 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     try
                                     {
-                                        var byteArray = DownloadImage(book.BookCoverUrl);
-                                        book.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                                        book.BookCover = new UriImageSource
+                                        {
+                                            Uri = new Uri(book.BookCoverUrl),
+                                            CachingEnabled = true,
+                                            CacheValidity = TimeSpan.FromDays(1),
+                                        };
                                         book.HasBookCover = true;
                                     }
                                     catch (Exception ex)

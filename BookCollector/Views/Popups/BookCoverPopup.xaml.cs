@@ -8,7 +8,7 @@ namespace BookCollector.Views.Popups;
 
 public partial class BookCoverPopup : Popup
 {
-    public BookCoverPopup(ImageSource? bookCover)
+    public BookCoverPopup(ImageSource bookCover)
     {
         this.BookCover = bookCover;
 
@@ -17,5 +17,5 @@ public partial class BookCoverPopup : Popup
         this.InitializeComponent();
     }
 
-    public ImageSource? BookCover { get; set; }
+    public ImageSource BookCover { get; set; }
 }

@@ -2,6 +2,7 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using System.Collections.ObjectModel;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -19,8 +20,6 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Collections.ObjectModel;
 using Editor = Microsoft.Maui.Controls.Editor;
 
 namespace BookCollector.ViewModels.Book
@@ -169,29 +168,21 @@ namespace BookCollector.ViewModels.Book
                 this.ShowUpNext = this.EditedBook.BookPageRead == 0;
                 this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
 
-                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation) && this.EditedBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation))
                 {
-                    var imageBytes = File.ReadAllBytes(this.EditedBook.BookCoverFileLocation);
-                    var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                    this.EditedBook.BookCover = imageSource;
+                    this.EditedBook.BookCover = ImageSource.FromFile(this.EditedBook.BookCoverFileLocation);
                 }
 
-                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl) && this.EditedBook.BookCover == null)
+                if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl))
                 {
                     if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
-                        var byteArray = DownloadImage(this.EditedBook.BookCoverUrl);
-                        this.EditedBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
-
-                        var directory = Path.Combine(FileSystem.AppDataDirectory, "BookCovers");
-
-                        if (!Directory.Exists(directory))
+                        this.EditedBook.BookCover = new UriImageSource
                         {
-                            Directory.CreateDirectory(directory);
-
-                            var filePath = Path.Combine(directory, $"{this.EditedBook.BookGuid}.jpg");
-                            File.WriteAllBytes(filePath, byteArray);
-                        }
+                            Uri = new Uri(this.EditedBook.BookCoverUrl),
+                            CachingEnabled = true,
+                            CacheValidity = TimeSpan.FromDays(1),
+                        };
                     }
                     else
                     {
@@ -514,8 +505,12 @@ namespace BookCollector.ViewModels.Book
                     {
                         try
                         {
-                            var byteArray = DownloadImage(bookCoverUrl);
-                            this.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            this.BookCover = new UriImageSource
+                            {
+                                Uri = new Uri(bookCoverUrl),
+                                CachingEnabled = true,
+                                CacheValidity = TimeSpan.FromDays(1),
+                            };
                             this.EditedBook.BookCover = this.BookCover;
                             this.EditedBook.HasBookCover = true;
                             this.EditedBook.HasNoBookCover = false;

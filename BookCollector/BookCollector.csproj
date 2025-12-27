@@ -111,7 +111,7 @@
 		<MauiImage Include="Resources\Icons\vertical_dots_light.svg" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="100,100" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#336699" BaseSize="150,150" />
 
 		<!-- Images -->
 

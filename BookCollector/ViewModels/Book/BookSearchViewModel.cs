@@ -83,7 +83,9 @@ namespace BookCollector.ViewModels.Book
                         items.Count == 0 ||
                         totalItems == 0)
                     {
-                        throw new Exception();
+                        await DisplayMessage(AppStringResources.UnableToFindBook.Replace("api", "Google Books API"), null);
+                        this.SetIsBusyFalse();
+                        this.ShowAddISBN = true;
                     }
                     else
                     {

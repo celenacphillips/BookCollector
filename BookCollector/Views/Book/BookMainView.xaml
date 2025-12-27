@@ -90,7 +90,7 @@
                         <!-- Book Title -->
 
                         <!-- Book Cover -->
-                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=BookCover}"
+                        <ImageButton Source="{Binding SelectedBook.BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
                                      IsVisible="{Binding SelectedBook.HasBookCover}"

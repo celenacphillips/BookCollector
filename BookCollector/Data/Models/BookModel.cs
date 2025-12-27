@@ -148,6 +148,8 @@ namespace BookCollector.Data.Models
             {
                 var series = await GetItems.GetSeriesForBook(this.BookSeriesGuid);
 
+                this.BookSeries = null;
+
                 if (series != null)
                 {
                     if (this.BookNumberInSeries != null)

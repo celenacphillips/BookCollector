@@ -209,14 +209,14 @@ namespace BookCollector.ViewModels.Groupings
                     }
                     catch (Exception ex)
                     {
+#if DEBUG
+                        await DisplayMessage("Error!", ex.Message);
+#endif
                         await CanceledAction();
                     }
                 }
                 else
                 {
-#if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
-#endif
                     await CanceledAction();
                 }
             }

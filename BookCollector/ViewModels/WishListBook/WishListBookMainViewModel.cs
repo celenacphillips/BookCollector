@@ -46,19 +46,21 @@ namespace BookCollector.ViewModels.WishListBook
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
-                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverFileLocation) && this.SelectedWishlistBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverFileLocation))
                     {
-                        var imageBytes = File.ReadAllBytes(this.SelectedWishlistBook.BookCoverFileLocation);
-                        var imageSource = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-                        this.SelectedWishlistBook.BookCover = imageSource;
+                        this.SelectedWishlistBook.BookCover = ImageSource.FromFile(this.SelectedWishlistBook.BookCoverFileLocation);
                     }
 
-                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverUrl) && this.SelectedWishlistBook.BookCover == null)
+                    if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverUrl))
                     {
                         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
-                            var byteArray = DownloadImage(this.SelectedWishlistBook.BookCoverUrl);
-                            this.SelectedWishlistBook.BookCover = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                            this.SelectedWishlistBook.BookCover = new UriImageSource
+                            {
+                                Uri = new Uri(this.SelectedWishlistBook.BookCoverUrl),
+                                CachingEnabled = true,
+                                CacheValidity = TimeSpan.FromDays(1),
+                            };
                         }
                         else
                         {
@@ -207,6 +209,7 @@ namespace BookCollector.ViewModels.WishListBook
                             }
 
                             this.SelectedWishlistBook.BookSeriesGuid = series.SeriesGuid;
+                            this.SelectedWishlistBook.BookSeries = null;
                         }
 
                         if (TestData.UseTestData)

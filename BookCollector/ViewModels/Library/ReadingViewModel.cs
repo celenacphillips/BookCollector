@@ -31,6 +31,8 @@ namespace BookCollector.ViewModels.Library
             {
                 this.SetIsBusyTrue();
 
+                this.FilteredBookList = null;
+
                 this.GetPreferences();
 
                 var fullList = FillLists.GetReadingBooksList(this.ShowHiddenBook);

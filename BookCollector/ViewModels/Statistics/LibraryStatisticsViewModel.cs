@@ -89,7 +89,7 @@ namespace BookCollector.ViewModels.Statistics
                 var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber);
                 var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber);
                 var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber);
                 var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
                 var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
                 var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
@@ -119,6 +119,8 @@ namespace BookCollector.ViewModels.Statistics
                     locations,
                     formats,
                     formatPrices);
+
+                await Task.Delay(1);
 
                 this.CostBooks = cost.Result;
                 this.TotalBooks = total.Result;

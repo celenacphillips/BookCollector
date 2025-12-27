@@ -34,6 +34,8 @@ namespace BookCollector.ViewModels.Genre
                 {
                     this.SetIsBusyTrue();
 
+                    this.FilteredBookList = null;
+
                     this.GetPreferences();
 
                     var fullList = FillLists.GetAllBooksInGenreList(this.SelectedGenre.GenreGuid, this.ShowHiddenBook);

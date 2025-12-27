@@ -41,6 +41,8 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.SetIsBusyTrue();
 
+                this.FilteredBookList = null;
+
                 this.GetPreferences();
 
                 switch (this.SelectedObjectType)

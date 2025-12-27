@@ -36,6 +36,8 @@ namespace BookCollector.ViewModels.Series
                 {
                     this.SetIsBusyTrue();
 
+                    this.FilteredBookList = null;
+
                     this.GetPreferences();
 
                     var fullList = FillLists.GetAllBooksInSeriesList(this.SelectedSeries.SeriesGuid, this.ShowHiddenBook);
@@ -92,7 +94,8 @@ namespace BookCollector.ViewModels.Series
                                     this.BookPriceChecked,
                                     this.PageCountChecked,
                                     this.AscendingChecked,
-                                    this.DescendingChecked);
+                                    this.DescendingChecked,
+                                    this.SeriesOrderChecked);
 
                             this.FilteredBooksCount = this.FilteredBookList.Count;
 

@@ -42,20 +42,24 @@ namespace BookCollector.Data.BookAPI
 
                         if (isbnResponse != null)
                         {
-                            foreach (var item in isbnResponse.items)
+                            if (isbnResponse.items != null)
                             {
-                                if (item.volumeInfo.imageLinks.thumbnail.StartsWith("http://"))
+                                foreach (var item in isbnResponse.items)
                                 {
-                                    item.volumeInfo.imageLinks.thumbnail = item.volumeInfo.imageLinks.thumbnail.Replace("http://", "https://");
+                                    if (item.VolumeInfo.ImageLinks.thumbnail.StartsWith("http://"))
+                                    {
+                                        item.VolumeInfo.ImageLinks.thumbnail = item.VolumeInfo.ImageLinks.thumbnail.Replace("http://", "https://");
+                                    }
                                 }
+
+                                items = [.. isbnResponse.items];
                             }
 
-                            items = [.. isbnResponse.items];
                             totalItemCount = isbnResponse.totalItems;
 
                             if (totalItemCount == 0)
                             {
-                                throw new Exception();
+                                return (items, totalItemCount);
                             }
 
                             if (items != null)
@@ -65,8 +69,13 @@ namespace BookCollector.Data.BookAPI
                                     if (item.VolumeInfo?.ImageLinks != null &&
                                         item.VolumeInfo.ImageLinks.thumbnail != null)
                                     {
-                                        var byteArray = DownloadImage($"{item.VolumeInfo.ImageLinks.thumbnail}.jpg");
-                                        item.VolumeInfo.ImageLinks.ImageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                                        var image = $"{item.VolumeInfo.ImageLinks.thumbnail}.jpg";
+                                        item.VolumeInfo.ImageLinks.ImageSource = new UriImageSource
+                                        {
+                                            Uri = new Uri(image),
+                                            CachingEnabled = true,
+                                            CacheValidity = TimeSpan.FromDays(1),
+                                        };
                                         item.VolumeInfo.HasBookCover = true;
                                     }
                                     else
@@ -98,7 +107,7 @@ namespace BookCollector.Data.BookAPI
                     }
                     else
                     {
-                        throw new Exception();
+                        return (items, totalItemCount);
                     }
                 }
                 catch (AggregateException ex)
@@ -112,7 +121,7 @@ namespace BookCollector.Data.BookAPI
                 }
                 catch (Exception ex)
                 {
-                    return (items, totalItemCount);
+                    throw ex;
                 }
             }
             else

@@ -34,6 +34,8 @@ namespace BookCollector.ViewModels.Collection
                 {
                     this.SetIsBusyTrue();
 
+                    this.FilteredBookList = null;
+
                     this.GetPreferences();
 
                     var fullList = FillLists.GetAllBooksInCollectionList(this.SelectedCollection.CollectionGuid, this.ShowHiddenBook);

@@ -1110,4 +1110,7 @@
   <data name="UnableToOverwriteFile_PleaseDelete" xml:space="preserve">
     <value>Unable to overwrite file. Please delete filePath and try again.</value>
   </data>
+  <data name="UnableToFindBook" xml:space="preserve">
+    <value>Unable to find book with api.</value>
+  </data>
 </root>
