@@ -10,9 +10,9 @@ public partial class ExistingBooksView : ContentPage
 {
     private ExistingBooksViewModel viewModel;
 
-    public ExistingBooksView(object selected, string viewTitle)
+    public ExistingBooksView(object selected, string viewTitle, object previousViewModel)
     {
-        this.viewModel = new ExistingBooksViewModel(selected, this)
+        this.viewModel = new ExistingBooksViewModel(selected, this, previousViewModel)
         {
             ViewTitle = viewTitle,
         };

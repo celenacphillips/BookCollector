@@ -2,9 +2,12 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using BookCollector.Data;
 using BookCollector.Data.Database;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Extensions;
@@ -270,6 +273,45 @@ namespace BookCollector.ViewModels.BaseViewModels
                     book.HasNoBookCover = true;
                 }
             }
+        }
+
+        public static void ClearAllLists()
+        {
+            ReadingViewModel.fullBookList?.Clear();
+            ReadingViewModel.filteredBookList?.Clear();
+            ReadingViewModel.RefreshView = true;
+
+            ToBeReadViewModel.fullBookList?.Clear();
+            ToBeReadViewModel.filteredBookList?.Clear();
+            ToBeReadViewModel.RefreshView = true;
+
+            ReadViewModel.fullBookList?.Clear();
+            ReadViewModel.filteredBookList?.Clear();
+            ReadViewModel.RefreshView = true;
+
+            AllBooksViewModel.fullBookList?.Clear();
+            AllBooksViewModel.filteredBookList?.Clear();
+            AllBooksViewModel.RefreshView = true;
+
+            CollectionsViewModel.fullCollectionList?.Clear();
+            CollectionsViewModel.filteredCollectionList?.Clear();
+            CollectionsViewModel.RefreshView = true;
+
+            GenresViewModel.fullGenreList?.Clear();
+            GenresViewModel.filteredGenreList?.Clear();
+            GenresViewModel.RefreshView = true;
+
+            SeriesViewModel.fullSeriesList?.Clear();
+            SeriesViewModel.filteredSeriesList?.Clear();
+            SeriesViewModel.RefreshView = true;
+
+            AuthorsViewModel.fullAuthorList?.Clear();
+            AuthorsViewModel.filteredAuthorList?.Clear();
+            AuthorsViewModel.RefreshView = true;
+
+            LocationsViewModel.fullLocationList?.Clear();
+            LocationsViewModel.filteredLocationList?.Clear();
+            LocationsViewModel.RefreshView = true;
         }
     }
 }

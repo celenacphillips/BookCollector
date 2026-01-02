@@ -30,7 +30,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedLocation.LocationName}"
-                            Placeholder="{x:Static localization:AppStringResources.LocationName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterLocationName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="LocationNameEditor">

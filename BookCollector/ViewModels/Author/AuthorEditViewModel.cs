@@ -7,9 +7,11 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Author;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Author
 {
@@ -80,6 +82,7 @@ namespace BookCollector.ViewModels.Author
                     else
                     {
                         this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
+                        AddToStaticList(this.EditedAuthor);
                     }
 
                     if (this.InsertMainViewBefore)
@@ -148,6 +151,66 @@ namespace BookCollector.ViewModels.Author
                 lastNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.AuthorLastNameValid = true;
             }
+        }
+
+        public static async Task AddToStaticList(AuthorModel author)
+        {
+            if (AuthorsViewModel.fullAuthorList != null)
+            {
+                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
+            }
+        }
+
+        private static async Task<bool> AddAuthorToStaticList(AuthorModel author, ObservableCollection<AuthorModel> authorList, ObservableCollection<AuthorModel>? filteredAuthorList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                author.SetTotalBooks(true),
+                author.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldAuthor = authorList.FirstOrDefault(x => x.AuthorGuid == author.AuthorGuid);
+
+                if (oldAuthor != null)
+                {
+                    var index = authorList.IndexOf(oldAuthor);
+                    authorList.Remove(oldAuthor);
+                    authorList.Insert(index, author);
+                    refresh = true;
+                }
+                else
+                {
+                    authorList.Add(author);
+                    refresh = true;
+                }
+
+                if (filteredAuthorList != null)
+                {
+                    var filteredAuthor = filteredAuthorList.FirstOrDefault(x => x.AuthorGuid == author.AuthorGuid);
+
+                    if (filteredAuthor != null)
+                    {
+                        var index = filteredAuthorList.IndexOf(filteredAuthor);
+                        filteredAuthorList.Remove(filteredAuthor);
+                        filteredAuthorList.Insert(index, author);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredAuthorList.Add(author);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

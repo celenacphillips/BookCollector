@@ -30,7 +30,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedCollection.CollectionName}"
-                            Placeholder="{x:Static localization:AppStringResources.CollectionName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterCollectionName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="CollectionNameEditor">

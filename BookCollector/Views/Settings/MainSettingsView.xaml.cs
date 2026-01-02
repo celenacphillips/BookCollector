@@ -5,6 +5,7 @@
 using BookCollector.Data;
 using BookCollector.Data.Database;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Storage;
 
 namespace BookCollector.Views.Settings;
@@ -168,6 +169,7 @@ public partial class MainSettingsView : ContentPage
             else
             {
                 await Database.DropAllTables();
+                BaseViewModel.ClearAllLists();
             }
 
             await Shell.Current.DisplayAlertAsync(AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, AppStringResources.OK);

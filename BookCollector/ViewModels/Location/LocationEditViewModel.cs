@@ -7,9 +7,11 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Location;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Location
 {
@@ -73,6 +75,7 @@ namespace BookCollector.ViewModels.Location
                     else
                     {
                         this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
+                        AddToStaticList(this.EditedLocation);
                     }
 
                     if (this.InsertMainViewBefore)
@@ -125,6 +128,66 @@ namespace BookCollector.ViewModels.Location
                 locationNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.LocationNameValid = true;
             }
+        }
+
+        public static async Task AddToStaticList(LocationModel location)
+        {
+            if (LocationsViewModel.fullLocationList != null)
+            {
+                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
+            }
+        }
+
+        private static async Task<bool> AddLocationToStaticList(LocationModel location, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                location.SetTotalBooks(true),
+                location.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldLocation = locationList.FirstOrDefault(x => x.LocationGuid == location.LocationGuid);
+
+                if (oldLocation != null)
+                {
+                    var index = locationList.IndexOf(oldLocation);
+                    locationList.Remove(oldLocation);
+                    locationList.Insert(index, location);
+                    refresh = true;
+                }
+                else
+                {
+                    locationList.Add(location);
+                    refresh = true;
+                }
+
+                if (filteredLocationList != null)
+                {
+                    var filteredLocation = filteredLocationList.FirstOrDefault(x => x.LocationGuid == location.LocationGuid);
+
+                    if (filteredLocation != null)
+                    {
+                        var index = filteredLocationList.IndexOf(filteredLocation);
+                        filteredLocationList.Remove(filteredLocation);
+                        filteredLocationList.Insert(index, location);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredLocationList.Add(location);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

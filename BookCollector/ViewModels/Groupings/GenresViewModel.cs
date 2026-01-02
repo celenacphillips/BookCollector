@@ -7,6 +7,7 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Genre;
 using BookCollector.Views.Popups;
@@ -14,6 +15,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Groupings
 {
@@ -28,6 +30,7 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
             this.InfoText = $"{AppStringResources.GenreView_InfoText}";
             this.ViewTitle = AppStringResources.Genres;
+            RefreshView = true;
         }
 
         private bool ShowHiddenGenres { get; set; }
@@ -38,63 +41,66 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
+        public static bool RefreshView { get; set; }
+
+        public static async Task SetList(bool showHiddenGenres)
+        {
+            if (fullGenreList == null)
+            {
+                fullGenreList = await FillLists.GetAllGenresList(showHiddenGenres);
+            }
+        }
+
         public async Task SetViewModelData()
         {
-            try
+            if (RefreshView)
             {
-                this.SetIsBusyTrue();
-
-                this.GetPreferences();
-
-                var fullList = FillLists.GetAllGenresList(this.ShowHiddenGenres);
-
-                await Task.WhenAll(fullList);
-
-                this.FullGenreList = fullList.Result;
-
-                if (this.FullGenreList != null)
+                try
                 {
-                    this.FilteredGenreList = this.FullGenreList;
+                    this.SetIsBusyTrue();
 
-                    this.SearchOnGenre(this.Searchstring);
+                    this.GetPreferences();
 
-                    var loadDataTasks = new Task[]
+                    await SetList(this.ShowHiddenGenres);
+
+                    if (fullGenreList != null)
                     {
-                        Task.Run(() => this.FilteredGenreList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
-                        Task.Run(() => this.FilteredGenreList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
-                    };
+                        this.FilteredGenreList = fullGenreList;
 
-                    await Task.WhenAll(loadDataTasks);
+                        this.TotalGenresCount = fullGenreList != null ? fullGenreList.Count : 0;
 
-                    var sortList = SortLists.SortGenresList(
-                            this.FilteredGenreList,
-                            this.GenreNameChecked,
-                            this.TotalBooksChecked,
-                            this.TotalPriceChecked,
-                            this.AscendingChecked,
-                            this.DescendingChecked);
+                        this.SearchOnGenre(this.Searchstring);
 
-                    this.TotalGenresCount = this.FullGenreList.Count;
+                        var sortList = SortLists.SortGenresList(
+                                this.FilteredGenreList,
+                                this.GenreNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
 
-                    this.FilteredGenresCount = this.FilteredGenreList.Count;
+                        this.FilteredGenresCount = this.FilteredGenreList.Count;
 
-                    this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
+                        this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
 
-                    this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
+                        this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
 
-                    await Task.WhenAll(sortList);
+                        await Task.WhenAll(sortList);
 
-                    this.FilteredGenreList = sortList.Result;
+                        this.FilteredGenreList = sortList.Result;
+                    }
+
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
                 }
-
-                this.SetIsBusyFalse();
-            }
-            catch (Exception ex)
-            {
+                catch (Exception ex)
+                {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                    await DisplayMessage("Error!", ex.Message);
 #endif
-                this.SetIsBusyFalse();
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
             }
         }
 
@@ -152,6 +158,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task Refresh()
         {
             this.SetRefreshTrue();
+            RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -200,6 +207,7 @@ namespace BookCollector.ViewModels.Groupings
                         else
                         {
                             await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
+                            this.RemoveFromStaticList(selected);
                         }
 
                         await ConfirmDelete(selected.GenreName);
@@ -243,15 +251,19 @@ namespace BookCollector.ViewModels.Groupings
 
                 popup.BindingContext = viewModel;
 
-                await this.View.ShowPopupAsync(popup);
-                await this.SetViewModelData();
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    RefreshView = true;
+                    await this.SetViewModelData();
+                }
             }
         }
 
         private void GetPreferences()
         {
             this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
-            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
             this.GenreNameChecked = Preferences.Get($"{this.ViewTitle}_GenreNameSelection", true /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
@@ -259,6 +271,46 @@ namespace BookCollector.ViewModels.Groupings
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+        }
+
+        private void RemoveFromStaticList(GenreModel selected)
+        {
+            if (GenresViewModel.fullGenreList != null)
+            {
+                GenresViewModel.RefreshView = this.RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
+            }
+        }
+
+        private bool RemoveGenreFromStaticList(GenreModel selected, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldGenre = genreList.FirstOrDefault(x => x.GenreGuid == selected.GenreGuid);
+
+                if (oldGenre != null)
+                {
+                    genreList.Remove(oldGenre);
+                    refresh = true;
+                }
+
+                if (filteredGenreList != null)
+                {
+                    var filteredGenre = filteredGenreList.FirstOrDefault(x => x.GenreGuid == selected.GenreGuid);
+
+                    if (filteredGenre != null)
+                    {
+                        filteredGenreList.Remove(filteredGenre);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

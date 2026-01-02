@@ -11,40 +11,58 @@ using BookCollector.Views.Book;
 using BookCollector.Views.Groupings;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Series
 {
     public partial class SeriesMainViewModel : SeriesBaseViewModel
     {
+        [ObservableProperty]
+        public ObservableCollection<BookModel>? fullBookList;
+
+        [ObservableProperty]
+        public ObservableCollection<BookModel>? filteredBookList;
+
+        [ObservableProperty]
+        public int totalBooksCount;
+
+        [ObservableProperty]
+        public int filteredBooksCount;
+
+        public bool RefreshView { get; set; }
+
         public SeriesMainViewModel(SeriesModel series, ContentPage view)
         {
             this.View = view;
-
             this.SelectedSeries = series;
             this.CollectionViewHeight = this.DeviceHeight - this.SingleMenuBar;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
+            RefreshView = true;
         }
 
         private bool SeriesOrderChecked { get; set; }
 
+        public async Task SetList(bool showHiddenBooks)
+        {
+            if (this.FullBookList == null)
+            {
+                this.FullBookList = await FillLists.GetAllBooksInSeriesList(this.SelectedSeries.SeriesGuid, ShowHiddenBook);
+            }
+        }
+
         public async Task SetViewModelData()
         {
-            if (this.SelectedSeries != null)
+            if (RefreshView && this.SelectedSeries != null)
             {
                 try
                 {
                     this.SetIsBusyTrue();
 
-                    this.FilteredBookList = null;
-
                     this.GetPreferences();
 
-                    var fullList = FillLists.GetAllBooksInSeriesList(this.SelectedSeries.SeriesGuid, this.ShowHiddenBook);
-
-                    await Task.WhenAll(fullList);
-
-                    this.FullBookList = fullList.Result;
+                    await this.SetList(ShowHiddenBook);
 
                     if (this.FullBookList != null)
                     {
@@ -69,18 +87,9 @@ namespace BookCollector.ViewModels.Series
 
                         if (this.FilteredBookList != null)
                         {
-                            var sortTasks = new Task[]
-                            {
-                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetReadingProgress())),
-                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetAuthorListString())),
-                            };
-
-                            var loadDataTasks = new Task[]
-                            {
-                                Task.Run(() => this.FilteredBookList.ToList().ForEach(x => x.SetCoverDisplay())),
-                            };
-
-                            await Task.WhenAll(sortTasks);
+                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetReadingProgress()));
+                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetAuthorListString()));
+                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetCoverDisplay()));
 
                             var sortList = SortLists.SortBookList(
                                     this.FilteredBookList,
@@ -106,8 +115,6 @@ namespace BookCollector.ViewModels.Series
                             await Task.WhenAll(sortList);
 
                             this.FilteredBookList = sortList.Result;
-
-                            await Task.WhenAll(loadDataTasks);
                         }
 
                         await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
@@ -118,6 +125,7 @@ namespace BookCollector.ViewModels.Series
                     }
 
                     this.SetIsBusyFalse();
+                    RefreshView = false;
                 }
                 catch (Exception ex)
                 {
@@ -125,14 +133,43 @@ namespace BookCollector.ViewModels.Series
                     await DisplayMessage("Error!", ex.Message);
 #endif
                     this.SetIsBusyFalse();
+                    RefreshView = false;
                 }
             }
+        }
+
+        [RelayCommand]
+        public async void BookSearchOnTitle(string? input)
+        {
+            this.SetIsBusyTrue();
+
+            this.Searchstring = input;
+
+            if (this.FilteredBookList != null && this.FullBookList != null)
+            {
+                this.FilteredBookList = await FilterLists.FilterBookList(
+                                this.FullBookList,
+                                this.FavoriteBooksOption,
+                                this.BookFormatOption,
+                                this.BookPublisherOption,
+                                this.BookLanguageOption,
+                                this.BookRatingOption,
+                                this.BookPublishYearOption,
+                                this.Searchstring);
+
+                this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
+
+                this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
+            }
+
+            this.SetIsBusyFalse();
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
             this.SetRefreshTrue();
+            RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -149,7 +186,7 @@ namespace BookCollector.ViewModels.Series
                     BookSeriesGuid = this.SelectedSeries.SeriesGuid,
                 };
 
-                var view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}");
+                var view = new BookEditView(newBook, $"{AppStringResources.AddNewBook}", false, null, this);
 
                 await Shell.Current.Navigation.PushAsync(view);
 
@@ -162,7 +199,7 @@ namespace BookCollector.ViewModels.Series
         {
             if (this.SelectedSeries != null && !string.IsNullOrEmpty(this.ViewTitle))
             {
-                var view = new ExistingBooksView(this.SelectedSeries, this.ViewTitle);
+                var view = new ExistingBooksView(this.SelectedSeries, this.ViewTitle, this);
 
                 await Shell.Current.Navigation.PushAsync(view);
             }
@@ -198,8 +235,11 @@ namespace BookCollector.ViewModels.Series
 
                 popup.BindingContext = viewModel;
 
-                await this.View.ShowPopupAsync(popup);
-                await this.SetViewModelData();
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    await this.SetViewModelData();
+                }
             }
         }
 
@@ -237,14 +277,17 @@ namespace BookCollector.ViewModels.Series
 
                 popup.BindingContext = viewModel;
 
-                await this.View.ShowPopupAsync(popup);
-                await this.SetViewModelData();
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    await this.SetViewModelData();
+                }
             }
         }
 
         private void GetPreferences()
         {
-            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 

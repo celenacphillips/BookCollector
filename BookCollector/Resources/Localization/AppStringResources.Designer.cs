@@ -853,11 +853,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Books Read This Year: yyyy.
+        ///   Looks up a localized string similar to Books Read.
         /// </summary>
-        internal static string BooksReadThisYear {
+        internal static string BooksRead {
             get {
-                return ResourceManager.GetString("BooksReadThisYear", resourceCulture);
+                return ResourceManager.GetString("BooksRead", resourceCulture);
             }
         }
         
@@ -1249,11 +1249,227 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Author First Name.
+        /// </summary>
+        internal static string EnterAuthorFirstName {
+            get {
+                return ResourceManager.GetString("EnterAuthorFirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Author Last Name.
+        /// </summary>
+        internal static string EnterAuthorLastName {
+            get {
+                return ResourceManager.GetString("EnterAuthorLastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Comments.
+        /// </summary>
+        internal static string EnterBookComments {
+            get {
+                return ResourceManager.GetString("EnterBookComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Identifier/ISBN.
+        /// </summary>
+        internal static string EnterBookIdentifier {
+            get {
+                return ResourceManager.GetString("EnterBookIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Language.
+        /// </summary>
+        internal static string EnterBookLanguage {
+            get {
+                return ResourceManager.GetString("EnterBookLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Number.
+        /// </summary>
+        internal static string EnterBookNumber {
+            get {
+                return ResourceManager.GetString("EnterBookNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Series.
+        /// </summary>
+        internal static string EnterBookSeries {
+            get {
+                return ResourceManager.GetString("EnterBookSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Summary.
+        /// </summary>
+        internal static string EnterBookSummary {
+            get {
+                return ResourceManager.GetString("EnterBookSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book Title.
+        /// </summary>
+        internal static string EnterBookTitle {
+            get {
+                return ResourceManager.GetString("EnterBookTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Book URL.
+        /// </summary>
+        internal static string EnterBookURL {
+            get {
+                return ResourceManager.GetString("EnterBookURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Chapter Name.
+        /// </summary>
+        internal static string EnterChapterName {
+            get {
+                return ResourceManager.GetString("EnterChapterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Collection Name.
+        /// </summary>
+        internal static string EnterCollectionName {
+            get {
+                return ResourceManager.GetString("EnterCollectionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Date.
+        /// </summary>
+        internal static string EnterDate {
+            get {
+                return ResourceManager.GetString("EnterDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter End Date.
+        /// </summary>
+        internal static string EnterEndDate {
+            get {
+                return ResourceManager.GetString("EnterEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Genre Name.
+        /// </summary>
+        internal static string EnterGenreName {
+            get {
+                return ResourceManager.GetString("EnterGenreName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Location Name.
+        /// </summary>
+        internal static string EnterLocationName {
+            get {
+                return ResourceManager.GetString("EnterLocationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Name.
+        /// </summary>
+        internal static string EnterName {
+            get {
+                return ResourceManager.GetString("EnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter only ISBNs.
         /// </summary>
         internal static string EnterOnlyISBNs {
             get {
                 return ResourceManager.GetString("EnterOnlyISBNs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Page Range.
+        /// </summary>
+        internal static string EnterPageRange {
+            get {
+                return ResourceManager.GetString("EnterPageRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Publisher.
+        /// </summary>
+        internal static string EnterPublisher {
+            get {
+                return ResourceManager.GetString("EnterPublisher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Publish Year.
+        /// </summary>
+        internal static string EnterPublishYear {
+            get {
+                return ResourceManager.GetString("EnterPublishYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Series Name.
+        /// </summary>
+        internal static string EnterSeriesName {
+            get {
+                return ResourceManager.GetString("EnterSeriesName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Start Date.
+        /// </summary>
+        internal static string EnterStartDate {
+            get {
+                return ResourceManager.GetString("EnterStartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Total Books in Series.
+        /// </summary>
+        internal static string EnterTotalBooksInSeries {
+            get {
+                return ResourceManager.GetString("EnterTotalBooksInSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Where to Buy.
+        /// </summary>
+        internal static string EnterWhereToBuy {
+            get {
+                return ResourceManager.GetString("EnterWhereToBuy", resourceCulture);
             }
         }
         
@@ -2095,15 +2311,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pages Read This Year: yyyy.
-        /// </summary>
-        internal static string PagesReadThisYear {
-            get {
-                return ResourceManager.GetString("PagesReadThisYear", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Paperback.
         /// </summary>
         internal static string Paperback {
@@ -2235,6 +2442,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ReadingData {
             get {
                 return ResourceManager.GetString("ReadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a running total of all the books and pages you have completed in the past number years. It is calculated by the Reading End Date of the book..
+        /// </summary>
+        internal static string ReadingData_InfoText {
+            get {
+                return ResourceManager.GetString("ReadingData_InfoText", resourceCulture);
             }
         }
         
@@ -3027,6 +3243,15 @@ namespace BookCollector.Resources.Localization {
         internal static string WishListView_InfoText {
             get {
                 return ResourceManager.GetString("WishListView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        internal static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
         

@@ -36,7 +36,7 @@
                         <!-- Book Title -->
                         <VerticalStackLayout Margin="10">
                             <Editor Text="{Binding EditedWishlistBook.BookTitle}"
-                                    Placeholder="{x:Static localization:AppStringResources.BookTitle}"
+                                    Placeholder="{x:Static localization:AppStringResources.EnterBookTitle}"
                                     FontAttributes="Bold"
                                     HorizontalTextAlignment="Center"
                                     AutoSize="TextChanges"
@@ -148,7 +148,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookSeries}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedWishlistBook.BookSeries}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookSeries}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookSeries}"
                                             HorizontalTextAlignment="Center"
                                             AutoSize="TextChanges">
 
@@ -166,7 +166,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookNumber}"
                                             Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedWishlistBook.BookNumberInSeries}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookNumber}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookNumber}"
                                             HorizontalTextAlignment="Center"
                                             Keyboard="Numeric"
                                             AutoSize="TextChanges"/>
@@ -238,7 +238,7 @@
                                                        Style="{DynamicResource SubTitle}"/>
 
                                                 <Editor Text="{Binding FirstName}"
-                                                        Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
+                                                        Placeholder="{x:Static localization:AppStringResources.EnterAuthorFirstName}"
                                                         HorizontalTextAlignment="Center"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="0">
@@ -252,7 +252,7 @@
                                                 </Editor>
 
                                                 <Editor Text="{Binding LastName}"
-                                                        Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
+                                                        Placeholder="{x:Static localization:AppStringResources.EnterAuthorLastName}"
                                                         HorizontalTextAlignment="Center"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="1">
@@ -334,7 +334,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.WhereToBuy}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedWishlistBook.BookWhereToBuy}"
-                                            Placeholder="{x:Static localization:AppStringResources.WhereToBuy}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterWhereToBuy}"
                                             HorizontalTextAlignment="Center"
                                             AutoSize="TextChanges">
                                         <Editor.Keyboard>
@@ -360,7 +360,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedWishlistBook.BookPublisher}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPublisher}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
                                                 HorizontalTextAlignment="Center"
                                                 AutoSize="TextChanges">
                                             <Editor.Keyboard>
@@ -380,7 +380,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedWishlistBook.BookPublishYear}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPublishYear}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
                                                 HorizontalTextAlignment="Center"
                                                 Keyboard="Numeric"
                                                 MaxLength="4"
@@ -394,9 +394,8 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedWishlistBook.BookIdentifier}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookIdentifier}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookIdentifier}"
                                             HorizontalTextAlignment="Center"
-                                            Keyboard="Numeric"
                                             AutoSize="TextChanges"/>
                                 </VerticalStackLayout>
                                 <!-- Book Identifier -->
@@ -414,7 +413,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedWishlistBook.BookLanguage}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookLanguage}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
                                                 HorizontalTextAlignment="Center"
                                                 AutoSize="TextChanges">
                                             <Editor.Keyboard>
@@ -447,7 +446,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookURL}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedWishlistBook.BookURL}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookURL}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookURL}"
                                             HorizontalTextAlignment="Center"
                                             AutoSize="TextChanges"/>
                                 </VerticalStackLayout>
@@ -504,7 +503,7 @@
                                              BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 
                                 <Editor Text="{Binding EditedWishlistBook.BookSummary}"
-                                        Placeholder="{x:Static localization:AppStringResources.BookSummary}"
+                                        Placeholder="{x:Static localization:AppStringResources.EnterBookSummary}"
                                         HorizontalTextAlignment="Center"
                                         AutoSize="TextChanges">
                                     <Editor.Keyboard>
@@ -557,7 +556,7 @@
                                              BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 
                                 <Editor Text="{Binding EditedWishlistBook.BookComments}"
-                                        Placeholder="{x:Static localization:AppStringResources.BookComments}"
+                                        Placeholder="{x:Static localization:AppStringResources.EnterBookComments}"
                                         HorizontalTextAlignment="Center"
                                         AutoSize="TextChanges">
                                     <Editor.Keyboard>

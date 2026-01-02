@@ -80,7 +80,7 @@
                         <!-- Book Title -->
                         <VerticalStackLayout Margin="10">
                             <Editor Text="{Binding EditedBook.BookTitle}"
-                                    Placeholder="{x:Static localization:AppStringResources.BookTitle}"
+                                    Placeholder="{x:Static localization:AppStringResources.EnterBookTitle}"
                                     FontAttributes="Bold"
                                     HorizontalTextAlignment="Center"
                                     AutoSize="TextChanges"
@@ -222,7 +222,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookNumber}"
                                             Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedBook.BookNumberInSeries}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookNumber}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookNumber}"
                                             HorizontalTextAlignment="Center"
                                             Keyboard="Numeric"
                                             AutoSize="TextChanges"/>
@@ -331,7 +331,7 @@
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.ReadingStartDate}"
+                                                                     Placeholder="{x:Static localization:AppStringResources.EnterStartDate}"
                                                                      Icon="{AppThemeBinding Light=Icons/calendar_icon_light.svg, Dark=Icons/calendar_icon_dark.svg}"/>
 
                                     </VerticalStackLayout>
@@ -346,7 +346,7 @@
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.ReadingEndDate}"
+                                                                     Placeholder="{x:Static localization:AppStringResources.EnterEndDate}"
                                                                      Icon="{AppThemeBinding Light=Icons/calendar_icon_light.svg, Dark=Icons/calendar_icon_dark.svg}"/>
                                     </VerticalStackLayout>
                                     <!-- Reading End Date -->
@@ -360,7 +360,8 @@
 
                                     <!-- Total Pages -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
+                                                         Grid.Row="0" Grid.Column="0"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.TotalPages}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedBook.BookPageTotal}"
@@ -379,7 +380,8 @@
 
                                     <!-- Pages Read -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
+                                                         Grid.Row="0" Grid.Column="1"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.PagesRead}"
                                                Style="{DynamicResource Header}"/>
                                         <Button Text="{Binding EditedBook.BookPageRead}"
@@ -411,7 +413,7 @@
                                        Style="{DynamicResource Header}"
                                        Margin="0,0,0,20"/>
                                     <ProgressBar Progress="{Binding EditedBook.Progress}"/>
-                                    <Grid>
+                                    <Grid IsVisible="{Binding ShowCheckpoints}">
 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.95*" />
@@ -510,7 +512,7 @@
                                                        Style="{DynamicResource SubTitle}"/>
 
                                                 <Editor Text="{Binding ChapterName}"
-                                                        Placeholder="{x:Static localization:AppStringResources.ChapterName}"
+                                                        Placeholder="{x:Static localization:AppStringResources.EnterChapterName}"
                                                         HorizontalTextAlignment="Center"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="0">
@@ -524,7 +526,7 @@
                                                 </Editor>
 
                                                 <Editor Text="{Binding PageRange}"
-                                                        Placeholder="{x:Static localization:AppStringResources.ChapterPages}"
+                                                        Placeholder="{x:Static localization:AppStringResources.EnterPageRange}"
                                                         HorizontalTextAlignment="Center"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="1"/>
@@ -745,7 +747,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedBook.BookPublisher}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPublisher}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
                                                 HorizontalTextAlignment="Center"
                                                 AutoSize="TextChanges">
                                             <Editor.Keyboard>
@@ -765,7 +767,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedBook.BookPublishYear}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPublishYear}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
                                                 HorizontalTextAlignment="Center"
                                                 Keyboard="Numeric"
                                                 MaxLength="4"
@@ -779,9 +781,8 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookIdentifier}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedBook.BookIdentifier}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookIdentifier}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookIdentifier}"
                                             HorizontalTextAlignment="Center"
-                                            Keyboard="Numeric"
                                             AutoSize="TextChanges"/>
                                 </VerticalStackLayout>
                                 <!-- Book Identifier -->
@@ -799,7 +800,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
                                                Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedBook.BookLanguage}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookLanguage}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
                                                 HorizontalTextAlignment="Center"
                                                 AutoSize="TextChanges">
                                             <Editor.Keyboard>
@@ -832,7 +833,7 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookURL}"
                                            Style="{DynamicResource Header}"/>
                                     <Editor Text="{Binding EditedBook.BookURL}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookURL}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookURL}"
                                             HorizontalTextAlignment="Center"
                                             AutoSize="TextChanges"/>
                                 </VerticalStackLayout>
@@ -851,7 +852,7 @@
                                         <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
                                            Style="{DynamicResource Header}"/>
                                         <Editor Text="{Binding EditedBook.LoanedTo}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookLoanedTo}"
+                                                Placeholder="{x:Static localization:AppStringResources.EnterName}"
                                                 HorizontalTextAlignment="Center"
                                                 AutoSize="TextChanges"/>
                                     </VerticalStackLayout>
@@ -866,7 +867,7 @@
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
                                                                      TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.BookLoanedOutOn}"
+                                                                     Placeholder="{x:Static localization:AppStringResources.EnterDate}"
                                                                      Icon="{AppThemeBinding Light=Icons/calendar_icon_light.svg, Dark=Icons/calendar_icon_dark.svg}"/>
                                     </VerticalStackLayout>
                                     <!-- Book Loaned Out On -->
@@ -923,7 +924,7 @@
                                              BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
                                 
                                 <Editor Text="{Binding EditedBook.BookSummary}"
-                                        Placeholder="{x:Static localization:AppStringResources.BookSummary}"
+                                        Placeholder="{x:Static localization:AppStringResources.EnterBookSummary}"
                                         HorizontalTextAlignment="Center"
                                         AutoSize="TextChanges">
                                     <Editor.Keyboard>
@@ -953,7 +954,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Text="{x:Static localization:AppStringResources.BookComments}"
+                                    <Label Text="{x:Static localization:AppStringResources.EnterBookComments}"
                                        Style="{DynamicResource expanderHeaderLabel}"
                                        Grid.Row="0" Grid.Column="0"/>
 

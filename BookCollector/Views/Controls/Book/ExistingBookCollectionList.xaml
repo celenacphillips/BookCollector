@@ -22,9 +22,7 @@
         </CollectionView.ItemTemplate>
 
         <CollectionView.ItemsLayout>
-            <LinearItemsLayout Orientation="Vertical"
-                               SnapPointsType="Mandatory"
-                               SnapPointsAlignment="Start" />
+            <LinearItemsLayout Orientation="Vertical" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.EmptyView>

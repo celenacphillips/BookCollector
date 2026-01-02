@@ -7,9 +7,11 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Genre;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Genre
 {
@@ -73,6 +75,7 @@ namespace BookCollector.ViewModels.Genre
                     else
                     {
                         this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
+                        AddToStaticList(this.EditedGenre);
                     }
 
                     if (this.InsertMainViewBefore)
@@ -125,6 +128,66 @@ namespace BookCollector.ViewModels.Genre
                 genreNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.GenreNameValid = true;
             }
+        }
+
+        public static async Task AddToStaticList(GenreModel genre)
+        {
+            if (GenresViewModel.fullGenreList != null)
+            {
+                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
+            }
+        }
+
+        private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                genre.SetTotalBooks(true),
+                genre.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldGenre = genreList.FirstOrDefault(x => x.GenreGuid == genre.GenreGuid);
+
+                if (oldGenre != null)
+                {
+                    var index = genreList.IndexOf(oldGenre);
+                    genreList.Remove(oldGenre);
+                    genreList.Insert(index, genre);
+                    refresh = true;
+                }
+                else
+                {
+                    genreList.Add(genre);
+                    refresh = true;
+                }
+
+                if (filteredGenreList != null)
+                {
+                    var filteredGenre = filteredGenreList.FirstOrDefault(x => x.GenreGuid == genre.GenreGuid);
+
+                    if (filteredGenre != null)
+                    {
+                        var index = filteredGenreList.IndexOf(filteredGenre);
+                        filteredGenreList.Remove(filteredGenre);
+                        filteredGenreList.Insert(index, genre);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredGenreList.Add(genre);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

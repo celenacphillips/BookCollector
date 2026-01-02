@@ -37,7 +37,7 @@ namespace BookCollector.Data.Models
             return this.MemberwiseClone();
         }
 
-        public async void SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInCollectionList(this.CollectionGuid, showHiddenBooks);
             var count = 0;
@@ -51,7 +51,7 @@ namespace BookCollector.Data.Models
             this.CollectionTotalBooks = count;
         }
 
-        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
         {
             this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInCollectionList(this.CollectionGuid, showHiddenBooks);
         }

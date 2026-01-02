@@ -30,7 +30,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedSeries.SeriesName}"
-                            Placeholder="{x:Static localization:AppStringResources.SeriesName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterSeriesName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="SeriesNameEditor">
@@ -57,7 +57,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedSeries.TotalBooksInSeries}"
-                            Placeholder="{x:Static localization:AppStringResources.TotalBooksInSeries}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterTotalBooksInSeries}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric">

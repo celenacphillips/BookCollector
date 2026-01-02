@@ -149,7 +149,7 @@ namespace BookCollector.Data.Models
             this.PartOfSeries = output;
         }
 
-        public void SetCoverDisplay()
+        public async Task SetCoverDisplay()
         {
             this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
             this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
@@ -188,7 +188,10 @@ namespace BookCollector.Data.Models
                     }
                     else
                     {
-                        this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
+                        if (authorList.Count > 1)
+                        {
+                            this.AuthorListString = this.AuthorListString[..(this.AuthorListString.LastIndexOf("; ") - 1)];
+                        }
                     }
                 }
             }

@@ -30,7 +30,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedGenre.GenreName}"
-                            Placeholder="{x:Static localization:AppStringResources.GenreName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterGenreName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="GenreNameEditor">

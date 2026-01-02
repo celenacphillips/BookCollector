@@ -9,6 +9,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
 using BookCollector.Views.Author;
 using BookCollector.Views.Book;
 using BookCollector.Views.Collection;
@@ -71,15 +72,22 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public ObservableCollection<AuthorPicker>? authorPickers;
 
+        [ObservableProperty]
+        public bool showCheckpoints;
+
+        [ObservableProperty]
+        public bool showPages;
+
         private Popup? pagesReadPopup;
 
-        public BookEditViewModel(BookModel book, ContentPage view)
+        public BookEditViewModel(BookModel book, ContentPage view, object? previousViewModel)
         {
             this.View = view;
 
             this.EditedBook = (BookModel)book.Clone();
             this.SelectedBook = book;
             this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{this.EditedBook.BookTitle}")}";
+            this.PreviousViewModel = previousViewModel;
 
             this.PopupWidth = this.DeviceWidth - 50;
         }
@@ -101,6 +109,8 @@ namespace BookCollector.ViewModels.Book
         private List<ChapterModel>? ChaptersToDelete { get; set; }
 
         private List<AuthorModel>? AuthorsToDelete { get; set; }
+
+        private object? PreviousViewModel { get; set; }
 
         [RelayCommand]
         public static async Task AddSeries()
@@ -164,9 +174,18 @@ namespace BookCollector.ViewModels.Book
                 this.SummarySectionValue = true;
                 this.CommentsSectionValue = true;
 
-                this.BookIsRead = this.EditedBook.BookPageRead == this.EditedBook.BookPageTotal && this.EditedBook.BookPageTotal != 0;
-                this.ShowUpNext = this.EditedBook.BookPageRead == 0;
-                this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
+                if (this.EditedBook.BookFormat == null || !this.EditedBook.BookFormat.Equals(AppStringResources.Audiobook))
+                {
+                    this.BookIsRead = this.EditedBook.BookPageRead == this.EditedBook.BookPageTotal && this.EditedBook.BookPageTotal != 0;
+                    this.ShowUpNext = this.EditedBook.BookPageRead == 0;
+                    this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
+                    this.ShowPages = true;
+                    this.ShowCheckpoints = this.EditedBook.BookPageTotal != 0;
+                }
+                else
+                {
+                    this.ShowPages = false;
+                }
 
                 if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation))
                 {
@@ -196,7 +215,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     Task.Run(() => this.ValidateEntry()),
                     Task.Run(() => this.EditedBook.SetBookPrice()),
-                    Task.Run(() => this.EditedBook.SetBookCheckpoints()),
+                    Task.Run(() => this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints)),
                     Task.Run(() => this.EditedBook.SetCoverDisplay()),
                     Task.Run(() => BookModel.SetDate(this.EditedBook.BookStartDate)),
                     Task.Run(() => BookModel.SetDate(this.EditedBook.BookEndDate)),
@@ -403,6 +422,8 @@ namespace BookCollector.ViewModels.Book
                         }
                     }
 
+                    AddToStaticList(this.EditedBook, this.PreviousViewModel);
+
                     if (this.RemoveMainViewBefore)
                     {
                         Shell.Current.Navigation.RemovePage(this.MainViewBefore);
@@ -576,8 +597,9 @@ namespace BookCollector.ViewModels.Book
         public void UpdateProgress()
         {
             this.StepperEnabled = this.EditedBook.BookPageTotal != 0;
+            this.ShowCheckpoints = this.EditedBook.BookPageTotal != 0;
             this.EditedBook.SetReadingProgress();
-            this.EditedBook.SetBookCheckpoints();
+            this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints);
         }
 
         [RelayCommand]

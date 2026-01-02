@@ -2,39 +2,34 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
+using BookCollector.ViewModels.Collection;
+using BookCollector.ViewModels.Genre;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Location;
+using BookCollector.ViewModels.Series;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
     public partial class BookBaseViewModel : BaseViewModel
     {
         [ObservableProperty]
-        public static ObservableCollection<BookModel>? fullBookList;
-
-        [ObservableProperty]
-        public static ObservableCollection<BookModel>? filteredBookList;
-
-        [ObservableProperty]
         public static ObservableCollection<string>? bookFormats;
 
         [ObservableProperty]
         public string? totalBooksString;
-
-        [ObservableProperty]
-        public int totalBooksCount;
-
-        [ObservableProperty]
-        public int filteredBooksCount;
 
         [ObservableProperty]
         public BookModel? selectedBook;
@@ -140,7 +135,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }
 
-        public bool ShowHiddenBook { get; set; }
+        public static bool ShowHiddenBook { get; set; }
 
         public bool HiddenAuthorsOn { get; set; }
 
@@ -232,39 +227,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         [RelayCommand]
-        public async void BookSearchOnTitle(string? input)
-        {
-            this.SetIsBusyTrue();
-
-            this.Searchstring = input;
-
-            if (this.FilteredBookList != null && this.FullBookList != null)
-            {
-                this.FilteredBookList = await FilterLists.FilterBookList(
-                                this.FullBookList,
-                                this.FavoriteBooksOption,
-                                this.BookFormatOption,
-                                this.BookPublisherOption,
-                                this.BookLanguageOption,
-                                this.BookRatingOption,
-                                this.BookPublishYearOption,
-                                this.Searchstring);
-
-                this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
-
-                this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-            }
-
-            this.SetIsBusyFalse();
-        }
-
-        [RelayCommand]
         public async Task BookSelectionChanged()
         {
             if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
             {
                 var view = new BookMainView(this.SelectedBook, this.SelectedBook.BookTitle);
-
                 await Shell.Current.Navigation.PushAsync(view);
                 this.SelectedBook = null;
             }
@@ -328,6 +295,470 @@ namespace BookCollector.ViewModels.BaseViewModels
         public async Task BookCoverPopup()
         {
             this.View.ShowPopup(new BookCoverPopup(this.BookCover));
+        }
+
+        public static async Task AddToStaticList(BookModel book, object? previousViewModel = null)
+        {
+            if (AllBooksViewModel.fullBookList != null)
+            {
+                AllBooksViewModel.RefreshView = await AddBookToStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
+            }
+
+            if (((book.BookPageRead != book.BookPageTotal &&
+                book.BookPageRead != 0) ||
+                book.UpNext == true) &&
+                ReadingViewModel.fullBookList != null)
+            {
+                ReadingViewModel.RefreshView = await AddBookToStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+            }
+
+            if (book.BookPageRead == 0 &&
+                book.UpNext == false &&
+                ToBeReadViewModel.fullBookList != null)
+            {
+                ToBeReadViewModel.RefreshView = await AddBookToStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+            }
+
+            if (book.BookPageRead == book.BookPageTotal &&
+                book.BookPageRead != 0 &&
+                ReadViewModel.fullBookList != null)
+            {
+                ReadViewModel.RefreshView = await AddBookToStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+            }
+
+            if (CollectionsViewModel.fullCollectionList != null)
+            {
+                if (book.BookCollectionGuid != null)
+                {
+                    var selected = CollectionsViewModel.fullCollectionList.FirstOrDefault(x => x.CollectionGuid == book.BookCollectionGuid);
+
+                    if (selected != null)
+                    {
+                        CollectionMainViewModel collectionViewModel;
+
+                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Collection"))
+                        {
+                            collectionViewModel = (CollectionMainViewModel)previousViewModel;
+                        }
+                        else
+                        {
+                            collectionViewModel = new CollectionMainViewModel(selected, new ContentPage());
+                        }
+
+                        if (collectionViewModel.FullBookList != null)
+                        {
+                            collectionViewModel.RefreshView = await AddBookToStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
+                        }
+
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+
+                if (book.BookCollectionGuid == null)
+                {
+                    var collectionViewModel = new ExistingBooksViewModel(new CollectionModel(), new ContentPage(), previousViewModel);
+
+                    if (collectionViewModel.FullBookList != null)
+                    {
+                        collectionViewModel.RefreshView = await AddBookToStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
+                    }
+                }
+            }
+
+            if (GenresViewModel.fullGenreList != null)
+            {
+                if (book.BookGenreGuid != null)
+                {
+                    var selected = GenresViewModel.fullGenreList.FirstOrDefault(x => x.GenreGuid == book.BookGenreGuid);
+
+                    if (selected != null)
+                    {
+                        GenreMainViewModel genreViewModel;
+
+                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Genre"))
+                        {
+                            genreViewModel = (GenreMainViewModel)previousViewModel;
+                        }
+                        else
+                        {
+                            genreViewModel = new GenreMainViewModel(selected, new ContentPage());
+                        }
+
+                        if (genreViewModel.FullBookList != null)
+                        {
+                            genreViewModel.RefreshView = await AddBookToStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
+                        }
+
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+
+                if (book.BookGenreGuid == null)
+                {
+                    var genreViewModel = new ExistingBooksViewModel(new GenreModel(), new ContentPage(), previousViewModel);
+
+                    if (genreViewModel.FullBookList != null)
+                    {
+                        genreViewModel.RefreshView = await AddBookToStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
+                    }
+                }
+            }
+
+            if (SeriesViewModel.fullSeriesList != null)
+            {
+                if (book.BookSeriesGuid != null)
+                {
+                    var selected = SeriesViewModel.fullSeriesList.FirstOrDefault(x => x.SeriesGuid == book.BookSeriesGuid);
+
+                    if (selected != null)
+                    {
+                        SeriesMainViewModel seriesViewModel;
+
+                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Series"))
+                        {
+                            seriesViewModel = (SeriesMainViewModel)previousViewModel;
+                        }
+                        else
+                        {
+                            seriesViewModel = new SeriesMainViewModel(selected, new ContentPage());
+                        }
+
+                        if (seriesViewModel.FullBookList != null)
+                        {
+                            seriesViewModel.RefreshView = await AddBookToStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
+                        }
+
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+
+                if (book.BookSeriesGuid == null)
+                {
+                    var seriesViewModel = new ExistingBooksViewModel(new SeriesModel(), new ContentPage(), previousViewModel);
+
+                    if (seriesViewModel.FullBookList != null)
+                    {
+                        seriesViewModel.RefreshView = await AddBookToStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
+                    }
+                }
+            }
+
+            if (AuthorsViewModel.fullAuthorList != null)
+            {
+                if (!string.IsNullOrEmpty(book.AuthorListString))
+                {
+                    var authors = SplitStringIntoAuthorList(book.AuthorListString);
+
+                    foreach (var author in authors)
+                    {
+                        var selected = AuthorsViewModel.fullAuthorList.FirstOrDefault(x => x.FirstName.Equals(author.FirstName) && x.LastName.Equals(author.LastName));
+
+                        if (selected != null)
+                        {
+                            AuthorMainViewModel authorViewModel;
+
+                            if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Author"))
+                            {
+                                authorViewModel = (AuthorMainViewModel)previousViewModel;
+                            }
+                            else
+                            {
+                                authorViewModel = new AuthorMainViewModel(selected, new ContentPage());
+                            }
+
+                            if (authorViewModel.FullBookList != null)
+                            {
+                                authorViewModel.RefreshView = await AddBookToStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
+                            }
+
+                            await Task.WhenAll(new Task[]
+                            {
+                                selected.SetTotalBooks(true),
+                                selected.SetTotalCostOfBooks(true),
+                            });
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(book.AuthorListString))
+                {
+                    var authorViewModel = new ExistingBooksViewModel(new AuthorModel(), new ContentPage(), previousViewModel);
+
+                    if (authorViewModel.FullBookList != null)
+                    {
+                        authorViewModel.RefreshView = await AddBookToStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
+                    }
+                }
+            }
+
+            if (LocationsViewModel.fullLocationList != null)
+            {
+                if (book.BookLocationGuid != null)
+                {
+                    var selected = LocationsViewModel.fullLocationList.FirstOrDefault(x => x.LocationGuid == book.BookLocationGuid);
+
+                    if (selected != null)
+                    {
+                        LocationMainViewModel locationViewModel;
+
+                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Location"))
+                        {
+                            locationViewModel = (LocationMainViewModel)previousViewModel;
+                        }
+                        else
+                        {
+                            locationViewModel = new LocationMainViewModel(selected, new ContentPage());
+                        }
+
+                        if (locationViewModel.FullBookList != null)
+                        {
+                            locationViewModel.RefreshView = await AddBookToStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
+                        }
+
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+
+                if (book.BookLocationGuid == null)
+                {
+                    var locationViewModel = new ExistingBooksViewModel(new LocationModel(), new ContentPage(), previousViewModel);
+
+                    if (locationViewModel.FullBookList != null)
+                    {
+                        locationViewModel.RefreshView = await AddBookToStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
+                    }
+                }
+            }
+        }
+
+        private static async Task<bool> AddBookToStaticList(BookModel book, ObservableCollection<BookModel> bookList, ObservableCollection<BookModel>? filteredBookList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                book.SetReadingProgress(),
+                //book.SetAuthorListString(),
+                book.SetCoverDisplay(),
+            });
+
+            try
+            {
+                var oldBook = bookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                if (oldBook != null)
+                {
+                    var index = bookList.IndexOf(oldBook);
+                    bookList.Remove(oldBook);
+                    bookList.Insert(index, book);
+                    refresh = true;
+                }
+                else
+                {
+                    bookList.Add(book);
+                    refresh = true;
+                }
+
+                if (filteredBookList != null)
+                {
+                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                    if (filteredBook != null)
+                    {
+                        var index = filteredBookList.IndexOf(filteredBook);
+                        filteredBookList.Remove(filteredBook);
+                        filteredBookList.Insert(index, book);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredBookList.Add(book);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
+        }
+
+        public async Task RemoveFromStaticList(BookModel book)
+        {
+            if (AllBooksViewModel.fullBookList != null)
+            {
+                AllBooksViewModel.RefreshView = RemoveBookFromStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
+            }
+
+            if (((book.BookPageRead != book.BookPageTotal &&
+                book.BookPageRead != 0) ||
+                book.UpNext == true) &&
+                ReadingViewModel.fullBookList != null)
+            {
+                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+            }
+
+            if (book.BookPageRead == 0 &&
+                book.UpNext == false &&
+                ToBeReadViewModel.fullBookList != null)
+            {
+                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+            }
+
+            if (book.BookPageRead == book.BookPageTotal &&
+                book.BookPageRead != 0 &&
+                ReadViewModel.fullBookList != null)
+            {
+                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+            }
+
+            if (CollectionsViewModel.fullCollectionList != null)
+            {
+                if (book.BookCollectionGuid != null)
+                {
+                    var selected = CollectionsViewModel.fullCollectionList.FirstOrDefault(x => x.CollectionGuid == book.BookCollectionGuid);
+
+                    if (selected != null)
+                    {
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+            }
+
+            if (GenresViewModel.fullGenreList != null)
+            {
+                if (book.BookGenreGuid != null)
+                {
+                    var selected = GenresViewModel.fullGenreList.FirstOrDefault(x => x.GenreGuid == book.BookGenreGuid);
+
+                    if (selected != null)
+                    {
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+            }
+
+            if (SeriesViewModel.fullSeriesList != null)
+            {
+                if (book.BookSeriesGuid != null)
+                {
+                    var selected = SeriesViewModel.fullSeriesList.FirstOrDefault(x => x.SeriesGuid == book.BookSeriesGuid);
+
+                    if (selected != null)
+                    {
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+            }
+
+            if (AuthorsViewModel.fullAuthorList != null)
+            {
+                if (!string.IsNullOrEmpty(book.AuthorListString))
+                {
+                    var authors = SplitStringIntoAuthorList(book.AuthorListString);
+
+                    foreach (var author in authors)
+                    {
+                        var selected = AuthorsViewModel.fullAuthorList.FirstOrDefault(x => x.FirstName.Equals(author.FirstName) && x.LastName.Equals(author.LastName));
+
+                        if (selected != null)
+                        {
+                            await Task.WhenAll(new Task[]
+                            {
+                                selected.SetTotalBooks(true),
+                                selected.SetTotalCostOfBooks(true),
+                            });
+                        }
+                    }
+                }
+            }
+
+            if (LocationsViewModel.fullLocationList != null)
+            {
+                if (book.BookLocationGuid != null)
+                {
+                    var selected = LocationsViewModel.fullLocationList.FirstOrDefault(x => x.LocationGuid == book.BookLocationGuid);
+
+                    if (selected != null)
+                    {
+                        await Task.WhenAll(new Task[]
+                        {
+                            selected.SetTotalBooks(true),
+                            selected.SetTotalCostOfBooks(true),
+                        });
+                    }
+                }
+            }
+        }
+
+        public static bool RemoveBookFromStaticList(BookModel book, ObservableCollection<BookModel>? bookList, ObservableCollection<BookModel>? filteredBookList)
+        {
+            var refresh = false;
+
+            try
+            {
+                if (bookList != null)
+                {
+                    var oldBook = bookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                    if (oldBook != null)
+                    {
+                        bookList.Remove(oldBook);
+                        refresh = true;
+                    }
+                }
+
+                if (filteredBookList != null)
+                {
+                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                    if (filteredBook != null)
+                    {
+                        filteredBookList.Remove(filteredBook);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

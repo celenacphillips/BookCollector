@@ -7,9 +7,12 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Collection
 {
@@ -73,6 +76,7 @@ namespace BookCollector.ViewModels.Collection
                     else
                     {
                         this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
+                        AddToStaticList(this.EditedCollection);
                     }
 
                     if (this.InsertMainViewBefore)
@@ -125,6 +129,66 @@ namespace BookCollector.ViewModels.Collection
                 collectionNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.CollectionNameValid = true;
             }
+        }
+
+        public static async Task AddToStaticList(CollectionModel collection)
+        {
+            if (CollectionsViewModel.fullCollectionList != null)
+            {
+                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
+            }
+        }
+
+        private static async Task<bool> AddCollectionToStaticList(CollectionModel collection, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                collection.SetTotalBooks(true),
+                collection.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldCollection = collectionList.FirstOrDefault(x => x.CollectionGuid == collection.CollectionGuid);
+
+                if (oldCollection != null)
+                {
+                    var index = collectionList.IndexOf(oldCollection);
+                    collectionList.Remove(oldCollection);
+                    collectionList.Insert(index, collection);
+                    refresh = true;
+                }
+                else
+                {
+                    collectionList.Add(collection);
+                    refresh = true;
+                }
+
+                if (filteredCollectionList != null)
+                {
+                    var filteredCollection = filteredCollectionList.FirstOrDefault(x => x.CollectionGuid == collection.CollectionGuid);
+
+                    if (filteredCollection != null)
+                    {
+                        var index = filteredCollectionList.IndexOf(filteredCollection);
+                        filteredCollectionList.Remove(filteredCollection);
+                        filteredCollectionList.Insert(index, collection);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredCollectionList.Add(collection);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

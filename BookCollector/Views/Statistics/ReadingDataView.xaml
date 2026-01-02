@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Statistics.ReadingDataView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Statistics"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             x:DataType="viewModel:ReadingDataViewModel"
+             Title="{x:Static localization:AppStringResources.ReadingData}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
+                     Command="{Binding InfoPopupCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid>
+        <!-- Main Content -->
+        <StackLayout>
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding RefreshCommand}">
+
+                <ScrollView>
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                        <Grid Margin="20,20,20,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{x:Static localization:AppStringResources.Year}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="0" Grid.Column="0"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.BooksRead}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="0" Grid.Column="1"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.PagesRead}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="0" Grid.Column="2"/>
+                        </Grid>
+                        <CollectionView ItemsSource="{Binding ReadingDataList}">
+                            
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dataModels:ReadingData">
+                                    <Grid Margin="20,20,20,10">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="{Binding Year}"
+                                               Style="{StaticResource Header}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="0" Grid.Column="0"/>
+
+                                        <Label Text="{Binding BooksReadCount, StringFormat='{0:N0}'}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="1" Grid.Column="1"/>
+
+                                        <Label Text="{Binding PagesReadCount, StringFormat='{0:N0}'}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="1" Grid.Column="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+
+        </StackLayout>
+        <!-- Main Content -->
+
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
+        <!-- Activity Indicator -->
+    </Grid>
+</ContentPage>

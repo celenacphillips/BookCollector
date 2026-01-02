@@ -9,9 +9,9 @@ namespace BookCollector.Views.Book;
 
 public partial class BookEditView : ContentPage
 {
-    public BookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, BookMainView? mainViewBefore = null)
+    public BookEditView(BookModel book, string viewTitle, bool removeMainViewBefore = false, BookMainView? mainViewBefore = null, object? previousViewModel = null)
     {
-        this.ViewModel = new BookEditViewModel(book, this)
+        this.ViewModel = new BookEditViewModel(book, this, previousViewModel)
         {
             ViewTitle = viewTitle,
             RemoveMainViewBefore = removeMainViewBefore,

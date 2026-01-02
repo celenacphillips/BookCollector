@@ -2,15 +2,16 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -21,6 +22,12 @@ namespace BookCollector.ViewModels.Book
 
         [ObservableProperty]
         public ObservableCollection<AuthorModel>? selectedAuthorList;
+
+        [ObservableProperty]
+        public bool showCheckpoints;
+
+        [ObservableProperty]
+        public bool showPages;
 
         public BookMainViewModel(BookModel book, ContentPage view)
         {
@@ -52,8 +59,17 @@ namespace BookCollector.ViewModels.Book
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
-                    this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
-                    this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
+                    if (!this.SelectedBook.BookFormat.Equals(AppStringResources.Audiobook))
+                    {
+                        this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
+                        this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
+                        this.ShowPages = true;
+                        this.ShowCheckpoints = this.SelectedBook.BookPageTotal != 0;
+                    }
+                    else
+                    {
+                        this.ShowPages = false;
+                    }
 
                     if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
                     {
@@ -87,7 +103,7 @@ namespace BookCollector.ViewModels.Book
                         Task.Run(() => this.BookInfoChanged()),
                         Task.Run(() => this.SummaryChanged()),
                         Task.Run(() => this.CommentsChanged()),
-                        Task.Run(() => this.SelectedBook.SetBookCheckpoints()),
+                        Task.Run(() => this.SelectedBook.SetBookCheckpoints(this.ShowCheckpoints)),
                         Task.Run(() => this.SelectedBook.SetCoverDisplay()),
                         Task.Run(() => this.SelectedBook.SetPartOfSeries()),
                         Task.Run(() => this.SelectedBook.SetPartOfCollection()),
@@ -158,6 +174,7 @@ namespace BookCollector.ViewModels.Book
                         else
                         {
                             await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+                            this.RemoveFromStaticList(this.SelectedBook);
                         }
 
                         await ConfirmDelete(this.SelectedBook.BookTitle);

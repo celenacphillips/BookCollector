@@ -55,9 +55,12 @@ namespace BookCollector.Data
             string? publishYearOption,
             string? authorOption,
             string? locationOption,
-            string? seriesOption)
+            string? seriesOption,
+            string? searchString)
         {
             var filteredList = bookList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
 
             filteredList = FilterBookFormat_Wishlist(filteredList, formatOption);
 
@@ -77,6 +80,18 @@ namespace BookCollector.Data
         }
 
         public static ObservableCollection<BookModel> FilterOnSearchString(ObservableCollection<BookModel> bookList, string? searchString)
+        {
+            var filterList = bookList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        public static ObservableCollection<WishlistBookModel> FilterOnSearchString(ObservableCollection<WishlistBookModel> bookList, string? searchString)
         {
             var filterList = bookList;
 

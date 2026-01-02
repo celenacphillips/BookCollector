@@ -7,7 +7,15 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Data.Spreadsheet;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Book;
+using BookCollector.ViewModels.Collection;
+using BookCollector.ViewModels.Genre;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Location;
+using BookCollector.ViewModels.Series;
+using BookCollector.ViewModels.WishListBook;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -295,6 +303,8 @@ namespace BookCollector.ViewModels.Main
                         await this.ReadBooksFromSpreadsheet();
                         await this.ReadBookAuthorsFromSpreadsheet();
 
+                        await DataCleanup();
+
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
                         await DisplayMessage(AppStringResources.ImportComplete, null);
@@ -393,6 +403,20 @@ namespace BookCollector.ViewModels.Main
             else
             {
                 return input;
+            }
+        }
+
+        private static async Task DataCleanup()
+        {
+            var authors = await Database.GetAllAuthorsAsync(true);
+
+            foreach (var author in authors)
+            {
+                await Task.WhenAll(new Task[]
+                {
+                    author.SetTotalBooks(true),
+                    author.SetTotalCostOfBooks(true),
+                });
             }
         }
 
@@ -704,6 +728,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                                BookEditViewModel.AddToStaticList(book);
                             }
 
                             importCount++;
@@ -998,6 +1023,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
+                                WishListBookEditViewModel.AddToStaticList(book);
                             }
 
                             importCount++;
@@ -1264,6 +1290,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
+                                CollectionEditViewModel.AddToStaticList(collection);
                             }
 
                             importCount++;
@@ -1394,6 +1421,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
+                                GenreEditViewModel.AddToStaticList(genre);
                             }
 
                             importCount++;
@@ -1527,6 +1555,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
+                                SeriesEditViewModel.AddToStaticList(series);
                             }
 
                             importCount++;
@@ -1790,6 +1819,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
+                                AuthorEditViewModel.AddToStaticList(author);
                             }
 
                             importCount++;
@@ -1920,6 +1950,7 @@ namespace BookCollector.ViewModels.Main
                             else
                             {
                                 await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
+                                LocationEditViewModel.AddToStaticList(location);
                             }
 
                             importCount++;

@@ -1253,8 +1253,8 @@ namespace BookCollector.Data.Database
                     .OrderBy(x => x.LastName)
                     .ToList();
 
-                authorsList.ForEach(x => x.SetTotalBooks(true));
-                authorsList.ForEach(x => x.SetTotalCostOfBooks(true));
+                await Task.WhenAll(authorsList.Select(x => x.SetTotalBooks(true)));
+                await Task.WhenAll(authorsList.Select(x => x.SetTotalCostOfBooks(true)));
 
                 if (!showHiddenAuthors)
                 {
@@ -1470,8 +1470,8 @@ namespace BookCollector.Data.Database
                     .OrderBy(x => x.ParsedCollectionName)
                     .ToList();
 
-                collectionsList.ForEach(x => x.SetTotalBooks(true));
-                collectionsList.ForEach(x => x.SetTotalCostOfBooks(true));
+                await Task.WhenAll(collectionsList.Select(x => x.SetTotalBooks(true)));
+                await Task.WhenAll(collectionsList.Select(x => x.SetTotalCostOfBooks(true)));
 
                 if (!showHiddenCollections)
                 {
@@ -1643,8 +1643,8 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedGenreName)
                         .ToList();
 
-                genresList.ForEach(x => x.SetTotalBooks(true));
-                genresList.ForEach(x => x.SetTotalCostOfBooks(true));
+                await Task.WhenAll(genresList.Select(x => x.SetTotalBooks(true)));
+                await Task.WhenAll(genresList.Select(x => x.SetTotalCostOfBooks(true)));
 
                 if (!showHiddenGenres)
                 {
@@ -1816,8 +1816,8 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedSeriesName)
                         .ToList();
 
-                seriesList.ForEach(x => x.SetTotalBooks(true));
-                seriesList.ForEach(x => x.SetTotalCostOfBooks(true));
+                await Task.WhenAll(seriesList.Select(x => x.SetTotalBooks(true)));
+                await Task.WhenAll(seriesList.Select(x => x.SetTotalCostOfBooks(true)));
 
                 if (!showHiddenSeries)
                 {
@@ -1989,8 +1989,8 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedLocationName)
                         .ToList();
 
-                locationsList.ForEach(x => x.SetTotalBooks(true));
-                locationsList.ForEach(x => x.SetTotalCostOfBooks(true));
+                await Task.WhenAll(locationsList.Select(x => x.SetTotalBooks(true)));
+                await Task.WhenAll(locationsList.Select(x => x.SetTotalCostOfBooks(true)));
 
                 if (!showHiddenLocations)
                 {

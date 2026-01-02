@@ -7,9 +7,11 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Series;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Series
 {
@@ -73,6 +75,7 @@ namespace BookCollector.ViewModels.Series
                     else
                     {
                         this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
+                        AddToStaticList(this.EditedSeries);
                     }
 
                     if (this.InsertMainViewBefore)
@@ -125,6 +128,66 @@ namespace BookCollector.ViewModels.Series
                 seriesNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
                 this.SeriesNameValid = true;
             }
+        }
+
+        public static async Task AddToStaticList(SeriesModel series)
+        {
+            if (SeriesViewModel.fullSeriesList != null)
+            {
+                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
+            }
+        }
+
+        private static async Task<bool> AddSeriesToStaticList(SeriesModel series, ObservableCollection<SeriesModel> seriesList, ObservableCollection<SeriesModel>? filteredSeriesList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
+            {
+                series.SetTotalBooks(true),
+                series.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldSeries = seriesList.FirstOrDefault(x => x.SeriesGuid == series.SeriesGuid);
+
+                if (oldSeries != null)
+                {
+                    var index = seriesList.IndexOf(oldSeries);
+                    seriesList.Remove(oldSeries);
+                    seriesList.Insert(index, series);
+                    refresh = true;
+                }
+                else
+                {
+                    seriesList.Add(series);
+                    refresh = true;
+                }
+
+                if (filteredSeriesList != null)
+                {
+                    var filteredSeries = filteredSeriesList.FirstOrDefault(x => x.SeriesGuid == series.SeriesGuid);
+
+                    if (filteredSeries != null)
+                    {
+                        var index = filteredSeriesList.IndexOf(filteredSeries);
+                        filteredSeriesList.Remove(filteredSeries);
+                        filteredSeriesList.Insert(index, series);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredSeriesList.Add(series);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

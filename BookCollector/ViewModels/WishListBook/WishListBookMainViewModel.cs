@@ -6,7 +6,11 @@ using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
+using BookCollector.ViewModels.Series;
 using BookCollector.Views.WishListBook;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -142,6 +146,7 @@ namespace BookCollector.ViewModels.WishListBook
                         else
                         {
                             await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
+                            this.RemoveFromStaticList();
                         }
 
                         await ConfirmDelete(this.SelectedWishlistBook.BookTitle);
@@ -205,6 +210,7 @@ namespace BookCollector.ViewModels.WishListBook
                                 else
                                 {
                                     series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
+                                    SeriesEditViewModel.AddToStaticList(series);
                                 }
                             }
 
@@ -220,7 +226,10 @@ namespace BookCollector.ViewModels.WishListBook
                         else
                         {
                             this.SelectedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedWishlistBook)));
+                            AddToStaticList(ConvertTo<BookModel>(this.SelectedWishlistBook));
+
                             await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
+                            this.RemoveFromStaticList();
                         }
 
                         if (!string.IsNullOrEmpty(this.SelectedWishlistBook.AuthorListString))
@@ -242,11 +251,13 @@ namespace BookCollector.ViewModels.WishListBook
                                     if (existingAuthor != null && existingAuthor.AuthorGuid != null)
                                     {
                                         addAuthor = existingAuthor;
+                                        await Database.AddAuthorToBookAsync(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
                                     }
                                     else
                                     {
                                         addAuthor.AuthorGuid = Guid.NewGuid();
-                                        await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedBook.BookGuid);
+                                        await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
+                                        AuthorEditViewModel.AddToStaticList(addAuthor);
                                     }
                                 }
                             }
@@ -306,6 +317,46 @@ namespace BookCollector.ViewModels.WishListBook
                     Title = title,
                 });
             }
+        }
+
+        private void RemoveFromStaticList()
+        {
+            if (WishListViewModel.fullWishlistBookList != null)
+            {
+                WishListViewModel.RefreshView = this.RemoveWishListBookFromStaticList(WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList);
+            }
+        }
+
+        private bool RemoveWishListBookFromStaticList(ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldBook = bookList.FirstOrDefault(x => x.BookGuid == this.SelectedWishlistBook!.BookGuid);
+
+                if (oldBook != null)
+                {
+                    bookList.Remove(oldBook);
+                    refresh = true;
+                }
+
+                if (filteredBookList != null)
+                {
+                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == this.SelectedWishlistBook!.BookGuid);
+
+                    if (filteredBook != null)
+                    {
+                        filteredBookList.Remove(filteredBook);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

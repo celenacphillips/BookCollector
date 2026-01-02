@@ -6,9 +6,12 @@ using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Vml;
 using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
@@ -31,18 +34,6 @@ namespace BookCollector.ViewModels.Statistics
         public bool showGenres;
 
         [ObservableProperty]
-        public string booksReadstring;
-
-        [ObservableProperty]
-        public int booksReadCount;
-
-        [ObservableProperty]
-        public string pagesReadstring;
-
-        [ObservableProperty]
-        public int pagesReadCount;
-
-        [ObservableProperty]
         public string? topXCollections;
 
         [ObservableProperty]
@@ -51,8 +42,6 @@ namespace BookCollector.ViewModels.Statistics
         public LibraryStatisticsViewModel(ContentPage view)
         {
             this.View = view;
-            this.BooksReadstring = AppStringResources.BooksReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
-            this.PagesReadstring = AppStringResources.PagesReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
             this.MaxListNumber = 5;
         }
 
@@ -71,47 +60,106 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
+                List<Task> taskList = new List<Task>();
+                List<Task<int>> dataTasks = new List<Task<int>>();
+
+                if (ToBeReadViewModel.fullBookList == null)
+                {
+                    taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (ReadViewModel.fullBookList == null)
+                {
+                    taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (ReadingViewModel.fullBookList == null)
+                {
+                    taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (CollectionsViewModel.fullCollectionList == null)
+                {
+                    taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
+                }
+
+                if (GenresViewModel.fullGenreList == null)
+                {
+                    taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
+                }
+
+                if (SeriesViewModel.fullSeriesList == null)
+                {
+                    taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
+                }
+
+                if (AuthorsViewModel.fullAuthorList == null)
+                {
+                    taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
+                }
+
+                if (LocationsViewModel.fullLocationList == null)
+                {
+                    taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
+                }
+
+                if (AllBooksViewModel.fullBookList == null)
+                {
+                    await AllBooksViewModel.SetList(this.ShowHiddenBooks);
+                }
+
                 var cost = GetCounts.GetPriceOfAllBooks(this.ShowHiddenBooks);
-                var total = GetCounts.GetAllBooksListCount(this.ShowHiddenBooks);
-                var bookReadCount = GetCounts.GetBookCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks);
-                var pageReadCount = GetCounts.GetBookPageCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks);
-                var toBeReadCount = GetCounts.GetToBeReadBooksListCount(this.ShowHiddenBooks);
-                var readingCount = GetCounts.GetReadingBooksListCount(this.ShowHiddenBooks);
-                var readCount = GetCounts.GetReadBooksListCount(this.ShowHiddenBooks);
-                var favoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true);
-                var nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false);
-                var zeroCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0);
-                var oneCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1);
-                var twoCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2);
-                var threeCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3);
-                var fourCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4);
-                var fiveCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5);
+                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
+
+                Task<int>? favoriteCount = null;
+                Task<int>? nonFavoriteCount = null;
+
+                if (this.ShowFavorites)
+                {
+                    favoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true);
+                    nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false);
+
+                    dataTasks.Add(favoriteCount);
+                    dataTasks.Add(nonFavoriteCount);
+                }
+
+                Task<int>? zeroCount = null;
+                Task<int>? oneCount = null;
+                Task<int>? twoCount = null;
+                Task<int>? threeCount = null;
+                Task<int>? fourCount = null;
+                Task<int>? fiveCount = null;
+
+                if (this.ShowRatings)
+                {
+                    zeroCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0);
+                    oneCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1);
+                    twoCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2);
+                    threeCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3);
+                    fourCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4);
+                    fiveCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5);
+
+                    dataTasks.Add(zeroCount);
+                    dataTasks.Add(oneCount);
+                    dataTasks.Add(twoCount);
+                    dataTasks.Add(threeCount);
+                    dataTasks.Add(fourCount);
+                    dataTasks.Add(fiveCount);
+                }
+
+                await Task.WhenAll(taskList);
+
                 var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber);
                 var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber);
                 var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
                 var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber);
                 var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
-                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
-                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
 
                 this.GetColors();
 
                 await Task.WhenAll(
                     cost,
-                    total,
-                    bookReadCount,
-                    pageReadCount,
-                    toBeReadCount,
-                    readingCount,
-                    readCount,
-                    favoriteCount,
-                    nonFavoriteCount,
-                    zeroCount,
-                    oneCount,
-                    twoCount,
-                    threeCount,
-                    fourCount,
-                    fiveCount,
                     collections,
                     genres,
                     series,
@@ -120,23 +168,21 @@ namespace BookCollector.ViewModels.Statistics
                     formats,
                     formatPrices);
 
-                await Task.Delay(1);
+                await Task.WhenAll(dataTasks);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = total.Result;
-                this.BooksReadCount = bookReadCount.Result;
-                this.PagesReadCount = pageReadCount.Result;
-                var toBeRead = toBeReadCount.Result;
-                var reading = readingCount.Result;
-                var read = readCount.Result;
-                var favorite = favoriteCount.Result;
-                var nonFavorite = nonFavoriteCount.Result;
-                var zero = zeroCount.Result;
-                var one = oneCount.Result;
-                var two = twoCount.Result;
-                var three = threeCount.Result;
-                var four = fourCount.Result;
-                var five = fiveCount.Result;
+                this.TotalBooks = AllBooksViewModel.fullBookList!.Count;
+                var toBeRead = ToBeReadViewModel.fullBookList!.Count;
+                var reading = ReadingViewModel.fullBookList!.Count;
+                var read = ReadViewModel.fullBookList!.Count;
+                var favorite = favoriteCount != null ? favoriteCount.Result : 0;
+                var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
+                var zero = zeroCount != null ? zeroCount.Result : 0;
+                var one = oneCount != null ? oneCount.Result : 0;
+                var two = twoCount != null ? twoCount.Result : 0;
+                var three = threeCount != null ? threeCount.Result : 0;
+                var four = fourCount != null ? fourCount.Result : 0;
+                var five = fiveCount != null ? fiveCount.Result : 0;
                 var collectionCounts = collections.Result;
                 var genresCounts = genres.Result;
                 var seriesCounts = series.Result;

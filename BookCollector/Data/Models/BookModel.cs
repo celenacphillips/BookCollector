@@ -91,7 +91,7 @@ namespace BookCollector.Data.Models
 
         public double BookPriceValue
         {
-            get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice[1..]) : 0;
+            get => !string.IsNullOrEmpty(this.BookPrice) ? (this.BookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol) ? double.Parse(this.BookPrice[1..]) : double.Parse(this.BookPrice)) : 0;
         }
 
         public DateTime? StartDateValue
@@ -126,17 +126,20 @@ namespace BookCollector.Data.Models
             return this.MemberwiseClone();
         }
 
-        public void SetReadingProgress()
+        public async Task SetReadingProgress()
         {
             this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
             this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
-        public void SetBookCheckpoints()
+        public void SetBookCheckpoints(bool showCheckpoints)
         {
-            this.Half = this.BookPageTotal / 2;
-            this.Fourth = this.BookPageTotal / 4;
-            this.ThreeFourth = this.Half + this.Fourth;
+            if (showCheckpoints)
+            {
+                this.Half = this.BookPageTotal / 2;
+                this.Fourth = this.BookPageTotal / 4;
+                this.ThreeFourth = this.Half + this.Fourth;
+            }
         }
 
         public async Task SetPartOfSeries()
@@ -203,7 +206,7 @@ namespace BookCollector.Data.Models
             this.PartOfCollection = output;
         }
 
-        public void SetCoverDisplay()
+        public async Task SetCoverDisplay()
         {
             this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
             this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;

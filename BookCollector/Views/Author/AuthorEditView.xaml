@@ -30,7 +30,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedAuthor.FirstName}"
-                            Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterAuthorFirstName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="FirstNameEditor">
@@ -57,7 +57,7 @@
                            Style="{StaticResource Header}"
                            HorizontalOptions="Center"/>
                     <Editor Text="{Binding EditedAuthor.LastName}"
-                            Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterAuthorLastName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="LastNameEditor">

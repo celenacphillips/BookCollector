@@ -8,20 +8,20 @@ namespace BookCollector.Views.Groupings;
 
 public partial class CollectionsView : ContentPage
 {
+    private CollectionsViewModel viewModel;
+
     public CollectionsView()
     {
-        this.ViewModel = new CollectionsViewModel(this);
-        this.BindingContext = this.ViewModel;
+        this.viewModel = new CollectionsViewModel(this);
+        this.BindingContext = this.viewModel;
 
         this.InitializeComponent();
     }
-
-    private CollectionsViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
     protected override void OnAppearing()
     {
-        var variable = this.ViewModel.SetViewModelData();
+        var variable = this.viewModel.SetViewModelData();
     }
 }

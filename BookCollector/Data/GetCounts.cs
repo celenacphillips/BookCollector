@@ -2,12 +2,17 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using System.Globalization;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 using CommunityToolkit.Maui.Core.Extensions;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BookCollector.Data
 {
@@ -98,8 +103,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllWishlistBooksAsync(showHiddenBooks);
-                filteredList = list.ToObservableCollection();
+                filteredList = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
             }
 
             var count = filteredList != null ? filteredList.Count : 0;
@@ -117,8 +123,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetBooksByFavoriteAsync(showHiddenBooks, favoriteValue);
-                filteredList = list.ToObservableCollection();
+                filteredList = AllBooksViewModel.fullBookList?
+                    .Where(x => x.IsFavorite == favoriteValue)
+                    .ToObservableCollection();
             }
 
             var count = filteredList != null ? filteredList.Count : 0;
@@ -136,8 +143,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetBooksByRatingAsync(showHiddenBooks, starRating);
-                filteredList = list.ToObservableCollection();
+                filteredList = AllBooksViewModel.fullBookList?
+                    .Where(x => x.Rating == starRating)
+                    .ToObservableCollection();
             }
 
             var count = filteredList != null ? filteredList.Count : 0;
@@ -247,8 +255,8 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllBooksAsync(showHiddenBooks);
-                bookList = list.ToObservableCollection();
+                bookList = AllBooksViewModel.fullBookList?
+                    .ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -285,8 +293,8 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllBooksAsync(showHiddenBooks);
-                bookList = list.ToObservableCollection();
+                bookList = AllBooksViewModel.fullBookList?
+                    .ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -323,8 +331,8 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllWishlistBooksAsync(showHiddenBooks);
-                bookList = list.ToObservableCollection();
+                bookList = WishListViewModel.fullWishlistBookList?
+                    .ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -361,8 +369,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllWishlistBooksAsync(showHiddenBooks);
-                bookList = list.ToObservableCollection();
+                bookList = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -399,8 +408,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetBooksReadInYearAsync(year, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
+                filteredList = AllBooksViewModel.fullBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
+                    .ToObservableCollection();
             }
 
             var count = filteredList != null ? filteredList.Count : 0;
@@ -419,8 +429,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetBooksReadInYearAsync(year, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
+                filteredList = AllBooksViewModel.fullBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
+                    .ToObservableCollection();
             }
 
             if (filteredList != null)
@@ -445,8 +456,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllBooksWithAPriceAsync(showHiddenBooks);
-                filteredList = list.ToObservableCollection();
+                filteredList = AllBooksViewModel.fullBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
             }
 
             if (filteredList != null)
@@ -471,8 +483,9 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllWishlistBooksWithAPriceAsync(showHiddenBooks);
-                filteredList = list.ToObservableCollection();
+                filteredList = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
+                    .ToObservableCollection();
             }
 
             if (filteredList != null)
@@ -521,16 +534,12 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllAuthorsAsync(showHiddenAuthors);
-                filteredList = list1.ToObservableCollection();
-
-                var list2 = await Database.GetAllBooksWithoutAnAuthorAsync(showHiddenBooks);
-                filteredBookList = list2.ToObservableCollection();
+                filteredList = AuthorsViewModel.fullAuthorList;
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList != null && filteredBookList != null)
+            if (filteredList != null)
             {
                 filteredList = [.. filteredList.OrderByDescending(x => x.AuthorTotalBooks)];
 
@@ -549,12 +558,6 @@ namespace BookCollector.Data
                         Count = filteredList[i].AuthorTotalBooks,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoAuthor,
-                    Count = filteredBookList.Count(x => string.IsNullOrEmpty(x.AuthorListString)),
-                });
             }
 
             return counts;
@@ -572,16 +575,12 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllCollectionsAsync(showHiddenCollections);
-                filteredList = list1.ToObservableCollection();
-
-                var list2 = await Database.GetAllBooksWithoutACollectionAsync(showHiddenBooks);
-                filteredBookList = list2.ToObservableCollection();
+                filteredList = CollectionsViewModel.fullCollectionList;
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList != null && filteredBookList != null)
+            if (filteredList != null)
             {
                 filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
 
@@ -600,12 +599,6 @@ namespace BookCollector.Data
                         Count = filteredList[i].CollectionTotalBooks,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoCollection,
-                    Count = filteredBookList.Count(x => x.BookCollectionGuid == null),
-                });
             }
 
             return counts;
@@ -623,16 +616,12 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllGenresAsync(showHiddenGenres);
-                filteredList = list1.ToObservableCollection();
-
-                var list2 = await Database.GetAllBooksWithoutAGenreAsync(showHiddenBooks);
-                filteredBookList = list2.ToObservableCollection();
+                filteredList = GenresViewModel.fullGenreList;
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList != null && filteredBookList != null)
+            if (filteredList != null)
             {
                 filteredList = [.. filteredList.OrderByDescending(x => x.GenreTotalBooks)];
 
@@ -651,12 +640,6 @@ namespace BookCollector.Data
                         Count = filteredList[i].GenreTotalBooks,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoGenre,
-                    Count = filteredBookList.Count(x => x.BookGenreGuid == null),
-                });
             }
 
             return counts;
@@ -674,16 +657,12 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllSeriesAsync(showHiddenSeries);
-                filteredList = list1.ToObservableCollection();
-
-                var list2 = await Database.GetAllBooksWithoutASeriesAsync(showHiddenBooks);
-                filteredBookList = list2.ToObservableCollection();
+                filteredList = SeriesViewModel.fullSeriesList;
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList != null && filteredBookList != null)
+            if (filteredList != null)
             {
                 filteredList = [.. filteredList.OrderByDescending(x => x.SeriesTotalBooks)];
 
@@ -702,12 +681,6 @@ namespace BookCollector.Data
                         Count = filteredList[i].SeriesTotalBooks,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoSeries,
-                    Count = filteredBookList.Count(x => x.BookSeriesGuid == null),
-                });
             }
 
             return counts;
@@ -725,16 +698,12 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllLocationsAsync(showHiddenLocations);
-                filteredList = list1.ToObservableCollection();
-
-                var list2 = await Database.GetAllBooksWithoutALocationAsync(showHiddenBooks);
-                filteredBookList = list2.ToObservableCollection();
+                filteredList = LocationsViewModel.fullLocationList;
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList != null && filteredBookList != null)
+            if (filteredList != null)
             {
                 filteredList = [.. filteredList.OrderByDescending(x => x.LocationTotalBooks)];
 
@@ -753,12 +722,6 @@ namespace BookCollector.Data
                         Count = filteredList[i].LocationTotalBooks,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoLocation,
-                    Count = filteredBookList.Count(x => x.BookLocationGuid == null),
-                });
             }
 
             return counts;
@@ -778,21 +741,19 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllWishlistBooksWithALocationAsync(showHiddenBooks);
-                filteredList1 = list1.ToObservableCollection();
+                filteredList1 = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy))
+                    .ToObservableCollection();
 
-                var list2 = await Database.GetAllWishlistBooksWithoutALocationAsync(showHiddenBooks);
-                filteredList2 = list2.ToObservableCollection();
-
-                list = await Database.GetAllWishlistBooksLocationsAsync(showHiddenBooks);
+                list = [.. filteredList1!
+                    .Select(x => x.BookWhereToBuy)
+                    .Distinct()];
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList1 != null && list != null && filteredList2 != null)
+            if (filteredList1 != null && list != null)
             {
-                // filteredList1 = [.. filteredList1.OrderByDescending(x => x.CollectionTotalBooks)];
-
                 var max = maxLimit;
 
                 if (list.Count < max)
@@ -810,12 +771,6 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoLocation,
-                    Count = filteredList2.Count,
-                });
             }
 
             return counts;
@@ -835,21 +790,19 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllWishlistBooksWithASeriesAsync(showHiddenBooks);
-                filteredList1 = list1.ToObservableCollection();
+                filteredList1 = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.BookSeries))
+                    .ToObservableCollection();
 
-                var list2 = await Database.GetAllWishlistBooksWithoutASeriesAsync(showHiddenBooks);
-                filteredList2 = list2.ToObservableCollection();
-
-                list = await Database.GetAllWishlistBooksSeriesAsync(showHiddenBooks);
+                list = [.. filteredList1!
+                    .Select(x => x.BookSeries)
+                    .Distinct()];
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList1 != null && list != null && filteredList2 != null)
+            if (filteredList1 != null && list != null)
             {
-                // filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
-
                 var max = maxLimit;
 
                 if (list.Count < max)
@@ -867,12 +820,6 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoSeries,
-                    Count = filteredList2.Count,
-                });
             }
 
             return counts;
@@ -892,21 +839,19 @@ namespace BookCollector.Data
             }
             else
             {
-                var list1 = await Database.GetAllWishlistBooksWithAuthorsAsync(showHiddenBooks);
-                filteredList1 = list1.ToObservableCollection();
+                filteredList1 = WishListViewModel.fullWishlistBookList?
+                    .Where(x => !string.IsNullOrEmpty(x.AuthorListString))
+                    .ToObservableCollection();
 
-                var list2 = await Database.GetAllWishlistBooksWithoutAuthorsAsync(showHiddenBooks);
-                filteredList2 = list2.ToObservableCollection();
-
-                authorStringList = await Database.GetAllWishlistBooksAuthorsAsync(showHiddenBooks);
+                authorStringList = [.. filteredList1!
+                    .Select(x => x.AuthorListString)
+                    .Distinct()];
             }
 
             var counts = new List<CountModel>();
 
-            if (filteredList1 != null && authorStringList != null && filteredList2 != null)
+            if (filteredList1 != null && authorStringList != null)
             {
-                // filteredList = [.. filteredList.OrderByDescending(x => x.CollectionTotalBooks)];
-
                 var list = new List<AuthorModel>();
 
                 foreach (var authorString in authorStringList)
@@ -939,12 +884,6 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
-
-                counts.Add(new CountModel()
-                {
-                    Label = AppStringResources.NoAuthor,
-                    Count = filteredList2.Count,
-                });
             }
 
             return counts;

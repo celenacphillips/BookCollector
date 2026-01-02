@@ -2,10 +2,11 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using CommunityToolkit.Maui.Core.Extensions;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.Data
 {
@@ -617,8 +618,15 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllCollectionsAsync(showHiddenCollections);
-                filteredList = list.ToObservableCollection();
+                if (CollectionsViewModel.fullCollectionList == null)
+                {
+                    var list = await Database.GetAllCollectionsAsync(showHiddenCollections);
+                    filteredList = list.ToObservableCollection();
+                }
+                else
+                {
+                    filteredList = CollectionsViewModel.fullCollectionList;
+                }
             }
 
             return filteredList;
@@ -634,8 +642,15 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllGenresAsync(showHiddenGenres);
-                filteredList = list.ToObservableCollection();
+                if (GenresViewModel.fullGenreList == null)
+                {
+                    var list = await Database.GetAllGenresAsync(showHiddenGenres);
+                    filteredList = list.ToObservableCollection();
+                }
+                else
+                {
+                    filteredList = GenresViewModel.fullGenreList;
+                }
             }
 
             return filteredList;
@@ -651,8 +666,15 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllSeriesAsync(showHiddenSeries);
-                filteredList = list.ToObservableCollection();
+                if (SeriesViewModel.fullSeriesList == null)
+                {
+                    var list = await Database.GetAllSeriesAsync(showHiddenSeries);
+                    filteredList = list.ToObservableCollection();
+                }
+                else
+                {
+                    filteredList = SeriesViewModel.fullSeriesList;
+                }
             }
 
             return filteredList;
@@ -668,8 +690,15 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllLocationsAsync(showHiddenLocations);
-                filteredList = list.ToObservableCollection();
+                if (LocationsViewModel.fullLocationList == null)
+                {
+                    var list = await Database.GetAllLocationsAsync(showHiddenLocations);
+                    filteredList = list.ToObservableCollection();
+                }
+                else
+                {
+                    filteredList = LocationsViewModel.fullLocationList;
+                }
             }
 
             return filteredList;
@@ -722,8 +751,15 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllAuthorsAsync(showHiddenAuthors);
-                filteredList = list.ToObservableCollection();
+                if (AuthorsViewModel.fullAuthorList == null)
+                {
+                    var list = await Database.GetAllAuthorsAsync(showHiddenAuthors);
+                    filteredList = list.ToObservableCollection();
+                }
+                else
+                {
+                    filteredList = AuthorsViewModel.fullAuthorList;
+                }
             }
 
             return filteredList;

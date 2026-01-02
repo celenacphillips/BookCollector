@@ -2,10 +2,12 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Globalization;
 using BookCollector.Data;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 using CommunityToolkit.Mvvm.Input;
+using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -32,19 +34,22 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
+                if (WishListViewModel.fullWishlistBookList == null)
+                {
+                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
+                }
+
                 var cost = GetCounts.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks);
-                var total = GetCounts.GetAllWishListBooksListCount(this.ShowHiddenWishlistBooks);
-                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.ShowHiddenBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.ShowHiddenBooks, this.MaxListNumber);
-                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.ShowHiddenBooks, this.MaxListNumber);
-                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenBooks);
-                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
 
                 this.GetColors();
 
                 await Task.WhenAll(
                     cost,
-                    total,
                     series,
                     authors,
                     locations,
@@ -52,7 +57,7 @@ namespace BookCollector.ViewModels.Statistics
                     formatPrices);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = total.Result;
+                this.TotalBooks = WishListViewModel.fullWishlistBookList!.Count;
                 var seriesCounts = series.Result;
                 var authorsCounts = authors.Result;
                 var locationsCounts = locations.Result;

@@ -7,6 +7,7 @@ using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Collection;
 using BookCollector.Views.Popups;
@@ -14,6 +15,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Groupings
 {
@@ -29,6 +31,7 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
             this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
             this.ViewTitle = AppStringResources.Collections;
+            RefreshView = true;
         }
 
         private bool ShowHiddenCollections { get; set; }
@@ -39,63 +42,66 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
+        public static bool RefreshView { get; set; }
+
+        public static async Task SetList(bool showHiddenCollections)
+        {
+            if (fullCollectionList == null)
+            {
+                fullCollectionList = await FillLists.GetAllCollectionsList(showHiddenCollections);
+            }
+        }
+
         public async Task SetViewModelData()
         {
-            try
+            if (RefreshView)
             {
-                this.SetIsBusyTrue();
-
-                this.GetPreferences();
-
-                var fullList = FillLists.GetAllCollectionsList(this.ShowHiddenCollections);
-
-                await Task.WhenAll(fullList);
-
-                this.FullCollectionList = fullList.Result;
-
-                if (this.FullCollectionList != null)
+                try
                 {
-                    this.FilteredCollectionList = this.FullCollectionList;
+                    this.SetIsBusyTrue();
 
-                    this.SearchOnCollection(this.Searchstring);
+                    this.GetPreferences();
 
-                    var loadDataTasks = new Task[]
+                    await SetList(this.ShowHiddenCollections);
+
+                    if (fullCollectionList != null)
                     {
-                        Task.Run(() => this.FilteredCollectionList.ToList().ForEach(x => x.SetTotalBooks(this.ShowHiddenBook))),
-                        Task.Run(() => this.FilteredCollectionList.ToList().ForEach(x => x.SetTotalCostOfBooks(this.ShowHiddenBook))),
-                    };
+                        this.FilteredCollectionList = fullCollectionList;
 
-                    await Task.WhenAll(loadDataTasks);
+                        this.TotalCollectionsCount = fullCollectionList != null ? fullCollectionList.Count : 0;
 
-                    var sortList = SortLists.SortCollectionsList(
-                            this.FilteredCollectionList,
-                            this.CollectionNameChecked,
-                            this.TotalBooksChecked,
-                            this.TotalPriceChecked,
-                            this.AscendingChecked,
-                            this.DescendingChecked);
+                        this.SearchOnCollection(this.Searchstring);
 
-                    this.TotalCollectionsCount = this.FullCollectionList.Count;
+                        var sortList = SortLists.SortCollectionsList(
+                                this.FilteredCollectionList,
+                                this.CollectionNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
 
-                    this.FilteredCollectionsCount = this.FilteredCollectionList.Count;
+                        this.FilteredCollectionsCount = this.FilteredCollectionList.Count;
 
-                    this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+                        this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
-                    this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
+                        this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
 
-                    await Task.WhenAll(sortList);
+                        await Task.WhenAll(sortList);
 
-                    this.FilteredCollectionList = sortList.Result;
+                        this.FilteredCollectionList = sortList.Result;
+                    }
+
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
                 }
-
-                this.SetIsBusyFalse();
-            }
-            catch (Exception ex)
-            {
+                catch (Exception ex)
+                {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                    await DisplayMessage("Error!", ex.Message);
 #endif
-                this.SetIsBusyFalse();
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
             }
         }
 
@@ -153,6 +159,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task Refresh()
         {
             this.SetRefreshTrue();
+            RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -201,6 +208,7 @@ namespace BookCollector.ViewModels.Groupings
                         else
                         {
                             await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
+                            this.RemoveFromStaticList(selected);
                         }
 
                         await ConfirmDelete(selected.CollectionName);
@@ -244,15 +252,19 @@ namespace BookCollector.ViewModels.Groupings
 
                 popup.BindingContext = viewModel;
 
-                await this.View.ShowPopupAsync(popup);
-                await this.SetViewModelData();
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    RefreshView = true;
+                    await this.SetViewModelData();
+                }
             }
         }
 
         private void GetPreferences()
         {
             this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
             this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
@@ -260,6 +272,46 @@ namespace BookCollector.ViewModels.Groupings
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+        }
+
+        private void RemoveFromStaticList(CollectionModel selected)
+        {
+            if (CollectionsViewModel.fullCollectionList != null)
+            {
+                CollectionsViewModel.RefreshView = this.RemoveCollectionFromStaticList(selected, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
+            }
+        }
+
+        private bool RemoveCollectionFromStaticList(CollectionModel selected, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldCollection = collectionList.FirstOrDefault(x => x.CollectionGuid == selected.CollectionGuid);
+
+                if (oldCollection != null)
+                {
+                    collectionList.Remove(oldCollection);
+                    refresh = true;
+                }
+
+                if (filteredCollectionList != null)
+                {
+                    var filteredCollection = filteredCollectionList.FirstOrDefault(x => x.CollectionGuid == selected.CollectionGuid);
+
+                    if (filteredCollection != null)
+                    {
+                        filteredCollectionList.Remove(filteredCollection);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

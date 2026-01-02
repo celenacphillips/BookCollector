@@ -406,6 +406,9 @@
 		<MauiXaml Update="Views\Statistics\LibraryStatisticsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Statistics\ReadingDataView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Statistics\WishListStatisticsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

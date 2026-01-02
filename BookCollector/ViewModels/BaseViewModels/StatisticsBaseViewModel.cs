@@ -130,7 +130,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             section.Chart = new BarChart
             {
                 Entries = entries,
-                BarAreaAlpha = 0,
+                BarAreaAlpha = 2,
                 LabelOrientation = Orientation.Vertical,
                 ValueLabelOrientation = Orientation.Horizontal,
                 BackgroundColor = SKColor.Empty,
@@ -154,7 +154,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void GetPreferences()
         {
-            this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
             this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
             this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);

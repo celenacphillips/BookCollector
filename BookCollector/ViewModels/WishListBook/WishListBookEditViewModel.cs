@@ -8,6 +8,8 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Book;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using BookCollector.Views.WishListBook;
@@ -177,10 +179,10 @@ namespace BookCollector.ViewModels.WishListBook
 
                     var dataTasks = new Task[]
                     {
-                    Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
-                    Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
-                    Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
-                    Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
+                        Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
+                        Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
+                        Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
+                        Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
                     };
 
                     await Task.WhenAll(dataTasks);
@@ -199,6 +201,7 @@ namespace BookCollector.ViewModels.WishListBook
                     else
                     {
                         this.EditedWishlistBook = await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.EditedWishlistBook));
+                        AddToStaticList(this.EditedWishlistBook);
                     }
 
                     if (this.RemoveMainViewBefore)
@@ -405,6 +408,60 @@ namespace BookCollector.ViewModels.WishListBook
             {
                 this.BookFormatNotValid = false;
             }
+        }
+
+        public static void AddToStaticList(WishlistBookModel book)
+        {
+            if (WishListViewModel.fullWishlistBookList != null)
+            {
+                WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList);
+            }
+        }
+
+        private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldBook = bookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                if (oldBook != null)
+                {
+                    var index = bookList.IndexOf(oldBook);
+                    bookList.Remove(oldBook);
+                    bookList.Insert(index, book);
+                    refresh = true;
+                }
+                else
+                {
+                    bookList.Add(book);
+                    refresh = true;
+                }
+
+                if (filteredBookList != null)
+                {
+                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                    if (filteredBook != null)
+                    {
+                        var index = filteredBookList.IndexOf(filteredBook);
+                        filteredBookList.Remove(filteredBook);
+                        filteredBookList.Insert(index, book);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredBookList.Add(book);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

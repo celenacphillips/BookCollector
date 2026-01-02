@@ -256,7 +256,8 @@
 
                                     <!-- Total Pages -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
+                                                         Grid.Row="0" Grid.Column="0"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.TotalPages}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
@@ -276,7 +277,8 @@
 
                                     <!-- Pages Read -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
+                                                         Grid.Row="0" Grid.Column="1"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.PagesRead}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
@@ -301,7 +303,7 @@
                                            Style="{DynamicResource Header}"
                                            Margin="0,0,0,20"/>
                                     <ProgressBar Progress="{Binding SelectedBook.Progress}"/>
-                                    <Grid>
+                                    <Grid IsVisible="{Binding ShowCheckpoints}">
 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.95*" />

@@ -99,6 +99,9 @@
 
             <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
                           ContentTemplate="{DataTemplate statisticsViews:WishListStatisticsView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.ReadingData}"
+                          ContentTemplate="{DataTemplate statisticsViews:ReadingDataView}"/>
         </Tab>
     </FlyoutItem>
 
