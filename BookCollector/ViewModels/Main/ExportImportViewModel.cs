@@ -303,7 +303,7 @@ namespace BookCollector.ViewModels.Main
                         await this.ReadBooksFromSpreadsheet();
                         await this.ReadBookAuthorsFromSpreadsheet();
 
-                        await DataCleanup();
+                        await DataCleanup(this.BooksChecked, this.AuthorsChecked, this.BookAuthorsChecked);
 
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
@@ -406,17 +406,20 @@ namespace BookCollector.ViewModels.Main
             }
         }
 
-        private static async Task DataCleanup()
+        private static async Task DataCleanup(bool booksChecked, bool authorsChecked, bool bookAuthorsChecked)
         {
-            var authors = await Database.GetAllAuthorsAsync(true);
-
-            foreach (var author in authors)
+            if (booksChecked && authorsChecked && bookAuthorsChecked)
             {
-                await Task.WhenAll(new Task[]
+                var authors = await Database.GetAllAuthorsAsync(true);
+
+                foreach (var author in authors)
                 {
+                    await Task.WhenAll(new Task[]
+                    {
                     author.SetTotalBooks(true),
                     author.SetTotalCostOfBooks(true),
-                });
+                    });
+                }
             }
         }
 

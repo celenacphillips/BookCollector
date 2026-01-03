@@ -534,7 +534,7 @@ namespace BookCollector.Data
             }
             else
             {
-                filteredList = AuthorsViewModel.fullAuthorList;
+                filteredList = AuthorsViewModel.fullAuthorList?.OrderByDescending(x => x.FirstName)?.OrderByDescending(x => x.LastName).ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -575,7 +575,7 @@ namespace BookCollector.Data
             }
             else
             {
-                filteredList = CollectionsViewModel.fullCollectionList;
+                filteredList = CollectionsViewModel.fullCollectionList?.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -616,7 +616,7 @@ namespace BookCollector.Data
             }
             else
             {
-                filteredList = GenresViewModel.fullGenreList;
+                filteredList = GenresViewModel.fullGenreList?.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -657,7 +657,7 @@ namespace BookCollector.Data
             }
             else
             {
-                filteredList = SeriesViewModel.fullSeriesList;
+                filteredList = SeriesViewModel.fullSeriesList?.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -698,7 +698,7 @@ namespace BookCollector.Data
             }
             else
             {
-                filteredList = LocationsViewModel.fullLocationList;
+                filteredList = LocationsViewModel.fullLocationList?.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
             }
 
             var counts = new List<CountModel>();
@@ -754,14 +754,9 @@ namespace BookCollector.Data
 
             if (filteredList1 != null && list != null)
             {
-                var max = maxLimit;
+                list = [.. list.OrderByDescending(x => x)];
 
-                if (list.Count < max)
-                {
-                    max = list.Count;
-                }
-
-                for (int i = 0; i < max; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     var count = filteredList1.Count(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.Equals(list[i]));
 
@@ -771,6 +766,17 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
+
+                counts = [.. counts.OrderByDescending(x => x.Count)];
+
+                var max = maxLimit;
+
+                if (list.Count < max)
+                {
+                    max = list.Count;
+                }
+
+                counts.RemoveRange(max, list.Count - max);
             }
 
             return counts;
@@ -803,14 +809,9 @@ namespace BookCollector.Data
 
             if (filteredList1 != null && list != null)
             {
-                var max = maxLimit;
+                list = [.. list.OrderByDescending(x => x)];
 
-                if (list.Count < max)
-                {
-                    max = list.Count;
-                }
-
-                for (int i = 0; i < max; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     var count = filteredList1.Count(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(list[i]));
 
@@ -820,6 +821,17 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
+
+                counts = [.. counts.OrderByDescending(x => x.Count)];
+
+                var max = maxLimit;
+
+                if (list.Count < max)
+                {
+                    max = list.Count;
+                }
+
+                counts.RemoveRange(max, list.Count - max);
             }
 
             return counts;
@@ -858,20 +870,14 @@ namespace BookCollector.Data
                 {
                     if (!string.IsNullOrEmpty(authorString))
                     {
-                        list = SplitStringIntoAuthorList(authorString);
+                        list.AddRange(SplitStringIntoAuthorList(authorString));
                     }
                 }
 
                 list = [.. list.DistinctBy(x => x.FullName)];
+                list = [.. list.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName)];
 
-                var max = maxLimit;
-
-                if (list.Count < max)
-                {
-                    max = list.Count;
-                }
-
-                for (int i = 0; i < max; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     var filteredBookList = filteredList1.Where(x => !string.IsNullOrEmpty(x.AuthorListString) &&
                                                     x.AuthorListString.Contains(list[i].ReverseFullName)).ToObservableCollection();
@@ -884,6 +890,17 @@ namespace BookCollector.Data
                         Count = count,
                     });
                 }
+
+                counts = [.. counts.OrderByDescending(x => x.Count)];
+
+                var max = maxLimit;
+
+                if (list.Count < max)
+                {
+                    max = list.Count;
+                }
+
+                counts.RemoveRange(max, list.Count - max);
             }
 
             return counts;

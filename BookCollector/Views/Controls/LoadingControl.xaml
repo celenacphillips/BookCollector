@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookCollector.Views.Controls.LoadingControl"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
              x:DataType="viewModel:BaseViewModel">
     
@@ -9,10 +10,20 @@
           BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
           Opacity="0.8">
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           Opacity="1"/>
+                           VerticalOptions="End"
+                           Opacity="1"
+                           Grid.Row="0" Grid.Column="0"/>
+        <Label Text="{x:Static localization:AppStringResources.LoadingDataPleaseWait}"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               Grid.Row="1" Grid.Column="0"/>
     </Grid>
 </ContentView>

@@ -475,6 +475,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blank1 items (Blank2 unread).
+        /// </summary>
+        internal static string Blank1ItemsBlank2Unread {
+            get {
+                return ResourceManager.GetString("Blank1ItemsBlank2Unread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blank1 of Blank2 items.
         /// </summary>
         internal static string Blank1OfBlank2Items {
@@ -484,11 +493,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blank items.
+        ///   Looks up a localized string similar to Blank1 of Blank2 items (Blank3 unread).
         /// </summary>
-        internal static string BlankItems {
+        internal static string Blank1OfBlank2ItemsBlank3Unread {
             get {
-                return ResourceManager.GetString("BlankItems", resourceCulture);
+                return ResourceManager.GetString("Blank1OfBlank2ItemsBlank3Unread", resourceCulture);
             }
         }
         
@@ -2001,6 +2010,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading Data. Please Wait....
+        /// </summary>
+        internal static string LoadingDataPleaseWait {
+            get {
+                return ResourceManager.GetString("LoadingDataPleaseWait", resourceCulture);
             }
         }
         

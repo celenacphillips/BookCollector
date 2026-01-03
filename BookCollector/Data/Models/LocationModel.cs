@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data.DatabaseModels;
+using System.Threading;
 
 namespace BookCollector.Data.Models
 {
@@ -41,13 +42,15 @@ namespace BookCollector.Data.Models
         {
             var list = await FillLists.GetAllBooksInLocationList(this.LocationGuid, showHiddenBooks);
             var count = 0;
+            var unread = 0;
 
             if (list != null)
             {
                 count = list.Count;
+                unread = list.Count(x => x.BookPageRead == 0 && !x.UpNext);
             }
 
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
             this.LocationTotalBooks = count;
         }
 

@@ -381,6 +381,9 @@
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author when Settings &gt; Show Hidden Authors is off?</value>
   </data>
+  <data name="Blank1OfBlank2ItemsBlank3Unread" xml:space="preserve">
+    <value>Blank1 of Blank2 items (Blank3 unread)</value>
+  </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
   </data>
@@ -762,8 +765,8 @@
   <data name="NoSeries" xml:space="preserve">
     <value>No Series</value>
   </data>
-  <data name="BlankItems" xml:space="preserve">
-    <value>Blank items</value>
+  <data name="Blank1ItemsBlank2Unread" xml:space="preserve">
+    <value>Blank1 items (Blank2 unread)</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sort By</value>
@@ -1187,5 +1190,8 @@
   </data>
   <data name="ReadingData_InfoText" xml:space="preserve">
     <value>This is a running total of all the books and pages you have completed in the past number years. It is calculated by the Reading End Date of the book.</value>
+  </data>
+  <data name="LoadingDataPleaseWait" xml:space="preserve">
+    <value>Loading Data. Please Wait...</value>
   </data>
 </root>

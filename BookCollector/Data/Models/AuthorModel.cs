@@ -42,13 +42,15 @@ namespace BookCollector.Data.Models
         {
             var list = await FillLists.GetAllBooksInAuthorList(this.AuthorGuid, showHiddenBooks);
             var count = 0;
+            var unread = 0;
 
             if (list != null)
             {
                 count = list.Count;
+                unread = list.Count(x => x.BookPageRead == 0 && !x.UpNext);
             }
 
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
             this.AuthorTotalBooks = count;
         }
 
