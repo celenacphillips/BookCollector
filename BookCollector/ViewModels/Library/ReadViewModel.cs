@@ -50,6 +50,17 @@ namespace BookCollector.ViewModels.Library
 
         public async Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                this.SetIsBusyTrue();
+
+                var temp = this.FilteredBookList;
+                this.FilteredBookList = null;
+                this.FilteredBookList = temp;
+
+                this.SetIsBusyFalse();
+            }
+
             if (RefreshView)
             {
                 try
@@ -86,6 +97,7 @@ namespace BookCollector.ViewModels.Library
                             await Task.WhenAll(this.FilteredBookList.Select(x => x.SetReadingProgress()));
                             await Task.WhenAll(this.FilteredBookList.Select(x => x.SetAuthorListString()));
                             await Task.WhenAll(this.FilteredBookList.Select(x => x.SetCoverDisplay()));
+                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetBookTotalTime()));
 
                             var sortList = SortLists.SortBookList(
                                     this.FilteredBookList,
@@ -97,7 +109,7 @@ namespace BookCollector.ViewModels.Library
                                     this.AuthorLastNameChecked,
                                     this.BookFormatChecked,
                                     this.BookPriceChecked,
-                                    this.PageCountChecked,
+                                    this.PageCountBookTimeChecked,
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
@@ -142,7 +154,13 @@ namespace BookCollector.ViewModels.Library
 
             if (this.FilteredBookList != null && this.FullBookList != null)
             {
-                this.FilteredBookList = await FilterLists.FilterBookList(
+                if (!string.IsNullOrEmpty(input))
+                {
+                    this.FilteredBookList = FilterLists.FilterOnSearchString(this.FullBookList, input);
+                }
+                else
+                {
+                    this.FilteredBookList = await FilterLists.FilterBookList(
                                 this.FullBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
@@ -151,6 +169,7 @@ namespace BookCollector.ViewModels.Library
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
                                 this.Searchstring);
+                }
 
                 this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
 
@@ -175,7 +194,7 @@ namespace BookCollector.ViewModels.Library
             if (!string.IsNullOrEmpty(this.ViewTitle))
             {
                 var popup = new FilterPopup();
-                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle)
+                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View)
                 {
                     FavoriteVisible = this.ShowFavoriteBooks,
                     FavoriteOption = this.FavoriteBooksOption,
@@ -230,8 +249,8 @@ namespace BookCollector.ViewModels.Library
                     AuthorLastNameChecked = this.AuthorLastNameChecked,
                     BookFormatVisible = true,
                     BookFormatChecked = this.BookFormatChecked,
-                    PageCountVisible = true,
-                    PageCountChecked = this.PageCountChecked,
+                    PageCountTimeVisible = true,
+                    PageCountTimeChecked = this.PageCountBookTimeChecked,
                     BookPriceVisible = true,
                     BookPriceChecked = this.BookPriceChecked,
                     AscendingChecked = this.AscendingChecked,
@@ -269,7 +288,7 @@ namespace BookCollector.ViewModels.Library
             this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
             this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
             this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountChecked = Preferences.Get($"{this.ViewTitle}_PageCountSelection", false /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
             this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", false /* Default */);

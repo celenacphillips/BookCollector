@@ -34,7 +34,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                if (WishListViewModel.fullWishlistBookList == null)
+                if (WishListViewModel.fullWishlistBookList == null || WishListViewModel.RefreshView)
                 {
                     await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
                 }

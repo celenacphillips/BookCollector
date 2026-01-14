@@ -21,7 +21,7 @@ namespace BookCollector.ViewModels.Genre
         public GenreModel editedGenre;
 
         [ObservableProperty]
-        public bool genreNameValid;
+        public bool genreNameNotValid;
 
         public GenreEditViewModel(GenreModel genre, ContentPage view)
         {
@@ -55,7 +55,7 @@ namespace BookCollector.ViewModels.Genre
             {
                 this.SetIsBusyTrue();
 
-                if (!this.GenreNameValid)
+                if (this.GenreNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.GenreNameNotValid, null);
                 }
@@ -68,15 +68,8 @@ namespace BookCollector.ViewModels.Genre
                     }
 #endif
 
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateGenre(this.EditedGenre);
-                    }
-                    else
-                    {
-                        this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
-                        AddToStaticList(this.EditedGenre);
-                    }
+                    this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
+                    AddToStaticList(this.EditedGenre);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -112,22 +105,7 @@ namespace BookCollector.ViewModels.Genre
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedGenre.GenreName))
-            {
-                var genreNameEditor = this.View.FindByName<Editor>("GenreNameEditor");
-                genreNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                genreNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.GenreNameValid = false;
-            }
-            else
-            {
-                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
-
-                var genreNameEditor = this.View.FindByName<Editor>("GenreNameEditor");
-                genreNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                genreNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.GenreNameValid = true;
-            }
+            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
         }
 
         public static async Task AddToStaticList(GenreModel genre)

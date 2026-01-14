@@ -18,9 +18,15 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <Image Source="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                   HorizontalOptions="Center"
-                   Grid.Row="0" Grid.Column="0"/>
+            <Image HorizontalOptions="Center"
+                   Grid.Row="0" Grid.Column="0">
+                <Image.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                     Glyph="&#xF02FC;"
+                                     Size="34"
+                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                </Image.Source>
+            </Image>
 
             <Label Text="{Binding InfoText}"
                    Grid.Row="0" Grid.Column="1"

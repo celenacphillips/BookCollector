@@ -53,6 +53,17 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                this.SetIsBusyTrue();
+
+                var temp = this.FilteredSeriesList;
+                this.FilteredSeriesList = null;
+                this.FilteredSeriesList = temp;
+
+                this.SetIsBusyFalse();
+            }
+
             if (RefreshView)
             {
                 try
@@ -200,15 +211,8 @@ namespace BookCollector.ViewModels.Groupings
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteSeries(selected);
-                        }
-                        else
-                        {
-                            await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
-                            this.RemoveFromStaticList(selected);
-                        }
+                        await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
+                        this.RemoveFromStaticList(selected);
 
                         await ConfirmDelete(selected.SeriesName);
 

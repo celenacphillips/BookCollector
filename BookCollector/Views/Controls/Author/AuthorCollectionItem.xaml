@@ -17,37 +17,46 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="{AppThemeBinding Light=Icons/person_icon_light.svg, Dark=Icons/person_icon_dark.svg}"
-                   HeightRequest="30"
-                   HorizontalOptions="Start"
-                   Grid.Row="0" Grid.Column="0"/>
+            <Image HorizontalOptions="Start"
+                   Grid.Row="0" Grid.Column="0">
+                <Image.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                             Glyph="&#xF0004;"
+                             Size="34"
+                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                </Image.Source>
+            </Image>
 
             <VerticalStackLayout VerticalOptions="Center"
                                  HorizontalOptions="Start"
                                  Grid.Row="0" Grid.Column="1">
                 <Label Text="{Binding FullName}"
-                       TextColor="{StaticResource Primary}"/>
+                       TextColor="{DynamicResource Primary}"/>
 
                 <Label Text="{Binding TotalBooksString}"
-                       Style="{StaticResource SubTitle}"
+                       Style="{DynamicResource SubTitle}"
                        FontSize="12"/>
             </VerticalStackLayout>
 
             <HorizontalStackLayout Grid.Row="0" Grid.Column="2">
-                <ImageButton Source="{AppThemeBinding Light=Icons/vertical_dots_light.svg, Dark=Icons/vertical_dots_dark.svg}"
-                             WidthRequest="20"
-                             HeightRequest="20"
-                             HorizontalOptions="End"
-                             Margin="10"
+                <ImageButton HorizontalOptions="End"
                              Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:AuthorsViewModel}}, Path=PopupMenuAuthorCommand}"
                              CommandParameter="{Binding AuthorGuid}"
-                             BackgroundColor="Transparent"/>
+                             BackgroundColor="Transparent"
+                             Padding="10,0">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF01D9;"
+                                         Size="24"
+                                         Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                    </ImageButton.Source>
+                </ImageButton>
             </HorizontalStackLayout>
 
 
         </Grid>
 
-        <Label Style="{StaticResource LongSeparator}"/>
+        <Label Style="{DynamicResource LongSeparator}"/>
 
     </VerticalStackLayout>
 </ContentView>

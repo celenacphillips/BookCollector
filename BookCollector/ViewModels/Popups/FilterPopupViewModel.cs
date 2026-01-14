@@ -2,12 +2,14 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Popups
 {
@@ -110,10 +112,11 @@ namespace BookCollector.ViewModels.Popups
         [ObservableProperty]
         public string? seriesOption;
 
-        public FilterPopupViewModel(Popup popup, string viewTitle)
+        public FilterPopupViewModel(Popup popup, string viewTitle, ContentPage view)
         {
             this.Popup = popup;
             this.ViewTitle = viewTitle;
+            this.View = view;
             this.PopupWidth = this.DeviceWidth - 50;
         }
 
@@ -187,6 +190,207 @@ namespace BookCollector.ViewModels.Popups
             this.SeriesPicker = series != null ? [.. series] : null;
             this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
             this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
+        }
+
+        [RelayCommand]
+        public async Task FavoriteChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.Favorite,
+                    this.FavoritePicker.ToList(),
+                    this.FavoriteOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.FavoriteOption = result.Result;
+                }
+
+                this.Popup.CanBeDismissedByTappingOutsideOfPopup = false;
+                this.Popup.CanBeDismissedByTappingOutsideOfPopup = true;
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task AuthorChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.Authors,
+                    this.AuthorPicker.ToList(),
+                    this.AuthorOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.AuthorOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task PublisherChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookPublisher,
+                    this.PublisherPicker.ToList(),
+                    this.PublisherOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.PublisherOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task PublishYearChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookPublishYear,
+                    this.PublishYearPicker.ToList(),
+                    this.PublishYearOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.PublishYearOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task FormatChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookFormat,
+                    this.FormatPicker.ToList(),
+                    this.FormatOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.FormatOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task LanguageChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookLanguage,
+                    this.LanguagePicker.ToList(),
+                    this.LanguageOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.LanguageOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task RatingChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookRating,
+                    this.RatingPicker.ToList(),
+                    this.RatingOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.RatingOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task LocationChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookLocation,
+                    this.LocationPicker.ToList(),
+                    this.LocationOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.LocationOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [RelayCommand]
+        public async Task SeriesChanged()
+        {
+            try
+            {
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.BookSeries,
+                    this.SeriesPicker.ToList(),
+                    this.SeriesOption,
+                    true);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.SeriesOption = result.Result;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void SetPreferences()

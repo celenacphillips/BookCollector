@@ -1,14 +1,14 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="ReadingDataViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Library;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Bibliography;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -20,11 +20,14 @@ namespace BookCollector.ViewModels.Statistics
         public ReadingDataViewModel(ContentPage view)
         {
             this.View = view;
-            this.MaxListNumber = 5;
-            this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.MaxListNumber.ToString());
+            this.YearCount = $"{5}";
+            this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount);
         }
 
-        private int MaxListNumber { get; set; }
+        public string YearCount { get; set; }
+
+        [ObservableProperty]
+        public bool yearCountNotValid;
 
         public async Task SetViewModelData()
         {
@@ -41,12 +44,13 @@ namespace BookCollector.ViewModels.Statistics
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }
 
-                for (int i = 0; i < this.MaxListNumber; i++)
+                for (int i = 0; i < int.Parse(this.YearCount); i++)
                 {
                     var year = DateTime.Now.Year - i;
 
                     var bookReadCount = GetCounts.GetBookCountReadInYear(year, this.ShowHiddenBooks);
                     var pageReadCount = GetCounts.GetBookPageCountReadInYear(year, this.ShowHiddenBooks);
+                    var listenedTimeCount = GetCounts.GetBookTimeCountReadInYear(year, this.ShowHiddenBooks);
 
                     await Task.WhenAll(bookReadCount, pageReadCount);
 
@@ -56,6 +60,7 @@ namespace BookCollector.ViewModels.Statistics
                             Year = year,
                             BooksReadCount = bookReadCount.Result,
                             PagesReadCount = pageReadCount.Result,
+                            AudiobookTime = listenedTimeCount.Result,
                         });
                 }
 
@@ -76,6 +81,21 @@ namespace BookCollector.ViewModels.Statistics
             this.SetRefreshTrue();
             await this.SetViewModelData();
             this.SetRefreshFalse();
+        }
+
+        [RelayCommand]
+        public async Task UpdateMaxNumber()
+        {
+            if (!string.IsNullOrEmpty(this.YearCount) && int.Parse(this.YearCount) < 21 && int.Parse(this.YearCount) > 0)
+            {
+                this.YearCountNotValid = false;
+                await this.SetViewModelData();
+                this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount.ToString());
+            }
+            else
+            {
+                this.YearCountNotValid = true;
+            }
         }
     }
 }

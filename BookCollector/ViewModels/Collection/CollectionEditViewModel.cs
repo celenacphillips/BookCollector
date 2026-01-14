@@ -22,7 +22,7 @@ namespace BookCollector.ViewModels.Collection
         public CollectionModel editedCollection;
 
         [ObservableProperty]
-        public bool collectionNameValid;
+        public bool collectionNameNotValid;
 
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
         {
@@ -56,7 +56,7 @@ namespace BookCollector.ViewModels.Collection
             {
                 this.SetIsBusyTrue();
 
-                if (!this.CollectionNameValid)
+                if (this.CollectionNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
                 }
@@ -69,15 +69,8 @@ namespace BookCollector.ViewModels.Collection
                     }
 #endif
 
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateCollection(this.EditedCollection);
-                    }
-                    else
-                    {
-                        this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
-                        AddToStaticList(this.EditedCollection);
-                    }
+                    this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
+                    AddToStaticList(this.EditedCollection);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -113,22 +106,7 @@ namespace BookCollector.ViewModels.Collection
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedCollection.CollectionName))
-            {
-                var collectionNameEditor = this.View.FindByName<Editor>("CollectionNameEditor");
-                collectionNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                collectionNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.CollectionNameValid = false;
-            }
-            else
-            {
-                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
-
-                var collectionNameEditor = this.View.FindByName<Editor>("CollectionNameEditor");
-                collectionNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                collectionNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.CollectionNameValid = true;
-            }
+            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
         }
 
         public static async Task AddToStaticList(CollectionModel collection)

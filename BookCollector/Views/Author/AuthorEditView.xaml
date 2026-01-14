@@ -11,8 +11,15 @@
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
-                     Command="{Binding SaveAuthorCommand}"/>
+        <ToolbarItem Command="{Binding SaveAuthorCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0193;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -26,9 +33,23 @@
                 <VerticalStackLayout Padding="10">
 
                     <!-- Author First Name -->
-                    <Label Text="{x:Static localization:AppStringResources.AuthorFirstName}"
-                           Style="{StaticResource Header}"
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3.4*"></ColumnDefinition>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="{x:Static localization:AppStringResources.AuthorFirstName}"
+                               Style="{StaticResource Header}"
+                               Grid.Row="0" Grid.Column="0"
+                               HorizontalOptions="End"/>
+
+                        <Label Text=" *"
+                               Style="{DynamicResource Header_Warning}"
+                               IsVisible="{Binding AuthorFirstNameNotValid}"
+                               Grid.Row="0" Grid.Column="1"
+                               HorizontalOptions="Start"/>
+                    </Grid>
                     <Editor Text="{Binding EditedAuthor.FirstName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterAuthorFirstName}"
                             FontAttributes="Bold"
@@ -53,9 +74,23 @@
                     <!-- Author First Name -->
 
                     <!-- Author Last Name -->
-                    <Label Text="{x:Static localization:AppStringResources.AuthorLastName}"
-                           Style="{StaticResource Header}"
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3.4*"></ColumnDefinition>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Text="{x:Static localization:AppStringResources.AuthorLastName}"
+                               Style="{StaticResource Header}"
+                               Grid.Row="0" Grid.Column="0"
+                               HorizontalOptions="End"/>
+
+                        <Label Text=" *"
+                               Style="{DynamicResource Header_Warning}"
+                               IsVisible="{Binding AuthorLastNameNotValid}"
+                               Grid.Row="0" Grid.Column="1"
+                               HorizontalOptions="Start"/>
+                    </Grid>
                     <Editor Text="{Binding EditedAuthor.LastName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterAuthorLastName}"
                             FontAttributes="Bold"

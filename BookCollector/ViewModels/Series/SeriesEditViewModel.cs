@@ -21,7 +21,7 @@ namespace BookCollector.ViewModels.Series
         public SeriesModel editedSeries;
 
         [ObservableProperty]
-        public bool seriesNameValid;
+        public bool seriesNameNotValid;
 
         public SeriesEditViewModel(SeriesModel series, ContentPage view)
         {
@@ -55,7 +55,7 @@ namespace BookCollector.ViewModels.Series
             {
                 this.SetIsBusyTrue();
 
-                if (!this.SeriesNameValid)
+                if (this.SeriesNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
                 }
@@ -68,15 +68,8 @@ namespace BookCollector.ViewModels.Series
                     }
 #endif
 
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateSeries(this.EditedSeries);
-                    }
-                    else
-                    {
-                        this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
-                        AddToStaticList(this.EditedSeries);
-                    }
+                    this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
+                    AddToStaticList(this.EditedSeries);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -112,22 +105,7 @@ namespace BookCollector.ViewModels.Series
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedSeries.SeriesName))
-            {
-                var seriesNameEditor = this.View.FindByName<Editor>("SeriesNameEditor");
-                seriesNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                seriesNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.SeriesNameValid = false;
-            }
-            else
-            {
-                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
-
-                var seriesNameEditor = this.View.FindByName<Editor>("SeriesNameEditor");
-                seriesNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                seriesNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.SeriesNameValid = true;
-            }
+            this.SeriesNameNotValid = string.IsNullOrEmpty(this.EditedSeries.SeriesName);
         }
 
         public static async Task AddToStaticList(SeriesModel series)

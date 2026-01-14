@@ -12,7 +12,7 @@
                 <scan:CameraView HorizontalOptions="Fill"
                                  VerticalOptions="Fill"
                                  OnDetected="CameraView_OnDetected"
-                                 TorchOn="True"
+                                 TorchOn="False"
                                  VibrationOnDetected="True"
                                  ScanInterval="25"
                                  x:Name="barcodeScannerView"/>

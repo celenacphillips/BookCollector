@@ -36,32 +36,18 @@ namespace BookCollector.Data.Models
             this.BookPrice = dbModel.BookPrice;
             this.BookSummary = dbModel.BookSummary;
             this.BookPageTotal = dbModel.BookPageTotal;
-            this.Progress = dbModel.Progress;
-            this.PageReadPercent = dbModel.PageReadPercent;
-            this.BookStartDate = dbModel.BookStartDate;
-            this.BookEndDate = dbModel.BookEndDate;
+            this.BookHoursTotal = dbModel.BookHoursTotal;
+            this.BookMinutesTotal = dbModel.BookMinutesTotal;
             this.BookComments = dbModel.BookComments;
             this.BookCoverUrl = dbModel.BookCoverUrl;
             this.HasBookCover = dbModel.HasBookCover;
             this.HasNoBookCover = dbModel.HasNoBookCover;
             this.HasSeries = dbModel.HasSeries;
-            this.HasCollection = dbModel.HasCollection;
             this.BookURL = dbModel.BookURL;
             this.BookWhereToBuy = dbModel.BookWhereToBuy;
-            this.LoanedTo = dbModel.LoanedTo;
-            this.BookLoanedOutOn = dbModel.BookLoanedOutOn;
-            this.UpNext = dbModel.UpNext;
             this.HideBook = dbModel.HideBook;
-            this.Half = dbModel.Half;
-            this.Fourth = dbModel.Fourth;
-            this.ThreeFourth = dbModel.ThreeFourth;
             this.PartOfSeries = dbModel.PartOfSeries;
-            this.PartOfCollection = dbModel.PartOfCollection;
             this.BookCoverFileLocation = dbModel.BookCoverFileLocation;
-            this.BookSeriesGuid = dbModel.BookSeriesGuid;
-            this.BookCollectionGuid = dbModel.BookCollectionGuid;
-            this.BookGenreGuid = dbModel.BookGenreGuid;
-            this.BookLocationGuid = dbModel.BookLocationGuid;
             this.AuthorListString = dbModel.AuthorListString;
             this.IsFavorite = dbModel.IsFavorite;
             this.Rating = dbModel.Rating;
@@ -90,15 +76,18 @@ namespace BookCollector.Data.Models
             get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice[1..]) : 0;
         }
 
-        public DateTime? StartDateValue
+        public string? BookDurationTotal
         {
-            get => !string.IsNullOrEmpty(this.BookStartDate) ? DateTime.Parse(this.BookStartDate) : null;
+            get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
+                AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
+                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString()).Replace("Blank2", this.BookMinutesTotal.ToString());
         }
 
-        public DateTime? EndDateValue
-        {
-            get => !string.IsNullOrEmpty(this.BookEndDate) ? DateTime.Parse(this.BookEndDate) : null;
-        }
+        [ObservableProperty]
+        public double? bookTotalTime;
+
+        [ObservableProperty]
+        public TimeSpan totalTimeSpan;
 
         public object Clone()
         {
@@ -107,31 +96,8 @@ namespace BookCollector.Data.Models
 
         public async Task SetPartOfSeries()
         {
-            this.HasSeries = this.BookSeriesGuid != null || !string.IsNullOrEmpty(this.BookSeries);
+            this.HasSeries = !string.IsNullOrEmpty(this.BookSeries);
             var output = string.Empty;
-
-            if (this.BookSeriesGuid != null)
-            {
-                var series = await GetItems.GetSeriesForBook(this.BookSeriesGuid);
-
-                if (series != null)
-                {
-                    if (this.BookNumberInSeries != null)
-                    {
-                        output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}, {AppStringResources.BookNumber.Replace("Number", $"{this.BookNumberInSeries}")}";
-                    }
-
-                    if (this.BookNumberInSeries != null && !string.IsNullOrEmpty(series.TotalBooksInSeries))
-                    {
-                        output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}, {AppStringResources.BookNumberOfTotal.Replace("number", $"{this.BookNumberInSeries}").Replace("total", $"{series.TotalBooksInSeries}")}";
-                    }
-
-                    if (this.BookNumberInSeries == null)
-                    {
-                        output = $"{AppStringResources.PartofSeries.Replace("blank", $"{series.SeriesName}")}";
-                    }
-                }
-            }
 
             if (!string.IsNullOrEmpty(this.BookSeries))
             {
@@ -211,6 +177,16 @@ namespace BookCollector.Data.Models
 
                 this.BookPrice = string.Format(cultureInfo, "{0:C}", parsed ? price : 0);
             }
+        }
+
+        public async Task SetBookTotalTime()
+        {
+            this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
+        }
+
+        public TimeSpan SetTime(int hour, int minute)
+        {
+            return new TimeSpan(hour, minute, 0);
         }
     }
 }

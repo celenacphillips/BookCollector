@@ -207,9 +207,6 @@
   <data name="Paperback" xml:space="preserve">
     <value>Paperback</value>
   </data>
-  <data name="ApplicationTitle" xml:space="preserve">
-    <value>Book Collector</value>
-  </data>
   <data name="Hardcover" xml:space="preserve">
     <value>Hardcover</value>
   </data>
@@ -367,19 +364,19 @@
     <value>Add Existing Book</value>
   </data>
   <data name="HideCollection_Question" xml:space="preserve">
-    <value>Hide Collection when Settings &gt; Show Hidden Collections is off?</value>
+    <value>Hide Collection when Settings &gt; Show Hidden Collections is off? This will also hide any books associated with this collection.</value>
   </data>
   <data name="HideGenre_Question" xml:space="preserve">
-    <value>Hide Genre when Settings &gt; Show Hidden Genres is off?</value>
+    <value>Hide Genre when Settings &gt; Show Hidden Genres is off? This will also hide any books associated with this genre.</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
-    <value>Hide Series when Settings &gt; Show Hidden Series is off?</value>
+    <value>Hide Series when Settings &gt; Show Hidden Series is off? This will also hide any books associated with this series.</value>
   </data>
   <data name="HideLocation_Question" xml:space="preserve">
-    <value>Hide Location when Settings &gt; Show Hidden Location is off?</value>
+    <value>Hide Location when Settings &gt; Show Hidden Location is off? This will also hide any books associated with this location.</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author when Settings &gt; Show Hidden Authors is off?</value>
+    <value>Hide Author when Settings &gt; Show Hidden Authors is off? This will also hide any books associated with this author.</value>
   </data>
   <data name="Blank1OfBlank2ItemsBlank3Unread" xml:space="preserve">
     <value>Blank1 of Blank2 items (Blank3 unread)</value>
@@ -536,6 +533,9 @@
   </data>
   <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
     <value>Please allow Camera permission to scan barcodes!</value>
+  </data>
+  <data name="PleaseAllowPhotoPermissionToDownloadBookCoverPhotos" xml:space="preserve">
+    <value>Please allow Photos permission to download book cover photos!</value>
   </data>
   <data name="PleaseConnectToInternetToSearch" xml:space="preserve">
     <value>Please connect to Internet to search!</value>
@@ -904,7 +904,7 @@
     <value>Import</value>
   </data>
   <data name="Export_Import_Question" xml:space="preserve">
-    <value>Would you like to import or export your data?</value>
+    <value>Would you like to import your data from or export your data to a spreadsheet?</value>
   </data>
   <data name="ExportImportView_InfoText" xml:space="preserve">
     <value>Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution).</value>
@@ -1189,9 +1189,156 @@
     <value>Books Read</value>
   </data>
   <data name="ReadingData_InfoText" xml:space="preserve">
-    <value>This is a running total of all the books and pages you have completed in the past number years. It is calculated by the Reading End Date of the book.</value>
+    <value>This is a running total of all the books and pages you have completed in the past number years. A book is considered completed in a year if the reading end date is in that year, and all the pages in the book are counted for that year.</value>
   </data>
   <data name="LoadingDataPleaseWait" xml:space="preserve">
     <value>Loading Data. Please Wait...</value>
+  </data>
+  <data name="AudiobookHours" xml:space="preserve">
+    <value>Audiobook Hours</value>
+  </data>
+  <data name="ClickToSearchWithGoogleBooks" xml:space="preserve">
+    <value>Click to Search with Google Books</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="BookLocations" xml:space="preserve">
+    <value>Book Locations</value>
+  </data>
+  <data name="ANewBook" xml:space="preserve">
+    <value>A New Book</value>
+  </data>
+  <data name="TotalBooksOwned" xml:space="preserve">
+    <value>Total Books Owned</value>
+  </data>
+  <data name="TotalPriceOfBooksOwned" xml:space="preserve">
+    <value>Total Price of Books Owned</value>
+  </data>
+  <data name="AddNewAuthorToBook" xml:space="preserve">
+    <value>Add New Author to Book</value>
+  </data>
+  <data name="AddNewChapterToBook" xml:space="preserve">
+    <value>Add New Chapter To Book</value>
+  </data>
+  <data name="CreateNewSeries" xml:space="preserve">
+    <value>Create New Series</value>
+  </data>
+  <data name="CreateNewCollection" xml:space="preserve">
+    <value>Create New Collection</value>
+  </data>
+  <data name="CreateNewGenre" xml:space="preserve">
+    <value>Create New Genre</value>
+  </data>
+  <data name="CreateNewLocation" xml:space="preserve">
+    <value>Create New Location</value>
+  </data>
+  <data name="ChangeLog" xml:space="preserve">
+    <value>Change Log</value>
+  </data>
+  <data name="SupportInfoText" xml:space="preserve">
+    <value>Found a bug? Want to suggest a new feature? Need additional help? Email us!</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SearchList" xml:space="preserve">
+    <value>Search list...</value>
+  </data>
+  <data name="ThereAreNoItems" xml:space="preserve">
+    <value>There are no items.</value>
+  </data>
+  <data name="YearCount" xml:space="preserve">
+    <value>Year Count</value>
+  </data>
+  <data name="EnterYearCount" xml:space="preserve">
+    <value>Enter Year Count</value>
+  </data>
+  <data name="BlankPages" xml:space="preserve">
+    <value>Blank pages</value>
+  </data>
+  <data name="Blank1HoursBlank2Minutes" xml:space="preserve">
+    <value>Blank1 hours, Blank2 minutes</value>
+  </data>
+  <data name="TotalHours" xml:space="preserve">
+    <value>Total Hours</value>
+  </data>
+  <data name="TotalMinutes" xml:space="preserve">
+    <value>Total Minutes</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ListenTime" xml:space="preserve">
+    <value>Listen Time</value>
+  </data>
+  <data name="SelectHourListenedTo" xml:space="preserve">
+    <value>Select Hour Listened To</value>
+  </data>
+  <data name="SelectMinuteListenedTo" xml:space="preserve">
+    <value>Select Minute Listened To</value>
+  </data>
+  <data name="HoursListened" xml:space="preserve">
+    <value>Hours Listened</value>
+  </data>
+  <data name="MinutesListened" xml:space="preserve">
+    <value>Minutes Listened</value>
+  </data>
+  <data name="TotalTime" xml:space="preserve">
+    <value>Total Time</value>
+  </data>
+  <data name="ListenHours" xml:space="preserve">
+    <value>Listen Hours</value>
+  </data>
+  <data name="ListenMinutes" xml:space="preserve">
+    <value>Listen Minutes</value>
+  </data>
+  <data name="BlankHours" xml:space="preserve">
+    <value>Blank hours</value>
+  </data>
+  <data name="EnterHours" xml:space="preserve">
+    <value>Enter Hours</value>
+  </data>
+  <data name="EnterMinutes" xml:space="preserve">
+    <value>Enter Minutes</value>
+  </data>
+  <data name="Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="Internet" xml:space="preserve">
+    <value>Internet</value>
+  </data>
+  <data name="Files_Photos" xml:space="preserve">
+    <value>Files / Photos</value>
+  </data>
+  <data name="Camera_Description" xml:space="preserve">
+    <value>This app only needs permission to the Camera when you scan a barcode. If you will not be scanning barcodes, you do not need the permission granted.</value>
+  </data>
+  <data name="Internet_Description" xml:space="preserve">
+    <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
+  </data>
+  <data name="Files_Photos_Description" xml:space="preserve">
+    <value>This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers from a URL, you do not need the permission granted.</value>
+  </data>
+  <data name="DataStorage" xml:space="preserve">
+    <value>Data Storage</value>
+  </data>
+  <data name="PageCountBookTime" xml:space="preserve">
+    <value>Page Count / Book Time</value>
   </data>
 </root>

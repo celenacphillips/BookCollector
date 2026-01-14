@@ -220,7 +220,8 @@ namespace BookCollector.ViewModels.Book
                                 });
                         }
 
-                        var variable = this.SelectedBook.SetAuthorListString(authorList.ToObservableCollection(), false);
+                        this.SelectedBook.SelectedAuthors ??= [];
+                        this.SelectedBook.SelectedAuthors.AddRange(authorList);
                     }
                 }
 

@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Book;
 
 namespace BookCollector.Views.Book;
@@ -21,11 +22,15 @@ public partial class BookEditView : ContentPage
 
         this.InitializeComponent();
 
-        // Need this to make sure the stepper doesn't set pages read
-        // to 100 if over 100. 100 is default.
-        var stepper = (Stepper)this.FindByName("PageReadStepper");
-        stepper.Maximum = book.BookPageTotal;
-        stepper.Value = book.BookPageRead;
+        if (book.BookFormat == null ||
+            (book.BookFormat != null && !book.BookFormat!.Equals(AppStringResources.Audiobook)))
+        {
+            // Need this to make sure the stepper doesn't set pages read
+            // to 100 if over 100. 100 is default.
+            var stepper = (Stepper)this.FindByName("PageReadStepper");
+            stepper.Maximum = (int)book.BookPageTotal;
+            stepper.Value = book.BookPageRead;
+        }
     }
 
     private BookEditViewModel ViewModel { get; set; }

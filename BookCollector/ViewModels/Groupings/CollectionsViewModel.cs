@@ -54,6 +54,17 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                this.SetIsBusyTrue();
+
+                var temp = this.FilteredCollectionList;
+                this.FilteredCollectionList = null;
+                this.FilteredCollectionList = temp;
+
+                this.SetIsBusyFalse();
+            }
+
             if (RefreshView)
             {
                 try
@@ -201,15 +212,8 @@ namespace BookCollector.ViewModels.Groupings
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteCollection(selected);
-                        }
-                        else
-                        {
-                            await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
-                            this.RemoveFromStaticList(selected);
-                        }
+                        await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
+                        this.RemoveFromStaticList(selected);
 
                         await ConfirmDelete(selected.CollectionName);
 

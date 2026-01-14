@@ -2,16 +2,15 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using System.Collections.ObjectModel;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
 using BookCollector.Views.Book;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -29,13 +28,16 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public bool showPages;
 
-        public BookMainViewModel(BookModel book, ContentPage view)
+        public BookMainViewModel(BookModel book, ContentPage view, object? previousViewModel)
         {
             this.View = view;
 
             this.SelectedBook = book;
             this.InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book", $"{this.SelectedBook.BookTitle}")}";
+            this.PreviousViewModel = previousViewModel;
         }
+
+        private object? PreviousViewModel { get; set; }
 
         public async Task SetViewModelData()
         {
@@ -64,11 +66,16 @@ namespace BookCollector.ViewModels.Book
                         this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
                         this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
                         this.ShowPages = true;
+                        this.ShowTime = false;
                         this.ShowCheckpoints = this.SelectedBook.BookPageTotal != 0;
                     }
                     else
                     {
+                        this.BookIsRead = this.SelectedBook.BookListenedTime == this.SelectedBook.BookTotalTime && this.SelectedBook.BookTotalTime != 0;
+                        this.ShowUpNext = this.SelectedBook.BookListenedTime == 0;
                         this.ShowPages = false;
+                        this.ShowTime = true;
+                        this.ShowCheckpoints = this.SelectedBook.BookTotalTime != 0;
                     }
 
                     if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
@@ -108,6 +115,8 @@ namespace BookCollector.ViewModels.Book
                         Task.Run(() => this.SelectedBook.SetPartOfSeries()),
                         Task.Run(() => this.SelectedBook.SetPartOfCollection()),
                         Task.Run(() => this.SelectedBook.SetBookPrice()),
+                        Task.Run(() => this.SelectedBook.TotalTimeSpan = this.SelectedBook.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
+                        Task.Run(() => this.SelectedBook.ListenTimeSpan = this.SelectedBook.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
                     };
 
                     await Task.WhenAll(chapters, genre, location, authors);
@@ -118,6 +127,9 @@ namespace BookCollector.ViewModels.Book
                     this.SelectedAuthorList = authors.Result;
 
                     await Task.WhenAll(loadDataTasks);
+
+                    this.SelectedBook.TotalTimeString = $"{this.SelectedBook.BookHoursTotal:0}:{this.SelectedBook.BookMinutesTotal:00}";
+                    this.SelectedBook.ListenTimeString = $"{this.SelectedBook.BookHourListened:0}:{this.SelectedBook.BookMinuteListened:00}";
 
                     this.SetIsBusyFalse();
                 }
@@ -146,7 +158,7 @@ namespace BookCollector.ViewModels.Book
             {
                 this.SetIsBusyTrue();
 
-                var view = new BookEditView(this.SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)this.View);
+                var view = new BookEditView(this.SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)this.View, this.PreviousViewModel);
 
                 await Shell.Current.Navigation.PushAsync(view);
 
@@ -167,15 +179,8 @@ namespace BookCollector.ViewModels.Book
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteBook(this.SelectedBook);
-                        }
-                        else
-                        {
-                            await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
-                            this.RemoveFromStaticList(this.SelectedBook);
-                        }
+                        await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+                        this.RemoveFromStaticList(this.SelectedBook);
 
                         await ConfirmDelete(this.SelectedBook.BookTitle);
 
@@ -206,11 +211,11 @@ namespace BookCollector.ViewModels.Book
                 var title = this.SelectedBook.BookTitle;
 
                 string? text;
-                if (this.AuthorList != null)
+                if (this.SelectedAuthorList != null && this.SelectedAuthorList.Count() > 0)
                 {
-                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
+                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.SelectedAuthorList[0].FullName)}";
 
-                    if (this.AuthorList.Count > 1)
+                    if (this.SelectedAuthorList.Count > 1)
                     {
                         text += $", {AppStringResources.EtAl}";
                     }

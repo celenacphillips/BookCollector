@@ -25,6 +25,7 @@ namespace BookCollector
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
                 })
                 .ConfigureMauiHandlers(handlers =>
                 {
@@ -34,7 +35,7 @@ namespace BookCollector
 
             #if DEBUG
             builder.Logging.AddDebug();
-            #endif
+#endif
 
             builder.Services.AddSingleton<BookCollectorDatabase>();
 

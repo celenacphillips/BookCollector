@@ -28,6 +28,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool isVisible;
 
         [ObservableProperty]
+        public bool isEnabled;
+
+        [ObservableProperty]
         public string? viewTitle;
 
         [ObservableProperty]
@@ -202,15 +205,16 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void SetIsBusyTrue()
         {
-            GC.Collect();
             this.IsBusy = true;
             this.IsVisible = true;
+            this.IsEnabled = false;
         }
 
         public void SetIsBusyFalse()
         {
             this.IsBusy = false;
             this.IsVisible = true;
+            this.IsEnabled = true;
         }
 
         public void SetRefreshTrue()

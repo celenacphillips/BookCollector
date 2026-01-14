@@ -15,48 +15,46 @@
         <!-- Main Content -->
         <StackLayout>
 
-        <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshCommand}">
+            <Grid Margin="20,20,20,0">
 
-            <ScrollView>
-                <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                    
-                    <Grid Margin="20,20,20,0">
-                        
-                        <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                        
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                        <!-- Number of Books -->
-                        <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
-                               Style="{StaticResource Header}"
-                               HorizontalTextAlignment="Center"
-                               Grid.Row="0" Grid.Column="0"/>
-                        <Label Text="{Binding TotalBooks}"
-                               HorizontalTextAlignment="Center"
-                               Grid.Row="1" Grid.Column="0"/>
-                        <!-- Number of Books -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                        <!-- Total Value -->
-                        <Label Text="{x:Static localization:AppStringResources.TotalValue}"
-                               Style="{StaticResource Header}"
-                               HorizontalTextAlignment="Center"
-                               Grid.Row="0" Grid.Column="1"/>
-                        <Label Text="{Binding CostBooks}"
-                               HorizontalTextAlignment="Center"
-                               Grid.Row="1" Grid.Column="1"/>
-                        <!-- Total Value -->
-                    </Grid>
+                <!-- Number of Books -->
+                <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="{Binding TotalBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="0"/>
+                <!-- Number of Books -->
 
-                    
+                <!-- Total Value -->
+                <Label Text="{x:Static localization:AppStringResources.TotalValue}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding CostBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="1"/>
+                <!-- Total Value -->
+            </Grid>
 
-                    <Label Style="{StaticResource ShortSeparator}" />
+            <Label Style="{StaticResource ShortSeparator}" />
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView>
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
 
                         <!-- Reading Status -->
                         <VerticalStackLayout IsVisible="{Binding ShowReadingStatus}">

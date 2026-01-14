@@ -4,6 +4,7 @@
 
 using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Core.Extensions;
 
@@ -21,7 +22,7 @@ namespace BookCollector.Data
             bool authorLastNameChecked,
             bool bookFormatChecked,
             bool bookPriceChecked,
-            bool pageCountChecked,
+            bool pageCountBookTimeChecked,
             bool ascendingChecked,
             bool descendingChecked,
             bool seriesOrderChecked = false)
@@ -145,16 +146,30 @@ namespace BookCollector.Data
                 }
             }
 
-            if (pageCountChecked)
+            if (pageCountBookTimeChecked)
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal).ToObservableCollection();
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookTotalTime);
+
+                    var list = new List<BookModel>();
+                    list.AddRange(nonAudio);
+                    list.AddRange(audio);
+
+                    filteredList = list.ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal).ToObservableCollection();
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookTotalTime);
+
+                    var list = new List<BookModel>();
+                    list.AddRange(nonAudio);
+                    list.AddRange(audio);
+
+                    filteredList = list.ToObservableCollection();
                 }
             }
 
@@ -431,7 +446,7 @@ namespace BookCollector.Data
             bool authorLastNameChecked,
             bool bookFormatChecked,
             bool bookPriceChecked,
-            bool pageCountChecked,
+            bool PageCountTimeChecked,
             bool ascendingChecked,
             bool descendingChecked)
         {
@@ -447,32 +462,6 @@ namespace BookCollector.Data
                 if (descendingChecked)
                 {
                     filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).ToObservableCollection();
-                }
-            }
-
-            if (bookReadingDateChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.StartDateValue).OrderBy(x => x.EndDateValue).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.StartDateValue).OrderByDescending(x => x.EndDateValue).ToObservableCollection();
-                }
-            }
-
-            if (bookReadPercentageChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.Progress).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.Progress).ToObservableCollection();
                 }
             }
 
@@ -541,7 +530,7 @@ namespace BookCollector.Data
                 }
             }
 
-            if (pageCountChecked)
+            if (PageCountTimeChecked)
             {
                 if (ascendingChecked)
                 {

@@ -46,7 +46,9 @@ namespace BookCollector.Data.Models
             if (list != null)
             {
                 count = list.Count;
-                unread = list.Count(x => x.BookPageRead == 0 && !x.UpNext);
+                unread = list.Count(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
+                    && !x.UpNext);
             }
 
             this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);

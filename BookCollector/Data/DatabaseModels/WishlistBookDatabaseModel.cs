@@ -12,7 +12,7 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public string? bookTitle;
         [ObservableProperty]
-        public double? bookNumberInSeries;
+        public string? bookNumberInSeries;
         [ObservableProperty]
         public string? bookPublisher;
         [ObservableProperty]
@@ -30,13 +30,9 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public int bookPageTotal;
         [ObservableProperty]
-        public double progress;
+        public int bookHoursTotal;
         [ObservableProperty]
-        public string? pageReadPercent;
-        [ObservableProperty]
-        public string? bookStartDate;
-        [ObservableProperty]
-        public string? bookEndDate;
+        public int bookMinutesTotal;
         [ObservableProperty]
         public string? bookComments;
         [ObservableProperty]
@@ -48,29 +44,13 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public bool hasSeries;
         [ObservableProperty]
-        public bool hasCollection;
-        [ObservableProperty]
         public string? bookURL;
         [ObservableProperty]
         public string? bookWhereToBuy;
         [ObservableProperty]
-        public string? loanedTo;
-        [ObservableProperty]
-        public string? bookLoanedOutOn;
-        [ObservableProperty]
-        public bool upNext;
-        [ObservableProperty]
         public bool hideBook;
         [ObservableProperty]
-        public int half;
-        [ObservableProperty]
-        public int fourth;
-        [ObservableProperty]
-        public int threeFourth;
-        [ObservableProperty]
         public string? partOfSeries;
-        [ObservableProperty]
-        public string? partOfCollection;
         [ObservableProperty]
         public string? bookCoverFileLocation;
 
@@ -78,12 +58,6 @@ namespace BookCollector.Data.DatabaseModels
         public Guid? BookGuid { get; set; }
 
         public Guid? BookSeriesGuid { get; set; }
-
-        public Guid? BookCollectionGuid { get; set; }
-
-        public Guid? BookGenreGuid { get; set; }
-
-        public Guid? BookLocationGuid { get; set; }
 
         public string? AuthorListString { get; set; }
 

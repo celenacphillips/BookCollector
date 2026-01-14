@@ -108,10 +108,10 @@ namespace BookCollector.ViewModels.Popups
         /********************************************************/
 
         [ObservableProperty]
-        public bool pageCountVisible;
+        public bool pageCountTimeVisible;
 
         [ObservableProperty]
-        public bool pageCountChecked;
+        public bool pageCountTimeChecked;
 
         /********************************************************/
 
@@ -228,9 +228,9 @@ namespace BookCollector.ViewModels.Popups
                 Preferences.Set($"{this.ViewTitle}_BookFormatSelection", this.BookFormatChecked);
             }
 
-            if (this.PageCountVisible)
+            if (this.PageCountTimeVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_PageCountSelection", this.PageCountChecked);
+                Preferences.Set($"{this.ViewTitle}_PageCountBookTimeSelection", this.PageCountTimeChecked);
             }
 
             if (this.TotalPriceVisible)

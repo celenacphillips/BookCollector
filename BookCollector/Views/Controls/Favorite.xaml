@@ -4,9 +4,7 @@
              x:Class="BookCollector.Views.Controls.Favorite">
 
     <VerticalStackLayout>
-        <ImageButton HeightRequest="20"
-                     WidthRequest="20"
-                     x:Name="heart"
+        <ImageButton x:Name="heart"
                      Clicked="Heart_Clicked"
                      Background="Transparent"/>
     </VerticalStackLayout>

@@ -11,9 +11,9 @@ public partial class BookMainView : ContentPage
 {
     private BookMainViewModel viewModel;
 
-    public BookMainView(BookModel book, string viewTitle)
+    public BookMainView(BookModel book, string viewTitle, object? previousViewModel = null)
     {
-        this.viewModel = new BookMainViewModel(book, this)
+        this.viewModel = new BookMainViewModel(book, this, previousViewModel)
         {
             ViewTitle = viewTitle,
         };

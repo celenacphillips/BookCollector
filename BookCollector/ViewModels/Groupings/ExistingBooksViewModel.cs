@@ -99,6 +99,17 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                this.SetIsBusyTrue();
+
+                var temp = this.FilteredBookList;
+                this.FilteredBookList = null;
+                this.FilteredBookList = temp;
+
+                this.SetIsBusyFalse();
+            }
+
             if (RefreshView)
             {
                 try
@@ -178,7 +189,7 @@ namespace BookCollector.ViewModels.Groupings
                                     this.AuthorLastNameChecked,
                                     this.BookFormatChecked,
                                     this.BookPriceChecked,
-                                    this.PageCountChecked,
+                                    this.PageCountBookTimeChecked,
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
@@ -274,7 +285,7 @@ namespace BookCollector.ViewModels.Groupings
             if (!string.IsNullOrEmpty(this.ViewTitle))
             {
                 var popup = new FilterPopup();
-                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle)
+                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View)
                 {
                     FavoriteVisible = this.ShowFavoriteBooks,
                     FavoriteOption = this.FavoriteBooksOption,
@@ -329,8 +340,8 @@ namespace BookCollector.ViewModels.Groupings
                     AuthorLastNameChecked = this.AuthorLastNameChecked,
                     BookFormatVisible = true,
                     BookFormatChecked = this.BookFormatChecked,
-                    PageCountVisible = true,
-                    PageCountChecked = this.PageCountChecked,
+                    PageCountTimeVisible = true,
+                    PageCountTimeChecked = this.PageCountBookTimeChecked,
                     BookPriceVisible = true,
                     BookPriceChecked = this.BookPriceChecked,
                     AscendingChecked = this.AscendingChecked,
@@ -368,7 +379,7 @@ namespace BookCollector.ViewModels.Groupings
             this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
             this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
             this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountChecked = Preferences.Get($"{this.ViewTitle}_PageCountSelection", false /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
             this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
@@ -403,16 +414,10 @@ namespace BookCollector.ViewModels.Groupings
                         case "Author":
                             var author = (AuthorModel?)this.SelectedObject;
 
-                            this.SelectedBook.SelectedAuthor = author;
+                            this.SelectedBook.SelectedAuthors ??= [];
+                            this.SelectedBook.SelectedAuthors.Add(author);
 
-                            if (TestData.UseTestData)
-                            {
-                                TestData.AddAuthorToBook(author?.AuthorGuid, this.SelectedBook.BookGuid);
-                            }
-                            else
-                            {
-                                await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
-                            }
+                            await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
 
                             await this.SelectedBook.SetAuthorListString();
 
@@ -427,13 +432,7 @@ namespace BookCollector.ViewModels.Groupings
                             break;
                     }
 
-                    if (TestData.UseTestData)
-                    {
-                    }
-                    else
-                    {
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
-                    }
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
 
                     this.RemoveFromStaticList(this.SelectedBook);
                     AddToStaticList(this.SelectedBook, this.PreviousViewModel);

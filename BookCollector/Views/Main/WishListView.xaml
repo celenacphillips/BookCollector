@@ -12,16 +12,54 @@
              Title="{x:Static localization:AppStringResources.Wishlist}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/filter_icon_light.svg, Dark=Icons/filter_icon_dark.svg}"
-                     Command="{Binding FilterPopupCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/sort_icon_light.svg, Dark=Icons/sort_icon_dark.svg}"
-                     Command="{Binding SortPopupCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
-                     Command="{Binding ShareListCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/book_add_light.svg, Dark=Icons/book_add_dark.svg}"
-                     Command="{Binding AddWishListBookCommand}"/>
+        <ToolbarItem Command="{Binding FilterPopupCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0236;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding SortPopupCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF04BA;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding ShareListCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0497;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding AddWishListBookCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF05DB;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>

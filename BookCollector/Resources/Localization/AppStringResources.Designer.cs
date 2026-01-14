@@ -115,11 +115,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Author to Book.
+        /// </summary>
+        internal static string AddNewAuthorToBook {
+            get {
+                return ResourceManager.GetString("AddNewAuthorToBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Book.
         /// </summary>
         internal static string AddNewBook {
             get {
                 return ResourceManager.GetString("AddNewBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Chapter To Book.
+        /// </summary>
+        internal static string AddNewChapterToBook {
+            get {
+                return ResourceManager.GetString("AddNewChapterToBook", resourceCulture);
             }
         }
         
@@ -286,11 +304,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Collector.
+        ///   Looks up a localized string similar to A New Book.
         /// </summary>
-        internal static string ApplicationTitle {
+        internal static string ANewBook {
             get {
-                return ResourceManager.GetString("ApplicationTitle", resourceCulture);
+                return ResourceManager.GetString("ANewBook", resourceCulture);
             }
         }
         
@@ -363,6 +381,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Audiobook {
             get {
                 return ResourceManager.GetString("Audiobook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Audiobook Hours.
+        /// </summary>
+        internal static string AudiobookHours {
+            get {
+                return ResourceManager.GetString("AudiobookHours", resourceCulture);
             }
         }
         
@@ -475,6 +502,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blank1 hours, Blank2 minutes.
+        /// </summary>
+        internal static string Blank1HoursBlank2Minutes {
+            get {
+                return ResourceManager.GetString("Blank1HoursBlank2Minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blank1 items (Blank2 unread).
         /// </summary>
         internal static string Blank1ItemsBlank2Unread {
@@ -498,6 +534,24 @@ namespace BookCollector.Resources.Localization {
         internal static string Blank1OfBlank2ItemsBlank3Unread {
             get {
                 return ResourceManager.GetString("Blank1OfBlank2ItemsBlank3Unread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blank hours.
+        /// </summary>
+        internal static string BlankHours {
+            get {
+                return ResourceManager.GetString("BlankHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blank pages.
+        /// </summary>
+        internal static string BlankPages {
+            get {
+                return ResourceManager.GetString("BlankPages", resourceCulture);
             }
         }
         
@@ -745,6 +799,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Locations.
+        /// </summary>
+        internal static string BookLocations {
+            get {
+                return ResourceManager.GetString("BookLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can view all the information related to &apos;book&apos;. You can also tap on some of the data to copy..
         /// </summary>
         internal static string BookMainView_InfoText {
@@ -943,11 +1006,38 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Camera.
+        /// </summary>
+        internal static string Camera {
+            get {
+                return ResourceManager.GetString("Camera", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This app only needs permission to the Camera when you scan a barcode. If you will not be scanning barcodes, you do not need the permission granted..
+        /// </summary>
+        internal static string Camera_Description {
+            get {
+                return ResourceManager.GetString("Camera_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Log.
+        /// </summary>
+        internal static string ChangeLog {
+            get {
+                return ResourceManager.GetString("ChangeLog", resourceCulture);
             }
         }
         
@@ -1020,6 +1110,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ClickToSearch {
             get {
                 return ResourceManager.GetString("ClickToSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to Search with Google Books.
+        /// </summary>
+        internal static string ClickToSearchWithGoogleBooks {
+            get {
+                return ResourceManager.GetString("ClickToSearchWithGoogleBooks", resourceCulture);
             }
         }
         
@@ -1105,6 +1204,51 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create New Collection.
+        /// </summary>
+        internal static string CreateNewCollection {
+            get {
+                return ResourceManager.GetString("CreateNewCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Genre.
+        /// </summary>
+        internal static string CreateNewGenre {
+            get {
+                return ResourceManager.GetString("CreateNewGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Location.
+        /// </summary>
+        internal static string CreateNewLocation {
+            get {
+                return ResourceManager.GetString("CreateNewLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Series.
+        /// </summary>
+        internal static string CreateNewSeries {
+            get {
+                return ResourceManager.GetString("CreateNewSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credits.
+        /// </summary>
+        internal static string Credits {
+            get {
+                return ResourceManager.GetString("Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency.
         /// </summary>
         internal static string Currency {
@@ -1119,6 +1263,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Dark {
             get {
                 return ResourceManager.GetString("Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data Storage.
+        /// </summary>
+        internal static string DataStorage {
+            get {
+                return ResourceManager.GetString("DataStorage", resourceCulture);
             }
         }
         
@@ -1236,6 +1389,15 @@ namespace BookCollector.Resources.Localization {
         internal static string EditSeries {
             get {
                 return ResourceManager.GetString("EditSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
             }
         }
         
@@ -1393,11 +1555,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Hours.
+        /// </summary>
+        internal static string EnterHours {
+            get {
+                return ResourceManager.GetString("EnterHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter Location Name.
         /// </summary>
         internal static string EnterLocationName {
             get {
                 return ResourceManager.GetString("EnterLocationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Minutes.
+        /// </summary>
+        internal static string EnterMinutes {
+            get {
+                return ResourceManager.GetString("EnterMinutes", resourceCulture);
             }
         }
         
@@ -1479,6 +1659,15 @@ namespace BookCollector.Resources.Localization {
         internal static string EnterWhereToBuy {
             get {
                 return ResourceManager.GetString("EnterWhereToBuy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Year Count.
+        /// </summary>
+        internal static string EnterYearCount {
+            get {
+                return ResourceManager.GetString("EnterYearCount", resourceCulture);
             }
         }
         
@@ -1627,7 +1816,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to import or export your data?.
+        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet?.
         /// </summary>
         internal static string Export_Import_Question {
             get {
@@ -1690,6 +1879,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FAQ.
+        /// </summary>
+        internal static string FAQ {
+            get {
+                return ResourceManager.GetString("FAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Favorite.
         /// </summary>
         internal static string Favorite {
@@ -1713,6 +1911,24 @@ namespace BookCollector.Resources.Localization {
         internal static string FavoriteStatus {
             get {
                 return ResourceManager.GetString("FavoriteStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files / Photos.
+        /// </summary>
+        internal static string Files_Photos {
+            get {
+                return ResourceManager.GetString("Files_Photos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers from a URL, you do not need the permission granted..
+        /// </summary>
+        internal static string Files_Photos_Description {
+            get {
+                return ResourceManager.GetString("Files_Photos_Description", resourceCulture);
             }
         }
         
@@ -1852,7 +2068,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Author when Settings &gt; Show Hidden Authors is off?.
+        ///   Looks up a localized string similar to Hide Author when Settings &gt; Show Hidden Authors is off? This will also hide any books associated with this author..
         /// </summary>
         internal static string HideAuthor_Question {
             get {
@@ -1870,7 +2086,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Collection when Settings &gt; Show Hidden Collections is off?.
+        ///   Looks up a localized string similar to Hide Collection when Settings &gt; Show Hidden Collections is off? This will also hide any books associated with this collection..
         /// </summary>
         internal static string HideCollection_Question {
             get {
@@ -1879,7 +2095,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Genre when Settings &gt; Show Hidden Genres is off?.
+        ///   Looks up a localized string similar to Hide Genre when Settings &gt; Show Hidden Genres is off? This will also hide any books associated with this genre..
         /// </summary>
         internal static string HideGenre_Question {
             get {
@@ -1888,7 +2104,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Location when Settings &gt; Show Hidden Location is off?.
+        ///   Looks up a localized string similar to Hide Location when Settings &gt; Show Hidden Location is off? This will also hide any books associated with this location..
         /// </summary>
         internal static string HideLocation_Question {
             get {
@@ -1897,7 +2113,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Series when Settings &gt; Show Hidden Series is off?.
+        ///   Looks up a localized string similar to Hide Series when Settings &gt; Show Hidden Series is off? This will also hide any books associated with this series..
         /// </summary>
         internal static string HideSeries_Question {
             get {
@@ -1911,6 +2127,24 @@ namespace BookCollector.Resources.Localization {
         internal static string HideWishlistBook_Question {
             get {
                 return ResourceManager.GetString("HideWishlistBook_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hours.
+        /// </summary>
+        internal static string Hours {
+            get {
+                return ResourceManager.GetString("Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hours Listened.
+        /// </summary>
+        internal static string HoursListened {
+            get {
+                return ResourceManager.GetString("HoursListened", resourceCulture);
             }
         }
         
@@ -1947,6 +2181,24 @@ namespace BookCollector.Resources.Localization {
         internal static string ImportResultsStart {
             get {
                 return ResourceManager.GetString("ImportResultsStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internet.
+        /// </summary>
+        internal static string Internet {
+            get {
+                return ResourceManager.GetString("Internet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This app only needs permission to the Internet to search for a book or to download a book cover from a URL..
+        /// </summary>
+        internal static string Internet_Description {
+            get {
+                return ResourceManager.GetString("Internet_Description", resourceCulture);
             }
         }
         
@@ -2010,6 +2262,33 @@ namespace BookCollector.Resources.Localization {
         internal static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listen Hours.
+        /// </summary>
+        internal static string ListenHours {
+            get {
+                return ResourceManager.GetString("ListenHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listen Minutes.
+        /// </summary>
+        internal static string ListenMinutes {
+            get {
+                return ResourceManager.GetString("ListenMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listen Time.
+        /// </summary>
+        internal static string ListenTime {
+            get {
+                return ResourceManager.GetString("ListenTime", resourceCulture);
             }
         }
         
@@ -2091,6 +2370,24 @@ namespace BookCollector.Resources.Localization {
         internal static string MainSettings {
             get {
                 return ResourceManager.GetString("MainSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minutes.
+        /// </summary>
+        internal static string Minutes {
+            get {
+                return ResourceManager.GetString("Minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minutes Listened.
+        /// </summary>
+        internal static string MinutesListened {
+            get {
+                return ResourceManager.GetString("MinutesListened", resourceCulture);
             }
         }
         
@@ -2302,6 +2599,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page Count / Book Time.
+        /// </summary>
+        internal static string PageCountBookTime {
+            get {
+                return ResourceManager.GetString("PageCountBookTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page Range.
         /// </summary>
         internal static string PageRange {
@@ -2365,6 +2671,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Permissions.
+        /// </summary>
+        internal static string Permissions {
+            get {
+                return ResourceManager.GetString("Permissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Picking cover canceled..
         /// </summary>
         internal static string PickingCoverCanceled {
@@ -2388,6 +2703,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PleaseAllowPhotoPermissionToAddCover {
             get {
                 return ResourceManager.GetString("PleaseAllowPhotoPermissionToAddCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please allow Photos permission to download book cover photos!.
+        /// </summary>
+        internal static string PleaseAllowPhotoPermissionToDownloadBookCoverPhotos {
+            get {
+                return ResourceManager.GetString("PleaseAllowPhotoPermissionToDownloadBookCoverPhotos", resourceCulture);
             }
         }
         
@@ -2464,7 +2788,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a running total of all the books and pages you have completed in the past number years. It is calculated by the Reading End Date of the book..
+        ///   Looks up a localized string similar to This is a running total of all the books and pages you have completed in the past number years. A book is considered completed in a year if the reading end date is in that year, and all the pages in the book are counted for that year..
         /// </summary>
         internal static string ReadingData_InfoText {
             get {
@@ -2581,6 +2905,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search list....
+        /// </summary>
+        internal static string SearchList {
+            get {
+                return ResourceManager.GetString("SearchList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search locations....
         /// </summary>
         internal static string SearchLocations {
@@ -2649,6 +2982,24 @@ namespace BookCollector.Resources.Localization {
         internal static string SelectASeries {
             get {
                 return ResourceManager.GetString("SelectASeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Hour Listened To.
+        /// </summary>
+        internal static string SelectHourListenedTo {
+            get {
+                return ResourceManager.GetString("SelectHourListenedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Minute Listened To.
+        /// </summary>
+        internal static string SelectMinuteListenedTo {
+            get {
+                return ResourceManager.GetString("SelectMinuteListenedTo", resourceCulture);
             }
         }
         
@@ -2887,6 +3238,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Support.
+        /// </summary>
+        internal static string Support {
+            get {
+                return ResourceManager.GetString("Support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found a bug? Want to suggest a new feature? Need additional help? Email us!.
+        /// </summary>
+        internal static string SupportInfoText {
+            get {
+                return ResourceManager.GetString("SupportInfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Table: Getting items....
         /// </summary>
         internal static string Table_GettingItems {
@@ -2973,6 +3342,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ThereAreNoGenres {
             get {
                 return ResourceManager.GetString("ThereAreNoGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no items..
+        /// </summary>
+        internal static string ThereAreNoItems {
+            get {
+                return ResourceManager.GetString("ThereAreNoItems", resourceCulture);
             }
         }
         
@@ -3121,6 +3499,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        internal static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Books.
         /// </summary>
         internal static string TotalBooks {
@@ -3139,11 +3526,38 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Books Owned.
+        /// </summary>
+        internal static string TotalBooksOwned {
+            get {
+                return ResourceManager.GetString("TotalBooksOwned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Hours.
+        /// </summary>
+        internal static string TotalHours {
+            get {
+                return ResourceManager.GetString("TotalHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Items.
         /// </summary>
         internal static string TotalItems {
             get {
                 return ResourceManager.GetString("TotalItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Minutes.
+        /// </summary>
+        internal static string TotalMinutes {
+            get {
+                return ResourceManager.GetString("TotalMinutes", resourceCulture);
             }
         }
         
@@ -3162,6 +3576,24 @@ namespace BookCollector.Resources.Localization {
         internal static string TotalPrice {
             get {
                 return ResourceManager.GetString("TotalPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Price of Books Owned.
+        /// </summary>
+        internal static string TotalPriceOfBooksOwned {
+            get {
+                return ResourceManager.GetString("TotalPriceOfBooksOwned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Time.
+        /// </summary>
+        internal static string TotalTime {
+            get {
+                return ResourceManager.GetString("TotalTime", resourceCulture);
             }
         }
         
@@ -3270,6 +3702,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Year {
             get {
                 return ResourceManager.GetString("Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year Count.
+        /// </summary>
+        internal static string YearCount {
+            get {
+                return ResourceManager.GetString("YearCount", resourceCulture);
             }
         }
         

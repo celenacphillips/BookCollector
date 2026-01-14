@@ -10,8 +10,14 @@
              Title="{x:Static localization:AppStringResources.Export_Import}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>

@@ -4,11 +4,6 @@
 
 namespace BookCollector
 {
-    using BookCollector.Data;
-    using BookCollector.Data.Database;
-    using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
-
     /// <summary>
     /// App Shell class.
     /// </summary>
@@ -16,29 +11,19 @@ namespace BookCollector
     {
         public AppShell()
         {
-            this.Year = DateTime.Now.Year.ToString();
+            this.VersionString = $"v {AppInfo.VersionString}";
+            this.ApplicationTitleString = $"{AppInfo.Current.Name}, {DateTime.Now.Year}";
+
             this.InitializeComponent();
 
             AppShell.RegisterRoutes();
-            BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
-
-            TestData.UseTestData = false;
-
-            if (TestData.UseTestData)
-            {
-                // var testData = new TestData();
-                TestData.AddBooksToList();
-                TestData.AddWishListBooksToList();
-            }
-            else
-            {
-                BaseViewModel.Database = new BookCollectorDatabase();
-            }
 
             this.BindingContext = this;
         }
 
-        public string Year { get; set; }
+        public string ApplicationTitleString { get; set; }
+
+        public string VersionString { get; set; }
 
         private static void RegisterRoutes()
         {

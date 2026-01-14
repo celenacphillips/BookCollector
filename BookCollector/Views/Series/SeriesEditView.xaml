@@ -11,8 +11,15 @@
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
-                     Command="{Binding SaveSeriesCommand}"/>
+        <ToolbarItem Command="{Binding SaveSeriesCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0193;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -26,9 +33,23 @@
                 <VerticalStackLayout Padding="10">
 
                     <!-- Series Name -->
-                    <Label Text="{x:Static localization:AppStringResources.SeriesName}"
-                           Style="{StaticResource Header}"
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="2.1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Text="{x:Static localization:AppStringResources.SeriesName}"
+                               Style="{StaticResource Header}"
+                               Grid.Row="0" Grid.Column="0"
+                               HorizontalOptions="End"/>
+                        
+                        <Label Text=" *"
+                               Style="{DynamicResource Header_Warning}"
+                               IsVisible="{Binding SeriesNameNotValid}"
+                               Grid.Row="0" Grid.Column="1"
+                               HorizontalOptions="Start"/>
+                    </Grid>
                     <Editor Text="{Binding EditedSeries.SeriesName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterSeriesName}"
                             FontAttributes="Bold"

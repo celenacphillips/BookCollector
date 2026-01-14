@@ -53,6 +53,17 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                this.SetIsBusyTrue();
+
+                var temp = this.FilteredLocationList;
+                this.FilteredLocationList = null;
+                this.FilteredLocationList = temp;
+
+                this.SetIsBusyFalse();
+            }
+
             if (RefreshView)
             {
                 try
@@ -200,15 +211,8 @@ namespace BookCollector.ViewModels.Groupings
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteLocation(selected);
-                        }
-                        else
-                        {
-                            await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
-                            this.RemoveFromStaticList(selected);
-                        }
+                        await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
+                        this.RemoveFromStaticList(selected);
 
                         await ConfirmDelete(selected.LocationName);
 

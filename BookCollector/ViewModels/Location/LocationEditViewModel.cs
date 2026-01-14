@@ -21,7 +21,7 @@ namespace BookCollector.ViewModels.Location
         public LocationModel editedLocation;
 
         [ObservableProperty]
-        public bool locationNameValid;
+        public bool locationNameNotValid;
 
         public LocationEditViewModel(LocationModel location, ContentPage view)
         {
@@ -55,7 +55,7 @@ namespace BookCollector.ViewModels.Location
             {
                 this.SetIsBusyTrue();
 
-                if (!this.LocationNameValid)
+                if (this.LocationNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.LocationNameNotValid, null);
                 }
@@ -68,15 +68,8 @@ namespace BookCollector.ViewModels.Location
                     }
 #endif
 
-                    if (TestData.UseTestData)
-                    {
-                        TestData.UpdateLocation(this.EditedLocation);
-                    }
-                    else
-                    {
-                        this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
-                        AddToStaticList(this.EditedLocation);
-                    }
+                    this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
+                    AddToStaticList(this.EditedLocation);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -112,22 +105,7 @@ namespace BookCollector.ViewModels.Location
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedLocation.LocationName))
-            {
-                var locationNameEditor = this.View.FindByName<Editor>("LocationNameEditor");
-                locationNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                locationNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.LocationNameValid = false;
-            }
-            else
-            {
-                var userAppTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme : Application.Current?.UserAppTheme;
-
-                var locationNameEditor = this.View.FindByName<Editor>("LocationNameEditor");
-                locationNameEditor.TextColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                locationNameEditor.PlaceholderColor = userAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.LocationNameValid = true;
-            }
+            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
         }
 
         public static async Task AddToStaticList(LocationModel location)

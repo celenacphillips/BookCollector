@@ -63,47 +63,47 @@ namespace BookCollector.ViewModels.Statistics
                 List<Task> taskList = new List<Task>();
                 List<Task<int>> dataTasks = new List<Task<int>>();
 
-                if (ToBeReadViewModel.fullBookList == null)
+                if (ToBeReadViewModel.fullBookList == null || ToBeReadViewModel.RefreshView)
                 {
                     taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadViewModel.fullBookList == null)
+                if (ReadViewModel.fullBookList == null || ReadViewModel.RefreshView)
                 {
                     taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadingViewModel.fullBookList == null)
+                if (ReadingViewModel.fullBookList == null || ReadingViewModel.RefreshView)
                 {
                     taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (CollectionsViewModel.fullCollectionList == null)
+                if (CollectionsViewModel.fullCollectionList == null || CollectionsViewModel.RefreshView)
                 {
                     taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
                 }
 
-                if (GenresViewModel.fullGenreList == null)
+                if (GenresViewModel.fullGenreList == null || GenresViewModel.RefreshView)
                 {
                     taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
                 }
 
-                if (SeriesViewModel.fullSeriesList == null)
+                if (SeriesViewModel.fullSeriesList == null || SeriesViewModel.RefreshView)
                 {
                     taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
                 }
 
-                if (AuthorsViewModel.fullAuthorList == null)
+                if (AuthorsViewModel.fullAuthorList == null || AuthorsViewModel.RefreshView)
                 {
                     taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
                 }
 
-                if (LocationsViewModel.fullLocationList == null)
+                if (LocationsViewModel.fullLocationList == null || LocationsViewModel.RefreshView)
                 {
                     taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
                 }
 
-                if (AllBooksViewModel.fullBookList == null)
+                if (AllBooksViewModel.fullBookList == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }

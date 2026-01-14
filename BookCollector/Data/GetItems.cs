@@ -15,14 +15,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (TestData.UseTestData)
-                {
-                    genre = TestData.GetGenreForBook(inputGuid);
-                }
-                else
-                {
-                    genre = await Database.GetGenreForBookAsync((Guid)inputGuid);
-                }
+                genre = await Database.GetGenreForBookAsync((Guid)inputGuid);
             }
 
             return genre;
@@ -34,14 +27,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (TestData.UseTestData)
-                {
-                    location = TestData.GetLocationForBook(inputGuid);
-                }
-                else
-                {
-                    location = await Database.GetLocationForBookAsync((Guid)inputGuid);
-                }
+                location = await Database.GetLocationForBookAsync((Guid)inputGuid);
             }
 
             return location;
@@ -53,14 +39,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (TestData.UseTestData)
-                {
-                    series = TestData.GetSeriesForBook(inputGuid);
-                }
-                else
-                {
-                    series = await Database.GetSeriesForBookAsync((Guid)inputGuid);
-                }
+                series = await Database.GetSeriesForBookAsync((Guid)inputGuid);
             }
 
             return series;
@@ -72,14 +51,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (TestData.UseTestData)
-                {
-                    collection = TestData.GetCollectionForBook(inputGuid);
-                }
-                else
-                {
-                    collection = await Database.GetCollectionForBookAsync((Guid)inputGuid);
-                }
+                collection = await Database.GetCollectionForBookAsync((Guid)inputGuid);
             }
 
             return collection;

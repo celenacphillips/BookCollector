@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.Controls.FilterablePicker"
+             x:Name="this">
+    
+    <VerticalStackLayout BindingContext="{x:Reference this}">
+
+        <Label Text="{Binding TotalItemsString}"
+               HorizontalOptions="End"
+               TextColor="{DynamicResource Primary}"
+               Style="{StaticResource SubTitle}"
+               IsVisible="{Binding ShowFilter}"/>
+        
+        <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchList}"
+                   TextChanged="SearchBar_TextChanged"
+                   IsVisible="{Binding ShowFilter}"/>
+
+
+        <CollectionView ItemsSource="{Binding FilteredItems}"
+                        SelectedItem="{Binding SelectedItem}"
+                        SelectionMode="Single"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        MaximumHeightRequest="{Binding CollectionViewHeight}">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <HorizontalStackLayout>
+                        
+                        <Label Text="{Binding .}"
+                               HeightRequest="50"
+                               WidthRequest="250"
+                               Margin="50,0"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="TailTruncation"
+                               MaxLines="3"/>
+                        
+                    </HorizontalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         HeightRequest="200"
+                                         VerticalOptions="Start">
+                        <Label Text="{x:Static localization:AppStringResources.ThereAreNoItems}"
+                               Margin="10,25,10,10"
+                               HorizontalTextAlignment="Center"
+                               Style="{StaticResource SubTitle}"/>
+                    </VerticalStackLayout>
+                </ContentView>
+            </CollectionView.EmptyView>
+
+            <CollectionView.Footer>
+                <Label Margin="0,5,0,0"
+                       Text="{x:Static localization:AppStringResources.EndOfList}"
+                       HorizontalTextAlignment="Center"
+                       Style="{StaticResource SubTitle}"/>
+            </CollectionView.Footer>
+            
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

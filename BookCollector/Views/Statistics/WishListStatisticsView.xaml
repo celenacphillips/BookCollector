@@ -16,46 +16,47 @@
         <!-- Main Content -->
         <StackLayout>
 
+            <Grid Margin="20,20,20,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Number of Books -->
+                <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="{Binding TotalBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="0"/>
+                <!-- Number of Books -->
+
+                <!-- Total Value -->
+                <Label Text="{x:Static localization:AppStringResources.TotalValue}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding CostBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="1"/>
+                <!-- Total Value -->
+            </Grid>
+
+            <Label Style="{StaticResource ShortSeparator}" />
+
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
                 <ScrollView>
                     <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                        <Grid Margin="20,20,20,0">
-                            
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!-- Number of Books -->
-                            <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="0" Grid.Column="0"/>
-                            <Label Text="{Binding TotalBooks}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="1" Grid.Column="0"/>
-                            <!-- Number of Books -->
-
-                            <!-- Total Value -->
-                            <Label Text="{x:Static localization:AppStringResources.TotalValue}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="0" Grid.Column="1"/>
-                            <Label Text="{Binding CostBooks}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="1" Grid.Column="1"/>
-                            <!-- Total Value -->
-                        </Grid>
-
-                        <Label Style="{StaticResource ShortSeparator}" />
-
+                        
                         <!-- Book Formats -->
                         <VerticalStackLayout IsVisible="{Binding ShowFormats}">
                             <Label Text="{x:Static localization:AppStringResources.BookFormat}"

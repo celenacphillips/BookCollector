@@ -2,6 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
+
 namespace BookCollector.Views.Settings;
 
 public partial class ToggleSettingsView : ContentPage
@@ -69,36 +73,53 @@ public partial class ToggleSettingsView : ContentPage
 
     public void OnHiddenBooksToggled(object sender, ToggledEventArgs e)
     {
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+
         Preferences.Set("HiddenBooksOn", e.Value);
     }
 
     public void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
     {
+        CollectionsViewModel.RefreshView = true;
+
         Preferences.Set("HiddenCollectionsOn", e.Value);
     }
 
     public void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
     {
+        GenresViewModel.RefreshView = true;
+
         Preferences.Set("HiddenGenresOn", e.Value);
     }
 
     public void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
     {
+        SeriesViewModel.RefreshView = true;
+
         Preferences.Set("HiddenSeriesOn", e.Value);
     }
 
     public void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
     {
+        AuthorsViewModel.RefreshView = true;
+
         Preferences.Set("HiddenAuthorsOn", e.Value);
     }
 
     public void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
     {
+        LocationsViewModel.RefreshView = true;
+
         Preferences.Set("HiddenLocationsOn", e.Value);
     }
 
     public void OnHiddenWishlistBooksToggled(object sender, ToggledEventArgs e)
     {
+        WishListViewModel.RefreshView = true;
+
         Preferences.Set("HiddenWishlistBooksOn", e.Value);
     }
 }

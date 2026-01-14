@@ -324,20 +324,18 @@ namespace BookCollector.Data.Spreadsheet
                 "X" => "Y",
                 "Y" => "Z",
                 "Z" => "AA",
+                "AA" => "AB",
+                "AB" => "AC",
+                "AC" => "AD",
+                "AD" => "AE",
+                "AE" => "AF",
                 _ => "A",
             };
         }
 
         private static string SetCurrentColumn(int input)
         {
-            var convertedInput = input;
-            if (input > 26)
-            {
-                double convert = ((double)input % 26.0) - 1.0;
-                convertedInput = (int)convert;
-            }
-
-            string? output = convertedInput switch
+            return input switch
             {
                 1 => "B",
                 2 => "C",
@@ -364,14 +362,15 @@ namespace BookCollector.Data.Spreadsheet
                 23 => "X",
                 24 => "Y",
                 25 or -1 => "Z",
+                26 => "AA",
+                27 => "AB",
+                28 => "AC",
+                29 => "AD",
+                30 => "AE",
+                31 => "AF",
+                32 => "AG",
                 _ => "A",
             };
-            if (input > 26)
-            {
-                output = $"A{output}";
-            }
-
-            return output;
         }
 
         private static int SetRow(int? input)

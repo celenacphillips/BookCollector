@@ -16,5 +16,8 @@ namespace BookCollector.Data.Models
 
         [ObservableProperty]
         public int pagesReadCount;
+
+        [ObservableProperty]
+        public double audiobookTime;
     }
 }

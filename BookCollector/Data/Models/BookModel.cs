@@ -37,7 +37,11 @@ namespace BookCollector.Data.Models
             this.BookPrice = dbModel.BookPrice;
             this.BookSummary = dbModel.BookSummary;
             this.BookPageRead = dbModel.BookPageRead;
+            this.BookHourListened = dbModel.BookHourListened;
+            this.BookMinuteListened = dbModel.BookMinuteListened;
             this.BookPageTotal = dbModel.BookPageTotal;
+            this.BookHoursTotal = dbModel.BookHoursTotal;
+            this.BookMinutesTotal = dbModel.BookMinutesTotal;
             this.Progress = dbModel.Progress;
             this.PageReadPercent = dbModel.PageReadPercent;
             this.BookStartDate = dbModel.BookStartDate;
@@ -54,9 +58,12 @@ namespace BookCollector.Data.Models
             this.BookLoanedOutOn = dbModel.BookLoanedOutOn;
             this.UpNext = dbModel.UpNext;
             this.HideBook = dbModel.HideBook;
-            this.Half = dbModel.Half;
-            this.Fourth = dbModel.Fourth;
-            this.ThreeFourth = dbModel.ThreeFourth;
+            this.HalfPage = dbModel.HalfPage;
+            this.FourthPage = dbModel.FourthPage;
+            this.ThreeFourthPage = dbModel.ThreeFourthPage;
+            this.HalfHours = dbModel.HalfHours;
+            this.FourthHours = dbModel.FourthHours;
+            this.ThreeFourthHours = dbModel.ThreeFourthHours;
             this.PartOfSeries = dbModel.PartOfSeries;
             this.PartOfCollection = dbModel.PartOfCollection;
             this.BookCoverFileLocation = dbModel.BookCoverFileLocation;
@@ -72,7 +79,7 @@ namespace BookCollector.Data.Models
             this.BookIdentifier = dbModel.BookIdentifier;
         }
 
-        public AuthorModel? SelectedAuthor { get; set; }
+        public List<AuthorModel?>? SelectedAuthors { get; set; }
 
         public string PublisherPublishDatestring
         {
@@ -109,6 +116,31 @@ namespace BookCollector.Data.Models
             get => !string.IsNullOrEmpty(this.BookLoanedOutOn) ? DateTime.Parse(this.BookLoanedOutOn) : null;
         }
 
+        public string? BookDurationTotal
+        {
+            get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
+                AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
+                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString()).Replace("Blank2", this.BookMinutesTotal.ToString());
+        }
+
+        [ObservableProperty]
+        public double? bookTotalTime;
+
+        [ObservableProperty]
+        public TimeSpan totalTimeSpan;
+
+        [ObservableProperty]
+        public string totalTimeString;
+
+        [ObservableProperty]
+        public TimeSpan listenTimeSpan;
+
+        [ObservableProperty]
+        public double? bookListenedTime;
+
+        [ObservableProperty]
+        public string listenTimeString;
+
         public static string? SetDate(string? input)
         {
             string? output = null;
@@ -128,17 +160,35 @@ namespace BookCollector.Data.Models
 
         public async Task SetReadingProgress()
         {
-            this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
+            if (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook)))
+            {
+                this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
+            }
+            else
+            {
+                this.SetBookListenedTime();
+                this.SetBookTotalTime();
+                this.Progress = (double)((this.BookTotalTime != null && this.BookTotalTime != 0) ? this.BookListenedTime / (double)this.BookTotalTime : 0);
+            }
+
             this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
         public void SetBookCheckpoints(bool showCheckpoints)
         {
-            if (showCheckpoints)
+            if (showCheckpoints && (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook))))
             {
-                this.Half = this.BookPageTotal / 2;
-                this.Fourth = this.BookPageTotal / 4;
-                this.ThreeFourth = this.Half + this.Fourth;
+                this.HalfPage = this.BookPageTotal / 2;
+                this.FourthPage = this.BookPageTotal / 4;
+                this.ThreeFourthPage = this.HalfPage + this.FourthPage;
+            }
+
+            if (showCheckpoints && this.BookFormat != null && this.BookFormat!.Equals(AppStringResources.Audiobook))
+            {
+                this.SetBookTotalTime();
+                this.HalfHours = (double)this.BookTotalTime / 2;
+                this.FourthHours = (double)this.BookTotalTime / 4;
+                this.ThreeFourthHours = this.HalfHours + this.FourthHours;
             }
         }
 
@@ -221,28 +271,10 @@ namespace BookCollector.Data.Models
             ObservableCollection<AuthorModel>? authorList = [];
             ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
 
-            if (TestData.UseTestData)
+            if (authorGuidList != null && authorGuidList.Count > 0)
             {
-                if (authorGuidList != null && authorGuidList.Count > 0)
-                {
-                    foreach (var authorGuid in authorGuidList)
-                    {
-                        var author = TestData.AuthorList.FirstOrDefault(x => x.AuthorGuid == authorGuid);
-
-                        if (author != null)
-                        {
-                            authorList.Add(author);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (authorGuidList != null && authorGuidList.Count > 0)
-                {
-                    var list = await Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
-                    authorList = list.ToObservableCollection();
-                }
+                var list = await Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
+                authorList = list.ToObservableCollection();
             }
 
             if (authorList != null)
@@ -317,14 +349,7 @@ namespace BookCollector.Data.Models
                     {
                         chapter.BookGuid = (Guid)this.BookGuid;
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.UpdateChapter(chapter);
-                        }
-                        else
-                        {
-                            await Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
-                        }
+                        await Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }
@@ -340,14 +365,7 @@ namespace BookCollector.Data.Models
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteChapter(chapter);
-                        }
-                        else
-                        {
-                            await Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
-                        }
+                        await Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }
@@ -365,6 +383,21 @@ namespace BookCollector.Data.Models
 
                 this.BookPrice = string.Format(cultureInfo, "{0:C}", parsed ? price : 0);
             }
+        }
+
+        public void SetBookListenedTime()
+        {
+            this.BookListenedTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHourListened + ((double)this.BookMinuteListened / 60) : null;
+        }
+
+        public async Task SetBookTotalTime()
+        {
+            this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
+        }
+
+        public TimeSpan SetTime(int hour, int minute)
+        {
+            return new TimeSpan(hour, minute, 0);
         }
     }
 }

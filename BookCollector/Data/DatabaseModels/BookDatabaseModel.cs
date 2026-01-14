@@ -15,7 +15,7 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public string? bookTitle;
         [ObservableProperty]
-        public double? bookNumberInSeries;
+        public string? bookNumberInSeries;
         [ObservableProperty]
         public string? bookPublisher;
         [ObservableProperty]
@@ -34,11 +34,21 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public int bookPageRead;
         [ObservableProperty]
+        public int bookHourListened;
+        [ObservableProperty]
+        public int bookMinuteListened;
+        [ObservableProperty]
         public int bookPageTotal;
+        [ObservableProperty]
+        public int bookHoursTotal;
+        [ObservableProperty]
+        public int bookMinutesTotal;
         [ObservableProperty]
         public double progress;
         [ObservableProperty]
         public string? pageReadPercent;
+        [ObservableProperty]
+        public string? minutesListenedPercent;
         [ObservableProperty]
         public string? bookStartDate;
         [ObservableProperty]
@@ -69,11 +79,17 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public bool hideBook;
         [ObservableProperty]
-        public int half;
+        public int? halfPage;
         [ObservableProperty]
-        public int fourth;
+        public int? fourthPage;
         [ObservableProperty]
-        public int threeFourth;
+        public int? threeFourthPage;
+        [ObservableProperty]
+        public double? halfHours;
+        [ObservableProperty]
+        public double? fourthHours;
+        [ObservableProperty]
+        public double? threeFourthHours;
         [ObservableProperty]
         public string? partOfSeries;
         [ObservableProperty]

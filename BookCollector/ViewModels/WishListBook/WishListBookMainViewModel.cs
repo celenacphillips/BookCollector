@@ -8,6 +8,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Main;
 using BookCollector.ViewModels.Series;
@@ -50,6 +51,17 @@ namespace BookCollector.ViewModels.WishListBook
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
+                    if (!this.SelectedWishlistBook.BookFormat.Equals(AppStringResources.Audiobook))
+                    {
+                        this.ShowPages = true;
+                        this.ShowTime = false;
+                    }
+                    else
+                    {
+                        this.ShowPages = false;
+                        this.ShowTime = true;
+                    }
+
                     if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverFileLocation))
                     {
                         this.SelectedWishlistBook.BookCover = ImageSource.FromFile(this.SelectedWishlistBook.BookCoverFileLocation);
@@ -83,6 +95,7 @@ namespace BookCollector.ViewModels.WishListBook
                         Task.Run(() => this.SelectedWishlistBook.SetCoverDisplay()),
                         Task.Run(() => this.SelectedWishlistBook.SetPartOfSeries()),
                         Task.Run(() => this.SelectedWishlistBook.SetBookPrice()),
+                        Task.Run(() => this.SelectedWishlistBook.TotalTimeSpan = this.SelectedWishlistBook.SetTime(this.SelectedWishlistBook.BookHoursTotal, this.SelectedWishlistBook.BookMinutesTotal)),
                     };
 
                     await Task.WhenAll(authors);
@@ -139,15 +152,8 @@ namespace BookCollector.ViewModels.WishListBook
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteWishListBook(this.SelectedWishlistBook);
-                        }
-                        else
-                        {
-                            await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
-                            this.RemoveFromStaticList();
-                        }
+                        await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
+                        this.RemoveFromStaticList();
 
                         await ConfirmDelete(this.SelectedWishlistBook.BookTitle);
 
@@ -187,14 +193,7 @@ namespace BookCollector.ViewModels.WishListBook
                         {
                             SeriesModel? series = null;
 
-                            if (TestData.UseTestData)
-                            {
-                                series = TestData.SeriesList.SingleOrDefault(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(this.SelectedWishlistBook.BookSeries));
-                            }
-                            else
-                            {
-                                series = await Database.GetSeriesByNameAsync(this.SelectedWishlistBook.BookSeries);
-                            }
+                            series = await Database.GetSeriesByNameAsync(this.SelectedWishlistBook.BookSeries);
 
                             if (series == null || series.SeriesGuid == null)
                             {
@@ -203,34 +202,20 @@ namespace BookCollector.ViewModels.WishListBook
                                     SeriesName = this.SelectedWishlistBook.BookSeries,
                                 };
 
-                                if (TestData.UseTestData)
-                                {
-                                    TestData.InsertSeries(series);
-                                }
-                                else
-                                {
-                                    series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
-                                    SeriesEditViewModel.AddToStaticList(series);
-                                }
+                                series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
+                                SeriesEditViewModel.AddToStaticList(series);
+                                SeriesViewModel.RefreshView = true;
                             }
 
                             this.SelectedWishlistBook.BookSeriesGuid = series.SeriesGuid;
                             this.SelectedWishlistBook.BookSeries = null;
                         }
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.InsertBook(ConvertTo<BookModel>(this.SelectedWishlistBook));
-                            TestData.DeleteWishListBook(this.SelectedWishlistBook);
-                        }
-                        else
-                        {
-                            this.SelectedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedWishlistBook)));
-                            AddToStaticList(ConvertTo<BookModel>(this.SelectedWishlistBook));
+                        this.SelectedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedWishlistBook)));
+                        AddToStaticList(ConvertTo<BookModel>(this.SelectedWishlistBook));
 
-                            await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
-                            this.RemoveFromStaticList();
-                        }
+                        await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
+                        this.RemoveFromStaticList();
 
                         if (!string.IsNullOrEmpty(this.SelectedWishlistBook.AuthorListString))
                         {
@@ -240,25 +225,19 @@ namespace BookCollector.ViewModels.WishListBook
                             {
                                 var addAuthor = author;
 
-                                if (TestData.UseTestData)
+                                var existingAuthor = await Database.GetAuthorByNameAsync(addAuthor.FirstName, addAuthor.LastName);
+
+                                if (existingAuthor != null && existingAuthor.AuthorGuid != null)
                                 {
-                                    TestData.AddAuthorToBook(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
+                                    addAuthor = existingAuthor;
+                                    await Database.AddAuthorToBookAsync(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
                                 }
                                 else
                                 {
-                                    var existingAuthor = await Database.GetAuthorByNameAsync(addAuthor.FirstName, addAuthor.LastName);
-
-                                    if (existingAuthor != null && existingAuthor.AuthorGuid != null)
-                                    {
-                                        addAuthor = existingAuthor;
-                                        await Database.AddAuthorToBookAsync(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
-                                    }
-                                    else
-                                    {
-                                        addAuthor.AuthorGuid = Guid.NewGuid();
-                                        await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
-                                        AuthorEditViewModel.AddToStaticList(addAuthor);
-                                    }
+                                    addAuthor.AuthorGuid = Guid.NewGuid();
+                                    await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
+                                    AuthorEditViewModel.AddToStaticList(addAuthor);
+                                    AuthorsViewModel.RefreshView = true;
                                 }
                             }
                         }

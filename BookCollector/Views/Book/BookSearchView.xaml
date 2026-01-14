@@ -38,7 +38,7 @@
                                 Margin="10"
                                 IsVisible="{Binding ShowAddISBN}"/>
 
-                        <Button Text="{x:Static localization:AppStringResources.ClickToSearch}"
+                        <Button Text="{x:Static localization:AppStringResources.ClickToSearchWithGoogleBooks}"
                                 Command="{Binding SearchCommand}"
                                 Margin="10"/>
 
