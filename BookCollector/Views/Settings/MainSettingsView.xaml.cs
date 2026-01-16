@@ -168,7 +168,7 @@ public partial class MainSettingsView : ContentPage
                 AppStringResources.SelectYourAppTheme,
                 this.AppThemeList.ToList(),
                 this.SelectedAppTheme,
-                true);
+                false);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);
 
             if (!string.IsNullOrEmpty(result.Result))
@@ -191,7 +191,7 @@ public partial class MainSettingsView : ContentPage
                 AppStringResources.SelectYourAppColor,
                 this.ColorList.ToList(),
                 this.SelectedColor,
-                true);
+                false);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);
 
             if (!string.IsNullOrEmpty(result.Result))

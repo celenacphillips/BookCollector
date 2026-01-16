@@ -120,7 +120,7 @@ namespace BookCollector.ViewModels.Author
         {
             if (AuthorsViewModel.fullAuthorList != null)
             {
-                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
+                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
             }
         }
 
@@ -128,11 +128,11 @@ namespace BookCollector.ViewModels.Author
         {
             var refresh = false;
 
-            await Task.WhenAll(new Task[]
-            {
-                author.SetTotalBooks(true),
-                author.SetTotalCostOfBooks(true),
-            });
+            //await Task.WhenAll(new Task[]
+            //{
+            //    author.SetTotalBooks(Hi),
+            //    author.SetTotalCostOfBooks(true),
+            //});
 
             try
             {

@@ -25,7 +25,7 @@ public partial class AuthorEditView : ContentPage
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         this.ViewModel.SetViewModelData();
     }

@@ -47,7 +47,37 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (fullGenreList == null)
             {
-                fullGenreList = await FillLists.GetAllGenresList(showHiddenGenres);
+                fullGenreList = await FillLists.GetAllGenresList();
+            }
+
+            if (!showHiddenGenres)
+            {
+                filteredGenreList1 = new ObservableCollection<GenreModel>(fullGenreList!.Where(x => !x.HideGenre));
+            }
+            else
+            {
+                filteredGenreList1 = new ObservableCollection<GenreModel>(fullGenreList!);
+            }
+        }
+
+        public static async Task HideBooks(bool showHiddenGenres)
+        {
+            if (!showHiddenGenres)
+            {
+                var hideList = new ObservableCollection<GenreModel>(fullGenreList!.Where(x => x.HideGenre));
+
+                foreach (var item in hideList)
+                {
+                    var books = AllBooksViewModel.filteredBookList1?
+                        .Where(x => x.BookGenreGuid == item.GenreGuid && !x.HideBook)
+                        .ToObservableCollection();
+
+                    foreach (var book in books)
+                    {
+                        book.HideBook = true;
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    }
+                }
             }
         }
 
@@ -57,9 +87,9 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.SetIsBusyTrue();
 
-                var temp = this.FilteredGenreList;
-                this.FilteredGenreList = null;
-                this.FilteredGenreList = temp;
+                var temp = this.FilteredGenreList2;
+                this.FilteredGenreList2 = null;
+                this.FilteredGenreList2 = temp;
 
                 this.SetIsBusyFalse();
             }
@@ -74,23 +104,26 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenGenres);
 
-                    if (fullGenreList != null)
+                    if (this.FilteredGenreList1 != null)
                     {
-                        this.FilteredGenreList = fullGenreList;
+                        this.FilteredGenreList2 = this.FilteredGenreList1;
 
-                        this.TotalGenresCount = fullGenreList != null ? fullGenreList.Count : 0;
+                        this.TotalGenresCount = this.FilteredGenreList1 != null ? this.FilteredGenreList1.Count : 0;
 
                         this.SearchOnGenre(this.Searchstring);
 
+                        await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
+                        await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
+
                         var sortList = SortLists.SortGenresList(
-                                this.FilteredGenreList,
+                                this.FilteredGenreList2,
                                 this.GenreNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredGenresCount = this.FilteredGenreList.Count;
+                        this.FilteredGenresCount = this.FilteredGenreList2.Count;
 
                         this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
 
@@ -98,7 +131,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Task.WhenAll(sortList);
 
-                        this.FilteredGenreList = sortList.Result;
+                        this.FilteredGenreList2 = sortList.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -116,37 +149,45 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public void SearchOnGenre(string? input)
+        public async void SearchOnGenre(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredGenreList != null && this.FullGenreList != null)
+            if (this.FilteredGenreList2 != null && this.FilteredGenreList1 != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredGenreList = this.FullGenreList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredGenreList2 = this.FilteredGenreList1.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredGenreList = this.FullGenreList;
+                    this.FilteredGenreList2 = this.FilteredGenreList1;
                 }
 
-                this.FilteredGenresCount = this.FilteredGenreList != null ? this.FilteredGenreList.Count : 0;
+                this.FilteredGenresCount = this.FilteredGenreList2 != null ? this.FilteredGenreList2.Count : 0;
 
                 this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortGenresList(
+                                this.FilteredGenreList2,
+                                this.GenreNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredGenreList2 = sortList.Result;
         }
 
         [RelayCommand]
         public async Task PopupMenuGenre(Guid? input)
         {
-            if (this.FilteredGenreList != null)
+            if (this.FilteredGenreList2 != null)
             {
-                var selected = this.FilteredGenreList.FirstOrDefault(x => x.GenreGuid == input);
+                var selected = this.FilteredGenreList2.FirstOrDefault(x => x.GenreGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.GenreName))
                 {
@@ -281,7 +322,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (GenresViewModel.fullGenreList != null)
             {
-                GenresViewModel.RefreshView = this.RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
+                GenresViewModel.RefreshView = this.RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
             }
         }
 

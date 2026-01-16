@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.ViewModels.Statistics;
+using Microcharts.Maui;
 
 namespace BookCollector.Views.Statistics;
 
@@ -18,8 +19,19 @@ public partial class LibraryStatisticsView : ContentPage
         this.InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        var variable = this.viewModel.SetViewModelData();
+        this.readingStatus.ClearValue(ChartView.ChartProperty);
+        this.favorites.ClearValue(ChartView.ChartProperty);
+        this.ratings.ClearValue(ChartView.ChartProperty);
+        this.formats.ClearValue(ChartView.ChartProperty);
+        this.formatprices.ClearValue(ChartView.ChartProperty);
+        this.collections.ClearValue(ChartView.ChartProperty);
+        this.genres.ClearValue(ChartView.ChartProperty);
+        this.series.ClearValue(ChartView.ChartProperty);
+        this.authors.ClearValue(ChartView.ChartProperty);
+        this.locations.ClearValue(ChartView.ChartProperty);
+
+        await this.viewModel.SetViewModelData();
     }
 }

@@ -59,7 +59,7 @@
                                          Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                     </Image.Source>
                 </Image>
-                <Label Text="{x:Static localization:AppStringResources.Color}"
+                <Label Text="{x:Static localization:AppStringResources.AppColor}"
                        VerticalTextAlignment="Center"
                        Grid.Row="1" Grid.Column="1"/>
                 <Button Text="{Binding SelectedColor}"
@@ -108,7 +108,7 @@
                                          Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                     </Image.Source>
                 </Image>
-                <Label Text="{x:Static localization:AppStringResources.Language}"
+                <Label Text="{x:Static localization:AppStringResources.AppLanguage}"
                        VerticalTextAlignment="Center"
                        Grid.Row="3" Grid.Column="1"/>
                 <Button Text="{Binding SelectedLanguage}"
@@ -130,7 +130,7 @@
                                          Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                     </Image.Source>
                 </Image>
-                <Label Text="{x:Static localization:AppStringResources.Currency}"
+                <Label Text="{x:Static localization:AppStringResources.AppCurrency}"
                        VerticalTextAlignment="Center"
                        Grid.Row="4" Grid.Column="1"/>
                 <Button Text="{Binding SelectedCurrency}"

@@ -37,17 +37,95 @@ public partial class ToggleSettingsView : ContentPage
 
     public bool RatingsOn { get; set; }
 
-    public bool HiddenBooksOn { get; set; }
+    private bool hiddenBooksOnField;
 
-    public bool HiddenCollectionsOn { get; set; }
+    public bool HiddenBooksOn
+    {
+        get => this.hiddenBooksOnField;
+        set
+        {
+            if (this.hiddenBooksOnField != value)
+            {
+                this.hiddenBooksOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
-    public bool HiddenGenresOn { get; set; }
+    private bool hiddenCollectionsOnField;
 
-    public bool HiddenSeriesOn { get; set; }
+    public bool HiddenCollectionsOn
+    {
+        get => this.hiddenCollectionsOnField;
+        set
+        {
+            if (this.hiddenCollectionsOnField != value)
+            {
+                this.hiddenCollectionsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
-    public bool HiddenAuthorsOn { get; set; }
+    private bool hiddenGenresOnField;
 
-    public bool HiddenLocationsOn { get; set; }
+    public bool HiddenGenresOn
+    {
+        get => this.hiddenGenresOnField;
+        set
+        {
+            if (this.hiddenGenresOnField != value)
+            {
+                this.hiddenGenresOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool hiddenSeriesOnField;
+
+    public bool HiddenSeriesOn
+    {
+        get => this.hiddenSeriesOnField;
+        set
+        {
+            if (this.hiddenSeriesOnField != value)
+            {
+                this.hiddenSeriesOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool hiddenAuthorsOnField;
+
+    public bool HiddenAuthorsOn
+    {
+        get => this.hiddenAuthorsOnField;
+        set
+        {
+            if (this.hiddenAuthorsOnField != value)
+            {
+                this.hiddenAuthorsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool hiddenLocationsOnField;
+
+    public bool HiddenLocationsOn
+    {
+        get => this.hiddenLocationsOnField;
+        set
+        {
+            if (this.hiddenLocationsOnField != value)
+            {
+                this.hiddenLocationsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
     public bool HiddenWishlistBooksOn { get; set; }
 
@@ -78,12 +156,47 @@ public partial class ToggleSettingsView : ContentPage
         ReadViewModel.RefreshView = true;
         AllBooksViewModel.RefreshView = true;
 
+        if (e.Value)
+        {
+            if (!this.HiddenCollectionsOn)
+            {
+                this.HiddenCollectionsOn = true;
+            }
+
+            if (!this.HiddenGenresOn)
+            {
+                this.HiddenGenresOn = true;
+            }
+
+            if (!this.HiddenSeriesOn)
+            {
+                this.HiddenSeriesOn = true;
+            }
+
+            if (!this.HiddenAuthorsOn)
+            {
+                this.HiddenAuthorsOn = true;
+            }
+
+            if (!this.HiddenLocationsOn)
+            {
+                this.HiddenLocationsOn = true;
+            }
+        }
+
         Preferences.Set("HiddenBooksOn", e.Value);
     }
 
     public void OnHiddenCollectionsToggled(object sender, ToggledEventArgs e)
     {
         CollectionsViewModel.RefreshView = true;
+
+        var variable = CollectionsViewModel.HideBooks(e.Value);
+
+        if (!e.Value)
+        {
+            this.HiddenBooksOn = false;
+        }
 
         Preferences.Set("HiddenCollectionsOn", e.Value);
     }
@@ -92,12 +205,26 @@ public partial class ToggleSettingsView : ContentPage
     {
         GenresViewModel.RefreshView = true;
 
+        var variable = GenresViewModel.HideBooks(e.Value);
+
+        if (!e.Value)
+        {
+            this.HiddenBooksOn = e.Value;
+        }
+
         Preferences.Set("HiddenGenresOn", e.Value);
     }
 
     public void OnHiddenSeriesToggled(object sender, ToggledEventArgs e)
     {
         SeriesViewModel.RefreshView = true;
+
+        var variable = SeriesViewModel.HideBooks(e.Value);
+
+        if (!e.Value)
+        {
+            this.HiddenBooksOn = e.Value;
+        }
 
         Preferences.Set("HiddenSeriesOn", e.Value);
     }
@@ -106,12 +233,26 @@ public partial class ToggleSettingsView : ContentPage
     {
         AuthorsViewModel.RefreshView = true;
 
+        var variable = AuthorsViewModel.HideBooks(e.Value);
+
+        if (!e.Value)
+        {
+            this.HiddenBooksOn = e.Value;
+        }
+
         Preferences.Set("HiddenAuthorsOn", e.Value);
     }
 
     public void OnHiddenLocationsToggled(object sender, ToggledEventArgs e)
     {
         LocationsViewModel.RefreshView = true;
+
+        var variable = LocationsViewModel.HideBooks(e.Value);
+
+        if (!e.Value)
+        {
+            this.HiddenBooksOn = e.Value;
+        }
 
         Preferences.Set("HiddenLocationsOn", e.Value);
     }

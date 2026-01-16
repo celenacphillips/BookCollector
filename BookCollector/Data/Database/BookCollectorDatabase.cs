@@ -5,7 +5,10 @@
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
+using CommunityToolkit.Maui.Core.Extensions;
 using SQLite;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.Data.Database
 {
@@ -67,7 +70,7 @@ namespace BookCollector.Data.Database
         }
 
         /*********************** Book Methods ***********************/
-        public async Task<List<BookModel>> GetAllReadingBooksAsync(bool showHiddenBooks)
+        public async Task<List<BookModel>> GetAllReadingBooksAsync()
         {
             try
             {
@@ -84,11 +87,6 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedTitle)
                         .ToList();
 
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
                 return booksList;
             }
             catch (Exception ex)
@@ -97,7 +95,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<BookModel>> GetAllToBeReadBooksAsync(bool showHiddenBooks)
+        public async Task<List<BookModel>> GetAllToBeReadBooksAsync()
         {
             try
             {
@@ -114,11 +112,6 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedTitle)
                         .ToList();
 
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
                 return booksList;
             }
             catch (Exception ex)
@@ -127,7 +120,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<BookModel>> GetAllReadBooksAsync(bool showHiddenBooks)
+        public async Task<List<BookModel>> GetAllReadBooksAsync()
         {
             try
             {
@@ -143,11 +136,6 @@ namespace BookCollector.Data.Database
                         .OrderBy(x => x.ParsedTitle)
                         .ToList();
 
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
                 return booksList;
             }
             catch (Exception ex)
@@ -156,7 +144,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<BookModel>> GetAllBooksAsync(bool showHiddenBooks)
+        public async Task<List<BookModel>> GetAllBooksAsync()
         {
             try
             {
@@ -169,11 +157,6 @@ namespace BookCollector.Data.Database
                         .Select(x => new BookModel(x))
                         .OrderBy(x => x.ParsedTitle)
                         .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
 
                 return booksList;
             }
@@ -466,7 +449,7 @@ namespace BookCollector.Data.Database
         /*********************** Book Methods ***********************/
 
         /*********************** Wishlist Book Methods ***********************/
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksAsync(bool showHiddenBooks)
+        public async Task<List<WishlistBookModel>> GetAllWishlistBooksAsync()
         {
             try
             {
@@ -479,11 +462,6 @@ namespace BookCollector.Data.Database
                         .Select(x => new WishlistBookModel(x))
                         .OrderBy(x => x.ParsedTitle)
                         .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
 
                 return booksList;
             }
@@ -1215,6 +1193,51 @@ namespace BookCollector.Data.Database
             }
         }
 
+        public async Task<int> GetAllBooksCountForAuthorAsync(Guid authorGuid, bool showHiddenBooks)
+        {
+            return 0;
+
+            //try
+            //{
+            //    await this.Init();
+
+            //    var bookAuthors = await this.database.Table<BookAuthorModel>()
+            //        .Where(x => x.AuthorGuid == authorGuid)
+            //        .OrderBy(x => x.BookGuid)
+            //        .ToListAsync();
+
+            //    var books = new List<BookDatabaseModel>();
+
+            //    foreach (var bookAuthor in bookAuthors)
+            //    {
+            //        var book = await this.database.Table<BookDatabaseModel>()
+            //            .Where(x => x.BookGuid == bookAuthor.BookGuid)
+            //            .FirstOrDefaultAsync();
+
+            //        if (book != null)
+            //        {
+            //            books.Add(book);
+            //        }
+            //    }
+
+            //    var booksList = books
+            //            .Select(x => new BookModel(x))
+            //            .OrderBy(x => x.ParsedTitle)
+            //            .ToList();
+
+            //    if (!showHiddenBooks)
+            //    {
+            //        return [.. booksList.Where(x => !x.HideBook)];
+            //    }
+
+            //    return booksList;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
+        }
+
         public async Task<List<BookModel>> GetAllBooksWithoutAuthorAsync(string reverseAuthorName, bool showHiddenBooks)
         {
             try
@@ -1243,7 +1266,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<AuthorModel>> GetAllAuthorsAsync(bool showHiddenAuthors)
+        public async Task<List<AuthorModel>> GetAllAuthorsAsync()
         {
             try
             {
@@ -1257,14 +1280,6 @@ namespace BookCollector.Data.Database
                     .OrderBy(x => x.FirstName)
                     .OrderBy(x => x.LastName)
                     .ToList();
-
-                await Task.WhenAll(authorsList.Select(x => x.SetTotalBooks(true)));
-                await Task.WhenAll(authorsList.Select(x => x.SetTotalCostOfBooks(true)));
-
-                if (!showHiddenAuthors)
-                {
-                    return [.. authorsList.Where(x => !x.HideAuthor)];
-                }
 
                 return authorsList;
             }
@@ -1390,11 +1405,31 @@ namespace BookCollector.Data.Database
             {
                 await this.Init();
 
-                var author = await this.database.Table<AuthorDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.FirstName) && x.FirstName.Equals(authorFirstName) && !string.IsNullOrEmpty(x.LastName) && x.LastName.Equals(authorLastName))
-                    .FirstOrDefaultAsync();
+                var filteredList = new ObservableCollection<AuthorModel>();
 
-                return ConvertTo<AuthorModel>(author);
+                if (AuthorsViewModel.filteredAuthorList1 != null)
+                {
+                    filteredList = AuthorsViewModel.filteredAuthorList1;
+                }
+                else
+                {
+                    var authors = await this.database.Table<AuthorDatabaseModel>()
+                    .ToListAsync();
+
+                    var authorsList = authors
+                        .Select(x => new AuthorModel(x))
+                        .OrderBy(x => x.FirstName)
+                        .OrderBy(x => x.LastName)
+                        .ToList();
+
+                    filteredList = authorsList.ToObservableCollection();
+                }
+
+                var author = filteredList
+                    .Where(x => !string.IsNullOrEmpty(x.FirstName) && x.FirstName.Equals(authorFirstName) && !string.IsNullOrEmpty(x.LastName) && x.LastName.Equals(authorLastName))
+                    .FirstOrDefault();
+
+                return author;
             }
             catch (Exception ex)
             {
@@ -1461,7 +1496,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<CollectionModel>> GetAllCollectionsAsync(bool showHiddenCollections)
+        public async Task<List<CollectionModel>> GetAllCollectionsAsync()
         {
             try
             {
@@ -1474,14 +1509,6 @@ namespace BookCollector.Data.Database
                     .Select(x => new CollectionModel(x))
                     .OrderBy(x => x.ParsedCollectionName)
                     .ToList();
-
-                await Task.WhenAll(collectionsList.Select(x => x.SetTotalBooks(true)));
-                await Task.WhenAll(collectionsList.Select(x => x.SetTotalCostOfBooks(true)));
-
-                if (!showHiddenCollections)
-                {
-                    return [.. collectionsList.Where(x => !x.HideCollection)];
-                }
 
                 return collectionsList;
             }
@@ -1634,7 +1661,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<GenreModel>> GetAllGenresAsync(bool showHiddenGenres)
+        public async Task<List<GenreModel>> GetAllGenresAsync()
         {
             try
             {
@@ -1647,14 +1674,6 @@ namespace BookCollector.Data.Database
                         .Select(x => new GenreModel(x))
                         .OrderBy(x => x.ParsedGenreName)
                         .ToList();
-
-                await Task.WhenAll(genresList.Select(x => x.SetTotalBooks(true)));
-                await Task.WhenAll(genresList.Select(x => x.SetTotalCostOfBooks(true)));
-
-                if (!showHiddenGenres)
-                {
-                    return [.. genresList.Where(x => !x.HideGenre)];
-                }
 
                 return genresList;
             }
@@ -1807,7 +1826,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<SeriesModel>> GetAllSeriesAsync(bool showHiddenSeries)
+        public async Task<List<SeriesModel>> GetAllSeriesAsync()
         {
             try
             {
@@ -1820,14 +1839,6 @@ namespace BookCollector.Data.Database
                         .Select(x => new SeriesModel(x))
                         .OrderBy(x => x.ParsedSeriesName)
                         .ToList();
-
-                await Task.WhenAll(seriesList.Select(x => x.SetTotalBooks(true)));
-                await Task.WhenAll(seriesList.Select(x => x.SetTotalCostOfBooks(true)));
-
-                if (!showHiddenSeries)
-                {
-                    return [.. seriesList.Where(x => !x.HideSeries)];
-                }
 
                 return seriesList;
             }
@@ -1980,7 +1991,7 @@ namespace BookCollector.Data.Database
             }
         }
 
-        public async Task<List<LocationModel>> GetAllLocationsAsync(bool showHiddenLocations)
+        public async Task<List<LocationModel>> GetAllLocationsAsync()
         {
             try
             {
@@ -1993,14 +2004,6 @@ namespace BookCollector.Data.Database
                         .Select(x => new LocationModel(x))
                         .OrderBy(x => x.ParsedLocationName)
                         .ToList();
-
-                await Task.WhenAll(locationsList.Select(x => x.SetTotalBooks(true)));
-                await Task.WhenAll(locationsList.Select(x => x.SetTotalCostOfBooks(true)));
-
-                if (!showHiddenLocations)
-                {
-                    return [.. locationsList.Where(x => !x.HideLocation)];
-                }
 
                 return locationsList;
             }

@@ -175,7 +175,7 @@ namespace BookCollector.ViewModels.Book
 
             if (this.SelectedBook != null && this.SelectedISBNItem != null)
             {
-                if (string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation) || string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookCoverFileName) || string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl))
                 {
                     if (this.SelectedISBNItem.VolumeInfo?.ImageLinks != null)
                     {

@@ -16,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<LocationModel>? fullLocationList;
 
         [ObservableProperty]
-        public static ObservableCollection<LocationModel>? filteredLocationList;
+        public static ObservableCollection<LocationModel>? filteredLocationList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<LocationModel>? filteredLocationList2;
 
         [ObservableProperty]
         public int totalLocationsCount;

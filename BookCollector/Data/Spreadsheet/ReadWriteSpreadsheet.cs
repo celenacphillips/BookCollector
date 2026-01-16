@@ -2,12 +2,14 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Xml;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Xml;
 using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
 
 namespace BookCollector.Data.Spreadsheet
@@ -112,7 +114,7 @@ namespace BookCollector.Data.Spreadsheet
             worksheetPart.Worksheet.Save();
         }
 
-        public static List<List<string>> ReadSpreadSheet(string fileName, string sheetName)
+        public static List<List<string>> ReadSpreadSheet(string fileName, string sheetName, List<string?> columnNames)
         {
             List<List<string>> spreadsheetValues = [];
 
@@ -124,7 +126,7 @@ namespace BookCollector.Data.Spreadsheet
 
                 // Find the sheet with the supplied name, and then use that
                 // Sheet object to retrieve a reference to the first worksheet.
-                Sheet? theSheet = workbookPart?.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName).FirstOrDefault();
+                Sheet? theSheet = workbookPart?.Workbook.Descendants<Sheet>().Where(s => s.Name.ToString().ToLower().Replace(" ", string.Empty).Equals(sheetName.ToLower().Replace(" ", string.Empty))).FirstOrDefault();
 
                 // Throw an exception if there is no sheet.
                 if (theSheet is null || theSheet.Id is null)
@@ -146,7 +148,62 @@ namespace BookCollector.Data.Spreadsheet
                         {
                             if (row.RowIndex == 1)
                             {
-                                columnCount = row.Descendants<Cell>().Count();
+                                var theCells = row.Descendants<Cell>()?.ToList();
+
+                                int columnIndex = 0;
+
+                                if (theCells != null && columnNames != null)
+                                {
+                                    columnCount = theCells.Count;
+
+                                    // If the column names in the spreadsheet do not equal the
+                                    // expected column names for import,
+                                    // return the empty list of spreadsheet values.
+                                    if (columnNames.Count != columnCount)
+                                    {
+                                        return spreadsheetValues;
+                                    }
+
+                                    foreach (Cell theCell in theCells)
+                                    {
+                                        string columnValue = SetCurrentColumn(columnIndex);
+
+                                        // If the Row number and Column letter of the spreadsheet value
+                                        // Don't match the calculate Row number and Column letter,
+                                        // Add an empty value to the list and increment the Column letter
+                                        // Until we find the right Row number and Column letter.
+                                        while (theCell.CellReference != $"{columnValue}{row.RowIndex}")
+                                        {
+                                            if (!columnValue.Equals("A"))
+                                            {
+                                                columnIndex++;
+                                                columnValue = SetCurrentColumn(columnIndex);
+                                            }
+                                            else
+                                            {
+                                                columnValue += "A";
+                                            }
+                                        }
+
+                                        // If the Row number and Column letter of spreadsheet value
+                                        // matches calculated Row number and Column letter,
+                                        // Check if the values match.
+                                        if (theCell.CellReference == $"{columnValue}{row.RowIndex}")
+                                        {
+                                            var cellValue = GetCellValue(theCell, workbookPart).ToLower().Replace(" ", string.Empty);
+                                            var columnName = columnNames.ElementAt(columnIndex) !.ToLower().Replace(" ", string.Empty);
+
+                                            // At the first sign there is a column not in the right order,
+                                            // return the empty list of spreadsheet values.
+                                            if (!cellValue.Equals(columnName))
+                                            {
+                                                return spreadsheetValues;
+                                            }
+                                        }
+
+                                        columnIndex++;
+                                    }
+                                }
                             }
 
                             if (row.RowIndex != 1)
@@ -163,6 +220,13 @@ namespace BookCollector.Data.Spreadsheet
                                     {
                                         string columnValue = SetCurrentColumn(columnIndex);
 
+                                        // If the Row number and Column letter of the spreadsheet value
+                                        // Don't match the calculate Row number and Column letter,
+                                        // Add an empty value to the list and increment the Column letter
+                                        // Until we find the right Row number and Column letter.
+
+                                        // This allows the values to be added in the right order,
+                                        // even if there are blank/empty cells in the list.
                                         while (theCell.CellReference != $"{columnValue}{row.RowIndex}")
                                         {
                                             if (!columnValue.Equals("A"))
@@ -177,6 +241,12 @@ namespace BookCollector.Data.Spreadsheet
                                             }
                                         }
 
+                                        // If the Row number and Column letter of spreadsheet value
+                                        // matches calculated Row number and Column letter,
+                                        // Add the value from the spreadsheet to the list.
+
+                                        // This allows the values to be added in the right order,
+                                        // even if there are blank/empty cells in the list.
                                         if (theCell.CellReference == $"{columnValue}{row.RowIndex}")
                                         {
                                             var cellValue = GetCellValue(theCell, workbookPart);

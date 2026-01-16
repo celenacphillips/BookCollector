@@ -52,7 +52,7 @@ namespace BookCollector.Data.DatabaseModels
         [ObservableProperty]
         public string? partOfSeries;
         [ObservableProperty]
-        public string? bookCoverFileLocation;
+        public string? bookCoverFileName;
 
         [PrimaryKey]
         public Guid? BookGuid { get; set; }

@@ -23,7 +23,10 @@ namespace BookCollector.ViewModels.Collection
         public ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
-        public ObservableCollection<BookModel>? filteredBookList;
+        public ObservableCollection<BookModel>? filteredBookList1;
+
+        [ObservableProperty]
+        public ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
         public int totalBooksCount;
@@ -48,6 +51,15 @@ namespace BookCollector.ViewModels.Collection
             {
                 this.FullBookList = await FillLists.GetAllBooksInCollectionList(this.SelectedCollection.CollectionGuid, ShowHiddenBook);
             }
+
+            if (!showHiddenBooks)
+            {
+                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
+            }
+            else
+            {
+                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
+            }
         }
 
         public async Task SetViewModelData()
@@ -62,15 +74,15 @@ namespace BookCollector.ViewModels.Collection
 
                     await this.SetList(ShowHiddenBook);
 
-                    if (this.FullBookList != null)
+                    if (this.FilteredBookList1 != null)
                     {
-                        this.TotalBooksCount = this.FullBookList.Count;
+                        this.TotalBooksCount = this.FilteredBookList1.Count;
 
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FullBookList);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FullBookList);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FullBookList);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FullBookList,
+                                this.FilteredBookList1,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -81,17 +93,17 @@ namespace BookCollector.ViewModels.Collection
 
                         await Task.WhenAll(filteredList);
 
-                        this.FilteredBookList = filteredList.Result;
+                        this.FilteredBookList2 = filteredList.Result;
 
-                        if (this.FilteredBookList != null)
+                        if (this.FilteredBookList2 != null)
                         {
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetReadingProgress()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetAuthorListString()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetCoverDisplay()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetBookTotalTime()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetReadingProgress()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetAuthorListString()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetCoverDisplay()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetBookTotalTime()));
 
                             var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList,
+                                    this.FilteredBookList2,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
                                     this.BookReadPercentageChecked,
@@ -104,7 +116,7 @@ namespace BookCollector.ViewModels.Collection
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-                            this.FilteredBooksCount = this.FilteredBookList.Count;
+                            this.FilteredBooksCount = this.FilteredBookList2.Count;
 
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
@@ -112,7 +124,7 @@ namespace BookCollector.ViewModels.Collection
 
                             await Task.WhenAll(sortList);
 
-                            this.FilteredBookList = sortList.Result;
+                            this.FilteredBookList2 = sortList.Result;
                         }
 
                         await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
@@ -139,20 +151,18 @@ namespace BookCollector.ViewModels.Collection
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredBookList != null && this.FullBookList != null)
+            if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredBookList = FilterLists.FilterOnSearchString(this.FullBookList, input);
+                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.FilteredBookList1, input);
                 }
                 else
                 {
-                    this.FilteredBookList = await FilterLists.FilterBookList(
-                                this.FullBookList,
+                    this.FilteredBookList2 = await FilterLists.FilterBookList(
+                                this.FilteredBookList1,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -162,12 +172,28 @@ namespace BookCollector.ViewModels.Collection
                                 this.Searchstring);
                 }
 
-                this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
+                this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortBookList(
+                                    this.FilteredBookList2,
+                                    this.BookTitleChecked,
+                                    this.BookReadingDateChecked,
+                                    this.BookReadPercentageChecked,
+                                    this.BookPublisherChecked,
+                                    this.BookPublishYearChecked,
+                                    this.AuthorLastNameChecked,
+                                    this.BookFormatChecked,
+                                    this.BookPriceChecked,
+                                    this.PageCountBookTimeChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredBookList2 = sortList.Result;
         }
 
         [RelayCommand]

@@ -120,8 +120,8 @@
   <data name="AppTheme" xml:space="preserve">
     <value>App Theme</value>
   </data>
-  <data name="Color" xml:space="preserve">
-    <value>Color</value>
+  <data name="AppColor" xml:space="preserve">
+    <value>App Color</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
@@ -135,8 +135,8 @@
   <data name="ExportLocation" xml:space="preserve">
     <value>Export Location</value>
   </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
+  <data name="AppLanguage" xml:space="preserve">
+    <value>App Language</value>
   </data>
   <data name="ShowComments" xml:space="preserve">
     <value>Show Comments in books</value>
@@ -702,7 +702,7 @@
   <data name="EndOfList" xml:space="preserve">
     <value>End of List</value>
   </data>
-  <data name="Currency" xml:space="preserve">
+  <data name="AppCurrency" xml:space="preserve">
     <value>Currency</value>
   </data>
   <data name="SelectYourAppCurrency" xml:space="preserve">
@@ -904,7 +904,8 @@
     <value>Import</value>
   </data>
   <data name="Export_Import_Question" xml:space="preserve">
-    <value>Would you like to import your data from or export your data to a spreadsheet?</value>
+    <value>Would you like to import your data from or export your data to a spreadsheet?
+Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="ExportImportView_InfoText" xml:space="preserve">
     <value>Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution).</value>
@@ -1023,8 +1024,8 @@
   <data name="Table_Waiting" xml:space="preserve">
     <value>Table: Waiting...</value>
   </data>
-  <data name="BookImportExportFileLocation" xml:space="preserve">
-    <value>Book Import Export File Location</value>
+  <data name="BookCoverFileName" xml:space="preserve">
+    <value>Book Cover File Name</value>
   </data>
   <data name="UploadExistingFile" xml:space="preserve">
     <value>Upload Existing File</value>
@@ -1240,7 +1241,9 @@
     <value>Change Log</value>
   </data>
   <data name="SupportInfoText" xml:space="preserve">
-    <value>Found a bug? Want to suggest a new feature? Need additional help? Email us!</value>
+    <value>Found a bug? Want to suggest a new feature? Need additional help?
+
+Email us!</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -1333,12 +1336,52 @@
     <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
   </data>
   <data name="Files_Photos_Description" xml:space="preserve">
-    <value>This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers from a URL, you do not need the permission granted.</value>
+    <value>This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers, you do not need the permission granted.</value>
   </data>
   <data name="DataStorage" xml:space="preserve">
     <value>Data Storage</value>
   </data>
   <data name="PageCountBookTime" xml:space="preserve">
     <value>Page Count / Book Time</value>
+  </data>
+  <data name="AreYouSureImageImport_Question" xml:space="preserve">
+    <value>Are you sure you want to import your images from a file? If so, please select the top level folder for the images.</value>
+  </data>
+  <data name="BookCovers" xml:space="preserve">
+    <value>Book Covers</value>
+  </data>
+  <data name="LibraryBookCovers" xml:space="preserve">
+    <value>Library Book Covers</value>
+  </data>
+  <data name="WishlistBookCovers" xml:space="preserve">
+    <value>Wishlist Book Covers</value>
+  </data>
+  <data name="BookCoverUploads" xml:space="preserve">
+    <value>Book Cover Uploads</value>
+  </data>
+  <data name="BookCoverDownloads" xml:space="preserve">
+    <value>Book Cover Downloads</value>
+  </data>
+  <data name="WishlistBooks" xml:space="preserve">
+    <value>Wishlist Books</value>
+  </data>
+  <data name="DataStorageInfoText" xml:space="preserve">
+    <value>All data is stored locally on your device.
+Nothing is uploaded to a cloud service.
+
+If you delete your data, either through Settings &gt; Delete All Data in the app or by using your device’s Clear Storage option, it cannot be recovered.
+
+Please export and back up your data regularly.</value>
+  </data>
+  <data name="PictogrammersCredit" xml:space="preserve">
+    <value>Icons (minus App Icon) by Pictogrammers.
+Special thanks to the team and their open-source icons!
+Visit them at </value>
+  </data>
+  <data name="ImportErrors" xml:space="preserve">
+    <value>Some spreadsheets were not imported because they either did not exist in the workbook, the spreadsheet did not have any values, or the columns were not in the right order for import.</value>
+  </data>
+  <data name="ImportErrorsTitle" xml:space="preserve">
+    <value>Import Errors!</value>
   </data>
 </root>

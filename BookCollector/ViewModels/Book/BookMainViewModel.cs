@@ -78,9 +78,11 @@ namespace BookCollector.ViewModels.Book
                         this.ShowCheckpoints = this.SelectedBook.BookTotalTime != 0;
                     }
 
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileLocation))
+                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileName))
                     {
-                        this.SelectedBook.BookCover = ImageSource.FromFile(this.SelectedBook.BookCoverFileLocation);
+                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        this.SelectedBook.BookCover = ImageSource.FromFile($"{directory}/{this.SelectedBook.BookCoverFileName}");
                     }
 
                     if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl))
@@ -91,7 +93,7 @@ namespace BookCollector.ViewModels.Book
                             {
                                 Uri = new Uri(this.SelectedBook.BookCoverUrl),
                                 CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(1),
+                                CacheValidity = TimeSpan.FromDays(14),
                             };
                         }
                         else

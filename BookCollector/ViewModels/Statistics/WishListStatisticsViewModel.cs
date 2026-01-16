@@ -34,7 +34,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                if (WishListViewModel.fullWishlistBookList == null || WishListViewModel.RefreshView)
+                if (WishListViewModel.filteredWishlistBookList1 == null || WishListViewModel.RefreshView)
                 {
                     await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
                 }
@@ -57,7 +57,7 @@ namespace BookCollector.ViewModels.Statistics
                     formatPrices);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = WishListViewModel.fullWishlistBookList!.Count;
+                this.TotalBooks = WishListViewModel.filteredWishlistBookList1!.Count;
                 var seriesCounts = series.Result;
                 var authorsCounts = authors.Result;
                 var locationsCounts = locations.Result;

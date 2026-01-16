@@ -10,7 +10,8 @@
              Title="{x:Static localization:AppStringResources.Export_Import}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding InfoPopupCommand}">
+        <ToolbarItem Command="{Binding InfoPopupCommand}"
+                     IsEnabled="{Binding RefreshEnabled}">
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="MaterialDesignIcons" 
                                  Glyph="&#xF02FC;" 

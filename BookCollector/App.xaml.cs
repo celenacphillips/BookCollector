@@ -62,34 +62,6 @@ namespace BookCollector
             Data.Colors.SetColors(savedColorHexCode);
         }
 
-        internal static async Task PreLoadData()
-        {
-            var showHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            var showHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
-            var showHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            var showHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-            var showHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            var showHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-            var showHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
-
-            await AllBooksViewModel.SetList(showHiddenBooks);
-
-            List<Task> taskList =
-            [
-                CollectionsViewModel.SetList(showHiddenCollections),
-                GenresViewModel.SetList(showHiddenGenres),
-                SeriesViewModel.SetList(showHiddenSeries),
-                AuthorsViewModel.SetList(showHiddenAuthors),
-                LocationsViewModel.SetList(showHiddenLocations),
-                ToBeReadViewModel.SetList(showHiddenBooks),
-                ReadViewModel.SetList(showHiddenBooks),
-                ReadingViewModel.SetList(showHiddenBooks),
-                WishListViewModel.SetList(showHiddenWishlistBooks),
-            ];
-
-            await Task.WhenAll(taskList);
-        }
-
         private static bool UseFakeSplashScreen()
         {
 #if ANDROID

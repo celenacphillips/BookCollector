@@ -47,7 +47,37 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (fullLocationList == null)
             {
-                fullLocationList = await FillLists.GetAllLocationsList(showHiddenLocations);
+                fullLocationList = await FillLists.GetAllLocationsList();
+            }
+
+            if (!showHiddenLocations)
+            {
+                filteredLocationList1 = new ObservableCollection<LocationModel>(fullLocationList!.Where(x => !x.HideLocation));
+            }
+            else
+            {
+                filteredLocationList1 = new ObservableCollection<LocationModel>(fullLocationList!);
+            }
+        }
+
+        public static async Task HideBooks(bool showHiddenLocations)
+        {
+            if (!showHiddenLocations)
+            {
+                var hideList = new ObservableCollection<LocationModel>(fullLocationList!.Where(x => x.HideLocation));
+
+                foreach (var item in hideList)
+                {
+                    var books = AllBooksViewModel.filteredBookList1?
+                        .Where(x => x.BookLocationGuid == item.LocationGuid && !x.HideBook)
+                        .ToObservableCollection();
+
+                    foreach (var book in books)
+                    {
+                        book.HideBook = true;
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    }
+                }
             }
         }
 
@@ -57,9 +87,9 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.SetIsBusyTrue();
 
-                var temp = this.FilteredLocationList;
-                this.FilteredLocationList = null;
-                this.FilteredLocationList = temp;
+                var temp = this.FilteredLocationList2;
+                this.FilteredLocationList2 = null;
+                this.FilteredLocationList2 = temp;
 
                 this.SetIsBusyFalse();
             }
@@ -74,23 +104,26 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenLocations);
 
-                    if (fullLocationList != null)
+                    if (this.FilteredLocationList1 != null)
                     {
-                        this.FilteredLocationList = fullLocationList;
+                        this.FilteredLocationList2 = this.FilteredLocationList1;
 
-                        this.TotalLocationsCount = fullLocationList != null ? fullLocationList.Count : 0;
+                        this.TotalLocationsCount = this.FilteredLocationList1 != null ? this.FilteredLocationList1.Count : 0;
 
                         this.SearchOnLocation(this.Searchstring);
 
+                        await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
+                        await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
+
                         var sortList = SortLists.SortLocationsList(
-                                this.FilteredLocationList,
+                                this.FilteredLocationList2,
                                 this.LocationNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredLocationsCount = this.FilteredLocationList.Count;
+                        this.FilteredLocationsCount = this.FilteredLocationList2.Count;
 
                         this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
@@ -98,7 +131,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Task.WhenAll(sortList);
 
-                        this.FilteredLocationList = sortList.Result;
+                        this.FilteredLocationList2 = sortList.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -116,37 +149,45 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public void SearchOnLocation(string? input)
+        public async void SearchOnLocation(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredLocationList != null && this.FullLocationList != null)
+            if (this.FilteredLocationList2 != null && this.FilteredLocationList1 != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredLocationList = this.FullLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredLocationList2 = this.FilteredLocationList1.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredLocationList = this.FullLocationList;
+                    this.FilteredLocationList2 = this.FilteredLocationList1;
                 }
 
-                this.FilteredLocationsCount = this.FilteredLocationList != null ? this.FilteredLocationList.Count : 0;
+                this.FilteredLocationsCount = this.FilteredLocationList2 != null ? this.FilteredLocationList2.Count : 0;
 
                 this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortLocationsList(
+                                this.FilteredLocationList2,
+                                this.LocationNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredLocationList2 = sortList.Result;
         }
 
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
-            if (this.FilteredLocationList != null)
+            if (this.FilteredLocationList2 != null)
             {
-                var selected = this.FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
+                var selected = this.FilteredLocationList2.FirstOrDefault(x => x.LocationGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
                 {
@@ -281,7 +322,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (LocationsViewModel.fullLocationList != null)
             {
-                LocationsViewModel.RefreshView = this.RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
+                LocationsViewModel.RefreshView = this.RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
             }
         }
 

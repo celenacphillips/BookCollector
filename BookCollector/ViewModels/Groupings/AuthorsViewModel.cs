@@ -16,6 +16,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Bibliography;
 using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Groupings
@@ -46,7 +47,37 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (fullAuthorList == null)
             {
-                fullAuthorList = await FillLists.GetAllAuthorsList(showHiddenAuthors);
+                fullAuthorList = await FillLists.GetAllAuthorsList();
+            }
+
+            if (!showHiddenAuthors)
+            {
+                filteredAuthorList1 = new ObservableCollection<AuthorModel>(fullAuthorList!.Where(x => !x.HideAuthor));
+            }
+            else
+            {
+                filteredAuthorList1 = new ObservableCollection<AuthorModel>(fullAuthorList!);
+            }
+        }
+
+        public static async Task HideBooks(bool showHiddenAuthors)
+        {
+            if (!showHiddenAuthors)
+            {
+                var hideList = new ObservableCollection<AuthorModel>(fullAuthorList!.Where(x => x.HideAuthor));
+
+                foreach (var item in hideList)
+                {
+                    var books = await FillLists.GetAllBooksInAuthorList(item.AuthorGuid, true);
+
+                    books = books?.Where(x => !x.HideBook).ToObservableCollection();
+
+                    foreach (var book in books)
+                    {
+                        book.HideBook = true;
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    }
+                }
             }
         }
 
@@ -56,9 +87,9 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.SetIsBusyTrue();
 
-                var temp = this.FilteredAuthorList;
-                this.FilteredAuthorList = null;
-                this.FilteredAuthorList = temp;
+                var temp = this.FilteredAuthorList2;
+                this.FilteredAuthorList2 = null;
+                this.FilteredAuthorList2 = temp;
 
                 this.SetIsBusyFalse();
             }
@@ -73,23 +104,26 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenAuthors);
 
-                    if (fullAuthorList != null)
+                    if (this.FilteredAuthorList1 != null)
                     {
-                        this.FilteredAuthorList = fullAuthorList;
+                        this.FilteredAuthorList2 = this.FilteredAuthorList1;
 
-                        this.TotalAuthorsCount = fullAuthorList != null ? fullAuthorList.Count : 0;
+                        this.TotalAuthorsCount = this.FilteredAuthorList1 != null ? this.FilteredAuthorList1.Count : 0;
 
                         this.SearchOnAuthor(this.Searchstring);
 
+                        await Task.WhenAll(this.FilteredAuthorList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
+                        await Task.WhenAll(this.FilteredAuthorList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
+
                         var sortList = SortLists.SortAuthorList(
-                                this.FilteredAuthorList,
+                                this.FilteredAuthorList2,
                                 this.AuthorLastNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredAuthorsCount = this.FilteredAuthorList.Count;
+                        this.FilteredAuthorsCount = this.FilteredAuthorList2.Count;
 
                         this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
@@ -97,7 +131,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Task.WhenAll(sortList);
 
-                        this.FilteredAuthorList = sortList.Result;
+                        this.FilteredAuthorList2 = sortList.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -115,37 +149,45 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public void SearchOnAuthor(string? input)
+        public async void SearchOnAuthor(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredAuthorList != null && this.FullAuthorList != null)
+            if (this.FilteredAuthorList2 != null && this.FilteredAuthorList1 != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredAuthorList = this.FullAuthorList.Where(x => x.FullName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredAuthorList2 = this.FilteredAuthorList1.Where(x => x.FullName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredAuthorList = this.FullAuthorList;
+                    this.FilteredAuthorList2 = this.FilteredAuthorList1;
                 }
 
-                this.FilteredAuthorsCount = this.FilteredAuthorList != null ? this.FilteredAuthorList.Count : 0;
+                this.FilteredAuthorsCount = this.FilteredAuthorList2 != null ? this.FilteredAuthorList2.Count : 0;
 
                 this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortAuthorList(
+                                this.FilteredAuthorList2,
+                                this.AuthorLastNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredAuthorList2 = sortList.Result;
         }
 
         [RelayCommand]
         public async Task PopupMenuAuthor(Guid? input)
         {
-            if (this.FilteredAuthorList != null)
+            if (this.FilteredAuthorList2 != null)
             {
-                var selected = this.FilteredAuthorList.FirstOrDefault(x => x.AuthorGuid == input);
+                var selected = this.FilteredAuthorList2.FirstOrDefault(x => x.AuthorGuid == input);
 
                 if (selected != null)
                 {
@@ -277,7 +319,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (AuthorsViewModel.fullAuthorList != null)
             {
-                AuthorsViewModel.RefreshView = this.RemoveAuthorFromStaticList(selected, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
+                AuthorsViewModel.RefreshView = this.RemoveAuthorFromStaticList(selected, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
             }
         }
 

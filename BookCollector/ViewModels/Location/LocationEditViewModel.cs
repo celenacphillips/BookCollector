@@ -112,7 +112,7 @@ namespace BookCollector.ViewModels.Location
         {
             if (LocationsViewModel.fullLocationList != null)
             {
-                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
+                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
             }
         }
 

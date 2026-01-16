@@ -23,8 +23,8 @@ public partial class ExistingBooksView : ContentPage
 
     // Need this to make sure books populate when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        var variable = this.viewModel.SetViewModelData();
+        await this.viewModel.SetViewModelData();
     }
 }

@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Author"
              x:DataType="viewModel:AuthorBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredAuthorList}"
+    <CollectionView ItemsSource="{Binding FilteredAuthorList2}"
                     SelectionMode="Single"
                     SelectedItem="{Binding SelectedAuthor}"
                     SelectionChangedCommand="{Binding AuthorSelectionChangedCommand}"

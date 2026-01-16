@@ -15,6 +15,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Groupings
@@ -47,7 +48,37 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (fullSeriesList == null)
             {
-                fullSeriesList = await FillLists.GetAllSeriesList(showHiddenSeries);
+                fullSeriesList = await FillLists.GetAllSeriesList();
+            }
+
+            if (!showHiddenSeries)
+            {
+                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!.Where(x => !x.HideSeries));
+            }
+            else
+            {
+                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!);
+            }
+        }
+
+        public static async Task HideBooks(bool showHiddenSeries)
+        {
+            if (!showHiddenSeries)
+            {
+                var hideList = new ObservableCollection<SeriesModel>(fullSeriesList!.Where(x => x.HideSeries));
+
+                foreach (var item in hideList)
+                {
+                    var books = AllBooksViewModel.filteredBookList1?
+                        .Where(x => x.BookSeriesGuid == item.SeriesGuid && !x.HideBook)
+                        .ToObservableCollection();
+
+                    foreach (var book in books)
+                    {
+                        book.HideBook = true;
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    }
+                }
             }
         }
 
@@ -57,9 +88,9 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.SetIsBusyTrue();
 
-                var temp = this.FilteredSeriesList;
-                this.FilteredSeriesList = null;
-                this.FilteredSeriesList = temp;
+                var temp = this.FilteredSeriesList2;
+                this.FilteredSeriesList2 = null;
+                this.FilteredSeriesList2 = temp;
 
                 this.SetIsBusyFalse();
             }
@@ -74,23 +105,26 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenSeries);
 
-                    if (fullSeriesList != null)
+                    if (this.FilteredSeriesList1 != null)
                     {
-                        this.FilteredSeriesList = fullSeriesList;
+                        this.FilteredSeriesList2 = this.FilteredSeriesList1;
 
-                        this.TotalSeriesCount = fullSeriesList != null ? fullSeriesList.Count : 0;
+                        this.TotalSeriesCount = this.FilteredSeriesList1 != null ? this.FilteredSeriesList1.Count : 0;
 
                         this.SearchOnSeries(this.Searchstring);
 
+                        await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
+                        await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
+
                         var sortList = SortLists.SortSeriesList(
-                                this.FilteredSeriesList,
+                                this.FilteredSeriesList2,
                                 this.SeriesNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredSeriesCount = this.FilteredSeriesList.Count;
+                        this.FilteredSeriesCount = this.FilteredSeriesList2.Count;
 
                         this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
@@ -98,7 +132,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Task.WhenAll(sortList);
 
-                        this.FilteredSeriesList = sortList.Result;
+                        this.FilteredSeriesList2 = sortList.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -116,37 +150,45 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public void SearchOnSeries(string? input)
+        public async void SearchOnSeries(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredSeriesList != null && this.FullSeriesList != null)
+            if (this.FilteredSeriesList2 != null && this.FilteredSeriesList1 != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredSeriesList = this.FullSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredSeriesList2 = this.FilteredSeriesList1.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredSeriesList = this.FullSeriesList;
+                    this.FilteredSeriesList2 = this.FilteredSeriesList1;
                 }
 
-                this.FilteredSeriesCount = this.FilteredSeriesList != null ? this.FilteredSeriesList.Count : 0;
+                this.FilteredSeriesCount = this.FilteredSeriesList2 != null ? this.FilteredSeriesList2.Count : 0;
 
                 this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortSeriesList(
+                                this.FilteredSeriesList2,
+                                this.SeriesNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredSeriesList2 = sortList.Result;
         }
 
         [RelayCommand]
         public async Task PopupMenuSeries(Guid? input)
         {
-            if (this.FilteredSeriesList != null)
+            if (this.FilteredSeriesList2 != null)
             {
-                var selected = this.FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
+                var selected = this.FilteredSeriesList2.FirstOrDefault(x => x.SeriesGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.SeriesName))
                 {
@@ -281,7 +323,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (SeriesViewModel.fullSeriesList != null)
             {
-                SeriesViewModel.RefreshView = this.RemoveSeriesFromStaticList(selected, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
+                SeriesViewModel.RefreshView = this.RemoveSeriesFromStaticList(selected, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList2);
             }
         }
 

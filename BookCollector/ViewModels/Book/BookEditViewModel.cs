@@ -9,6 +9,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Author;
 using BookCollector.Views.Book;
 using BookCollector.Views.Collection;
@@ -172,11 +173,11 @@ namespace BookCollector.ViewModels.Book
                     this.GetPreferences();
 
                     var chapters = FillLists.GetAllChaptersInBook(this.EditedBook.BookGuid);
-                    var series = FillLists.GetAllSeriesList(this.HiddenSeriesOn);
-                    var collections = FillLists.GetAllCollectionsList(this.HiddenCollectionsOn);
-                    var genres = FillLists.GetAllGenresList(this.HiddenGenresOn);
-                    var locations = FillLists.GetAllLocationsList(this.HiddenLocationsOn);
-                    var authors = FillLists.GetAllAuthorsList(this.HiddenAuthorsOn);
+                    var series = SeriesViewModel.SetList(this.HiddenSeriesOn);
+                    var collections = CollectionsViewModel.SetList(this.HiddenCollectionsOn);
+                    var genres = GenresViewModel.SetList(this.HiddenGenresOn);
+                    var locations = LocationsViewModel.SetList(this.HiddenLocationsOn);
+                    var authors = AuthorsViewModel.SetList(this.HiddenAuthorsOn);
                     var bookAuthorList = FillLists.GetAllBookAuthorsForBook(this.EditedBook.BookGuid);
 
                     this.ChaptersToDelete = [];
@@ -209,9 +210,11 @@ namespace BookCollector.ViewModels.Book
                         this.TimeListenedStepperEnabled = this.EditedBook.BookHoursTotal != 0 || this.EditedBook.BookMinutesTotal != 0;
                     }
 
-                    if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileLocation))
+                    if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileName))
                     {
-                        this.EditedBook.BookCover = ImageSource.FromFile(this.EditedBook.BookCoverFileLocation);
+                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        this.EditedBook.BookCover = ImageSource.FromFile($"{directory}/{this.EditedBook.BookCoverFileName}");
                     }
 
                     if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl))
@@ -222,7 +225,7 @@ namespace BookCollector.ViewModels.Book
                             {
                                 Uri = new Uri(this.EditedBook.BookCoverUrl),
                                 CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(1),
+                                CacheValidity = TimeSpan.FromDays(14),
                             };
                         }
                         else
@@ -256,11 +259,11 @@ namespace BookCollector.ViewModels.Book
                     await Task.WhenAll(chapters, series, collections, genres, locations, authors, bookAuthorList);
 
                     this.ChapterList = chapters.Result;
-                    this.SeriesList = series.Result;
-                    this.CollectionList = collections.Result;
-                    this.GenreList = genres.Result;
-                    this.LocationList = locations.Result;
-                    this.AuthorList = authors.Result;
+                    this.SeriesList = SeriesViewModel.filteredSeriesList1;
+                    this.CollectionList = CollectionsViewModel.filteredCollectionList1;
+                    this.GenreList = GenresViewModel.filteredGenreList1;
+                    this.LocationList = LocationsViewModel.filteredLocationList1;
+                    this.AuthorList = AuthorsViewModel.filteredAuthorList1;
                     var bookAuthors = bookAuthorList.Result;
 
                     this.AuthorPickers = [];
@@ -272,6 +275,8 @@ namespace BookCollector.ViewModels.Book
                             if (this.AuthorList != null)
                             {
                                 var author = this.AuthorList.SingleOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
+
+                                author ??= AuthorsViewModel.fullAuthorList?.FirstOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
 
                                 this.AuthorPickers.Add(new AuthorPicker()
                                 {
@@ -314,6 +319,14 @@ namespace BookCollector.ViewModels.Book
                     this.SelectedLocation = this.LocationList != null ? this.LocationList.FirstOrDefault(x => x.LocationGuid == this.EditedBook.BookLocationGuid) : null;
                     this.SelectedCollection = this.CollectionList != null ? this.CollectionList.FirstOrDefault(x => x.CollectionGuid == this.EditedBook.BookCollectionGuid) : null;
                     this.SelectedSeries = this.SeriesList != null ? this.SeriesList.FirstOrDefault(x => x.SeriesGuid == this.EditedBook.BookSeriesGuid) : null;
+
+                    this.SelectedGenre ??= GenresViewModel.fullGenreList?.FirstOrDefault(x => x.GenreGuid == this.EditedBook.BookGenreGuid);
+
+                    this.SelectedLocation ??= LocationsViewModel.fullLocationList?.FirstOrDefault(x => x.LocationGuid == this.EditedBook.BookLocationGuid);
+
+                    this.SelectedCollection ??= CollectionsViewModel.fullCollectionList?.FirstOrDefault(x => x.CollectionGuid == this.EditedBook.BookCollectionGuid);
+
+                    this.SelectedSeries ??= SeriesViewModel.fullSeriesList?.FirstOrDefault(x => x.SeriesGuid == this.EditedBook.BookSeriesGuid);
 
                     this.SelectedSeriesString = this.SelectedSeries?.SeriesName ?? AppStringResources.SelectASeries;
                     this.SelectedCollectionString = this.SelectedCollection?.CollectionName ?? AppStringResources.SelectACollection;
@@ -510,7 +523,7 @@ namespace BookCollector.ViewModels.Book
                             this.EditedBook.HasBookCover = true;
                             this.EditedBook.HasNoBookCover = false;
 
-                            var directory = $"{FileSystem.AppDataDirectory}/BookCovers";
+                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
 
                             if (!Directory.Exists(directory))
                             {
@@ -521,7 +534,7 @@ namespace BookCollector.ViewModels.Book
                             var filePath = $"{directory}/{fi.Name}";
                             File.Copy(firstPhoto.FullPath, filePath, true);
 
-                            this.EditedBook.BookCoverFileLocation = filePath;
+                            this.EditedBook.BookCoverFileName = fi.Name;
                         }
                     }
                     catch (Exception ex)
@@ -560,7 +573,7 @@ namespace BookCollector.ViewModels.Book
                             {
                                 Uri = new Uri(bookCoverUrl),
                                 CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(1),
+                                CacheValidity = TimeSpan.FromDays(14),
                             };
                             this.EditedBook.BookCover = this.BookCover;
                             this.EditedBook.HasBookCover = true;
@@ -596,7 +609,7 @@ namespace BookCollector.ViewModels.Book
             this.EditedBook.HasNoBookCover = true;
             this.EditedBook.BookCover = null;
             this.EditedBook.BookCoverUrl = null;
-            this.EditedBook.BookCoverFileLocation = null;
+            this.EditedBook.BookCoverFileName = null;
         }
 
         [RelayCommand]
@@ -810,7 +823,7 @@ namespace BookCollector.ViewModels.Book
                     AppStringResources.SelectABookFormat,
                     BookFormats.ToList(),
                     this.EditedBook.BookFormat,
-                    true);
+                    false);
                 var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
 
                 if (!string.IsNullOrEmpty(result.Result))

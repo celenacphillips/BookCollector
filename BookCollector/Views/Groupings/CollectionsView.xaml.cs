@@ -20,8 +20,8 @@ public partial class CollectionsView : ContentPage
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        var variable = this.viewModel.SetViewModelData();
+        await this.viewModel.SetViewModelData();
     }
 }

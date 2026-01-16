@@ -113,7 +113,7 @@ namespace BookCollector.ViewModels.Collection
         {
             if (CollectionsViewModel.fullCollectionList != null)
             {
-                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
+                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
             }
         }
 

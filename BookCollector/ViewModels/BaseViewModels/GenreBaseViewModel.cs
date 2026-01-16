@@ -16,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<GenreModel>? fullGenreList;
 
         [ObservableProperty]
-        public static ObservableCollection<GenreModel>? filteredGenreList;
+        public static ObservableCollection<GenreModel>? filteredGenreList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<GenreModel>? filteredGenreList2;
 
         [ObservableProperty]
         public int totalGenresCount;

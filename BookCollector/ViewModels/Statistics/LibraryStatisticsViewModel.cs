@@ -63,47 +63,47 @@ namespace BookCollector.ViewModels.Statistics
                 List<Task> taskList = new List<Task>();
                 List<Task<int>> dataTasks = new List<Task<int>>();
 
-                if (ToBeReadViewModel.fullBookList == null || ToBeReadViewModel.RefreshView)
+                if (ToBeReadViewModel.filteredBookList1 == null || ToBeReadViewModel.RefreshView)
                 {
                     taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadViewModel.fullBookList == null || ReadViewModel.RefreshView)
+                if (ReadViewModel.filteredBookList1 == null || ReadViewModel.RefreshView)
                 {
                     taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadingViewModel.fullBookList == null || ReadingViewModel.RefreshView)
+                if (ReadingViewModel.filteredBookList1 == null || ReadingViewModel.RefreshView)
                 {
                     taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (CollectionsViewModel.fullCollectionList == null || CollectionsViewModel.RefreshView)
+                if (CollectionsViewModel.filteredCollectionList1 == null || CollectionsViewModel.RefreshView)
                 {
                     taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
                 }
 
-                if (GenresViewModel.fullGenreList == null || GenresViewModel.RefreshView)
+                if (GenresViewModel.filteredGenreList1 == null || GenresViewModel.RefreshView)
                 {
                     taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
                 }
 
-                if (SeriesViewModel.fullSeriesList == null || SeriesViewModel.RefreshView)
+                if (SeriesViewModel.filteredSeriesList1 == null || SeriesViewModel.RefreshView)
                 {
                     taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
                 }
 
-                if (AuthorsViewModel.fullAuthorList == null || AuthorsViewModel.RefreshView)
+                if (AuthorsViewModel.filteredAuthorList1 == null || AuthorsViewModel.RefreshView)
                 {
                     taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
                 }
 
-                if (LocationsViewModel.fullLocationList == null || LocationsViewModel.RefreshView)
+                if (LocationsViewModel.filteredLocationList1 == null || LocationsViewModel.RefreshView)
                 {
                     taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
                 }
 
-                if (AllBooksViewModel.fullBookList == null || AllBooksViewModel.RefreshView)
+                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }
@@ -171,10 +171,10 @@ namespace BookCollector.ViewModels.Statistics
                 await Task.WhenAll(dataTasks);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = AllBooksViewModel.fullBookList!.Count;
-                var toBeRead = ToBeReadViewModel.fullBookList!.Count;
-                var reading = ReadingViewModel.fullBookList!.Count;
-                var read = ReadViewModel.fullBookList!.Count;
+                this.TotalBooks = AllBooksViewModel.filteredBookList1!.Count;
+                var toBeRead = ToBeReadViewModel.filteredBookList1!.Count;
+                var reading = ReadingViewModel.filteredBookList1!.Count;
+                var read = ReadViewModel.filteredBookList1!.Count;
                 var favorite = favoriteCount != null ? favoriteCount.Result : 0;
                 var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
                 var zero = zeroCount != null ? zeroCount.Result : 0;

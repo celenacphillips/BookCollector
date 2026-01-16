@@ -24,8 +24,8 @@ public partial class AuthorMainView : ContentPage
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        this.viewModel.SetViewModelData();
+        await this.viewModel.SetViewModelData();
     }
 }

@@ -18,8 +18,8 @@ public partial class ReadingDataView : ContentPage
         this.InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        var variable = this.viewModel.SetViewModelData();
+        await this.viewModel.SetViewModelData();
     }
 }

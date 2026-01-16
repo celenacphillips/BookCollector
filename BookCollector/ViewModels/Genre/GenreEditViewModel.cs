@@ -112,7 +112,7 @@ namespace BookCollector.ViewModels.Genre
         {
             if (GenresViewModel.fullGenreList != null)
             {
-                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
+                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
             }
         }
 

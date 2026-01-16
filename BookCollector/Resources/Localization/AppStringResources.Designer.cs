@@ -313,6 +313,33 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App Color.
+        /// </summary>
+        internal static string AppColor {
+            get {
+                return ResourceManager.GetString("AppColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        internal static string AppCurrency {
+            get {
+                return ResourceManager.GetString("AppCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to App Language.
+        /// </summary>
+        internal static string AppLanguage {
+            get {
+                return ResourceManager.GetString("AppLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to App Theme.
         /// </summary>
         internal static string AppTheme {
@@ -336,6 +363,15 @@ namespace BookCollector.Resources.Localization {
         internal static string AreYouSureExport_Question {
             get {
                 return ResourceManager.GetString("AreYouSureExport_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to import your images from a file? If so, please select the top level folder for the images..
+        /// </summary>
+        internal static string AreYouSureImageImport_Question {
+            get {
+                return ResourceManager.GetString("AreYouSureImageImport_Question", resourceCulture);
             }
         }
         
@@ -619,11 +655,47 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Cover Downloads.
+        /// </summary>
+        internal static string BookCoverDownloads {
+            get {
+                return ResourceManager.GetString("BookCoverDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Cover File Name.
+        /// </summary>
+        internal static string BookCoverFileName {
+            get {
+                return ResourceManager.GetString("BookCoverFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Cover Images.
         /// </summary>
         internal static string BookCoverImages {
             get {
                 return ResourceManager.GetString("BookCoverImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Covers.
+        /// </summary>
+        internal static string BookCovers {
+            get {
+                return ResourceManager.GetString("BookCovers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Cover Uploads.
+        /// </summary>
+        internal static string BookCoverUploads {
+            get {
+                return ResourceManager.GetString("BookCoverUploads", resourceCulture);
             }
         }
         
@@ -732,15 +804,6 @@ namespace BookCollector.Resources.Localization {
         internal static string BookIdentifier {
             get {
                 return ResourceManager.GetString("BookIdentifier", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Book Import Export File Location.
-        /// </summary>
-        internal static string BookImportExportFileLocation {
-            get {
-                return ResourceManager.GetString("BookImportExportFileLocation", resourceCulture);
             }
         }
         
@@ -1186,15 +1249,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Color.
-        /// </summary>
-        internal static string Color {
-            get {
-                return ResourceManager.GetString("Color", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Create New Author.
         /// </summary>
         internal static string CreateNewAuthor {
@@ -1249,15 +1303,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Currency.
-        /// </summary>
-        internal static string Currency {
-            get {
-                return ResourceManager.GetString("Currency", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         internal static string Dark {
@@ -1272,6 +1317,20 @@ namespace BookCollector.Resources.Localization {
         internal static string DataStorage {
             get {
                 return ResourceManager.GetString("DataStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All data is stored locally on your device.
+        ///Nothing is uploaded to a cloud service.
+        ///
+        ///If you delete your data, either through Settings &gt; Delete All Data in the app or by using your device’s Clear Storage option, it cannot be recovered.
+        ///
+        ///Please export and back up your data regularly..
+        /// </summary>
+        internal static string DataStorageInfoText {
+            get {
+                return ResourceManager.GetString("DataStorageInfoText", resourceCulture);
             }
         }
         
@@ -1816,7 +1875,8 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet?.
+        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet?
+        ///Make sure to check/uncheck checkboxes before importing or exporting..
         /// </summary>
         internal static string Export_Import_Question {
             get {
@@ -1924,7 +1984,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers from a URL, you do not need the permission granted..
+        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers, you do not need the permission granted..
         /// </summary>
         internal static string Files_Photos_Description {
             get {
@@ -2167,6 +2227,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Some spreadsheets were not imported because they either did not exist in the workbook, the spreadsheet did not have any values, or the columns were not in the right order for import..
+        /// </summary>
+        internal static string ImportErrors {
+            get {
+                return ResourceManager.GetString("ImportErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import Errors!.
+        /// </summary>
+        internal static string ImportErrorsTitle {
+            get {
+                return ResourceManager.GetString("ImportErrorsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import finished..
         /// </summary>
         internal static string ImportResultsFinish {
@@ -2230,15 +2308,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language.
-        /// </summary>
-        internal static string Language {
-            get {
-                return ResourceManager.GetString("Language", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
         internal static string LastName {
@@ -2253,6 +2322,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Library {
             get {
                 return ResourceManager.GetString("Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Library Book Covers.
+        /// </summary>
+        internal static string LibraryBookCovers {
+            get {
+                return ResourceManager.GetString("LibraryBookCovers", resourceCulture);
             }
         }
         
@@ -2685,6 +2763,17 @@ namespace BookCollector.Resources.Localization {
         internal static string PickingCoverCanceled {
             get {
                 return ResourceManager.GetString("PickingCoverCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icons (minus App Icon) by Pictogrammers.
+        ///Special thanks to the team and their open-source icons!
+        ///Visit them at .
+        /// </summary>
+        internal static string PictogrammersCredit {
+            get {
+                return ResourceManager.GetString("PictogrammersCredit", resourceCulture);
             }
         }
         
@@ -3247,7 +3336,9 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found a bug? Want to suggest a new feature? Need additional help? Email us!.
+        ///   Looks up a localized string similar to Found a bug? Want to suggest a new feature? Need additional help?
+        ///
+        ///Email us!.
         /// </summary>
         internal static string SupportInfoText {
             get {
@@ -3684,6 +3775,24 @@ namespace BookCollector.Resources.Localization {
         internal static string Wishlist {
             get {
                 return ResourceManager.GetString("Wishlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wishlist Book Covers.
+        /// </summary>
+        internal static string WishlistBookCovers {
+            get {
+                return ResourceManager.GetString("WishlistBookCovers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wishlist Books.
+        /// </summary>
+        internal static string WishlistBooks {
+            get {
+                return ResourceManager.GetString("WishlistBooks", resourceCulture);
             }
         }
         

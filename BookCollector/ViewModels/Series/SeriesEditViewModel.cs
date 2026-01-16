@@ -112,7 +112,7 @@ namespace BookCollector.ViewModels.Series
         {
             if (SeriesViewModel.fullSeriesList != null)
             {
-                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
+                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList2);
             }
         }
 

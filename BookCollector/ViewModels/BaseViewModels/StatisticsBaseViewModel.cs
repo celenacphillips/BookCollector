@@ -76,8 +76,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var section = (ChartView)this.View.FindByName(sectionName);
 
-            section.ClearValue(ChartView.ChartProperty);
-
             List<ChartEntry> entries = [];
 
             foreach (var chartValue in chartValues)
@@ -109,8 +107,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
             var section = (ChartView)this.View.FindByName(sectionName);
-
-            section.ClearValue(ChartView.ChartProperty);
 
             List<ChartEntry> entries = [];
 

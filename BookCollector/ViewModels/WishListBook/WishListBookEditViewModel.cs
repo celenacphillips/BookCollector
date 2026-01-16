@@ -92,9 +92,11 @@ namespace BookCollector.ViewModels.WishListBook
                         this.ShowPages = false;
                     }
 
-                    if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverFileLocation))
+                    if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverFileName))
                     {
-                        this.EditedWishlistBook.BookCover = ImageSource.FromFile(this.EditedWishlistBook.BookCoverFileLocation);
+                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        this.EditedWishlistBook.BookCover = ImageSource.FromFile($"{directory}/{this.EditedWishlistBook.BookCoverFileName}");
                     }
 
                     if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverUrl))
@@ -105,7 +107,7 @@ namespace BookCollector.ViewModels.WishListBook
                             {
                                 Uri = new Uri(this.EditedWishlistBook.BookCoverUrl),
                                 CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(1),
+                                CacheValidity = TimeSpan.FromDays(14),
                             };
                         }
                         else
@@ -290,7 +292,7 @@ namespace BookCollector.ViewModels.WishListBook
                             var filePath = $"{directory}/{fi.Name}";
                             File.Copy(firstPhoto.FullPath, filePath, true);
 
-                            this.EditedWishlistBook.BookCoverFileLocation = filePath;
+                            this.EditedWishlistBook.BookCoverFileName = fi.Name;
                         }
                     }
                     catch (Exception ex)
@@ -332,7 +334,7 @@ namespace BookCollector.ViewModels.WishListBook
                             {
                                 Uri = new Uri(bookCoverUrl),
                                 CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(1),
+                                CacheValidity = TimeSpan.FromDays(14),
                             };
                             this.EditedWishlistBook.BookCover = this.BookCover;
                             this.EditedWishlistBook.HasBookCover = true;
@@ -371,7 +373,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.EditedWishlistBook.HasNoBookCover = true;
             this.EditedWishlistBook.BookCover = null;
             this.EditedWishlistBook.BookCoverUrl = null;
-            this.EditedWishlistBook.BookCoverFileLocation = null;
+            this.EditedWishlistBook.BookCoverFileName = null;
         }
 
         [RelayCommand]
@@ -432,7 +434,7 @@ namespace BookCollector.ViewModels.WishListBook
                     AppStringResources.SelectABookFormat,
                     BookFormats.ToList(),
                     this.EditedWishlistBook.BookFormat,
-                    true);
+                    false);
                 var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
 
                 if (!string.IsNullOrEmpty(result.Result))
@@ -463,7 +465,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             if (WishListViewModel.fullWishlistBookList != null)
             {
-                WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList);
+                WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList2);
             }
         }
 

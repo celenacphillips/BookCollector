@@ -34,7 +34,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowComments}"
                        VerticalTextAlignment="Center"
                        Grid.Row="0" Grid.Column="0"/>
-                <Switch IsToggled="{Binding CommentsOn}"
+                <Switch IsToggled="{Binding CommentsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -47,7 +47,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowChapters}"
                        VerticalTextAlignment="Center"
                        Grid.Row="1" Grid.Column="0"/>
-                <Switch IsToggled="{Binding ChaptersOn}"
+                <Switch IsToggled="{Binding ChaptersOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -60,7 +60,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowFavorites}"
                        VerticalTextAlignment="Center"
                        Grid.Row="2" Grid.Column="0"/>
-                <Switch IsToggled="{Binding FavoritesOn}"
+                <Switch IsToggled="{Binding FavoritesOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -73,7 +73,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowRatings}"
                        VerticalTextAlignment="Center"
                        Grid.Row="3" Grid.Column="0"/>
-                <Switch IsToggled="{Binding RatingsOn}"
+                <Switch IsToggled="{Binding RatingsOn, Mode=TwoWay}"
                         IsEnabled="True" 
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -86,7 +86,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenBooks}"
                        VerticalTextAlignment="Center"
                        Grid.Row="4" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenBooksOn}"
+                <Switch IsToggled="{Binding HiddenBooksOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -99,7 +99,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenCollections}"
                        VerticalTextAlignment="Center"
                        Grid.Row="5" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenCollectionsOn}"
+                <Switch IsToggled="{Binding HiddenCollectionsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -112,7 +112,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenGenres}"
                        VerticalTextAlignment="Center"
                        Grid.Row="6" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenGenresOn}"
+                <Switch IsToggled="{Binding HiddenGenresOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -125,7 +125,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenSeries}"
                        VerticalTextAlignment="Center"
                        Grid.Row="7" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenSeriesOn}"
+                <Switch IsToggled="{Binding HiddenSeriesOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -138,7 +138,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenAuthors}"
                        VerticalTextAlignment="Center"
                        Grid.Row="8" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenAuthorsOn}"
+                <Switch IsToggled="{Binding HiddenAuthorsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -151,7 +151,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenLocations}"
                        VerticalTextAlignment="Center"
                        Grid.Row="9" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenLocationsOn}"
+                <Switch IsToggled="{Binding HiddenLocationsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
@@ -164,7 +164,7 @@
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenWishlistBooks}"
                        VerticalTextAlignment="Center"
                        Grid.Row="10" Grid.Column="0"/>
-                <Switch IsToggled="{Binding HiddenWishlistBooksOn}"
+                <Switch IsToggled="{Binding HiddenWishlistBooksOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"

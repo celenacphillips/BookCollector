@@ -194,15 +194,13 @@
                           IsVisible="False"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.DataStorage}"
-                          ContentTemplate="{DataTemplate supportViews:DataStorageView}"
-                          IsVisible="False"/>
+                          ContentTemplate="{DataTemplate supportViews:DataStorageView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.Permissions}"
                           ContentTemplate="{DataTemplate supportViews:PermissionsView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.Credits}"
-                          ContentTemplate="{DataTemplate supportViews:CreditsView}"
-                          IsVisible="False"/>
+                          ContentTemplate="{DataTemplate supportViews:CreditsView}"/>
 
             <!-- Added to fix bug with MAUI where it selects the wrong item -->
             <ShellContent Title=""

@@ -8,6 +8,7 @@ using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Extensions;
@@ -147,7 +148,12 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static byte[] DownloadImage(string imageURL)
         {
-            return new HttpClient().GetByteArrayAsync(imageURL).Result;
+            using var client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(30),
+            };
+
+            return client.GetByteArrayAsync(imageURL).Result;
         }
 
         public static T ConvertTo<T>(object source)
@@ -229,9 +235,19 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static void SetBookCover(BookModel book)
         {
-            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+            if (!string.IsNullOrEmpty(book.BookCoverFileName))
             {
-                book.BookCover = ImageSource.FromFile(book.BookCoverFileLocation);
+                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                if (!File.Exists($"{directory}/{book.BookCoverFileName}"))
+                {
+                    book.HasBookCover = false;
+                    book.HasNoBookCover = true;
+                }
+                else
+                {
+                    book.BookCover = ImageSource.FromFile($"{directory}/{book.BookCoverFileName}");
+                }
             }
 
             if (!string.IsNullOrEmpty(book.BookCoverUrl))
@@ -242,7 +258,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     {
                         Uri = new Uri(book.BookCoverUrl),
                         CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(1),
+                        CacheValidity = TimeSpan.FromDays(14),
                     };
                 }
                 else
@@ -255,9 +271,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public static void SetBookCover(WishlistBookModel book)
         {
-            if (!string.IsNullOrEmpty(book.BookCoverFileLocation))
+            if (!string.IsNullOrEmpty(book.BookCoverFileName))
             {
-                book.BookCover = ImageSource.FromFile(book.BookCoverFileLocation);
+                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                book.BookCover = ImageSource.FromFile($"{directory}/{book.BookCoverFileName}");
             }
 
             if (!string.IsNullOrEmpty(book.BookCoverUrl))
@@ -268,7 +286,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     {
                         Uri = new Uri(book.BookCoverUrl),
                         CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(1),
+                        CacheValidity = TimeSpan.FromDays(14),
                     };
                 }
                 else
@@ -282,40 +300,54 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static void ClearAllLists()
         {
             ReadingViewModel.fullBookList?.Clear();
-            ReadingViewModel.filteredBookList?.Clear();
+            ReadingViewModel.filteredBookList1?.Clear();
+            ReadingViewModel.filteredBookList2?.Clear();
             ReadingViewModel.RefreshView = true;
 
             ToBeReadViewModel.fullBookList?.Clear();
-            ToBeReadViewModel.filteredBookList?.Clear();
+            ToBeReadViewModel.filteredBookList1?.Clear();
+            ToBeReadViewModel.filteredBookList2?.Clear();
             ToBeReadViewModel.RefreshView = true;
 
             ReadViewModel.fullBookList?.Clear();
-            ReadViewModel.filteredBookList?.Clear();
+            ReadViewModel.filteredBookList1?.Clear();
+            ReadViewModel.filteredBookList2?.Clear();
             ReadViewModel.RefreshView = true;
 
             AllBooksViewModel.fullBookList?.Clear();
-            AllBooksViewModel.filteredBookList?.Clear();
+            AllBooksViewModel.filteredBookList1?.Clear();
+            AllBooksViewModel.filteredBookList2?.Clear();
             AllBooksViewModel.RefreshView = true;
 
             CollectionsViewModel.fullCollectionList?.Clear();
-            CollectionsViewModel.filteredCollectionList?.Clear();
+            CollectionsViewModel.filteredCollectionList1?.Clear();
+            CollectionsViewModel.filteredCollectionList2?.Clear();
             CollectionsViewModel.RefreshView = true;
 
             GenresViewModel.fullGenreList?.Clear();
-            GenresViewModel.filteredGenreList?.Clear();
+            GenresViewModel.filteredGenreList1?.Clear();
+            GenresViewModel.filteredGenreList2?.Clear();
             GenresViewModel.RefreshView = true;
 
             SeriesViewModel.fullSeriesList?.Clear();
-            SeriesViewModel.filteredSeriesList?.Clear();
+            SeriesViewModel.filteredSeriesList1?.Clear();
+            SeriesViewModel.filteredSeriesList2?.Clear();
             SeriesViewModel.RefreshView = true;
 
             AuthorsViewModel.fullAuthorList?.Clear();
-            AuthorsViewModel.filteredAuthorList?.Clear();
+            AuthorsViewModel.filteredAuthorList1?.Clear();
+            AuthorsViewModel.filteredAuthorList2?.Clear();
             AuthorsViewModel.RefreshView = true;
 
             LocationsViewModel.fullLocationList?.Clear();
-            LocationsViewModel.filteredLocationList?.Clear();
+            LocationsViewModel.filteredLocationList1?.Clear();
+            LocationsViewModel.filteredLocationList2?.Clear();
             LocationsViewModel.RefreshView = true;
+
+            WishListViewModel.fullWishlistBookList?.Clear();
+            WishListViewModel.filteredWishlistBookList1?.Clear();
+            WishListViewModel.filteredWishlistBookList2?.Clear();
+            WishListViewModel.RefreshView = true;
         }
     }
 }

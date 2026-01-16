@@ -74,7 +74,7 @@ namespace BookCollector.Data.BookAPI
                                         {
                                             Uri = new Uri(image),
                                             CachingEnabled = true,
-                                            CacheValidity = TimeSpan.FromDays(1),
+                                            CacheValidity = TimeSpan.FromDays(14),
                                         };
                                         item.VolumeInfo.HasBookCover = true;
                                     }

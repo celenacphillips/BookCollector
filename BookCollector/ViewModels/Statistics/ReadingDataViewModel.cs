@@ -39,7 +39,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.ReadingDataList = new List<ReadingData>();
 
-                if (AllBooksViewModel.fullBookList == null)
+                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }

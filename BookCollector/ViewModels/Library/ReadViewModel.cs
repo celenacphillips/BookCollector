@@ -21,7 +21,10 @@ namespace BookCollector.ViewModels.Library
         public static ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
-        public static ObservableCollection<BookModel>? filteredBookList;
+        public static ObservableCollection<BookModel>? filteredBookList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
         public static int totalBooksCount;
@@ -44,7 +47,16 @@ namespace BookCollector.ViewModels.Library
         {
             if (fullBookList == null)
             {
-                fullBookList = await FillLists.GetReadBooksList(showHiddenBooks);
+                fullBookList = await FillLists.GetReadBooksList();
+            }
+
+            if (!showHiddenBooks)
+            {
+                filteredBookList1 = new ObservableCollection<BookModel>(fullBookList!.Where(x => !x.HideBook));
+            }
+            else
+            {
+                filteredBookList1 = new ObservableCollection<BookModel>(fullBookList!);
             }
         }
 
@@ -54,9 +66,9 @@ namespace BookCollector.ViewModels.Library
             {
                 this.SetIsBusyTrue();
 
-                var temp = this.FilteredBookList;
-                this.FilteredBookList = null;
-                this.FilteredBookList = temp;
+                var temp = this.FilteredBookList2;
+                this.FilteredBookList2 = null;
+                this.FilteredBookList2 = temp;
 
                 this.SetIsBusyFalse();
             }
@@ -71,15 +83,15 @@ namespace BookCollector.ViewModels.Library
 
                     await SetList(ShowHiddenBook);
 
-                    if (fullBookList != null)
+                    if (this.FilteredBookList1 != null)
                     {
-                        this.TotalBooksCount = fullBookList != null ? fullBookList.Count : 0;
+                        this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(fullBookList);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(fullBookList);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(fullBookList);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
                         var filteredList = FilterLists.FilterBookList(
-                                fullBookList,
+                                this.FilteredBookList1,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -90,17 +102,17 @@ namespace BookCollector.ViewModels.Library
 
                         await Task.WhenAll(filteredList);
 
-                        this.FilteredBookList = filteredList.Result;
+                        this.FilteredBookList2 = filteredList.Result;
 
-                        if (this.FilteredBookList != null)
+                        if (this.FilteredBookList2 != null)
                         {
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetReadingProgress()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetAuthorListString()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetCoverDisplay()));
-                            await Task.WhenAll(this.FilteredBookList.Select(x => x.SetBookTotalTime()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetReadingProgress()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetAuthorListString()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetCoverDisplay()));
+                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetBookTotalTime()));
 
                             var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList,
+                                    this.FilteredBookList2,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
                                     this.BookReadPercentageChecked,
@@ -113,7 +125,7 @@ namespace BookCollector.ViewModels.Library
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-                            this.FilteredBooksCount = this.FilteredBookList.Count;
+                            this.FilteredBooksCount = this.FilteredBookList2.Count;
 
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
@@ -121,7 +133,7 @@ namespace BookCollector.ViewModels.Library
 
                             await Task.WhenAll(sortList);
 
-                            this.FilteredBookList = sortList.Result;
+                            this.FilteredBookList2 = sortList.Result;
                         }
 
                         await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
@@ -148,20 +160,18 @@ namespace BookCollector.ViewModels.Library
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredBookList != null && this.FullBookList != null)
+            if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredBookList = FilterLists.FilterOnSearchString(this.FullBookList, input);
+                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.FilteredBookList1, input);
                 }
                 else
                 {
-                    this.FilteredBookList = await FilterLists.FilterBookList(
-                                this.FullBookList,
+                    this.FilteredBookList2 = await FilterLists.FilterBookList(
+                                this.FilteredBookList1,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -171,12 +181,28 @@ namespace BookCollector.ViewModels.Library
                                 this.Searchstring);
                 }
 
-                this.FilteredBooksCount = this.FilteredBookList != null ? this.FilteredBookList.Count : 0;
+                this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortBookList(
+                                    this.FilteredBookList2,
+                                    this.BookTitleChecked,
+                                    this.BookReadingDateChecked,
+                                    this.BookReadPercentageChecked,
+                                    this.BookPublisherChecked,
+                                    this.BookPublishYearChecked,
+                                    this.AuthorLastNameChecked,
+                                    this.BookFormatChecked,
+                                    this.BookPriceChecked,
+                                    this.PageCountBookTimeChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredBookList2 = sortList.Result;
         }
 
         [RelayCommand]

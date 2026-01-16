@@ -66,7 +66,7 @@ namespace BookCollector.Data.Models
             this.ThreeFourthHours = dbModel.ThreeFourthHours;
             this.PartOfSeries = dbModel.PartOfSeries;
             this.PartOfCollection = dbModel.PartOfCollection;
-            this.BookCoverFileLocation = dbModel.BookCoverFileLocation;
+            this.BookCoverFileName = dbModel.BookCoverFileName;
             this.BookSeriesGuid = dbModel.BookSeriesGuid;
             this.BookCollectionGuid = dbModel.BookCollectionGuid;
             this.BookGenreGuid = dbModel.BookGenreGuid;
@@ -258,8 +258,8 @@ namespace BookCollector.Data.Models
 
         public async Task SetCoverDisplay()
         {
-            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
-            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
+            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileName) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
+            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileName) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
 
             BaseViewModel.SetBookCover(this);
         }

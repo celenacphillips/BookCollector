@@ -16,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<CollectionModel>? fullCollectionList;
 
         [ObservableProperty]
-        public static ObservableCollection<CollectionModel>? filteredCollectionList;
+        public static ObservableCollection<CollectionModel>? filteredCollectionList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<CollectionModel>? filteredCollectionList2;
 
         [ObservableProperty]
         public int totalCollectionsCount;
