@@ -50,20 +50,20 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout IsVisible="{Binding IsVisible}"
-                                     IsEnabled="{Binding IsEnabled}">
+                <VerticalStackLayout IsVisible="{Binding IsVisible}">
                     <Label Text="{Binding TotalAuthorsstring}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{DynamicResource Primary}"
                            Style="{StaticResource SubTitle}"/>
 
-                    <ScrollView>
+                    <ScrollView IsEnabled="{Binding IsEnabled}">
                         <!-- This is needed to allow the refresh view to work. -->
 
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchAuthors}"
-                                       Text="{Binding Searchstring}">
+                                       Text="{Binding Searchstring}"
+                                       IsReadOnly="{Binding IsBusy}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding SearchOnAuthorCommand}"
                                                                     CommandParameter="{Binding Searchstring}"

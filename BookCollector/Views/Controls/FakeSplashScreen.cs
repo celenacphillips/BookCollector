@@ -59,7 +59,8 @@ namespace BookCollector.Views.Controls
 
         private static async Task PreLoadData()
         {
-            await Task.Delay(1000);
+            var minimumSeconds = 5;
+            var start = DateTime.Now;
 
             var showHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
             var showHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
@@ -85,6 +86,17 @@ namespace BookCollector.Views.Controls
             ];
 
             await Task.WhenAll(taskList);
+
+            var end = DateTime.Now;
+
+            var elapsed = end - start;
+
+            if (elapsed.Seconds < minimumSeconds)
+            {
+                var remainingSeconds = minimumSeconds - elapsed.Seconds;
+
+                await Task.Delay(remainingSeconds * 1000);
+            }
         }
     }
 }

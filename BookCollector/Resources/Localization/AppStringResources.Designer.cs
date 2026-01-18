@@ -2798,6 +2798,15 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Please allow Photos permission to download book cover photos!.
         /// </summary>
+        internal static string PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos {
+            get {
+                return ResourceManager.GetString("PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please allow Photos permission to automatically upload book cover photos!.
+        /// </summary>
         internal static string PleaseAllowPhotoPermissionToDownloadBookCoverPhotos {
             get {
                 return ResourceManager.GetString("PleaseAllowPhotoPermissionToDownloadBookCoverPhotos", resourceCulture);

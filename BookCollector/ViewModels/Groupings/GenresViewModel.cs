@@ -247,6 +247,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
                         this.RemoveFromStaticList(selected);
+                        this.RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.GenreName);
 
@@ -353,6 +354,18 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             return refresh;
+        }
+
+        private void RemoveBookFromGrouping(GenreModel genre)
+        {
+            var books = AllBooksViewModel.fullBookList?.Where(x => x.BookGenreGuid == genre.GenreGuid).ToList();
+
+            foreach (var book in books)
+            {
+                book.BookGenreGuid = null;
+                Database.SaveBookAsync(book);
+                BookBaseViewModel.AddToStaticList(book);
+            }
         }
     }
 }

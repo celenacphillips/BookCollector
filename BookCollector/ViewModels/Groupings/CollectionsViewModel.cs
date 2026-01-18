@@ -250,6 +250,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
                         this.RemoveFromStaticList(selected);
+                        this.RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.CollectionName);
 
@@ -356,6 +357,18 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             return refresh;
+        }
+
+        private void RemoveBookFromGrouping(CollectionModel collection)
+        {
+            var books = AllBooksViewModel.fullBookList?.Where(x => x.BookCollectionGuid == collection.CollectionGuid).ToList();
+
+            foreach(var book in books)
+            {
+                book.BookCollectionGuid = null;
+                Database.SaveBookAsync(book);
+                BookBaseViewModel.AddToStaticList(book);
+            }
         }
     }
 }

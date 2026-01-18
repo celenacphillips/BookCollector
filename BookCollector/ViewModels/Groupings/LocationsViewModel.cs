@@ -247,6 +247,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
                         this.RemoveFromStaticList(selected);
+                        this.RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.LocationName);
 
@@ -353,6 +354,18 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             return refresh;
+        }
+
+        private void RemoveBookFromGrouping(LocationModel location)
+        {
+            var books = AllBooksViewModel.fullBookList?.Where(x => x.BookLocationGuid == location.LocationGuid).ToList();
+
+            foreach (var book in books)
+            {
+                book.BookLocationGuid = null;
+                Database.SaveBookAsync(book);
+                BookBaseViewModel.AddToStaticList(book);
+            }
         }
     }
 }

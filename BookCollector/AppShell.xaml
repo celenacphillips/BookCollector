@@ -103,10 +103,10 @@
                           ContentTemplate="{DataTemplate groupingsViews:LocationsView}"/>
 
             <!-- Added to fix bug with MAUI where it selects the wrong item -->
-            <ShellContent Title=""
+            <!--<ShellContent Title=""
                           Route="Spacer"
                           ContentTemplate="{DataTemplate ContentPage}"
-                          IsVisible="False" />
+                          IsVisible="False" />-->
 
         </Tab>
     </FlyoutItem>
@@ -203,10 +203,10 @@
                           ContentTemplate="{DataTemplate supportViews:CreditsView}"/>
 
             <!-- Added to fix bug with MAUI where it selects the wrong item -->
-            <ShellContent Title=""
+            <!--<ShellContent Title=""
                           Route="Spacer"
                           ContentTemplate="{DataTemplate ContentPage}"
-                          IsVisible="False" />
+                          IsVisible="False" />-->
         </Tab>
     </FlyoutItem>
 

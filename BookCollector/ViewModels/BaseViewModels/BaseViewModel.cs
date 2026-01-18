@@ -45,6 +45,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         [ObservableProperty]
         internal static bool showCollectionViewFooter;
 
+        [ObservableProperty]
+        internal SelectionMode collectionViewSelectionMode;
+
         public BaseViewModel()
         {
             this.DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
@@ -214,6 +217,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.IsBusy = true;
             this.IsVisible = true;
             this.IsEnabled = false;
+            this.CollectionViewSelectionMode = SelectionMode.None;
         }
 
         public void SetIsBusyFalse()
@@ -221,6 +225,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.IsBusy = false;
             this.IsVisible = true;
             this.IsEnabled = true;
+            this.CollectionViewSelectionMode = SelectionMode.Single;
         }
 
         public void SetRefreshTrue()

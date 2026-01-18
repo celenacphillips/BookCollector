@@ -8,7 +8,7 @@
              x:DataType="viewModel:WishListViewModel">
 
     <CollectionView ItemsSource="{Binding FilteredWishlistBookList2}"
-                    SelectionMode="Single"
+                    SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedWishlistBook}"
                     SelectionChangedCommand="{Binding WishListBookSelectionChangedCommand}"
                     SelectionChangedCommandParameter="{Binding SelectedWishlistBook}"

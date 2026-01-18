@@ -8,7 +8,7 @@
              x:DataType="viewModel:GenreBaseViewModel">
 
     <CollectionView ItemsSource="{Binding FilteredGenreList2}"
-                    SelectionMode="Single"
+                    SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedGenre}"
                     SelectionChangedCommand="{Binding GenreSelectionChangedCommand}"
                     ItemSizingStrategy="MeasureAllItems"

@@ -165,27 +165,27 @@ namespace BookCollector.ViewModels.Main
         {
             var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
 
-            var photoWriteStatusGranted = false;
+//            var photoWriteStatusGranted = false;
 
-            if (this.ImagesChecked)
-            {
-#if ANDROID
-                var context = Android.App.Application.Context;
+//            if (this.ImagesChecked)
+//            {
+//#if ANDROID
+//                var context = Android.App.Application.Context;
 
-                var photoWriteStatus = ContextCompat.CheckSelfPermission(
-                    context,
-                    Manifest.Permission.ReadMediaImages);
+//                var photoWriteStatus = ContextCompat.CheckSelfPermission(
+//                    context,
+//                    Manifest.Permission.WriteMediaImages);
 
-                photoWriteStatusGranted = photoWriteStatus == Permission.Granted;
-#endif
-            }
+//                photoWriteStatusGranted = photoWriteStatus == Permission.Granted;
+//#endif
+//            }
 
-            if (!photoWriteStatusGranted)
-            {
-                await DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToDownloadBookCoverPhotos}", null);
-            }
+//            if (!photoWriteStatusGranted)
+//            {
+//                await DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToDownloadBookCoverPhotos}", null);
+//            }
 
-            if (action && photoWriteStatusGranted)
+            if (action)
             {
                 try
                 {
@@ -313,22 +313,42 @@ namespace BookCollector.ViewModels.Main
                     {
                         FolderPickerResult? bookCoverResult = null;
 
+                        var photoReadStatusGranted = false;
+
                         if (this.ImagesChecked)
                         {
-                            var imageAction = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImageImport_Question, null, null);
+#if ANDROID
+                            var context = Android.App.Application.Context;
 
-                            if (imageAction)
+                            var photoWriteStatus = ContextCompat.CheckSelfPermission(
+                                context,
+                                Manifest.Permission.ReadMediaImages);
+
+                            photoReadStatusGranted = photoWriteStatus == Permission.Granted;
+#endif
+
+                            if (!photoReadStatusGranted)
                             {
-                                bookCoverResult = await FolderPicker.PickAsync(CancellationToken.None);
-
-                                if (bookCoverResult != null && bookCoverResult.Folder != null)
-                                {
-                                    this.imageLocation = bookCoverResult.Folder.Path;
-                                }
+                                await DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos}", null);
+                                this.ImagesChecked = false;
                             }
                             else
                             {
-                                this.ImagesChecked = false;
+                                var imageAction = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImageImport_Question, null, null);
+
+                                if (imageAction)
+                                {
+                                    bookCoverResult = await FolderPicker.PickAsync(CancellationToken.None);
+
+                                    if (bookCoverResult != null && bookCoverResult.Folder != null)
+                                    {
+                                        this.imageLocation = bookCoverResult.Folder.Path;
+                                    }
+                                }
+                                else
+                                {
+                                    this.ImagesChecked = false;
+                                }
                             }
                         }
 
@@ -608,6 +628,12 @@ namespace BookCollector.ViewModels.Main
                     {
                         var filePath = ImageSource.FromFile(file);
                         var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        if (!Directory.Exists(appDirectory))
+                        {
+                            Directory.CreateDirectory(appDirectory);
+                        }
+
                         var appFilePath = $"{appDirectory}/{fi.Name}";
                         File.Copy(file, appFilePath, true);
                     }

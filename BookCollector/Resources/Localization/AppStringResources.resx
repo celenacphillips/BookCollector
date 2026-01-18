@@ -535,6 +535,9 @@
     <value>Please allow Camera permission to scan barcodes!</value>
   </data>
   <data name="PleaseAllowPhotoPermissionToDownloadBookCoverPhotos" xml:space="preserve">
+    <value>Please allow Photos permission to automatically upload book cover photos!</value>
+  </data>
+  <data name="PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos" xml:space="preserve">
     <value>Please allow Photos permission to download book cover photos!</value>
   </data>
   <data name="PleaseConnectToInternetToSearch" xml:space="preserve">

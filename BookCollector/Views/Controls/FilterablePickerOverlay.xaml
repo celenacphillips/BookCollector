@@ -8,30 +8,38 @@
     <Grid BindingContext="{x:Reference overlay}"
           IsVisible="{Binding IsOverlayVisible}">
 
-        <BoxView Color="Black"
-                 Opacity="0.5"
+        <BoxView Color="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
+                 Opacity="0.8"
                  Margin="-100">
             <BoxView.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnOverlayTapped" />
             </BoxView.GestureRecognizers>
         </BoxView>
 
-        <VerticalStackLayout VerticalOptions="Center"
-                             BackgroundColor="{AppThemeBinding Dark={DynamicResource BackgroundDark}, Light={DynamicResource BackgroundLight}}">
-            <Label Text="{Binding Title}"
-                   Style="{DynamicResource Header}"
-                   FontSize="Subtitle"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   Margin="0,10"/>
+        <Border VerticalOptions="Center"          
+                Stroke="White"
+                StrokeThickness="2"
+                Background="#F5F5F5"
+                StrokeShape="RoundRectangle 16"
+                Shadow="{OnPlatform Default='10,10,20,Black,0.3'}"
+                Padding="0">
+            
+            <VerticalStackLayout BackgroundColor="{AppThemeBinding Dark={DynamicResource BackgroundDark}, Light={DynamicResource BackgroundLight}}">
+                <Label Text="{Binding Title}"
+                       Style="{DynamicResource Header}"
+                       FontSize="Subtitle"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Margin="0,10"/>
 
-            <controls:FilterablePicker SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                                       Items="{Binding Items}"
-                                       ShowFilter="{Binding ShowFilter}"
-                                       TotalItemsColor="{DynamicResource Tertiary}"
-                                       MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
-                                       SelectedItemColor="{DynamicResource Primary}"/>
-        </VerticalStackLayout>
+                <controls:FilterablePicker SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                           Items="{Binding Items}"
+                                           ShowFilter="{Binding ShowFilter}"
+                                           TotalItemsColor="{DynamicResource Tertiary}"
+                                           MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                           SelectedItemColor="{DynamicResource Primary}"/>
+            </VerticalStackLayout>
+        </Border>
 
     </Grid>
 </ContentView>

@@ -245,6 +245,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     await Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
                     this.RemoveFromStaticList(selected);
+                    this.RemoveBookFromGrouping(selected);
 
                     await ConfirmDelete(selected.FullName);
 
@@ -350,6 +351,25 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             return refresh;
+        }
+
+        private async void RemoveBookFromGrouping(AuthorModel author)
+        {
+            var bookAuthors = await FillLists.GetAllBookAuthorsForAuthor(author.AuthorGuid);
+
+            foreach (var bookAuthor in bookAuthors)
+            {
+                await Database.DeleteBookAuthorAsync(bookAuthor.AuthorGuid, bookAuthor.BookGuid);
+
+                var book = AllBooksViewModel.fullBookList?.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                if (book != null)
+                {
+                    //book.AuthorListString = null;
+                    //Database.SaveBookAsync(book);
+                    BookBaseViewModel.AddToStaticList(book);
+                }
+            }
         }
     }
 }

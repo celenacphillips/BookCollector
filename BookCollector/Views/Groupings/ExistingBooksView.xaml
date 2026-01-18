@@ -50,8 +50,7 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout IsVisible="{Binding IsVisible}"
-                                     IsEnabled="{Binding IsEnabled}">
+                <VerticalStackLayout IsVisible="{Binding IsVisible}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -71,10 +70,11 @@
                                Grid.Column="1" Grid.Row="0"/>
                     </Grid>
 
-                    <ScrollView>
+                    <ScrollView IsEnabled="{Binding IsEnabled}">
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding Searchstring}">
+                                       Text="{Binding Searchstring}"
+                                       IsReadOnly="{Binding IsBusy}">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
                                                                     CommandParameter="{Binding Searchstring}"

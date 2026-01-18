@@ -8,7 +8,7 @@
              x:DataType="viewModel:BookBaseViewModel">
 
     <CollectionView ItemsSource="{Binding FilteredBookList2}"
-                    SelectionMode="Single"
+                    SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedBook}"
                     SelectionChangedCommand="{Binding BookSelectionChangedCommand}"
                     SelectionChangedCommandParameter="{Binding SelectedBook}"
