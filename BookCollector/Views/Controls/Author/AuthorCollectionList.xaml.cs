@@ -10,4 +10,12 @@ public partial class AuthorCollectionList : ContentView
     {
         this.InitializeComponent();
     }
+
+    protected override void OnBindingContextChanged()
+    {
+        base.OnBindingContextChanged();
+
+        // Reset visual state when the cell is reused
+        VisualStateManager.GoToState(this, "Normal");
+    }
 }

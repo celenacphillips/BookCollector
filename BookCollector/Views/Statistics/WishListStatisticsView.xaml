@@ -14,7 +14,8 @@
 
     <Grid>
         <!-- Main Content -->
-        <StackLayout>
+        <StackLayout IsEnabled="{Binding IsEnabled}"
+                     IsVisible="{Binding IsVisible}">
 
             <Grid Margin="20,20,20,0">
 

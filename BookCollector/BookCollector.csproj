@@ -267,6 +267,9 @@
 		<MauiXaml Update="Views\Controls\Favorite.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\FilterablePickerOverlay.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Genre\GenreCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

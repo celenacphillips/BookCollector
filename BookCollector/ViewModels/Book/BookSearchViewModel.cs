@@ -99,6 +99,10 @@ namespace BookCollector.ViewModels.Book
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                     this.SetIsBusyFalse();
                     this.ShowAddISBN = true;
                 }
@@ -147,6 +151,10 @@ namespace BookCollector.ViewModels.Book
                 await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
             }
         }

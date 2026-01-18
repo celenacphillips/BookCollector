@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:Class="BookCollector.Views.Controls.FilterablePickerOverlay"
+             x:Name="overlay">
+
+    <Grid BindingContext="{x:Reference overlay}"
+          IsVisible="{Binding IsOverlayVisible}">
+
+        <BoxView Color="Black"
+                 Opacity="0.5"
+                 Margin="-100">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOverlayTapped" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <VerticalStackLayout VerticalOptions="Center"
+                             BackgroundColor="{AppThemeBinding Dark={DynamicResource BackgroundDark}, Light={DynamicResource BackgroundLight}}">
+            <Label Text="{Binding Title}"
+                   Style="{DynamicResource Header}"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="0,10"/>
+
+            <controls:FilterablePicker SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                       Items="{Binding Items}"
+                                       ShowFilter="{Binding ShowFilter}"
+                                       TotalItemsColor="{DynamicResource Tertiary}"
+                                       MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                       SelectedItemColor="{DynamicResource Primary}"/>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentView>

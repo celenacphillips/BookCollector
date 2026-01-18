@@ -2,9 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Views;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace BookCollector.Views.Controls;
 
@@ -30,17 +31,31 @@ public partial class FilterablePicker : ContentView
                  typeof(FilterablePicker),
                  propertyChanged: OnRefreshControl);
 
-    public static readonly BindableProperty FilteredItemsProperty =
-             BindableProperty.Create(
-                 nameof(FilteredItems),
-                 typeof(ObservableCollection<string>),
-                 typeof(FilterablePicker),
-                 propertyChanged: OnRefreshControl);
-
     public static readonly BindableProperty ShowFilterProperty =
              BindableProperty.Create(
                  nameof(ShowFilter),
                  typeof(bool),
+                 typeof(FilterablePicker),
+                 propertyChanged: OnRefreshControl);
+
+    public static readonly BindableProperty TotalItemsColorProperty =
+             BindableProperty.Create(
+                 nameof(TotalItemsColor),
+                 typeof(Color),
+                 typeof(FilterablePicker),
+                 propertyChanged: OnRefreshControl);
+
+    public static readonly BindableProperty MainTextColorProperty =
+             BindableProperty.Create(
+                 nameof(MainTextColor),
+                 typeof(Color),
+                 typeof(FilterablePicker),
+                 propertyChanged: OnRefreshControl);
+
+    public static readonly BindableProperty SelectedItemColorProperty =
+             BindableProperty.Create(
+                 nameof(SelectedItemColor),
+                 typeof(Color),
                  typeof(FilterablePicker),
                  propertyChanged: OnRefreshControl);
 
@@ -74,10 +89,17 @@ public partial class FilterablePicker : ContentView
         set => this.SetValue(ItemsProperty, value);
     }
 
+    private ObservableCollection<string>? filteredItemsField;
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public ObservableCollection<string>? FilteredItems
     {
-        get => (ObservableCollection<string>?)this.GetValue(FilteredItemsProperty);
-        set => this.SetValue(FilteredItemsProperty, value);
+        get => this.filteredItemsField;
+        set
+        {
+            this.filteredItemsField = value;
+            this.OnPropertyChanged();
+        }
     }
 
     public string? TotalItemsString
@@ -90,6 +112,24 @@ public partial class FilterablePicker : ContentView
     {
         get => (bool)this.GetValue(ShowFilterProperty);
         set => this.SetValue(ShowFilterProperty, value);
+    }
+
+    public Color MainTextColor
+    {
+        get => (Color)this.GetValue(MainTextColorProperty);
+        set => this.SetValue(MainTextColorProperty, value);
+    }
+
+    public Color TotalItemsColor
+    {
+        get => (Color)this.GetValue(TotalItemsColorProperty);
+        set => this.SetValue(TotalItemsColorProperty, value);
+    }
+
+    public Color SelectedItemColor
+    {
+        get => (Color)this.GetValue(SelectedItemColorProperty);
+        set => this.SetValue(SelectedItemColorProperty, value);
     }
 
     public int CollectionViewHeight { get; set; }
@@ -107,6 +147,14 @@ public partial class FilterablePicker : ContentView
                 }
 
                 filterablePicker.TotalItemsString = AppStringResources.Blank1OfBlank2Items.Replace("Blank1", filterablePicker.FilteredItems?.Count.ToString()).Replace("Blank2", filterablePicker.Items?.Count.ToString());
+            }
+
+            if (filterablePicker.SelectedItem != null)
+            {
+                filterablePicker.collectionView.Loaded += (s, e) =>
+                {
+                    filterablePicker.collectionView.ScrollTo(filterablePicker.SelectedItem, position: ScrollToPosition.Center, animate: false);
+                };
             }
         }
     }
@@ -133,6 +181,11 @@ public partial class FilterablePicker : ContentView
             }
         }
 
+        if (this.FilteredItems.Contains(this.SelectedItem))
+        {
+            this.collectionView.ScrollTo(this.SelectedItem, position: ScrollToPosition.Center, animate: false);
+        }
+
         this.TotalItemsString = AppStringResources.Blank1OfBlank2Items.Replace("Blank1", this.FilteredItems?.Count.ToString()).Replace("Blank2", this.Items?.Count.ToString());
     }
 
@@ -149,6 +202,17 @@ public partial class FilterablePicker : ContentView
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
                 await view.CloseAsync(this.SelectedItem, token: cts.Token);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            try
+            {
+                var view = (FilterablePickerOverlay)this.BindingContext;
+
+                view.SelectionChanged((string)e.PreviousSelection[0], (string)e.CurrentSelection[0]);
             }
             catch (Exception ex)
             {

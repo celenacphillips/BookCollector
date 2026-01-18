@@ -8,7 +8,7 @@
                x:Class="BookCollector.Views.Popups.FilterableListPopup"
                x:TypeArguments="x:String"
                Margin="0">
-    
+
     <VerticalStackLayout>
 
         <Label Text="{Binding Title}"
@@ -20,6 +20,9 @@
 
         <controls:FilterablePicker SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                    Items="{Binding Items}"
-                                   ShowFilter="{Binding ShowFilter}"/>
+                                   ShowFilter="{Binding ShowFilter}"
+                                   TotalItemsColor="{DynamicResource Tertiary}"
+                                   MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                   SelectedItemColor="{DynamicResource Primary}"/>
     </VerticalStackLayout>
 </toolkit:Popup>

@@ -4,6 +4,7 @@
 
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Views.Controls;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
@@ -19,7 +20,7 @@ namespace BookCollector.ViewModels.Popups
         public bool favoriteVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? favoritePicker;
+        public List<string>? favoritePicker;
 
         [ObservableProperty]
         public string? favoriteOption;
@@ -30,7 +31,7 @@ namespace BookCollector.ViewModels.Popups
         public bool formatVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? formatPicker;
+        public List<string>? formatPicker;
 
         [ObservableProperty]
         public string? formatOption;
@@ -41,7 +42,7 @@ namespace BookCollector.ViewModels.Popups
         public bool authorVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? authorPicker;
+        public List<string>? authorPicker;
 
         [ObservableProperty]
         public string? authorOption;
@@ -52,7 +53,7 @@ namespace BookCollector.ViewModels.Popups
         public bool publisherVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? publisherPicker;
+        public List<string>? publisherPicker;
 
         [ObservableProperty]
         public string? publisherOption;
@@ -63,7 +64,7 @@ namespace BookCollector.ViewModels.Popups
         public bool publishYearVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? publishYearPicker;
+        public List<string>? publishYearPicker;
 
         [ObservableProperty]
         public string? publishYearOption;
@@ -74,7 +75,7 @@ namespace BookCollector.ViewModels.Popups
         public bool languageVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? languagePicker;
+        public List<string>? languagePicker;
 
         [ObservableProperty]
         public string? languageOption;
@@ -85,7 +86,7 @@ namespace BookCollector.ViewModels.Popups
         public bool ratingVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? ratingPicker;
+        public List<string>? ratingPicker;
 
         [ObservableProperty]
         public string? ratingOption;
@@ -96,7 +97,7 @@ namespace BookCollector.ViewModels.Popups
         public bool locationVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? locationPicker;
+        public List<string>? locationPicker;
 
         [ObservableProperty]
         public string? locationOption;
@@ -107,22 +108,28 @@ namespace BookCollector.ViewModels.Popups
         public bool seriesVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? seriesPicker;
+        public List<string>? seriesPicker;
 
         [ObservableProperty]
         public string? seriesOption;
+
+        /********************************************************/
 
         public FilterPopupViewModel(Popup popup, string viewTitle, ContentPage view)
         {
             this.Popup = popup;
             this.ViewTitle = viewTitle;
             this.View = view;
-            this.PopupWidth = this.DeviceWidth - 50;
+            this.PopupWidth = this.DeviceWidth - 30;
+
+            this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
 
         public double PopupWidth { get; set; }
 
         private Popup Popup { get; set; }
+
+        public Grid OverlaySection { get; set; }
 
         [RelayCommand]
         public async Task Close()
@@ -136,7 +143,12 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetFavoritePicker()
         {
-            this.FavoritePicker = [AppStringResources.Both, AppStringResources.Favorites, AppStringResources.NonFavorites];
+            this.FavoritePicker =
+            [
+                AppStringResources.Both,
+                AppStringResources.Favorites,
+                AppStringResources.NonFavorites,
+            ];
         }
 
         public void SetFormatPicker(ObservableCollection<string>? formats)
@@ -175,7 +187,16 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetRatingPicker()
         {
-            this.RatingPicker = [AppStringResources.AllRatings, $"0", $"1", $"2", $"3", $"4", $"5"];
+            this.RatingPicker =
+            [
+                AppStringResources.AllRatings,
+                AppStringResources.ZeroStars,
+                AppStringResources.OneStar,
+                AppStringResources.TwoStars,
+                AppStringResources.ThreeStars,
+                AppStringResources.FourStars,
+                AppStringResources.FiveStars,
+            ];
         }
 
         public void SetLocationPicker(ObservableCollection<string>? locations)
@@ -195,202 +216,127 @@ namespace BookCollector.ViewModels.Popups
         [RelayCommand]
         public async Task FavoriteChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.Favorite,
-                    this.FavoritePicker.ToList(),
-                    this.FavoriteOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.Favorite,
+                this.FavoritePicker,
+                this.FavoriteOption,
+                false,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.FavoriteOption = result.Result;
-                }
-
-                this.Popup.CanBeDismissedByTappingOutsideOfPopup = false;
-                this.Popup.CanBeDismissedByTappingOutsideOfPopup = true;
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task AuthorChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.Authors,
-                    this.AuthorPicker.ToList(),
-                    this.AuthorOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.Authors,
+                this.AuthorPicker,
+                this.AuthorOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.AuthorOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task PublisherChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookPublisher,
-                    this.PublisherPicker.ToList(),
-                    this.PublisherOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookPublisher,
+                this.PublisherPicker,
+                this.PublisherOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.PublisherOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task PublishYearChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookPublishYear,
-                    this.PublishYearPicker.ToList(),
-                    this.PublishYearOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookPublishYear,
+                this.PublishYearPicker,
+                this.PublishYearOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.PublishYearOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task FormatChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookFormat,
-                    this.FormatPicker.ToList(),
-                    this.FormatOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookFormat,
+                this.FormatPicker,
+                this.FormatOption,
+                false,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.FormatOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task LanguageChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookLanguage,
-                    this.LanguagePicker.ToList(),
-                    this.LanguageOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookLanguage,
+                this.LanguagePicker,
+                this.LanguageOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.LanguageOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task RatingChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookRating,
-                    this.RatingPicker.ToList(),
-                    this.RatingOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookRating,
+                this.RatingPicker,
+                this.RatingOption,
+                false,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.RatingOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task LocationChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookLocation,
-                    this.LocationPicker.ToList(),
-                    this.LocationOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookLocation,
+                this.LocationPicker,
+                this.LocationOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.LocationOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         [RelayCommand]
         public async Task SeriesChanged()
         {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.BookSeries,
-                    this.SeriesPicker.ToList(),
-                    this.SeriesOption,
-                    true);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookSeries,
+                this.SeriesPicker,
+                this.SeriesOption,
+                true,
+                true);
 
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.SeriesOption = result.Result;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         private void SetPreferences()

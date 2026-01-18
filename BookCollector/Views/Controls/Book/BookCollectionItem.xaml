@@ -12,7 +12,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout>
+    <VerticalStackLayout IsEnabled="{Binding IsEnabled}">
         <Grid HeightRequest="100"
               Margin="10"
               x:DataType="dataModels:BookModel">

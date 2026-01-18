@@ -33,7 +33,7 @@ namespace BookCollector
                     handlers.AddBarcodeScannerHandler();
                 });
 
-            #if DEBUG
+#if DEBUG
             builder.Logging.AddDebug();
 #endif
 

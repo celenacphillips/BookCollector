@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Main;
@@ -76,6 +77,10 @@ namespace BookCollector.ViewModels.Statistics
             {
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }

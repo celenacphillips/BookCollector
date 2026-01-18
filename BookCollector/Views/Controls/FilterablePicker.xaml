@@ -5,16 +5,18 @@
              x:Class="BookCollector.Views.Controls.FilterablePicker"
              x:Name="this">
     
-    <VerticalStackLayout BindingContext="{x:Reference this}">
+    <VerticalStackLayout BindingContext="{x:Reference this}"
+                         Margin="10">
 
         <Label Text="{Binding TotalItemsString}"
                HorizontalOptions="End"
-               TextColor="{DynamicResource Primary}"
-               Style="{StaticResource SubTitle}"
+               TextColor="{Binding TotalItemsColor}"
+               FontAttributes="Italic"
                IsVisible="{Binding ShowFilter}"/>
         
         <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchList}"
                    TextChanged="SearchBar_TextChanged"
+                   TextColor="{Binding MainTextColor}"
                    IsVisible="{Binding ShowFilter}"/>
 
 
@@ -22,20 +24,38 @@
                         SelectedItem="{Binding SelectedItem}"
                         SelectionMode="Single"
                         SelectionChanged="CollectionView_SelectionChanged"
-                        MaximumHeightRequest="{Binding CollectionViewHeight}">
+                        MaximumHeightRequest="{Binding CollectionViewHeight}"
+                        x:Name="collectionView">
             
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <HorizontalStackLayout>
-                        
+                    <HorizontalStackLayout x:Name="Root">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{Binding SelectedItemColor, Source={x:Reference this}}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+
                         <Label Text="{Binding .}"
                                HeightRequest="50"
                                WidthRequest="250"
-                               Margin="50,0"
+                               Margin="50,0,0,0"
                                VerticalTextAlignment="Center"
                                LineBreakMode="TailTruncation"
+                               TextColor="{Binding MainTextColor}"
                                MaxLines="3"/>
-                        
+
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -48,7 +68,8 @@
                         <Label Text="{x:Static localization:AppStringResources.ThereAreNoItems}"
                                Margin="10,25,10,10"
                                HorizontalTextAlignment="Center"
-                               Style="{StaticResource SubTitle}"/>
+                               TextColor="{Binding MainTextColor}"
+                               FontAttributes="Italic"/>
                     </VerticalStackLayout>
                 </ContentView>
             </CollectionView.EmptyView>
@@ -56,8 +77,9 @@
             <CollectionView.Footer>
                 <Label Margin="0,5,0,0"
                        Text="{x:Static localization:AppStringResources.EndOfList}"
+                       TextColor="{Binding MainTextColor}"
                        HorizontalTextAlignment="Center"
-                       Style="{StaticResource SubTitle}"/>
+                       FontAttributes="Italic"/>
             </CollectionView.Footer>
             
         </CollectionView>

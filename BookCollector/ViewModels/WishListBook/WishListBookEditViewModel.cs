@@ -147,6 +147,10 @@ namespace BookCollector.ViewModels.WishListBook
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                     this.SetIsBusyFalse();
                     this.RefreshView = false;
                 }
@@ -243,6 +247,10 @@ namespace BookCollector.ViewModels.WishListBook
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                 this.SetIsBusyFalse();
             }
         }
@@ -302,6 +310,10 @@ namespace BookCollector.ViewModels.WishListBook
 #if DEBUG
                         await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                     }
 
                     if (this.EditedWishlistBook.HasNoBookCover)
@@ -354,6 +366,10 @@ namespace BookCollector.ViewModels.WishListBook
                             await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
 #if DEBUG
                             await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                            await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                         }
                     }

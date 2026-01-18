@@ -4,6 +4,7 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
                xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Popups"
+               xmlns:controls="clr-namespace:BookCollector.Views.Controls"
                x:DataType="viewModel:FilterPopupViewModel"
                x:Class="BookCollector.Views.Popups.FilterPopup"
                CanBeDismissedByTappingOutsideOfPopup="True"
@@ -11,39 +12,41 @@
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                Margin="0">
 
-    <VerticalStackLayout>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-
-            <Label Text="{x:Static localization:AppStringResources.FilterBy}"
-                   Style="{DynamicResource Header}"
-                   FontSize="Subtitle"
-                   HorizontalOptions="Center"
-                   VerticalOptions="End"
-                   Grid.Row="0" Grid.Column="0"/>
-
-            <ImageButton HorizontalOptions="End"
-                         Margin="10,10,10,0"
-                         Padding="10,5"
-                         Command="{Binding CloseCommand}"
-                         Grid.Row="0" Grid.Column="1">
-                <ImageButton.Source>
-                    <FontImageSource FontFamily="MaterialDesignIcons"
-                                     Glyph="&#xF0193;"
-                                     Size="28"
-                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-                </ImageButton.Source>
-            </ImageButton>
-        </Grid>
+    <Grid>
 
         <VerticalStackLayout Margin="20,10">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.FilterBy}"
+                       Style="{DynamicResource Header}"
+                       FontSize="Subtitle"
+                       HorizontalOptions="Center"
+                       VerticalOptions="End"
+                       Grid.Row="0" Grid.Column="0"/>
+
+                <ImageButton HorizontalOptions="End"
+                             Margin="10,10,10,0"
+                             Padding="10,5"
+                             Command="{Binding CloseCommand}"
+                             Grid.Row="0" Grid.Column="1">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF0193;"
+                                         Size="28"
+                                         Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </Grid>
 
             <!-- Favorite -->
             <Grid IsVisible="{Binding FavoriteVisible}"
                   Margin="0,10">
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3*" />
@@ -204,5 +207,9 @@
             <!-- Series -->
 
         </VerticalStackLayout>
-    </VerticalStackLayout>
+
+        <Grid x:Name="overlaySection"/>
+
+    </Grid>
+    
 </toolkit:Popup>

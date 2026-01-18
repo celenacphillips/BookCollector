@@ -260,7 +260,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower()))
                                      .ToObservableCollection();
             }
 
@@ -293,26 +293,8 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString))
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
                                      .ToObservableCollection();
-
-                foreach (var book in filterList)
-                {
-                    if (!string.IsNullOrEmpty(book.AuthorListString))
-                    {
-                        var list = SplitStringIntoAuthorList(book.AuthorListString);
-
-                        foreach (var author in list)
-                        {
-                            if (author.FullName.Equals(authorOption))
-                            {
-                                newFilteredList.Add(book);
-                            }
-                        }
-                    }
-                }
-
-                filterList = newFilteredList.Distinct().ToObservableCollection();
             }
 
             return filterList;
@@ -330,7 +312,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(locationOption) && !locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.Equals(locationOption))
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.ToLower().Equals(locationOption.ToLower()))
                                      .ToObservableCollection();
             }
 

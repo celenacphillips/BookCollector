@@ -83,17 +83,6 @@ namespace BookCollector.ViewModels.Main
 
         public async Task SetViewModelData()
         {
-            if (!RefreshView)
-            {
-                this.SetIsBusyTrue();
-
-                var temp = this.FilteredWishlistBookList2;
-                this.FilteredWishlistBookList2 = null;
-                this.FilteredWishlistBookList2 = temp;
-
-                this.SetIsBusyFalse();
-            }
-
             if (RefreshView)
             {
                 try
@@ -176,6 +165,10 @@ namespace BookCollector.ViewModels.Main
                 {
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     RefreshView = false;

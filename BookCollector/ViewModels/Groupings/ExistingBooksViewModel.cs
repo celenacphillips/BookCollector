@@ -147,17 +147,6 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            if (!RefreshView)
-            {
-                this.SetIsBusyTrue();
-
-                var temp = this.FilteredBookList2;
-                this.FilteredBookList2 = null;
-                this.FilteredBookList2 = temp;
-
-                this.SetIsBusyFalse();
-            }
-
             if (RefreshView)
             {
                 try
@@ -267,6 +256,10 @@ namespace BookCollector.ViewModels.Groupings
                 {
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     RefreshView = false;
@@ -511,6 +504,10 @@ namespace BookCollector.ViewModels.Groupings
             {
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }

@@ -24,7 +24,8 @@
 
     <Grid>
         <!-- Main Content -->
-        <StackLayout>
+        <StackLayout IsEnabled="{Binding IsEnabled}"
+                     IsVisible="{Binding IsVisible}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"></ColumnDefinition>

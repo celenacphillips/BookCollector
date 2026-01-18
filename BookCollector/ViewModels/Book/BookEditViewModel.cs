@@ -346,6 +346,10 @@ namespace BookCollector.ViewModels.Book
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                     this.SetIsBusyFalse();
                     this.RefreshView = false;
                 }
@@ -483,6 +487,10 @@ namespace BookCollector.ViewModels.Book
             {
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }

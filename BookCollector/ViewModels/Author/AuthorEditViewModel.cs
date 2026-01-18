@@ -92,6 +92,10 @@ namespace BookCollector.ViewModels.Author
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                 this.SetIsBusyFalse();
             }
         }

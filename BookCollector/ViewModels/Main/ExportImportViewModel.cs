@@ -270,6 +270,10 @@ namespace BookCollector.ViewModels.Main
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = !this.IsBusy;
                     this.ExportEnabled = !this.IsBusy;
@@ -390,6 +394,10 @@ namespace BookCollector.ViewModels.Main
                     await CanceledAction();
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = !this.IsBusy;

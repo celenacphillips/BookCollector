@@ -30,7 +30,8 @@
                          Command="{Binding RefreshCommand}"
                          IsEnabled="{Binding RefreshEnabled}">
 
-                <ScrollView>
+                <ScrollView IsEnabled="{Binding IsEnabled}"
+                            IsVisible="{Binding IsVisible}">
                     <VerticalStackLayout Margin="20">
 
                         <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
