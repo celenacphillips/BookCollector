@@ -2,6 +2,7 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.Database;
 using BookCollector.Data.Models;
@@ -238,7 +239,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.IsRefreshing = false;
         }
 
-        public static void SetBookCover(BookModel book)
+        public static async void SetBookCover(BookModel book)
         {
             if (!string.IsNullOrEmpty(book.BookCoverFileName))
             {
@@ -257,7 +258,14 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (!string.IsNullOrEmpty(book.BookCoverUrl))
             {
-                if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                 {
                     book.BookCover = new UriImageSource
                     {
@@ -274,7 +282,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
         }
 
-        public static void SetBookCover(WishlistBookModel book)
+        public static async void SetBookCover(WishlistBookModel book)
         {
             if (!string.IsNullOrEmpty(book.BookCoverFileName))
             {
@@ -285,7 +293,14 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (!string.IsNullOrEmpty(book.BookCoverUrl))
             {
-                if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                 {
                     book.BookCover = new UriImageSource
                     {

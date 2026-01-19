@@ -2,6 +2,7 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -71,7 +72,14 @@ namespace BookCollector.ViewModels.WishListBook
 
                     if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookCoverUrl))
                     {
-                        if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                        PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                        if (internetStatus != PermissionStatus.Granted)
+                        {
+                            internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                        }
+
+                        if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
                             this.SelectedWishlistBook.BookCover = new UriImageSource
                             {
@@ -79,10 +87,6 @@ namespace BookCollector.ViewModels.WishListBook
                                 CachingEnabled = true,
                                 CacheValidity = TimeSpan.FromDays(14),
                             };
-                        }
-                        else
-                        {
-                            await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
                         }
                     }
 

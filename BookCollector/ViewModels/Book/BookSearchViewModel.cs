@@ -2,8 +2,8 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
 using BarcodeScanner.Mobile;
+using BookCollector.CustomPermissions;
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
@@ -14,6 +14,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -71,7 +72,14 @@ namespace BookCollector.ViewModels.Book
 
             this.Input = this.Input.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
 
-            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+            PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+            if (internetStatus != PermissionStatus.Granted)
+            {
+                internetStatus = await Permissions.RequestAsync<InternetPermission>();
+            }
+
+            if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
             {
                 try
                 {

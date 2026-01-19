@@ -6,6 +6,8 @@
 using Android;
 using Android.Content.PM;
 using AndroidX.Core.Content;
+using BookCollector.CustomPermissions;
+
 #endif
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
@@ -979,7 +981,14 @@ namespace BookCollector.ViewModels.Main
 
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
                             {
-                                if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                                if (internetStatus != PermissionStatus.Granted)
+                                {
+                                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                                }
+
+                                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                                 {
                                     try
                                     {
@@ -993,10 +1002,6 @@ namespace BookCollector.ViewModels.Main
                                     catch (Exception ex)
                                     {
                                     }
-                                }
-                                else
-                                {
-                                    await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
                                 }
                             }
 
@@ -1254,10 +1259,6 @@ namespace BookCollector.ViewModels.Main
                                     catch (Exception ex)
                                     {
                                     }
-                                }
-                                else
-                                {
-                                    await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
                                 }
                             }
 

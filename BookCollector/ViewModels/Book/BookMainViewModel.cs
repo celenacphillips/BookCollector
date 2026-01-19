@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.ObjectModel;
+using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -87,7 +88,14 @@ namespace BookCollector.ViewModels.Book
 
                     if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl))
                     {
-                        if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                        PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                        if (internetStatus != PermissionStatus.Granted)
+                        {
+                            internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                        }
+
+                        if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
                             this.SelectedBook.BookCover = new UriImageSource
                             {
@@ -95,10 +103,6 @@ namespace BookCollector.ViewModels.Book
                                 CachingEnabled = true,
                                 CacheValidity = TimeSpan.FromDays(14),
                             };
-                        }
-                        else
-                        {
-                            await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
                         }
                     }
 

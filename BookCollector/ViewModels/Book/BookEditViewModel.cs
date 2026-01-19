@@ -2,7 +2,7 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
+using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -20,6 +20,7 @@ using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -219,7 +220,14 @@ namespace BookCollector.ViewModels.Book
 
                     if (!string.IsNullOrEmpty(this.EditedBook.BookCoverUrl))
                     {
-                        if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                        PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                        if (internetStatus != PermissionStatus.Granted)
+                        {
+                            internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                        }
+
+                        if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                         {
                             this.EditedBook.BookCover = new UriImageSource
                             {
@@ -227,10 +235,6 @@ namespace BookCollector.ViewModels.Book
                                 CachingEnabled = true,
                                 CacheValidity = TimeSpan.FromDays(14),
                             };
-                        }
-                        else
-                        {
-                            await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
                         }
                     }
 
@@ -512,8 +516,12 @@ namespace BookCollector.ViewModels.Book
             {
                 this.SetIsBusyTrue();
 
-                PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.Media>();
-                storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Media>();
+                PermissionStatus storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Media>();
+
+                if (storageReadStatus != PermissionStatus.Granted)
+                {
+                    storageReadStatus = await Permissions.RequestAsync<Permissions.Media>();
+                }
 
                 if (storageReadStatus == PermissionStatus.Granted)
                 {
@@ -573,7 +581,14 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.SetIsBusyTrue();
 
-                    if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                    PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                    if (internetStatus != PermissionStatus.Granted)
+                    {
+                        internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                    }
+
+                    if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     {
                         try
                         {
@@ -600,11 +615,6 @@ namespace BookCollector.ViewModels.Book
                             this.EditedBook.BookCoverUrl = null;
                             await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
                         }
-                    }
-                    else
-                    {
-                        await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
-                        this.SetIsBusyFalse();
                     }
                 }
             }
