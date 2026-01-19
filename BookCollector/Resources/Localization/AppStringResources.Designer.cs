@@ -673,7 +673,8 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Cover Images.
+        ///   Looks up a localized string similar to Book Cover Images
+        ///(Must be checked with Books or Wishlist).
         /// </summary>
         internal static string BookCoverImages {
             get {
@@ -687,6 +688,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookCovers {
             get {
                 return ResourceManager.GetString("BookCovers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Because Book Cover Images is selected, any book covers with a URL will be downloaded to your device. You can save or delete these. They are created for archival purposes, should the book cover URL no longer exist..
+        /// </summary>
+        internal static string BookCoversDownloadMessage {
+            get {
+                return ResourceManager.GetString("BookCoversDownloadMessage", resourceCulture);
             }
         }
         
@@ -1984,7 +1994,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers, you do not need the permission granted..
+        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing uploaded book covers from a spreadsheet. If you will not be automatically uploading book covers through the import feature, you do not need the permission granted..
         /// </summary>
         internal static string Files_Photos_Description {
             get {

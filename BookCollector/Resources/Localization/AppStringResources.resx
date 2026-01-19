@@ -1067,7 +1067,8 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>BookGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="BookCoverImages" xml:space="preserve">
-    <value>Book Cover Images</value>
+    <value>Book Cover Images
+(Must be checked with Books or Wishlist)</value>
   </data>
   <data name="ExistingBooks_Object" xml:space="preserve">
     <value>ExistingBooks_Object</value>
@@ -1339,7 +1340,7 @@ Email us!</value>
     <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
   </data>
   <data name="Files_Photos_Description" xml:space="preserve">
-    <value>This app only needs permission to Files and Photos when importing or exporting data to a spreadsheet, uploading a book cover photo, or downloading and exporting book covers from a URL. If you will not be saving book covers, you do not need the permission granted.</value>
+    <value>This app only needs permission to Files and Photos when importing uploaded book covers from a spreadsheet. If you will not be automatically uploading book covers through the import feature, you do not need the permission granted.</value>
   </data>
   <data name="DataStorage" xml:space="preserve">
     <value>Data Storage</value>
@@ -1386,5 +1387,8 @@ Visit them at </value>
   </data>
   <data name="ImportErrorsTitle" xml:space="preserve">
     <value>Import Errors!</value>
+  </data>
+  <data name="BookCoversDownloadMessage" xml:space="preserve">
+    <value>Because Book Cover Images is selected, any book covers with a URL will be downloaded to your device. You can save or delete these. They are created for archival purposes, should the book cover URL no longer exist.</value>
   </data>
 </root>

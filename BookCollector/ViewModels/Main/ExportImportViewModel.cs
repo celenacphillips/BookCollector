@@ -165,26 +165,6 @@ namespace BookCollector.ViewModels.Main
         {
             var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
 
-//            var photoWriteStatusGranted = false;
-
-//            if (this.ImagesChecked)
-//            {
-//#if ANDROID
-//                var context = Android.App.Application.Context;
-
-//                var photoWriteStatus = ContextCompat.CheckSelfPermission(
-//                    context,
-//                    Manifest.Permission.WriteMediaImages);
-
-//                photoWriteStatusGranted = photoWriteStatus == Permission.Granted;
-//#endif
-//            }
-
-//            if (!photoWriteStatusGranted)
-//            {
-//                await DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToDownloadBookCoverPhotos}", null);
-//            }
-
             if (action)
             {
                 try
@@ -224,6 +204,8 @@ namespace BookCollector.ViewModels.Main
                         {
                             Directory.CreateDirectory(this.imageLocation);
                         }
+
+                        await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
                     }
 
                     await Task.Delay(1);
@@ -313,21 +295,16 @@ namespace BookCollector.ViewModels.Main
                     {
                         FolderPickerResult? bookCoverResult = null;
 
-                        var photoReadStatusGranted = false;
-
                         if (this.ImagesChecked)
                         {
-#if ANDROID
-                            var context = Android.App.Application.Context;
+                            var status = await Permissions.CheckStatusAsync<ReadMediaPermission>();
 
-                            var photoWriteStatus = ContextCompat.CheckSelfPermission(
-                                context,
-                                Manifest.Permission.ReadMediaImages);
+                            if (status != PermissionStatus.Granted)
+                            {
+                                status = await Permissions.RequestAsync<ReadMediaPermission>();
+                            }
 
-                            photoReadStatusGranted = photoWriteStatus == Permission.Granted;
-#endif
-
-                            if (!photoReadStatusGranted)
+                            if (status != PermissionStatus.Granted)
                             {
                                 await DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos}", null);
                                 this.ImagesChecked = false;
