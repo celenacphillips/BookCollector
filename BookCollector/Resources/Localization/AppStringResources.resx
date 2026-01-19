@@ -706,7 +706,7 @@
     <value>End of List</value>
   </data>
   <data name="AppCurrency" xml:space="preserve">
-    <value>Currency</value>
+    <value>App Currency</value>
   </data>
   <data name="SelectYourAppCurrency" xml:space="preserve">
     <value>Select your app currency</value>
@@ -1390,5 +1390,11 @@ Visit them at </value>
   </data>
   <data name="BookCoversDownloadMessage" xml:space="preserve">
     <value>Because Book Cover Images is selected, any book covers with a URL will be downloaded to your device. You can save or delete these. They are created for archival purposes, should the book cover URL no longer exist.</value>
+  </data>
+  <data name="UserSelectedImagesMessage" xml:space="preserve">
+    <value>You have previously selected specific images to share with this app. If you would like to change that, visit the app settings to add or remove images, select to share all images, or remove image sharing from the app.</value>
+  </data>
+  <data name="Caution_" xml:space="preserve">
+    <value>Caution!</value>
   </data>
 </root>

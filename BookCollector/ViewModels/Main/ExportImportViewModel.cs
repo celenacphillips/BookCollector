@@ -5,10 +5,10 @@
 #if ANDROID
 using Android;
 using Android.Content.PM;
+using Android.Provider;
 using AndroidX.Core.Content;
-using BookCollector.CustomPermissions;
-
 #endif
+using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
@@ -124,6 +124,8 @@ namespace BookCollector.ViewModels.Main
         private string mainFilePath = string.Empty;
 
         private string imageLocation = string.Empty;
+
+        private List<string> selectedFiles = new List<string>();
 
         public ExportImportViewModel(ContentPage view)
         {
@@ -313,25 +315,36 @@ namespace BookCollector.ViewModels.Main
                             }
                             else
                             {
-                                var imageAction = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImageImport_Question, null, null);
+                                var userSelectedImages = ReadMediaPermission.CheckForUserSelectedImages();
 
-                                if (imageAction)
+                                if (userSelectedImages.Count <= 0)
                                 {
-                                    bookCoverResult = await FolderPicker.PickAsync(CancellationToken.None);
+                                    var imageAction = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImageImport_Question, null, null);
 
-                                    if (bookCoverResult != null && bookCoverResult.Folder != null)
+                                    if (imageAction)
                                     {
-                                        this.imageLocation = bookCoverResult.Folder.Path;
+                                        bookCoverResult = await FolderPicker.PickAsync(CancellationToken.None);
+
+                                        if (bookCoverResult != null && bookCoverResult.Folder != null)
+                                        {
+                                            this.imageLocation = bookCoverResult.Folder.Path;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        this.ImagesChecked = false;
                                     }
                                 }
                                 else
                                 {
-                                    this.ImagesChecked = false;
+                                    await DisplayMessage($"{AppStringResources.Caution_}", AppStringResources.UserSelectedImagesMessage);
+
+                                    this.selectedFiles = userSelectedImages;
                                 }
                             }
                         }
 
-                        if (!this.ImagesChecked || bookCoverResult != null)
+                        if (!this.ImagesChecked || bookCoverResult != null || this.selectedFiles.Count > 0)
                         {
                             this.SetIsBusyTrue();
 
@@ -593,39 +606,62 @@ namespace BookCollector.ViewModels.Main
 
         private void GetFiles(string directory, string fileName)
         {
-            var folderFiles = Directory.GetFiles(directory);
-
-            if (folderFiles.Length > 0)
+            if (this.selectedFiles.Count > 0)
             {
-                var file = folderFiles.FirstOrDefault(x => new FileInfo(x).Name.Equals(fileName));
+                var file = this.selectedFiles.FirstOrDefault(x => new FileInfo(x).Name.Equals(fileName));
 
-                if (file != null)
+                var fi = new FileInfo(file);
+
+                if (fi.Name.Equals(fileName))
                 {
-                    var fi = new FileInfo(file);
+                    var filePath = ImageSource.FromFile(file);
+                    var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
 
-                    if (fi.Name.Equals(fileName))
+                    if (!Directory.Exists(appDirectory))
                     {
-                        var filePath = ImageSource.FromFile(file);
-                        var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                        if (!Directory.Exists(appDirectory))
-                        {
-                            Directory.CreateDirectory(appDirectory);
-                        }
-
-                        var appFilePath = $"{appDirectory}/{fi.Name}";
-                        File.Copy(file, appFilePath, true);
+                        Directory.CreateDirectory(appDirectory);
                     }
+
+                    var appFilePath = $"{appDirectory}/{fi.Name}";
+                    File.Copy(file, appFilePath, true);
                 }
             }
-
-            var internalFolders = Directory.GetDirectories(directory);
-
-            if (internalFolders.Length > 0)
+            else
             {
-                foreach (var internalFolder in internalFolders)
+                var folderFiles = Directory.GetFiles(directory);
+
+                if (folderFiles.Length > 0)
                 {
-                    this.GetFiles(internalFolder, fileName);
+                    var file = folderFiles.FirstOrDefault(x => new FileInfo(x).Name.Equals(fileName));
+
+                    if (file != null)
+                    {
+                        var fi = new FileInfo(file);
+
+                        if (fi.Name.Equals(fileName))
+                        {
+                            var filePath = ImageSource.FromFile(file);
+                            var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(appDirectory))
+                            {
+                                Directory.CreateDirectory(appDirectory);
+                            }
+
+                            var appFilePath = $"{appDirectory}/{fi.Name}";
+                            File.Copy(file, appFilePath, true);
+                        }
+                    }
+                }
+
+                var internalFolders = Directory.GetDirectories(directory);
+
+                if (internalFolders.Length > 0)
+                {
+                    foreach (var internalFolder in internalFolders)
+                    {
+                        this.GetFiles(internalFolder, fileName);
+                    }
                 }
             }
         }

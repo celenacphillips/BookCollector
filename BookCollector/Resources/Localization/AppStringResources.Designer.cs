@@ -322,7 +322,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Currency.
+        ///   Looks up a localized string similar to App Currency.
         /// </summary>
         internal static string AppCurrency {
             get {
@@ -1102,6 +1102,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caution!.
+        /// </summary>
+        internal static string Caution_ {
+            get {
+                return ResourceManager.GetString("Caution_", resourceCulture);
             }
         }
         
@@ -3767,6 +3776,15 @@ namespace BookCollector.Resources.Localization {
         internal static string UpNext_Question {
             get {
                 return ResourceManager.GetString("UpNext_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have previously selected specific images to share with this app. If you would like to change that, visit the app settings to add or remove images, select to share all images, or remove image sharing from the app..
+        /// </summary>
+        internal static string UserSelectedImagesMessage {
+            get {
+                return ResourceManager.GetString("UserSelectedImagesMessage", resourceCulture);
             }
         }
         

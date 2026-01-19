@@ -5,6 +5,7 @@
 #if ANDROID
 using Android;
 using Android.Content.PM;
+using Android.Provider;
 using Android.Views;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
@@ -25,7 +26,7 @@ namespace BookCollector.CustomPermissions
         public override async Task<PermissionStatus> CheckStatusAsync()
         {
             this.EnsureDeclared();
-#if ANDROID
+#if ANDROID33_0_OR_GREATER
             var activity = Platform.CurrentActivity!;
             var context = activity.ApplicationContext;
 
@@ -40,13 +41,13 @@ namespace BookCollector.CustomPermissions
                 ? PermissionStatus.Granted
                 : PermissionStatus.Denied;
 #else
-        throw new NotImplementedException();
+            throw new NotImplementedException();
 #endif
         }
 
         public override void EnsureDeclared()
         {
-#if ANDROID
+#if ANDROID33_0_OR_GREATER
             if (!Permissions.IsDeclaredInManifest(ReadMediaImages))
             {
                 throw new PermissionException(
@@ -70,7 +71,7 @@ namespace BookCollector.CustomPermissions
                 await BaseViewModel.DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos}", null);
             }
 
-#if ANDROID
+#if ANDROID33_0_OR_GREATER
             while (Platform.CurrentActivity is not { IsFinishing: false, IsDestroyed: false } ||
                Platform.CurrentActivity?.Window?.DecorView?.WindowVisibility != ViewStates.Visible)
             {
@@ -93,14 +94,7 @@ namespace BookCollector.CustomPermissions
             {
                 if (requestCode == 9911)
                 {
-                    var granted = grantResults.Length > 0 &&
-                                  grantResults[0] == Permission.Granted;
-
-                    tcs.TrySetResult(granted
-                        ? PermissionStatus.Granted
-                        : PermissionStatus.Denied);
-
-                    // Clear the delegate to avoid memory leaks
+                    tcs.TrySetResult(PermissionStatus.Unknown);
                     MainActivity.OnPermissionResult = null;
                 }
             };
@@ -110,16 +104,28 @@ namespace BookCollector.CustomPermissions
                 [ReadMediaImages, UserSelectedImages],
                 9911);
 
-            return await tcs.Task;
+            var result = await tcs.Task;
+
+            // Android may not have updated the permission yet
+            await Task.Delay(100);
+
+            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) == Permission.Granted ||
+                ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
+            {
+                return PermissionStatus.Granted;
+            }
+
+            return PermissionStatus.Denied;
+
 #else
-        throw new NotImplementedException();
+            throw new NotImplementedException();
 #endif
 
         }
 
         public override bool ShouldShowRationale()
         {
-#if ANDROID
+#if ANDROID33_0_OR_GREATER
             var activity = Platform.CurrentActivity;
 
             var readMediaImagesRationale = ActivityCompat.ShouldShowRequestPermissionRationale(
@@ -132,8 +138,46 @@ namespace BookCollector.CustomPermissions
 
             return readMediaImagesRationale || userSelectedImagesRationale;
 #else
-        throw new NotImplementedException();
+            throw new NotImplementedException();
 #endif
+        }
+
+        public static List<string> CheckForUserSelectedImages()
+        {
+            List<string> filePaths = new List<string>();
+
+#if ANDROID33_0_OR_GREATER
+            var activity = Platform.CurrentActivity!;
+            var context = activity.ApplicationContext;
+
+            if (ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
+            {
+                var collection = MediaStore.Images.Media.ExternalContentUri;
+
+                var projection = new[]
+                {
+                    MediaStore.Images.Media.InterfaceConsts.Id,
+                    MediaStore.Images.Media.InterfaceConsts.Data,
+                };
+
+                var cursor = context.ContentResolver!.Query(
+                    collection,
+                    projection,
+                    null,
+                    null,
+                    null
+                );
+
+                while (cursor.MoveToNext())
+                {
+                    var id = cursor.GetLong(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Id));
+                    var path = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Data));
+                    filePaths.Add(path);
+                }
+            }
+#endif
+
+            return filePaths;
         }
     }
 }
