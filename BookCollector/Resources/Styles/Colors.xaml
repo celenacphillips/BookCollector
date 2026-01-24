@@ -51,4 +51,6 @@
     <Color x:Key="SecondaryBackgroundDark">#333333</Color>
     <Color x:Key="TextDark">White</Color>
     <Color x:Key="SecondaryTextDark">Black</Color>
+
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource Tertiary}" />
 </ResourceDictionary>

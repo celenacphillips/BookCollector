@@ -6,7 +6,8 @@
              Title="{x:Static localization:AppStringResources.Credits}">
 
     <VerticalStackLayout Margin="20,0">
-        <Image Source="{AppThemeBinding Light=pictogrammers_full_black.svg, Dark=pictogrammers_full_white.svg}"/>
+        <Image Source="{AppThemeBinding Light=pictogrammers_full_black.svg, Dark=pictogrammers_full_white.svg}"
+               MaximumWidthRequest="400"/>
         <Label HorizontalTextAlignment="Center"
                Margin="10,0">
             <Label.FormattedText>

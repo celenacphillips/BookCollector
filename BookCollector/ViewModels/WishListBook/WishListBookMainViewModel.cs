@@ -256,6 +256,8 @@ namespace BookCollector.ViewModels.WishListBook
                             }
                         }
 
+                        WishListViewModel.RefreshView = true;
+
                         await DisplayMessage(AppStringResources.AddToLibrary, AppStringResources.BookWasAddedToLibrary);
 
                         await Shell.Current.Navigation.PopAsync();

@@ -250,6 +250,23 @@ namespace BookCollector.ViewModels.Main
                     this.SetIsBusyFalse();
                     this.RefreshEnabled = !this.IsBusy;
                 }
+                catch (UnauthorizedAccessException ex)
+                {
+                    await CanceledAction();
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                    this.SetIsBusyFalse();
+                    this.ImportEnabled = !this.IsBusy;
+                    this.ExportEnabled = !this.IsBusy;
+                    this.RefreshEnabled = !this.IsBusy;
+                    this.CheckboxesVisible = true;
+                    this.OutputVisible = false;
+                }
                 catch (Exception ex)
                 {
                     await CanceledAction();

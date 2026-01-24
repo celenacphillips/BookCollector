@@ -571,6 +571,12 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
             }
+
+            CollectionsViewModel.RefreshView = true;
+            GenresViewModel.RefreshView = true;
+            SeriesViewModel.RefreshView = true;
+            AuthorsViewModel.RefreshView = true;
+            LocationsViewModel.RefreshView = true;
         }
 
         private static async Task<bool> AddBookToStaticList(BookModel book, ObservableCollection<BookModel> bookList, ObservableCollection<BookModel>? filteredBookList)

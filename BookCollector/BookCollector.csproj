@@ -30,6 +30,7 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">28.0</SupportedOSPlatformVersion>
 
 	</PropertyGroup>
 
@@ -441,6 +442,10 @@
 		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core">
 			<Version>2.8.4</Version>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Platforms\Android\Resources\values\" />
 	</ItemGroup>
 
 </Project>

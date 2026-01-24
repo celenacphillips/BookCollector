@@ -347,7 +347,7 @@
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Magenta}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
         <Setter Property="Shell.Shadow" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray200}}" />
-        <Setter Property="FlyoutBackdrop" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
+        <Setter Property="FlyoutBackdrop" Value="{AppThemeBinding Light={DynamicResource TertiaryBrush}, Dark={DynamicResource TertiaryBrush}}" />
     </Style>
 
     <Style TargetType="NavigationPage">
