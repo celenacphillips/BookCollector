@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Series
         {
             this.View = view;
             this.SelectedSeries = series;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
             RefreshView = true;
         }

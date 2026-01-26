@@ -50,7 +50,7 @@ namespace BookCollector.ViewModels.Main
         public WishListViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = AppStringResources.WishListView_InfoText;
             this.ViewTitle = AppStringResources.Wishlist;
             RefreshView = true;

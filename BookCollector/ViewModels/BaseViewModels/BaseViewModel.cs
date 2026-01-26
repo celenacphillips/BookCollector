@@ -402,7 +402,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 searchHeight = 0;
             }
 
-            if (api > 31 && api <= 34)
+            if (api > 31)
             {
                 padding = 0;
                 navBarHeight /= 2;

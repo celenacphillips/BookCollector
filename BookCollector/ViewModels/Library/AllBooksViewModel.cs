@@ -38,7 +38,7 @@ namespace BookCollector.ViewModels.Library
         public AllBooksViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.AllBooksView_InfoText}";
             this.ViewTitle = AppStringResources.AllBooks;
             RefreshView = true;

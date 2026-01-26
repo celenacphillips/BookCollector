@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Author
         {
             this.View = view;
             this.SelectedAuthor = author;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.AuthorMainView_InfoText.Replace("author", $"{this.SelectedAuthor.FullName}")}";
             RefreshView = true;
         }

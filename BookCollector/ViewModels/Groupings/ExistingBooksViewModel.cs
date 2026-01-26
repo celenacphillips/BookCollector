@@ -44,7 +44,7 @@ namespace BookCollector.ViewModels.Groupings
             this.PreviousViewModel = previousViewModel;
             this.SetSelectedObjectType();
             this.SetSelectedObjectName();
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
             RefreshView = true;

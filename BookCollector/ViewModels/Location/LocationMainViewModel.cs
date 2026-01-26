@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Location
         {
             this.View = view;
             this.SelectedLocation = location;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.LocationMainView_InfoText.Replace("location", $"{this.SelectedLocation.LocationName}")}";
             RefreshView = true;
         }

@@ -29,7 +29,7 @@ namespace BookCollector.ViewModels.Groupings
         public AuthorsViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.AuthorView_InfoText}";
             this.ViewTitle = AppStringResources.Authors;
             RefreshView = true;

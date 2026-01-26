@@ -27,7 +27,7 @@ namespace BookCollector.ViewModels.Groupings
         public LocationsViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 200;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.LocationView_InfoText}";
             this.ViewTitle = AppStringResources.Locations;
             RefreshView = true;
