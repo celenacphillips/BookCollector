@@ -7,6 +7,7 @@ using BookCollector.Data;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Book;
 using BookCollector.ViewModels.Library;
@@ -141,6 +142,25 @@ namespace BookCollector.ViewModels.WishListBook
 
                     this.AuthorList = authors.Result;
 
+                    this.AuthorList ??= [];
+
+                    if (this.EditedWishlistBook.SelectedAuthors != null && this.EditedWishlistBook.SelectedAuthors.Count > 0)
+                    {
+                        foreach (var selectedAuthor in this.EditedWishlistBook.SelectedAuthors)
+                        {
+                            if (this.AuthorList != null && selectedAuthor != null)
+                            {
+                                var author = new AuthorModel()
+                                {
+                                    FirstName = selectedAuthor.FirstName,
+                                    LastName = selectedAuthor.LastName,
+                                };
+
+                                this.AuthorList.Add(author);
+                            }
+                        }
+                    }
+
                     await Task.WhenAll(loadDataTasks);
 
                     this.SetIsBusyFalse();
@@ -175,13 +195,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             this.SetIsBusyTrue();
 
-            var view = new BookSearchView();
-            var bindingContext = new BookSearchViewModel(null, view)
-            {
-                ViewTitle = $"{AppStringResources.BookSearch}",
-                SelectedBook = ConvertTo<BookModel>(this.EditedWishlistBook),
-            };
-            view.BindingContext = bindingContext;
+            var view = new BookSearchView(null, this.EditedWishlistBook, this);
 
             await Shell.Current.Navigation.PushModalAsync(view);
 

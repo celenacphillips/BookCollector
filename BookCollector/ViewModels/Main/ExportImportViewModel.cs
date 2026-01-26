@@ -117,7 +117,9 @@ namespace BookCollector.ViewModels.Main
         [ObservableProperty]
         public bool refreshEnabled;
 
-        private readonly Color? busyColor = (Color?)Application.Current?.Resources["Primary"];
+        private readonly Color? busyColor = Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["Tertiary"] :
+                (Color?)Application.Current?.Resources["Primary"];
 
         private string mainFilePath = string.Empty;
 

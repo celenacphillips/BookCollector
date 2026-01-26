@@ -57,6 +57,8 @@ namespace BookCollector.Data.Models
             this.BookIdentifier = dbModel.BookIdentifier;
         }
 
+        public List<AuthorModel?>? SelectedAuthors { get; set; }
+
         public string PublisherPublishDatestring
         {
             get => $"{(!string.IsNullOrEmpty(this.BookPublisher) ? this.BookPublisher : AppStringResources.NoPublisher)}, {(!string.IsNullOrEmpty(this.BookPublishYear) ? this.BookPublishYear : AppStringResources.NoDate)}";

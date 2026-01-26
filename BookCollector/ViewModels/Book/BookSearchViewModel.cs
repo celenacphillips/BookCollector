@@ -8,6 +8,7 @@ using BookCollector.Data.BookAPI;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.WishListBook;
 using BookCollector.Views.Book;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Core.Extensions;
@@ -38,6 +39,9 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public bool showAddISBN;
 
+        [ObservableProperty]
+        public WishlistBookModel? selectedWishListBook;
+
         public BookSearchViewModel(string? inputIsbn, ContentPage view)
         {
             this.View = view;
@@ -45,6 +49,8 @@ namespace BookCollector.ViewModels.Book
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
             this.CollectionViewHeight = 300;
         }
+
+        public object? PreviousViewModel { get; set; }
 
         [RelayCommand]
         public async Task Refresh()
@@ -152,6 +158,20 @@ namespace BookCollector.ViewModels.Book
             try
             {
                 this.SetData();
+
+                if (this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
+                {
+                    var previous = (WishListBookEditViewModel)this.PreviousViewModel;
+                    previous.RefreshView = true;
+                }
+
+                if (this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
+                    !this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
+                {
+                    var previous = (BookEditViewModel)this.PreviousViewModel;
+                    previous.RefreshView = true;
+                }
+
                 await Shell.Current.Navigation.PopModalAsync();
             }
             catch (Exception ex)
@@ -186,6 +206,14 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
+                if (this.SelectedWishListBook != null)
+                {
+                    if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier))
+                    {
+                        this.SelectedWishListBook.BookIdentifier = this.Input;
+                    }
+                }
+
                 return;
             }
 
@@ -217,28 +245,25 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
-                if (string.IsNullOrEmpty(this.SelectedBook.AuthorListString))
+                if (this.SelectedISBNItem.VolumeInfo?.Authors != null)
                 {
-                    if (this.SelectedISBNItem.VolumeInfo?.Authors != null)
+                    List<AuthorModel> authorList = [];
+
+                    foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                     {
-                        List<AuthorModel> authorList = [];
+                        string firstName = author[..author.LastIndexOf(' ')];
+                        string lastName = author[(author.LastIndexOf(' ') + 1) ..];
 
-                        foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
-                        {
-                            string firstName = author[..author.LastIndexOf(' ')];
-                            string lastName = author[(author.LastIndexOf(' ') + 1) ..];
-
-                            authorList.Add(
-                                new AuthorModel()
-                                {
-                                    FirstName = firstName,
-                                    LastName = lastName,
-                                });
-                        }
-
-                        this.SelectedBook.SelectedAuthors ??= [];
-                        this.SelectedBook.SelectedAuthors.AddRange(authorList);
+                        authorList.Add(
+                            new AuthorModel()
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                            });
                     }
+
+                    this.SelectedBook.SelectedAuthors ??= [];
+                    this.SelectedBook.SelectedAuthors.AddRange(authorList);
                 }
 
                 if (string.IsNullOrEmpty(this.SelectedBook.BookPublisher))
@@ -279,6 +304,96 @@ namespace BookCollector.ViewModels.Book
                 if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier))
                 {
                     this.SelectedBook.BookIdentifier = this.Input;
+                }
+            }
+
+            if (this.SelectedWishListBook != null && this.SelectedISBNItem != null)
+            {
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookCoverFileName) || string.IsNullOrEmpty(this.SelectedWishListBook.BookCoverUrl))
+                {
+                    if (this.SelectedISBNItem.VolumeInfo?.ImageLinks != null)
+                    {
+                        this.SelectedWishListBook.HasBookCover = true;
+
+                        this.SelectedWishListBook.BookCoverUrl = $"{this.SelectedISBNItem.VolumeInfo.ImageLinks.thumbnail}.jpg";
+                    }
+                    else
+                    {
+                        this.SelectedWishListBook.HasBookCover = false;
+                    }
+
+                    this.SelectedWishListBook.HasNoBookCover = !this.SelectedWishListBook.HasBookCover;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookTitle))
+                {
+                    this.SelectedWishListBook.BookTitle = this.SelectedISBNItem.VolumeInfo?.Title;
+
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.Subtitle))
+                    {
+                        this.SelectedWishListBook.BookTitle += $": {this.SelectedISBNItem.VolumeInfo.Subtitle}";
+                    }
+                }
+
+                if (this.SelectedISBNItem.VolumeInfo?.Authors != null)
+                {
+                    List<AuthorModel> authorList = [];
+
+                    foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
+                    {
+                        string firstName = author[..author.LastIndexOf(' ')];
+                        string lastName = author[(author.LastIndexOf(' ') + 1)..];
+
+                        authorList.Add(
+                            new AuthorModel()
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                            });
+                    }
+
+                    this.SelectedWishListBook.SelectedAuthors ??= [];
+                    this.SelectedWishListBook.SelectedAuthors.AddRange(authorList);
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookPublisher))
+                {
+                    this.SelectedWishListBook.BookPublisher = this.SelectedISBNItem.VolumeInfo?.Publisher;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookPublishYear))
+                {
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.PublishedDate) && this.SelectedISBNItem.VolumeInfo.PublishedDate.Contains('-'))
+                    {
+                        this.SelectedWishListBook.BookPublishYear = this.SelectedISBNItem.VolumeInfo.PublishedDate[..this.SelectedISBNItem.VolumeInfo.PublishedDate.IndexOf('-')];
+                    }
+                    else
+                    {
+                        this.SelectedWishListBook.BookPublishYear = this.SelectedISBNItem.VolumeInfo?.PublishedDate;
+                    }
+                }
+
+                if (this.SelectedWishListBook.BookPageTotal <= 0 && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
+                {
+                    this.SelectedWishListBook.BookPageTotal = (int)this.SelectedISBNItem.VolumeInfo?.PageCount;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookSummary) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
+                {
+                    this.SelectedWishListBook.BookSummary = this.SelectedISBNItem.VolumeInfo?.Description;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookLanguage) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
+                {
+                    if (!string.IsNullOrEmpty(this.SelectedISBNItem.VolumeInfo?.Language))
+                    {
+                        this.SelectedWishListBook.BookLanguage = this.SelectedISBNItem.VolumeInfo.Language.Equals("en") ? $"{AppStringResources.English}" : this.SelectedISBNItem.VolumeInfo.Language;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier))
+                {
+                    this.SelectedWishListBook.BookIdentifier = this.Input;
                 }
             }
         }

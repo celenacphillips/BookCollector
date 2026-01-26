@@ -382,16 +382,9 @@ namespace BookCollector.ViewModels.Book
         {
             this.SetIsBusyTrue();
 
-            var view = new BookSearchView();
-            var bindingContext = new BookSearchViewModel(null, view)
-            {
-                ViewTitle = $"{AppStringResources.BookSearch}",
-                SelectedBook = this.EditedBook,
-            };
-            view.BindingContext = bindingContext;
+            var view = new BookSearchView(null, this.EditedBook, this);
 
             await Shell.Current.Navigation.PushModalAsync(view);
-
             this.SetIsBusyFalse();
         }
 
