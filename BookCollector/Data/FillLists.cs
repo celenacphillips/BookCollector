@@ -449,11 +449,16 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.fullBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.fullBookList
                         .Where(x => x.BookCollectionGuid == inputGuid)
                         .ToObservableCollection();
+
+                    if (!showHiddenBooks)
+                    {
+                        filteredList = new ObservableCollection<BookModel>(AllBooksViewModel.fullBookList!.Where(x => !x.HideBook));
+                    }
                 }
                 else
                 {
@@ -481,11 +486,16 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.fullBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.fullBookList
                         .Where(x => x.BookGenreGuid == inputGuid)
                         .ToObservableCollection();
+
+                    if (!showHiddenBooks)
+                    {
+                        filteredList = new ObservableCollection<BookModel>(AllBooksViewModel.fullBookList!.Where(x => !x.HideBook));
+                    }
                 }
                 else
                 {
@@ -513,11 +523,16 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.fullBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.fullBookList
                         .Where(x => x.BookSeriesGuid == inputGuid)
                         .ToObservableCollection();
+
+                    if (!showHiddenBooks)
+                    {
+                        filteredList = new ObservableCollection<BookModel>(AllBooksViewModel.fullBookList!.Where(x => !x.HideBook));
+                    }
                 }
                 else
                 {
@@ -545,11 +560,16 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.fullBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.fullBookList
                         .Where(x => x.BookLocationGuid == inputGuid)
                         .ToObservableCollection();
+
+                    if (!showHiddenBooks)
+                    {
+                        filteredList = new ObservableCollection<BookModel>(AllBooksViewModel.fullBookList!.Where(x => !x.HideBook));
+                    }
                 }
                 else
                 {

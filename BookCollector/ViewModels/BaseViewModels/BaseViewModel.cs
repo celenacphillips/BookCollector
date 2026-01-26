@@ -1,7 +1,10 @@
 ﻿// <copyright file="BaseViewModel.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
-
+#if ANDROID
+using AndroidX.Core.View;
+using Android.OS;
+#endif
 using BookCollector.CustomPermissions;
 using BookCollector.Data;
 using BookCollector.Data.Database;
@@ -53,8 +56,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             this.DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
             this.DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
-            this.DoubleMenuBar = this.DeviceHeight * 0.2899;
-            this.SingleMenuBar = this.DeviceHeight * 0.2297;
             this.InfoText = string.Empty;
             this.View = new ContentPage();
         }
@@ -64,10 +65,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         public double DeviceWidth { get; set; }
 
         public double CollectionViewHeight { get; set; }
-
-        public double SingleMenuBar { get; set; }
-
-        public double DoubleMenuBar { get; set; }
 
         public ContentPage View { get; set; }
 
@@ -368,6 +365,59 @@ namespace BookCollector.ViewModels.BaseViewModels
             WishListViewModel.filteredWishlistBookList1?.Clear();
             WishListViewModel.filteredWishlistBookList2?.Clear();
             WishListViewModel.RefreshView = true;
+        }
+
+        public static double SetCollectionViewHeight(double viewHeight, double headerHeight, double searchHeight)
+        {
+            var padding = 20;
+            double extraSpacing = 0;
+            var navBarHeight = 0.0;
+
+#if ANDROID
+            var activity = Platform.CurrentActivity;
+            var rootView = activity?.Window?.DecorView;
+
+            if (rootView != null)
+            {
+                var insetsCompat = ViewCompat.GetRootWindowInsets(rootView);
+
+                if (insetsCompat != null)
+                {
+                    // System bars = status bar + nav bar
+                    var systemBars = insetsCompat.GetInsets(WindowInsetsCompat.Type.SystemBars());
+                    var bottomPx = systemBars!.Bottom;
+
+                    navBarHeight = bottomPx / activity!.Resources!.DisplayMetrics!.Density;
+                }
+            }
+
+            var api = (int)Build.VERSION.SdkInt;
+
+            // NOTE: Maybe need to add Device Height if there are too many complaints?
+
+            if (api <= 31)
+            {
+                extraSpacing = 10;
+                headerHeight = 0;
+                searchHeight = 0;
+            }
+
+            if (api > 31 && api <= 34)
+            {
+                padding = 0;
+                navBarHeight /= 2;
+            }
+#endif
+
+            double usableHeight =
+                viewHeight
+                - headerHeight
+                - searchHeight
+                - padding
+                - extraSpacing
+                - navBarHeight;
+
+            return usableHeight;
         }
     }
 }

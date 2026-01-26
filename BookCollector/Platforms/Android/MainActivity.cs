@@ -4,6 +4,9 @@
 
 using Android.App;
 using Android.Content.PM;
+using Android.OS;
+using AndroidX.Activity.Result;
+using AndroidX.Activity.Result.Contract;
 
 namespace BookCollector
 {
@@ -21,6 +24,5 @@ namespace BookCollector
 
             OnPermissionResult?.Invoke(requestCode, permissions, grantResults);
         }
-
     }
 }

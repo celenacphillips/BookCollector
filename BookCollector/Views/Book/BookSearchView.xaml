@@ -18,7 +18,8 @@
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout>
-                    <VerticalStackLayout Margin="10">
+                    <VerticalStackLayout Margin="10"
+                                         x:Name="rootLayout">
                         
                         <Button Text="{x:Static localization:AppStringResources.ScanBarcode}"
                                 Margin="10"
@@ -42,7 +43,8 @@
                                 Command="{Binding SearchCommand}"
                                 Margin="10"/>
 
-                        <HorizontalStackLayout HorizontalOptions="Center">
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                               x:Name="totalString">
                             <Label Text="{Binding TotalItemsstring}" />
                             <Label Text="{Binding TotalItems}" />
                         </HorizontalStackLayout>
@@ -54,7 +56,8 @@
                                         SelectionMode="Single"
                                         SelectedItem="{Binding SelectedISBNItem}"
                                         HeightRequest="{Binding CollectionViewHeight}"
-                                        SelectionChangedCommand="{Binding SaveCommand}" >
+                                        SelectionChangedCommand="{Binding SaveCommand}"
+                                        x:Name="bookList">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="object:Item">
                                     

@@ -12,7 +12,8 @@
                     SelectedItem="{Binding SelectedSeries}"
                     SelectionChangedCommand="{Binding SeriesSelectionChangedCommand}"
                     ItemSizingStrategy="MeasureAllItems"
-                    HeightRequest="{Binding CollectionViewHeight}">
+                    HeightRequest="{Binding CollectionViewHeight}"
+                    x:Name="seriesList">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <VerticalStackLayout>

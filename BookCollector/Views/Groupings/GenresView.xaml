@@ -50,12 +50,14 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                <VerticalStackLayout IsVisible="{Binding IsVisible}"
+                                     x:Name="rootLayout">
                     <Label Text="{Binding TotalGenresstring}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{DynamicResource Primary}"
-                           Style="{StaticResource SubTitle}"/>
+                           Style="{StaticResource SubTitle}"
+                           x:Name="totalString"/>
 
                     <ScrollView IsEnabled="{Binding IsEnabled}">
                         <!-- This is needed to allow the refresh view to work. -->
@@ -63,7 +65,8 @@
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchGenres}"
                                        Text="{Binding Searchstring}"
-                                       IsReadOnly="{Binding IsBusy}">
+                                       IsReadOnly="{Binding IsBusy}"
+                                       x:Name="searchBar">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding SearchOnGenreCommand}"
                                                                     CommandParameter="{Binding Searchstring}"
@@ -72,7 +75,7 @@
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
-                            <controls:GenreCollectionList/>
+                            <controls:GenreCollectionList x:Name="genreCollectionList"/>
 
                         </VerticalStackLayout>
                     </ScrollView>

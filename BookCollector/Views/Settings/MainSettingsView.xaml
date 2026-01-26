@@ -10,7 +10,8 @@
     <ScrollView BindingContext="{x:Reference this}">
         <VerticalStackLayout>
 
-            <Grid Margin="10">
+            <Grid Margin="10"
+                  HorizontalOptions="Center">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

@@ -29,7 +29,7 @@
             
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <HorizontalStackLayout x:Name="Root">
+                    <Grid x:Name="Root">
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
@@ -49,14 +49,14 @@
 
                         <Label Text="{Binding .}"
                                HeightRequest="50"
-                               WidthRequest="250"
-                               Margin="50,0,0,0"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Center"
                                VerticalTextAlignment="Center"
                                LineBreakMode="TailTruncation"
                                TextColor="{Binding MainTextColor}"
                                MaxLines="3"/>
 
-                    </HorizontalStackLayout>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

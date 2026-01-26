@@ -2860,6 +2860,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot access this folder. Please select another..
+        /// </summary>
+        internal static string PleaseSelectAnotherFolder {
+            get {
+                return ResourceManager.GetString("PleaseSelectAnotherFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rating Status.
         /// </summary>
         internal static string RatingStatus {

@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Groupings
         public SeriesViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.SeriesView_InfoText}";
             this.ViewTitle = AppStringResources.Series;
             RefreshView = true;

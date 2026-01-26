@@ -1397,4 +1397,7 @@ Visit them at </value>
   <data name="Caution_" xml:space="preserve">
     <value>Caution!</value>
   </data>
+  <data name="PleaseSelectAnotherFolder" xml:space="preserve">
+    <value>Cannot access this folder. Please select another.</value>
+  </data>
 </root>

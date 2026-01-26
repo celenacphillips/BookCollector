@@ -37,21 +37,23 @@
                     <!-- Series Name -->
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
-                            <ColumnDefinition Width="2.1*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        
-                        <Label Text="{x:Static localization:AppStringResources.SeriesName}"
-                               Style="{StaticResource Header}"
-                               Grid.Row="0" Grid.Column="0"
-                               HorizontalOptions="End"/>
-                        
-                        <Label Text=" *"
+
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.SeriesName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
+
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
                                Style="{DynamicResource Header_Warning}"
                                IsVisible="{Binding SeriesNameNotValid}"
-                               Grid.Row="0" Grid.Column="1"
-                               HorizontalOptions="Start"/>
+                               HorizontalOptions="Start" />
                     </Grid>
+
                     <Editor Text="{Binding EditedSeries.SeriesName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterSeriesName}"
                             FontAttributes="Bold"

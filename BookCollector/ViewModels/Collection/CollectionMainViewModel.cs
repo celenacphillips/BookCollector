@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Collection
         {
             this.View = view;
             this.SelectedCollection = collection;
-            this.CollectionViewHeight = this.DeviceHeight - this.SingleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.CollectionMainView_InfoText.Replace("collection", $"{this.SelectedCollection.CollectionName}")}";
             this.RefreshView = true;
         }

@@ -13,7 +13,8 @@
                     SelectionChangedCommand="{Binding WishListBookSelectionChangedCommand}"
                     SelectionChangedCommandParameter="{Binding SelectedWishlistBook}"
                     ItemSizingStrategy="MeasureAllItems"
-                    HeightRequest="{Binding CollectionViewHeight}">
+                    HeightRequest="{Binding CollectionViewHeight}"
+                    x:Name="bookList">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <VerticalStackLayout>

@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Genre
         {
             this.View = view;
             this.SelectedGenre = genre;
-            this.CollectionViewHeight = this.DeviceHeight - this.SingleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{this.SelectedGenre.GenreName}")}";
             RefreshView = true;
         }

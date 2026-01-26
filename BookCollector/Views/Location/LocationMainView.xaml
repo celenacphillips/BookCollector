@@ -61,18 +61,21 @@
                          Command="{Binding RefreshCommand}">
 
                 <VerticalStackLayout IsVisible="{Binding IsVisible}"
-                                     IsEnabled="{Binding IsEnabled}">
+                                     x:Name="rootLayout">
                     <Label Text="{Binding TotalBooksString}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{StaticResource Primary}"
-                           Style="{StaticResource SubTitle}"/>
+                           Style="{StaticResource SubTitle}"
+                           x:Name="totalString"/>
 
-                    <ScrollView>
+                    <ScrollView IsEnabled="{Binding IsEnabled}">
                         <!-- This is needed to allow the refresh view to work. -->
                         <VerticalStackLayout  Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding Searchstring}">
+                                       Text="{Binding Searchstring}"
+                                       IsReadOnly="{Binding IsBusy}"
+                                       x:Name="searchBar">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
                                                                     CommandParameter="{Binding Searchstring}"
@@ -81,7 +84,7 @@
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
-                            <bookControls:BookCollectionList/>
+                            <bookControls:BookCollectionList x:Name="bookCollectionList"/>
 
                         </VerticalStackLayout>
                     </ScrollView>

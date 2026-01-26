@@ -5,6 +5,7 @@
 #if ANDROID
 using Android;
 using Android.Content.PM;
+using Android.OS;
 using Android.Provider;
 using Android.Views;
 using AndroidX.Core.App;
@@ -18,28 +19,39 @@ namespace BookCollector.CustomPermissions
 {
     public class ReadMediaPermission : Permissions.BasePermission
     {
-#if ANDROID33_0_OR_GREATER
+#if ANDROID
         private const string ReadMediaImages = Manifest.Permission.ReadMediaImages;
         private const string UserSelectedImages = "android.permission.READ_MEDIA_VISUAL_USER_SELECTED";
+        private const string READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
 #endif
 
         public override async Task<PermissionStatus> CheckStatusAsync()
         {
             this.EnsureDeclared();
-#if ANDROID33_0_OR_GREATER
-            var activity = Platform.CurrentActivity!;
-            var context = activity.ApplicationContext;
+#if ANDROID
+            var api = (int)Build.VERSION.SdkInt;
 
-            var status = ContextCompat.CheckSelfPermission(context, ReadMediaImages);
-
-            if (status != Permission.Granted)
+            if (api >= 33)
             {
-                status = ContextCompat.CheckSelfPermission(context, UserSelectedImages);
+                var activity = Platform.CurrentActivity!;
+                var context = activity.ApplicationContext;
+
+                var status = ContextCompat.CheckSelfPermission(context, ReadMediaImages);
+
+                if (status != Permission.Granted)
+                {
+                    status = ContextCompat.CheckSelfPermission(context, UserSelectedImages);
+                }
+
+                return status == Permission.Granted
+                    ? PermissionStatus.Granted
+                    : PermissionStatus.Denied;
+            }
+            else
+            {
+                return await Permissions.CheckStatusAsync<Permissions.StorageRead>();
             }
 
-            return status == Permission.Granted
-                ? PermissionStatus.Granted
-                : PermissionStatus.Denied;
 #else
             throw new NotImplementedException();
 #endif
@@ -47,7 +59,7 @@ namespace BookCollector.CustomPermissions
 
         public override void EnsureDeclared()
         {
-#if ANDROID33_0_OR_GREATER
+#if ANDROID
             if (!Permissions.IsDeclaredInManifest(ReadMediaImages))
             {
                 throw new PermissionException(
@@ -58,6 +70,12 @@ namespace BookCollector.CustomPermissions
             {
                 throw new PermissionException(
                     $"{UserSelectedImages} is not declared in AndroidManifest.xml");
+            }
+
+            if (!Permissions.IsDeclaredInManifest(READ_EXTERNAL_STORAGE))
+            {
+                throw new PermissionException(
+                    $"{READ_EXTERNAL_STORAGE} is not declared in AndroidManifest.xml");
             }
 #else
         throw new NotImplementedException();
@@ -71,52 +89,61 @@ namespace BookCollector.CustomPermissions
                 await BaseViewModel.DisplayMessage($"{AppStringResources.PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos}", null);
             }
 
-#if ANDROID33_0_OR_GREATER
-            while (Platform.CurrentActivity is not { IsFinishing: false, IsDestroyed: false } ||
+#if ANDROID
+
+            var api = (int)Build.VERSION.SdkInt;
+
+            if (api >= 33)
+            {
+                while (Platform.CurrentActivity is not { IsFinishing: false, IsDestroyed: false } ||
                Platform.CurrentActivity?.Window?.DecorView?.WindowVisibility != ViewStates.Visible)
-            {
-                await Task.Delay(50);
-            }
-
-            var activity = Platform.CurrentActivity!;
-            var context = activity.ApplicationContext;
-
-            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) == Permission.Granted ||
-                ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
-            {
-                return PermissionStatus.Granted;
-            }
-
-            var tcs = new TaskCompletionSource<PermissionStatus>();
-
-            // Assign the delegate BEFORE requesting
-            MainActivity.OnPermissionResult = (requestCode, permissions, grantResults) =>
-            {
-                if (requestCode == 9911)
                 {
-                    tcs.TrySetResult(PermissionStatus.Unknown);
-                    MainActivity.OnPermissionResult = null;
+                    await Task.Delay(50);
                 }
-            };
 
-            ActivityCompat.RequestPermissions(
-                activity,
-                [ReadMediaImages, UserSelectedImages],
-                9911);
+                var activity = Platform.CurrentActivity!;
+                var context = activity.ApplicationContext;
 
-            var result = await tcs.Task;
+                if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) == Permission.Granted ||
+                    ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
+                {
+                    return PermissionStatus.Granted;
+                }
 
-            // Android may not have updated the permission yet
-            await Task.Delay(100);
+                var tcs = new TaskCompletionSource<PermissionStatus>();
 
-            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) == Permission.Granted ||
-                ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
-            {
-                return PermissionStatus.Granted;
+                // Assign the delegate BEFORE requesting
+                MainActivity.OnPermissionResult = (requestCode, permissions, grantResults) =>
+                {
+                    if (requestCode == 9911)
+                    {
+                        tcs.TrySetResult(PermissionStatus.Unknown);
+                        MainActivity.OnPermissionResult = null;
+                    }
+                };
+
+                ActivityCompat.RequestPermissions(
+                    activity,
+                    [ReadMediaImages, UserSelectedImages],
+                    9911);
+
+                var result = await tcs.Task;
+
+                // Android may not have updated the permission yet
+                await Task.Delay(100);
+
+                if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) == Permission.Granted ||
+                    ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
+                {
+                    return PermissionStatus.Granted;
+                }
+
+                return PermissionStatus.Denied;
             }
-
-            return PermissionStatus.Denied;
-
+            else
+            {
+                return await Permissions.RequestAsync<Permissions.StorageRead>();
+            }
 #else
             throw new NotImplementedException();
 #endif
@@ -125,18 +152,27 @@ namespace BookCollector.CustomPermissions
 
         public override bool ShouldShowRationale()
         {
-#if ANDROID33_0_OR_GREATER
-            var activity = Platform.CurrentActivity;
+#if ANDROID
+            var api = (int)Build.VERSION.SdkInt;
 
-            var readMediaImagesRationale = ActivityCompat.ShouldShowRequestPermissionRationale(
-                activity!,
-                ReadMediaImages);
+            if (api >= 33)
+            {
+                var activity = Platform.CurrentActivity;
 
-            var userSelectedImagesRationale = ActivityCompat.ShouldShowRequestPermissionRationale(
-                activity!,
-                ReadMediaImages);
+                var readMediaImagesRationale = ActivityCompat.ShouldShowRequestPermissionRationale(
+                    activity!,
+                    ReadMediaImages);
 
-            return readMediaImagesRationale || userSelectedImagesRationale;
+                var userSelectedImagesRationale = ActivityCompat.ShouldShowRequestPermissionRationale(
+                    activity!,
+                    ReadMediaImages);
+
+                return readMediaImagesRationale || userSelectedImagesRationale;
+            }
+            else
+            {
+                return Permissions.ShouldShowRationale<Permissions.StorageRead>();
+            }
 #else
             throw new NotImplementedException();
 #endif
@@ -146,7 +182,7 @@ namespace BookCollector.CustomPermissions
         {
             List<string> filePaths = new List<string>();
 
-#if ANDROID33_0_OR_GREATER
+#if ANDROID
             var activity = Platform.CurrentActivity!;
             var context = activity.ApplicationContext;
 

@@ -360,7 +360,7 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
+                            <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -377,7 +377,7 @@
 
     <Style x:Key="Header" TargetType="Label">
         <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
     </Style>
 
     <Style x:Key="Subtitle" TargetType="Label">
@@ -442,7 +442,7 @@
     </Style>
 
     <Style x:Key="AddButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="30" />
@@ -466,7 +466,7 @@
     </Style>
 
     <Style x:Key="MinusButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Tertiary}, Dark={DynamicResource Tertiary}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="40" />
@@ -493,7 +493,7 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="End" />
         <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="MinimumWidthRequest" Value="300" />

@@ -360,7 +360,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookCollectionGuid == null)
+                if (book.BookCollectionGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Collection"))
                 {
                     var collectionViewModel = new ExistingBooksViewModel(new CollectionModel(), new ContentPage(), previousViewModel);
 
@@ -409,7 +409,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookGenreGuid == null)
+                if (book.BookGenreGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Genre"))
                 {
                     var genreViewModel = new ExistingBooksViewModel(new GenreModel(), new ContentPage(), previousViewModel);
 
@@ -458,7 +458,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookSeriesGuid == null)
+                if (book.BookSeriesGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Series"))
                 {
                     var seriesViewModel = new ExistingBooksViewModel(new SeriesModel(), new ContentPage(), previousViewModel);
 
@@ -512,7 +512,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (string.IsNullOrEmpty(book.AuthorListString))
+                if (string.IsNullOrEmpty(book.AuthorListString) && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Author"))
                 {
                     var authorViewModel = new ExistingBooksViewModel(new AuthorModel(), new ContentPage(), previousViewModel);
 
@@ -561,7 +561,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookLocationGuid == null)
+                if (book.BookLocationGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Location"))
                 {
                     var locationViewModel = new ExistingBooksViewModel(new LocationModel(), new ContentPage(), previousViewModel);
 

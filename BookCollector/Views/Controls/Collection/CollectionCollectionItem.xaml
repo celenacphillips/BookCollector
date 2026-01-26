@@ -13,12 +13,12 @@
               x:DataType="dataModels:CollectionModel">
             
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Image HorizontalOptions="Start"
+            <Image HorizontalOptions="Center"
                    Grid.Row="0" Grid.Column="0">
                 <Image.Source>
                     <FontImageSource FontFamily="MaterialDesignIcons"
@@ -30,7 +30,8 @@
 
             <VerticalStackLayout VerticalOptions="Center"
                                  HorizontalOptions="Start"
-                                 Grid.Row="0" Grid.Column="1">
+                                 Grid.Row="0" Grid.Column="1"
+                                 Padding="10,0,0,0">
                 
                 <Label Text="{Binding CollectionName}"
                        TextColor="{DynamicResource Primary}"/>
@@ -40,7 +41,8 @@
                        FontSize="12"/>
             </VerticalStackLayout>
 
-            <HorizontalStackLayout Grid.Row="0" Grid.Column="2">
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="2"
+                                   HorizontalOptions="End">
                 <ImageButton HorizontalOptions="End"
                              Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CollectionsViewModel}}, Path=PopupMenuCollectionCommand}"
                              CommandParameter="{Binding CollectionGuid}"

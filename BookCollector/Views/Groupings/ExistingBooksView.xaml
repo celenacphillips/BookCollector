@@ -50,7 +50,8 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                <VerticalStackLayout IsVisible="{Binding IsVisible}"
+                                     x:Name="rootLayout">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -67,14 +68,16 @@
                                Margin="0,0,20,0"
                                TextColor="{DynamicResource Primary}"
                                Style="{DynamicResource SubTitle}"
-                               Grid.Column="1" Grid.Row="0"/>
+                               Grid.Column="1" Grid.Row="0"
+                               x:Name="totalString"/>
                     </Grid>
 
                     <ScrollView IsEnabled="{Binding IsEnabled}">
                         <VerticalStackLayout Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
                                        Text="{Binding Searchstring}"
-                                       IsReadOnly="{Binding IsBusy}">
+                                       IsReadOnly="{Binding IsBusy}"
+                                       x:Name="searchBar">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
                                                                     CommandParameter="{Binding Searchstring}"
@@ -83,7 +86,7 @@
                                 </SearchBar.Behaviors>
                             </SearchBar>
 
-                            <controls:ExistingBookCollectionList/>
+                            <controls:ExistingBookCollectionList x:Name="bookCollectionList"/>
 
                         </VerticalStackLayout>
                     </ScrollView>

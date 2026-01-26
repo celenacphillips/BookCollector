@@ -63,7 +63,7 @@
                             <!-- Rating -->
                             <controls:Rating CurrentValue="{Binding SelectedBook.Rating}"
                                              Grid.Column="0" Grid.Row="0"
-                                             HorizontalOptions="Center"
+                                             HorizontalOptions="Start"
                                              IsEnabled="False"
                                              IsVisible="{Binding ShowRatings}"/>
                             <!-- Rating -->

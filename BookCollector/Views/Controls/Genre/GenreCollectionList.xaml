@@ -12,7 +12,8 @@
                     SelectedItem="{Binding SelectedGenre}"
                     SelectionChangedCommand="{Binding GenreSelectionChangedCommand}"
                     ItemSizingStrategy="MeasureAllItems"
-                    HeightRequest="{Binding CollectionViewHeight}">
+                    HeightRequest="{Binding CollectionViewHeight}"
+                    x:Name="genreList">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <VerticalStackLayout>

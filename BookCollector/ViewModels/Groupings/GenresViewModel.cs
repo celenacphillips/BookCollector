@@ -27,7 +27,7 @@ namespace BookCollector.ViewModels.Groupings
         public GenresViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.GenreView_InfoText}";
             this.ViewTitle = AppStringResources.Genres;
             RefreshView = true;

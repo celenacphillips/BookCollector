@@ -67,7 +67,7 @@
                             <!-- Rating -->
                             <controls:Rating CurrentValue="{Binding EditedBook.Rating, Mode=TwoWay}"
                                              Grid.Column="0" Grid.Row="0"
-                                             HorizontalOptions="Center"
+                                             HorizontalOptions="Start"
                                              IsVisible="{Binding ShowRatings}"/>
                             <!-- Rating -->
 
@@ -105,22 +105,23 @@
                         <VerticalStackLayout Margin="10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*"></ColumnDefinition>
-                                    <ColumnDefinition Width="2.3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                
-                                <Label Text="{x:Static localization:AppStringResources.BookTitle}"
+
+                                <Label Grid.Column="1" Grid.Row="0"
+                                       Text="{x:Static localization:AppStringResources.BookTitle}"
                                        Style="{DynamicResource Header}"
-                                       Grid.Row="0" Grid.Column="0"
-                                       HorizontalOptions="End"/>
-                                
-                                <Label Text=" *"
+                                       HorizontalOptions="Center" />
+
+                                <Label Grid.Column="2" Grid.Row="0"
+                                       Text=" *"
                                        Style="{DynamicResource Header_Warning}"
                                        IsVisible="{Binding BookTitleNotValid}"
-                                       Grid.Row="0" Grid.Column="1"
-                                       HorizontalOptions="Start"/>
+                                       HorizontalOptions="Start" />
                             </Grid>
-                            
+
                             <Editor Text="{Binding EditedBook.BookTitle}"
                                     Placeholder="{x:Static localization:AppStringResources.EnterBookTitle}"
                                     FontAttributes="Bold"
@@ -244,6 +245,7 @@
                                     <Button Text="{Binding SelectedBookFormat}"
                                             Style="{DynamicResource PickerButton}"
                                             Margin="0,10,0,0"
+                                            HorizontalOptions="Center"
                                             Command="{Binding BookFormatChangedCommand}"/>
                                 </VerticalStackLayout>
                                 <!-- Book Format -->
@@ -266,21 +268,23 @@
                                             Margin="0,-10,5,0"
                                             Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
-                                
+
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
                                     <Button Text="{Binding SelectedSeriesString}"
                                             Style="{DynamicResource PickerButton}"
                                             Command="{Binding SeriesChangedCommand}"
-                                            Grid.Row="0" Grid.Column="0"/>
+                                            Grid.Row="0" Grid.Column="1"/>
 
                                     <Button Text="-"
                                             Style="{DynamicResource MinusButton}" 
                                             Grid.Row="0" Grid.Column="2"
+                                            HorizontalOptions="Center"
                                             Command="{Binding RemoveSeriesCommand}"/>
                                 </Grid>
 
@@ -315,20 +319,21 @@
                                 </Grid>
 
                                 <Grid Margin="0,0,0,10">
-                                    
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
                                     <Button Text="{Binding SelectedCollectionString}"
                                             Style="{DynamicResource PickerButton}"
                                             Command="{Binding CollectionChangedCommand}"
-                                            Grid.Row="0" Grid.Column="0"/>
+                                            Grid.Row="0" Grid.Column="1"/>
 
                                     <Button Text="-"
                                             Style="{DynamicResource MinusButton}" 
-                                            Grid.Row="0" Grid.Column="1"
+                                            Grid.Row="0" Grid.Column="2"
+                                            HorizontalOptions="Center"
                                             Command="{Binding RemoveCollectionCommand}"/>
                                 </Grid>
                                 <!-- Book Collection -->
@@ -711,10 +716,10 @@
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
+                                
                                 <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <Button Text="{x:Static localization:AppStringResources.AddNewChapterToBook}"
@@ -780,15 +785,15 @@
                                                 Margin="10">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate  x:DataType="author:AuthorPicker">
- 
+
                                             <Grid Margin="0,0,0,10">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <VerticalStackLayout Margin="10"
-                                                                     Grid.Row="0" Grid.Column="0">
+                                                <VerticalStackLayout Grid.Row="0" Grid.Column="1">
                                                     <Label Text="{x:Static localization:AppStringResources.AuthorFullName}"
                                                            Style="{DynamicResource SubTitle}"/>
 
@@ -800,7 +805,7 @@
 
                                                 <Button Text="-"
                                                         Style="{DynamicResource MinusButton}" 
-                                                        Grid.Row="0" Grid.Column="1"
+                                                        Grid.Row="0" Grid.Column="2"
                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=RemoveAuthorCommand}"
                                                         CommandParameter="{Binding .}"/>
                                             </Grid>
@@ -811,7 +816,7 @@
                                 
                                 <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
@@ -897,21 +902,23 @@
                                             Margin="0,0,5,0"
                                             Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
-
+                                
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
                                     <Button Text="{Binding SelectedGenreString}"
                                             Style="{DynamicResource PickerButton}"
                                             Command="{Binding GenreChangedCommand}"
-                                            Grid.Row="0" Grid.Column="0"/>
+                                            Grid.Row="0" Grid.Column="1"/>
 
                                     <Button Text="-"
                                             Style="{DynamicResource MinusButton}" 
-                                            Grid.Row="0" Grid.Column="1"
+                                            Grid.Row="0" Grid.Column="2"
+                                            HorizontalOptions="Center"
                                             Command="{Binding RemoveGenreCommand}"/>
                                 </Grid>
                                 <!-- Book Genre -->
@@ -934,21 +941,23 @@
                                             Margin="0,-10,5,0"
                                             Grid.Row="0" Grid.Column="1"/>
                                 </Grid>
-                                
+
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
                                     <Button Text="{Binding SelectedLocationString}"
                                             Style="{DynamicResource PickerButton}"
                                             Command="{Binding LocationChangedCommand}"
-                                            Grid.Row="0" Grid.Column="0"/>
+                                            Grid.Row="0" Grid.Column="1"/>
 
                                     <Button Text="-"
                                             Style="{DynamicResource MinusButton}" 
-                                            Grid.Row="0" Grid.Column="1"
+                                            Grid.Row="0" Grid.Column="2"
+                                            HorizontalOptions="Center"
                                             Command="{Binding RemoveLocationCommand}"/>
                                 </Grid>
                                 <!-- Book Location -->

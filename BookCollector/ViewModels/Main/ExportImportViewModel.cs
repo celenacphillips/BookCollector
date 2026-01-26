@@ -27,8 +27,6 @@ using BookCollector.ViewModels.WishListBook;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.Maui.ApplicationModel;
 using Color = Microsoft.Maui.Graphics.Color;
 
 namespace BookCollector.ViewModels.Main
@@ -173,92 +171,99 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
-                    var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
+                    var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
 
-                    if (exportLocation == null || exportLocation.Equals(AppStringResources.DefaultExportLocation))
+                    if (status != PermissionStatus.Granted)
                     {
-                        var result = await FolderPicker.PickAsync(CancellationToken.None);
-
-                        if (result != null && result.Folder != null)
-                        {
-                            exportLocation = result.Folder.Path;
-                            Preferences.Set("ExportLocation", result.Folder.Path);
-                        }
-                        else
-                        {
-                            await CanceledAction();
-
-                            this.SetIsBusyFalse();
-                            this.ImportEnabled = !this.IsBusy;
-                            this.ExportEnabled = !this.IsBusy;
-                            this.RefreshEnabled = !this.IsBusy;
-                        }
+                        status = await Permissions.RequestAsync<Permissions.StorageWrite>();
                     }
 
-                    if (!Directory.Exists(exportLocation))
+                    if (status == PermissionStatus.Granted)
                     {
-                        Directory.CreateDirectory(exportLocation);
-                    }
+                        var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
 
-                    if (this.ImagesChecked)
-                    {
-                        this.imageLocation = $"{exportLocation}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                        if (!Directory.Exists(this.imageLocation))
+                        if (exportLocation == null || exportLocation.Equals(AppStringResources.DefaultExportLocation))
                         {
-                            Directory.CreateDirectory(this.imageLocation);
+                            var result = await FolderPicker.PickAsync(CancellationToken.None);
+
+                            if (result != null && result.Folder != null)
+                            {
+                                exportLocation = result.Folder.Path;
+                                Preferences.Set("ExportLocation", result.Folder.Path);
+                            }
+                            else
+                            {
+                                await CanceledAction();
+
+                                this.SetIsBusyFalse();
+                                this.ImportEnabled = !this.IsBusy;
+                                this.ExportEnabled = !this.IsBusy;
+                                this.RefreshEnabled = !this.IsBusy;
+                            }
+
+
+                        }
+                        if (this.ImagesChecked)
+                        {
+                            this.imageLocation = $"{exportLocation}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(this.imageLocation))
+                            {
+                                Directory.CreateDirectory(this.imageLocation);
+                            }
+
+                            await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
                         }
 
-                        await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
+                        await Task.Delay(1);
+
+                        this.SetIsBusyTrue();
+
+                        this.ImportEnabled = !this.IsBusy;
+                        this.ExportEnabled = !this.IsBusy;
+                        this.RefreshEnabled = !this.IsBusy;
+
+                        this.ResetOutput();
+                        this.OutputVisible = this.IsBusy;
+                        this.CheckboxesVisible = !this.IsBusy;
+
+                        var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
+                        this.mainFilePath = filePath;
+
+                        this.StartOutput = AppStringResources.ExportResultsStart;
+
+                        this.SetOutputWaiting();
+
+                        await Task.Delay(1);
+
+                        await this.WriteWishListBooksToSpreadsheet();
+                        await this.WriteBooksToSpreadsheet();
+                        await this.WriteChaptersToSpreadsheet();
+                        await this.WriteCollectionsToSpreadsheet();
+                        await this.WriteGenresToSpreadsheet();
+                        await this.WriteSeriesToSpreadsheet();
+                        await this.WriteLocationsToSpreadsheet();
+                        await this.WriteBookAuthorsToSpreadsheet();
+                        await this.WriteAuthorsToSpreadsheet();
+
+                        this.FinalOutput = AppStringResources.ExportResultsFinish;
+
+                        await DisplayMessage(AppStringResources.ExportComplete, null);
+
+                        this.SetIsBusyFalse();
+                        this.RefreshEnabled = !this.IsBusy;
                     }
-
-                    await Task.Delay(1);
-
-                    this.SetIsBusyTrue();
-
-                    this.ImportEnabled = !this.IsBusy;
-                    this.ExportEnabled = !this.IsBusy;
-                    this.RefreshEnabled = !this.IsBusy;
-
-                    this.ResetOutput();
-                    this.OutputVisible = this.IsBusy;
-                    this.CheckboxesVisible = !this.IsBusy;
-
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
-                    this.mainFilePath = filePath;
-
-                    this.StartOutput = AppStringResources.ExportResultsStart;
-
-                    this.SetOutputWaiting();
-
-                    await Task.Delay(1);
-
-                    await this.WriteWishListBooksToSpreadsheet();
-                    await this.WriteBooksToSpreadsheet();
-                    await this.WriteChaptersToSpreadsheet();
-                    await this.WriteCollectionsToSpreadsheet();
-                    await this.WriteGenresToSpreadsheet();
-                    await this.WriteSeriesToSpreadsheet();
-                    await this.WriteLocationsToSpreadsheet();
-                    await this.WriteBookAuthorsToSpreadsheet();
-                    await this.WriteAuthorsToSpreadsheet();
-
-                    this.FinalOutput = AppStringResources.ExportResultsFinish;
-
-                    await DisplayMessage(AppStringResources.ExportComplete, null);
-
-                    this.SetIsBusyFalse();
-                    this.RefreshEnabled = !this.IsBusy;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     await CanceledAction();
+                    Preferences.Set("ExportLocation", AppStringResources.DefaultExportLocation);
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = !this.IsBusy;

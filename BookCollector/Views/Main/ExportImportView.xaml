@@ -34,17 +34,20 @@
                             IsVisible="{Binding IsVisible}">
                     <VerticalStackLayout Margin="20">
 
-                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
+                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}"
+                               HorizontalOptions="Center"/>
 
-                        <Grid Margin="20">
+                        <Grid Margin="20"
+                              HorizontalOptions="Center">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Button Text="{x:Static localization:AppStringResources.Export}"
                                     Margin="10"
+                                    Padding="50,0"
                                     Command="{Binding ExportCommand}"
                                     Grid.Row="0" Grid.Column="0"
                                     IsEnabled="{Binding ExportEnabled}"
@@ -52,6 +55,7 @@
 
                             <Button Text="{x:Static localization:AppStringResources.Import}"
                                     Margin="10"
+                                    Padding="50,0"
                                     Command="{Binding ImportCommand}"
                                     Grid.Row="0" Grid.Column="1"
                                     IsEnabled="{Binding ImportEnabled}"
@@ -59,7 +63,7 @@
 
                         </Grid>
 
-                        <Grid HorizontalOptions="Start"
+                        <Grid HorizontalOptions="Center"
                               IsVisible="{Binding OutputVisible}">
 
                             <Grid.ColumnDefinitions>

@@ -5,9 +5,11 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              Title="{x:Static localization:AppStringResources.DataStorage}">
     
-    <VerticalStackLayout Margin="20">
+    <VerticalStackLayout Margin="20"
+                         HorizontalOptions="Center">
         <Label Text="{x:Static localization:AppStringResources.DataStorageInfoText}"
                Margin="10,0"
+               MaximumWidthRequest="500"
                HorizontalTextAlignment="Center"/>
     </VerticalStackLayout>
 </ContentPage>

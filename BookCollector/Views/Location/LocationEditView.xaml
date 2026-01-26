@@ -37,21 +37,23 @@
                     <!-- Location Name -->
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
-                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        
-                        <Label Text="{x:Static localization:AppStringResources.LocationName}"
-                               Style="{StaticResource Header}"
-                               Grid.Row="0" Grid.Column="0"
-                               HorizontalOptions="End"/>
 
-                        <Label Text=" *"
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.LocationName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
+
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
                                Style="{DynamicResource Header_Warning}"
                                IsVisible="{Binding LocationNameNotValid}"
-                               Grid.Row="0" Grid.Column="1"
-                               HorizontalOptions="Start"/>
+                               HorizontalOptions="Start" />
                     </Grid>
+
                     <Editor Text="{Binding EditedLocation.LocationName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterLocationName}"
                             FontAttributes="Bold"

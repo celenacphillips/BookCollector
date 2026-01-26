@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.View = view;
 
-            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
             this.ViewTitle = AppStringResources.Collections;
             RefreshView = true;

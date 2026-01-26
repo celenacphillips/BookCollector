@@ -49,7 +49,7 @@ public partial class Rating : ContentView
                 Glyph = "\U000F04D2",
                 FontFamily = "MaterialDesignIcons",
                 Size = 22,
-                Color = Color.FromArgb("#ffffff"),
+                Color = Color.FromArgb("#cc9900"),
             },
             StarState.Half => new FontImageSource
             {

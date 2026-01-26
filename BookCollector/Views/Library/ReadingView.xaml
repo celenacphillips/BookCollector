@@ -60,12 +60,14 @@
                 <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}"
+                                         x:Name="rootLayout">
                         <Label Text="{Binding TotalBooksString}"
                                HorizontalOptions="End"
                                Margin="0,0,20,0"
                                TextColor="{DynamicResource Primary}"
-                               Style="{StaticResource SubTitle}"/>
+                               Style="{StaticResource SubTitle}"
+                               x:Name="totalString"/>
 
                     <ScrollView IsEnabled="{Binding IsEnabled}">
                             <!-- This is needed to allow the refresh view to work. -->
@@ -73,7 +75,8 @@
                             <VerticalStackLayout Padding="10">
                                 <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
                                            Text="{Binding Searchstring}"
-                                           IsReadOnly="{Binding IsBusy}">
+                                           IsReadOnly="{Binding IsBusy}"
+                                           x:Name="searchBar">
                                     <SearchBar.Behaviors>
                                         <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
                                                                     CommandParameter="{Binding Searchstring}"
@@ -82,7 +85,7 @@
                                     </SearchBar.Behaviors>
                                 </SearchBar>
 
-                                <controls:BookCollectionList/>
+                            <controls:BookCollectionList x:Name="bookCollectionList"/>
 
                             </VerticalStackLayout>
                         </ScrollView>

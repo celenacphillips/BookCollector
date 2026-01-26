@@ -39,7 +39,7 @@ namespace BookCollector.ViewModels.Library
         public ReadingViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.ReadingView_InfoText}";
             this.ViewTitle = AppStringResources.Reading;
             RefreshView = true;

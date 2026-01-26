@@ -37,21 +37,23 @@
                     <!-- Author First Name -->
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3.4*"></ColumnDefinition>
-                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Text="{x:Static localization:AppStringResources.AuthorFirstName}"
-                               Style="{StaticResource Header}"
-                               Grid.Row="0" Grid.Column="0"
-                               HorizontalOptions="End"/>
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.AuthorFirstName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
 
-                        <Label Text=" *"
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
                                Style="{DynamicResource Header_Warning}"
                                IsVisible="{Binding AuthorFirstNameNotValid}"
-                               Grid.Row="0" Grid.Column="1"
-                               HorizontalOptions="Start"/>
+                               HorizontalOptions="Start" />
                     </Grid>
+
                     <Editor Text="{Binding EditedAuthor.FirstName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterAuthorFirstName}"
                             FontAttributes="Bold"
@@ -78,21 +80,23 @@
                     <!-- Author Last Name -->
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3.4*"></ColumnDefinition>
-                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        
-                        <Label Text="{x:Static localization:AppStringResources.AuthorLastName}"
-                               Style="{StaticResource Header}"
-                               Grid.Row="0" Grid.Column="0"
-                               HorizontalOptions="End"/>
 
-                        <Label Text=" *"
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.AuthorLastName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
+
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
                                Style="{DynamicResource Header_Warning}"
                                IsVisible="{Binding AuthorLastNameNotValid}"
-                               Grid.Row="0" Grid.Column="1"
-                               HorizontalOptions="Start"/>
+                               HorizontalOptions="Start" />
                     </Grid>
+
                     <Editor Text="{Binding EditedAuthor.LastName}"
                             Placeholder="{x:Static localization:AppStringResources.EnterAuthorLastName}"
                             FontAttributes="Bold"

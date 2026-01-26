@@ -5,7 +5,8 @@
              x:Class="BookCollector.Views.Support.SupportView"
              Title="{x:Static localization:AppStringResources.Support}">
 
-    <VerticalStackLayout Margin="20">
+    <VerticalStackLayout Margin="20"
+                         HorizontalOptions="Center">
         <Label Text="{x:Static localization:AppStringResources.SupportInfoText}"
                Margin="10,0"/>
         <Button Text="{x:Static localization:AppStringResources.Email}"

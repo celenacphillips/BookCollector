@@ -44,7 +44,7 @@ namespace BookCollector.ViewModels.Groupings
             this.PreviousViewModel = previousViewModel;
             this.SetSelectedObjectType();
             this.SetSelectedObjectName();
-            this.CollectionViewHeight = this.DeviceHeight - this.SingleMenuBar;
+            this.CollectionViewHeight = 200;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
             RefreshView = true;
@@ -320,17 +320,21 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task ExistingBooksSelectionChanged()
         {
-            var title = $"{AppStringResources.AddBookToGrouping_Question.Replace("grouping", this.ViewTitle)}";
-            var answer = await DisplayMessage(title, title, null, null);
+            if (this.SelectedBook != null)
+            {
+                var title = $"{AppStringResources.AddBookToGrouping_Question.Replace("grouping", this.ViewTitle)}";
+                var answer = await DisplayMessage(title, title, null, null);
 
-            if (answer)
-            {
-                await this.AddBookToGrouping();
-            }
-            else
-            {
-                await CanceledAction();
-                this.SelectedBook = null;
+                if (answer)
+                {
+                    await this.AddBookToGrouping();
+                    this.SelectedBook = null;
+                }
+                else
+                {
+                    await CanceledAction();
+                    this.SelectedBook = null;
+                }
             }
         }
 

@@ -9,7 +9,8 @@
     <ScrollView>
         <VerticalStackLayout>
 
-            <Grid Margin="25,10">
+            <Grid Margin="25,10"
+                  HorizontalOptions="Center">
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
