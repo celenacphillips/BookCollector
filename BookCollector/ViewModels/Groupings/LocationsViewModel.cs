@@ -27,7 +27,7 @@ namespace BookCollector.ViewModels.Groupings
         public LocationsViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.LocationView_InfoText}";
             this.ViewTitle = AppStringResources.Locations;
             RefreshView = true;
@@ -117,6 +117,7 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
+                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

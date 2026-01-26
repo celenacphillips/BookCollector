@@ -47,7 +47,8 @@
             <ContentView>
                 <VerticalStackLayout HorizontalOptions="Center"
                                      HeightRequest="200"
-                                     VerticalOptions="Start">
+                                     VerticalOptions="Start"
+                                     IsEnabled="False">
                     <Label Text="{x:Static localization:AppStringResources.ThereAreNoBooks}"
                            Margin="10,25,10,10"
                            HorizontalTextAlignment="Center"

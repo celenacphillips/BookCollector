@@ -29,7 +29,7 @@ namespace BookCollector.ViewModels.Groupings
         public AuthorsViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.AuthorView_InfoText}";
             this.ViewTitle = AppStringResources.Authors;
             RefreshView = true;
@@ -117,6 +117,7 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
+                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

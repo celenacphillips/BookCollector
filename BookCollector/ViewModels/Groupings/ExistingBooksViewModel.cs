@@ -44,7 +44,7 @@ namespace BookCollector.ViewModels.Groupings
             this.PreviousViewModel = previousViewModel;
             this.SetSelectedObjectType();
             this.SetSelectedObjectName();
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
             RefreshView = true;
@@ -235,6 +235,7 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                         this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

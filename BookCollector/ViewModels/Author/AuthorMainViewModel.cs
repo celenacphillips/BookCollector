@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Author
         {
             this.View = view;
             this.SelectedAuthor = author;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.AuthorMainView_InfoText.Replace("author", $"{this.SelectedAuthor.FullName}")}";
             RefreshView = true;
         }
@@ -121,6 +121,7 @@ namespace BookCollector.ViewModels.Author
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 

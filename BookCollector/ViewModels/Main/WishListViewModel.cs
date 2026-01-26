@@ -50,7 +50,7 @@ namespace BookCollector.ViewModels.Main
         public WishListViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = AppStringResources.WishListView_InfoText;
             this.ViewTitle = AppStringResources.Wishlist;
             RefreshView = true;
@@ -142,6 +142,7 @@ namespace BookCollector.ViewModels.Main
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 

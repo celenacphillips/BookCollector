@@ -43,7 +43,7 @@ namespace BookCollector.ViewModels.Book
             this.View = view;
             this.Input = inputIsbn;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
         }
 
         [RelayCommand]

@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Series
         {
             this.View = view;
             this.SelectedSeries = series;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
             RefreshView = true;
         }
@@ -124,6 +124,7 @@ namespace BookCollector.ViewModels.Series
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 

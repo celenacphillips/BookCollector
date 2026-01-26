@@ -38,7 +38,7 @@ namespace BookCollector.ViewModels.Library
         public AllBooksViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = 300;
             this.InfoText = $"{AppStringResources.AllBooksView_InfoText}";
             this.ViewTitle = AppStringResources.AllBooks;
             RefreshView = true;
@@ -120,6 +120,7 @@ namespace BookCollector.ViewModels.Library
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
+                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 
