@@ -497,7 +497,7 @@ namespace BookCollector.ViewModels.Groupings
                     this.RemoveFromStaticList(this.SelectedBook);
                     AddToStaticList(this.SelectedBook, this.PreviousViewModel);
 
-                    var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}");
+                    var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
                     await Shell.Current.Navigation.PushAsync(view);
 
                     await DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);

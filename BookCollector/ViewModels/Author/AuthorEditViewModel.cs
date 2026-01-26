@@ -65,6 +65,7 @@ namespace BookCollector.ViewModels.Author
                 if (this.AuthorFirstNameNotValid || this.AuthorLastNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {

@@ -201,6 +201,7 @@
                                     <Button Text="{Binding SelectedBookFormat}"
                                             Style="{DynamicResource PickerButton}"
                                             Margin="0,10,0,0"
+                                            HorizontalOptions="Center"
                                             Command="{Binding BookFormatChangedCommand}"/>
                                 </VerticalStackLayout>
                                 <!-- Book Format -->

@@ -58,6 +58,7 @@ namespace BookCollector.ViewModels.Location
                 if (this.LocationNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.LocationNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {

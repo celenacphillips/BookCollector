@@ -155,6 +155,11 @@ public partial class ToggleSettingsView : ContentPage
         ToBeReadViewModel.RefreshView = true;
         ReadViewModel.RefreshView = true;
         AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
 
         if (e.Value)
         {

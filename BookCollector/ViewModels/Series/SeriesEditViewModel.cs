@@ -58,6 +58,7 @@ namespace BookCollector.ViewModels.Series
                 if (this.SeriesNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {

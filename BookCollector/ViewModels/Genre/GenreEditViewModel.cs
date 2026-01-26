@@ -58,6 +58,7 @@ namespace BookCollector.ViewModels.Genre
                 if (this.GenreNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.GenreNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {

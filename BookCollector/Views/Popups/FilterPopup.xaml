@@ -12,11 +12,11 @@
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                Margin="0">
 
-    <Grid HorizontalOptions="Center">
+    <Grid>
 
-        <VerticalStackLayout>
+        <VerticalStackLayout HorizontalOptions="Center">
 
-            <Grid>
+            <Grid Margin="0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -40,11 +40,9 @@
                        FontSize="Subtitle"
                        HorizontalOptions="Center"
                        VerticalOptions="End"
-                       Margin="20"
                        Grid.Row="0" Grid.Column="0"/>
 
                 <ImageButton HorizontalOptions="End"
-                             Margin="10"
                              Padding="10,5"
                              Command="{Binding CloseCommand}"
                              Grid.Row="0" Grid.Column="1">
@@ -60,7 +58,7 @@
                 <Label Text="{x:Static localization:AppStringResources.Favorite}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding FavoriteVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="1" Grid.Column="0"/>
 
                 <Button Text="{Binding FavoriteOption}"
@@ -75,7 +73,7 @@
                 <Label Text="{x:Static localization:AppStringResources.Authors}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding AuthorVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="2" Grid.Column="0"/>
 
                 <Button Text="{Binding AuthorOption}"
@@ -90,7 +88,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding PublisherVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="3" Grid.Column="0"/>
 
                 <Button Text="{Binding PublisherOption}"
@@ -105,7 +103,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding PublishYearVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="4" Grid.Column="0"/>
 
                 <Button Text="{Binding PublishYearOption}"
@@ -120,7 +118,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookFormat}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding FormatVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="5" Grid.Column="0"/>
 
                 <Button Text="{Binding FormatOption}"
@@ -135,7 +133,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding LanguageVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="6" Grid.Column="0"/>
 
                 <Button Text="{Binding LanguageOption}"
@@ -150,7 +148,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookRating}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding RatingVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="7" Grid.Column="0"/>
 
                 <Button Text="{Binding RatingOption}"
@@ -165,7 +163,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookLocation}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding LocationVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="8" Grid.Column="0"/>
 
                 <Button Text="{Binding LocationOption}"
@@ -180,7 +178,7 @@
                 <Label Text="{x:Static localization:AppStringResources.BookSeries}"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding SeriesVisible}"
-                       Margin="0,0,20,0"
+                       Padding="0,0,10,0"
                        Grid.Row="9" Grid.Column="0"/>
 
                 <Button Text="{Binding SeriesOption}"

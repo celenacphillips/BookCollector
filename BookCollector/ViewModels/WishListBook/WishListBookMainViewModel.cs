@@ -291,7 +291,7 @@ namespace BookCollector.ViewModels.WishListBook
                 var title = this.SelectedWishlistBook.BookTitle;
 
                 string? text;
-                if (this.AuthorList != null)
+                if (this.AuthorList != null && this.AuthorList.Count > 0)
                 {
                     text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedWishlistBook.BookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
 
@@ -320,9 +320,9 @@ namespace BookCollector.ViewModels.WishListBook
 
         private void RemoveFromStaticList()
         {
-            if (WishListViewModel.filteredWishlistBookList1 != null)
+            if (WishListViewModel.fullWishlistBookList != null)
             {
-                WishListViewModel.RefreshView = this.RemoveWishListBookFromStaticList(WishListViewModel.filteredWishlistBookList1, WishListViewModel.filteredWishlistBookList2);
+                WishListViewModel.RefreshView = this.RemoveWishListBookFromStaticList(WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList2);
             }
         }
 

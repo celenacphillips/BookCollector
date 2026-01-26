@@ -6,6 +6,7 @@ using BookCollector.Data.Database;
 using BookCollector.Data.DatabaseModels;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -131,6 +132,8 @@ namespace BookCollector.Data.Models
 
             if (authorList != null)
             {
+                authorList = authorList.Where(x => !string.IsNullOrEmpty(x.FirstName) && !string.IsNullOrEmpty(x.LastName)).ToObservableCollection();
+
                 for (int i = 0; i < authorList.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(authorList[i].FirstName) &&

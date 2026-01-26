@@ -59,6 +59,7 @@ namespace BookCollector.ViewModels.Collection
                 if (this.CollectionNameNotValid)
                 {
                     await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {

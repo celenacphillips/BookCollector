@@ -129,38 +129,43 @@ namespace BookCollector.ViewModels.Book
         public bool RefreshView { get; set; }
 
         [RelayCommand]
-        public static async Task AddSeries()
+        public async Task AddSeries()
         {
             var view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
             await Shell.Current.Navigation.PushAsync(view);
+            this.RefreshView = true;
         }
 
         [RelayCommand]
-        public static async Task AddCollection()
+        public async Task AddCollection()
         {
             var view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
             await Shell.Current.Navigation.PushAsync(view);
+            this.RefreshView = true;
         }
 
         [RelayCommand]
-        public static async Task AddGenre()
+        public async Task AddGenre()
         {
             var view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
             await Shell.Current.Navigation.PushAsync(view);
+            this.RefreshView = true;
         }
 
         [RelayCommand]
-        public static async Task AddLocation()
+        public async Task AddLocation()
         {
             var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
             await Shell.Current.Navigation.PushAsync(view);
+            this.RefreshView = true;
         }
 
         [RelayCommand]
-        public static async Task AddNewAuthor()
+        public async Task AddNewAuthor()
         {
             var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
             await Shell.Current.Navigation.PushAsync(view);
+            this.RefreshView = true;
         }
 
         public async Task SetViewModelData()
@@ -181,8 +186,8 @@ namespace BookCollector.ViewModels.Book
                     var authors = AuthorsViewModel.SetList(this.HiddenAuthorsOn);
                     var bookAuthorList = FillLists.GetAllBookAuthorsForBook(this.EditedBook.BookGuid);
 
-                    this.ChaptersToDelete = [];
-                    this.AuthorsToDelete = [];
+                    this.ChaptersToDelete ??= [];
+                    this.AuthorsToDelete ??= [];
 
                     this.BookInfo1SectionValue = true;
                     this.ReadingDataSectionValue = true;
@@ -270,24 +275,27 @@ namespace BookCollector.ViewModels.Book
                     this.AuthorList = AuthorsViewModel.filteredAuthorList1;
                     var bookAuthors = bookAuthorList.Result;
 
-                    this.AuthorPickers = [];
+                    this.AuthorPickers ??= [];
 
-                    if (bookAuthors != null && bookAuthors.Count > 0)
+                    if (this.AuthorPickers.Count == 0)
                     {
-                        foreach (var bookAuthor in bookAuthors)
+                        if (bookAuthors != null && bookAuthors.Count > 0)
                         {
-                            if (this.AuthorList != null)
+                            foreach (var bookAuthor in bookAuthors)
                             {
-                                var author = this.AuthorList.SingleOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
-
-                                author ??= AuthorsViewModel.fullAuthorList?.FirstOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
-
-                                this.AuthorPickers.Add(new AuthorPicker()
+                                if (this.AuthorList != null)
                                 {
-                                    AuthorList = this.AuthorList,
-                                    SelectedAuthor = author,
-                                    SelectedAuthorString = author?.FullName ?? AppStringResources.SelectAnAuthor,
-                                });
+                                    var author = this.AuthorList.SingleOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
+
+                                    author ??= AuthorsViewModel.fullAuthorList?.FirstOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
+
+                                    this.AuthorPickers.Add(new AuthorPicker()
+                                    {
+                                        AuthorList = this.AuthorList,
+                                        SelectedAuthor = author,
+                                        SelectedAuthorString = author?.FullName ?? AppStringResources.SelectAnAuthor,
+                                    });
+                                }
                             }
                         }
                     }

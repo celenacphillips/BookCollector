@@ -186,7 +186,8 @@ namespace BookCollector.CustomPermissions
             var activity = Platform.CurrentActivity!;
             var context = activity.ApplicationContext;
 
-            if (ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
+            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) != Permission.Granted && 
+                ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
             {
                 var collection = MediaStore.Images.Media.ExternalContentUri;
 

@@ -211,9 +211,9 @@ public partial class MainSettingsView : ContentPage
 
                 Data.Colors.SetColors(hexCode);
 
-#if ANDROID
-                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
-#endif
+//#if ANDROID
+//                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
+//#endif
 
                 Preferences.Set("AppColor", hexCode);
             }

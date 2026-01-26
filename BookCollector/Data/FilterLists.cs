@@ -271,6 +271,13 @@ namespace BookCollector.Data
         {
             var filterList = bookList;
 
+            ratingOption = ratingOption.Equals(AppStringResources.ZeroStars) ? "0" : ratingOption;
+            ratingOption = ratingOption.Equals(AppStringResources.OneStar) ? "1" : ratingOption;
+            ratingOption = ratingOption.Equals(AppStringResources.TwoStars) ? "2" : ratingOption;
+            ratingOption = ratingOption.Equals(AppStringResources.ThreeStars) ? "3" : ratingOption;
+            ratingOption = ratingOption.Equals(AppStringResources.FourStars) ? "4" : ratingOption;
+            ratingOption = ratingOption.Equals(AppStringResources.FiveStars) ? "5" : ratingOption;
+
             if (!ratingOption.Equals(AppStringResources.AllRatings))
             {
                 filterList = bookList.Where(x => x.Rating == int.Parse(ratingOption))
