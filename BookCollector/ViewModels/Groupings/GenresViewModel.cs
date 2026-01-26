@@ -27,7 +27,7 @@ namespace BookCollector.ViewModels.Groupings
         public GenresViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.GenreView_InfoText}";
             this.ViewTitle = AppStringResources.Genres;
             RefreshView = true;
@@ -117,7 +117,6 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
 
                         this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
-                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

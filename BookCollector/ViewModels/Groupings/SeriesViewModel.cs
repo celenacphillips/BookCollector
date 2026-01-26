@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Groupings
         public SeriesViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesView_InfoText}";
             this.ViewTitle = AppStringResources.Series;
             RefreshView = true;
@@ -118,7 +118,6 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
                         this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
-                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

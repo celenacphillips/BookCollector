@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Location
         {
             this.View = view;
             this.SelectedLocation = location;
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.LocationMainView_InfoText.Replace("location", $"{this.SelectedLocation.LocationName}")}";
             RefreshView = true;
         }
@@ -121,7 +121,6 @@ namespace BookCollector.ViewModels.Location
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
-                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 

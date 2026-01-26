@@ -36,20 +36,30 @@ public partial class BookSearchView : ContentPage
         this.BindingContext = viewModel;
 
         this.InitializeComponent();
+        this.FindByName<CollectionView>("bookList").IsVisible = false;
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
     private void OnLayoutMeasured(object sender, EventArgs e)
     {
-        // Measure the components above the CollectionView
-        var headerHeight = 0;
-        var searchHeight = 0;
-
-        var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, searchHeight);
-
-        if (usableHeight > 0)
+        this.Dispatcher.Dispatch(() =>
         {
-            this.FindByName<CollectionView>("bookList").HeightRequest = usableHeight;
-        }
+            // Wait until the label have real heights
+            if (this.totalString.Height <= 0)
+            {
+                return;
+            }
+
+            // Measure the components above the CollectionView
+            var headerHeight = this.totalString.Height;
+
+            var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, 0);
+
+            if (usableHeight > 0)
+            {
+                this.FindByName<CollectionView>("bookList").HeightRequest = usableHeight;
+                this.FindByName<CollectionView>("bookList").IsVisible = true;
+            }
+        });
     }
 }

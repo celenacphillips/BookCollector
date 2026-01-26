@@ -15,28 +15,33 @@ public partial class SeriesView : ContentPage
         this.BindingContext = this.ViewModel;
 
         this.InitializeComponent();
+        this.seriesCollectionList.IsVisible = false;
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
     private void OnLayoutMeasured(object sender, EventArgs e)
     {
-        // Wait until the label AND search bar have real heights
-        if (this.totalString.Height <= 0 || this.searchBar.Height <= 0)
+        this.Dispatcher.Dispatch(() =>
         {
-            return;
-        }
+            // Wait until the label AND search bar have real heights
+            if (this.totalString.Height <= 0 || this.searchBar.Height <= 0)
+            {
+                return;
+            }
 
-        // Measure the components above the CollectionView
-        var headerHeight = this.totalString.Height;
-        var searchHeight = this.searchBar.Height;
+            // Measure the components above the CollectionView
+            var headerHeight = this.totalString.Height;
+            var searchHeight = this.searchBar.Height;
 
-        var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, searchHeight);
+            var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, searchHeight);
 
-        if (usableHeight > 0)
-        {
-            this.seriesCollectionList.FindByName<CollectionView>("seriesList").HeightRequest = usableHeight;
-            this.ViewModel.ShowCollectionViewFooter = this.ViewModel.FilteredSeriesCount > 0;
-        }
+            if (usableHeight > 0)
+            {
+                this.seriesCollectionList.FindByName<CollectionView>("seriesList").HeightRequest = usableHeight;
+                this.ViewModel.ShowCollectionViewFooter = this.ViewModel.FilteredSeriesCount > 0;
+                this.seriesCollectionList.IsVisible = true;
+            }
+        });
     }
 
     private SeriesViewModel ViewModel { get; set; }

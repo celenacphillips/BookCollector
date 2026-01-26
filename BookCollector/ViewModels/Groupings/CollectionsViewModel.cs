@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.View = view;
 
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
             this.ViewTitle = AppStringResources.Collections;
             RefreshView = true;
@@ -118,7 +118,6 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
-                        this.CollectionViewHeight = this.DeviceHeight;
 
                         await Task.WhenAll(sortList);
 

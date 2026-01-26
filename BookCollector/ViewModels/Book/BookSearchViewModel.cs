@@ -47,7 +47,7 @@ namespace BookCollector.ViewModels.Book
             this.View = view;
             this.Input = inputIsbn;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
         }
 
         public object? PreviousViewModel { get; set; }

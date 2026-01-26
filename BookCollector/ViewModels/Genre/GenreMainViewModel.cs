@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Genre
         {
             this.View = view;
             this.SelectedGenre = genre;
-            this.CollectionViewHeight = 300;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{this.SelectedGenre.GenreName}")}";
             RefreshView = true;
         }
@@ -121,7 +121,6 @@ namespace BookCollector.ViewModels.Genre
                             this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                             this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
-                            this.CollectionViewHeight = this.DeviceHeight;
 
                             await Task.WhenAll(sortList);
 
