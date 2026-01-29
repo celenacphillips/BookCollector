@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/BookCollector/appsettings.json
+/BookCollector/20260129-BookCollectorExport.xlsx
