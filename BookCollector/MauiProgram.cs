@@ -23,9 +23,9 @@ namespace BookCollector
                 .UseMicrocharts()
                 .ConfigureFonts(fonts =>
                 {
+                    fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                    fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
                 })
                 .ConfigureMauiHandlers(handlers =>
                 {

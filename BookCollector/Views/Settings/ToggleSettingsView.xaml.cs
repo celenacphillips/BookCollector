@@ -161,6 +161,11 @@ public partial class ToggleSettingsView : ContentPage
         AuthorsViewModel.RefreshView = true;
         LocationsViewModel.RefreshView = true;
 
+        ReadingViewModel.filteredBookList2 = null;
+        ToBeReadViewModel.filteredBookList2 = null;
+        ReadViewModel.filteredBookList2 = null;
+        AllBooksViewModel.filteredBookList2 = null;
+
         if (e.Value)
         {
             if (!this.HiddenCollectionsOn)
@@ -196,6 +201,8 @@ public partial class ToggleSettingsView : ContentPage
     {
         CollectionsViewModel.RefreshView = true;
 
+        CollectionsViewModel.filteredCollectionList2 = null;
+
         var variable = CollectionsViewModel.HideBooks(e.Value);
 
         if (!e.Value)
@@ -209,6 +216,8 @@ public partial class ToggleSettingsView : ContentPage
     public void OnHiddenGenresToggled(object sender, ToggledEventArgs e)
     {
         GenresViewModel.RefreshView = true;
+
+        GenresViewModel.filteredGenreList2 = null;
 
         var variable = GenresViewModel.HideBooks(e.Value);
 
@@ -224,6 +233,8 @@ public partial class ToggleSettingsView : ContentPage
     {
         SeriesViewModel.RefreshView = true;
 
+        SeriesViewModel.filteredSeriesList2 = null;
+
         var variable = SeriesViewModel.HideBooks(e.Value);
 
         if (!e.Value)
@@ -237,6 +248,8 @@ public partial class ToggleSettingsView : ContentPage
     public void OnHiddenAuthorsToggled(object sender, ToggledEventArgs e)
     {
         AuthorsViewModel.RefreshView = true;
+
+        AuthorsViewModel.filteredAuthorList2 = null;
 
         var variable = AuthorsViewModel.HideBooks(e.Value);
 
@@ -252,6 +265,8 @@ public partial class ToggleSettingsView : ContentPage
     {
         LocationsViewModel.RefreshView = true;
 
+        LocationsViewModel.filteredLocationList2 = null;
+
         var variable = LocationsViewModel.HideBooks(e.Value);
 
         if (!e.Value)
@@ -265,6 +280,8 @@ public partial class ToggleSettingsView : ContentPage
     public void OnHiddenWishlistBooksToggled(object sender, ToggledEventArgs e)
     {
         WishListViewModel.RefreshView = true;
+
+        WishListViewModel.filteredWishlistBookList2 = null;
 
         Preferences.Set("HiddenWishlistBooksOn", e.Value);
     }

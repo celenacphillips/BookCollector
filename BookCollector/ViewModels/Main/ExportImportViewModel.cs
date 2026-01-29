@@ -830,6 +830,13 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
+        private string BookCoverFileName(string bookTitle, string extension)
+        {
+            string output = bookTitle.Replace(" ", "_");
+
+            return $"{output}{extension}";
+        }
+
         /*********************** Table Methods ***********************/
 
         /*********************** Book Methods ***********************/
@@ -941,7 +948,8 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     var byteArray = DownloadImage(book.BookCoverUrl);
                                     var fi = new FileInfo(book.BookCoverUrl);
-                                    var exportLocation = $"{bookCoverFileLocation}/{fi.Name}";
+                                    var fileName = this.BookCoverFileName(book.BookTitle, fi.Extension);
+                                    var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                     File.WriteAllBytes(exportLocation, byteArray);
                                 }
                                 catch (Exception ex)
@@ -1208,17 +1216,18 @@ namespace BookCollector.ViewModels.Main
 
                             if (!string.IsNullOrEmpty(book.BookCoverUrl))
                             {
-                                var bookCoverFile = $"{wishlistBooksImageExport}/{AppStringResources.BookCoverDownloads.Replace(" ", string.Empty)}";
+                                var bookCoverFileLocation = $"{wishlistBooksImageExport}/{AppStringResources.BookCoverDownloads.Replace(" ", string.Empty)}";
 
-                                if (!Directory.Exists(bookCoverFile))
+                                if (!Directory.Exists(bookCoverFileLocation))
                                 {
-                                    Directory.CreateDirectory(bookCoverFile);
+                                    Directory.CreateDirectory(bookCoverFileLocation);
                                 }
 
                                 var byteArray = DownloadImage(book.BookCoverUrl);
 
                                 var fi = new FileInfo(book.BookCoverUrl);
-                                var exportLocation = $"{bookCoverFile}/{fi.Name}";
+                                var fileName = this.BookCoverFileName(book.BookTitle, fi.Extension);
+                                var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                 File.WriteAllBytes(exportLocation, byteArray);
                             }
                         }

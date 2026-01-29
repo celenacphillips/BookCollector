@@ -2003,7 +2003,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing uploaded book covers from a spreadsheet. If you will not be automatically uploading book covers through the import feature, you do not need the permission granted..
+        ///   Looks up a localized string similar to This app only needs permission to Files and Photos importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process..
         /// </summary>
         internal static string Files_Photos_Description {
             get {

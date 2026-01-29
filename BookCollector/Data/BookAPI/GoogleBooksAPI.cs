@@ -15,6 +15,8 @@ namespace BookCollector.Data.BookAPI
     /// </summary>
     public class GoogleBooksAPI : BaseViewModel
     {
+        private const string APIKEY = "";
+
         public static async Task<(ObservableCollection<Item>?, int)> Search(string input)
         {
             var items = new ObservableCollection<Item>();
@@ -22,7 +24,7 @@ namespace BookCollector.Data.BookAPI
 
             HttpClient client = new ()
             {
-                BaseAddress = new Uri("https://www.googleapis.com/books/v1/volumes?q=isbn:"),
+                BaseAddress = new Uri($"https://www.googleapis.com/books/v1/volumes?key={APIKEY}&q=isbn:"),
             };
             var endpoint = $"{client.BaseAddress}{input}";
 
@@ -46,7 +48,10 @@ namespace BookCollector.Data.BookAPI
                             {
                                 foreach (var item in isbnResponse.items)
                                 {
-                                    if (item.VolumeInfo.ImageLinks.thumbnail.StartsWith("http://"))
+                                    if (item.VolumeInfo != null &&
+                                        item.VolumeInfo.ImageLinks != null &&
+                                        item.VolumeInfo.ImageLinks.thumbnail != null &&
+                                        item.VolumeInfo.ImageLinks.thumbnail.StartsWith("http://"))
                                     {
                                         item.VolumeInfo.ImageLinks.thumbnail = item.VolumeInfo.ImageLinks.thumbnail.Replace("http://", "https://");
                                     }

@@ -48,6 +48,7 @@ namespace BookCollector.ViewModels.Book
             this.Input = inputIsbn;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
             this.CollectionViewHeight = this.DeviceHeight;
+            this.ShowCollectionViewFooter = false;
         }
 
         public object? PreviousViewModel { get; set; }
@@ -106,6 +107,8 @@ namespace BookCollector.ViewModels.Book
                         this.IsbnItems = items;
                         this.TotalItems = totalItems;
                     }
+
+                    this.ShowCollectionViewFooter = totalItems > 0;
                 }
                 catch (Exception ex)
                 {

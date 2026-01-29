@@ -1340,7 +1340,7 @@ Email us!</value>
     <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
   </data>
   <data name="Files_Photos_Description" xml:space="preserve">
-    <value>This app only needs permission to Files and Photos when importing uploaded book covers from a spreadsheet. If you will not be automatically uploading book covers through the import feature, you do not need the permission granted.</value>
+    <value>This app only needs permission to Files and Photos importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process.</value>
   </data>
   <data name="DataStorage" xml:space="preserve">
     <value>Data Storage</value>

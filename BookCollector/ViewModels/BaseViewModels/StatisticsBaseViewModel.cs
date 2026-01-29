@@ -96,7 +96,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 Entries = entries,
                 LabelMode = LabelMode.RightOnly,
                 BackgroundColor = SKColor.Empty,
-                LabelTextSize = 30,
+                LabelTextSize = ConvertMauiFontToSkiaPixels(14f),
                 GraphPosition = GraphPosition.AutoFill,
             };
         }
@@ -130,8 +130,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                 LabelOrientation = Orientation.Vertical,
                 ValueLabelOrientation = Orientation.Horizontal,
                 BackgroundColor = SKColor.Empty,
-                LabelTextSize = 30,
-                ValueLabelTextSize = 30,
+                LabelTextSize = ConvertMauiFontToSkiaPixels(14f),
+                ValueLabelTextSize = ConvertMauiFontToSkiaPixels(14f),
                 MaxValue = this.TotalBooks,
             };
         }
@@ -159,6 +159,12 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+        }
+
+        public static float ConvertMauiFontToSkiaPixels(float mauiFontSizeDp)
+        {
+            float density = (float)DeviceDisplay.MainDisplayInfo.Density;
+            return mauiFontSizeDp * density;
         }
 
         /*********************** Series Methods ***********************/

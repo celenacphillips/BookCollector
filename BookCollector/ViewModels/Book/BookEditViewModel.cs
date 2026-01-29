@@ -20,6 +20,7 @@ using BookCollector.Views.Series;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
@@ -312,7 +313,7 @@ namespace BookCollector.ViewModels.Book
 
                                 if (author == null)
                                 {
-                                    author = await Database.SaveAuthorAsync(author);
+                                    author = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(selectedAuthor));
                                     AuthorEditViewModel.AddToStaticList(author);
                                     this.AuthorList.Add(author);
                                 }
@@ -323,6 +324,14 @@ namespace BookCollector.ViewModels.Book
                                     SelectedAuthor = author,
                                     SelectedAuthorString = author?.FullName ?? AppStringResources.SelectAnAuthor,
                                 });
+                            }
+                        }
+
+                        foreach (var authorPicker in this.AuthorPickers)
+                        {
+                            if (this.EditedBook.SelectedAuthors.Any(x => x.FirstName.Equals(authorPicker.SelectedAuthor?.FirstName) && x.LastName.Equals(authorPicker.SelectedAuthor?.LastName)))
+                            {
+                                this.EditedBook.SelectedAuthors.RemoveAll(x => x.FirstName.Equals(authorPicker.SelectedAuthor?.FirstName) && x.LastName.Equals(authorPicker.SelectedAuthor?.LastName));
                             }
                         }
                     }
@@ -810,6 +819,7 @@ namespace BookCollector.ViewModels.Book
                 this.EditedBook.BookMinuteListened = this.EditedBook.BookMinutesTotal;
                 this.EditedBook.ListenTimeSpan = this.EditedBook.TotalTimeSpan;
                 this.EditedBook.BookListenedTime = this.EditedBook.BookTotalTime;
+                this.EditedBook.ListenTimeString = $"{this.EditedBook.BookHourListened:0}:{this.EditedBook.BookMinuteListened:00}";
             }
 
             this.EditedBook.SetReadingProgress();
@@ -856,12 +866,14 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.ShowPages = true;
                     this.ShowTime = false;
+                    this.ShowCheckpoints = this.EditedBook.BookPageTotal != 0;
                 }
 
                 if (this.SelectedBookFormat.Equals(AppStringResources.Audiobook))
                 {
                     this.ShowPages = false;
                     this.ShowTime = true;
+                    this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
                 }
             }
             catch (Exception ex)
