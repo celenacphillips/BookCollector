@@ -6,7 +6,8 @@
              x:Name="overlay">
 
     <Grid BindingContext="{x:Reference overlay}"
-          IsVisible="{Binding IsOverlayVisible}">
+          IsVisible="{Binding IsOverlayVisible}"
+          Padding="0,30">
 
         <BoxView Color="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
                  Opacity="0.8"
