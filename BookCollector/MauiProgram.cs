@@ -3,11 +3,14 @@
 // </copyright>
 
 using BarcodeScanner.Mobile;
+using BookCollector.Data.BookAPI;
 using BookCollector.Data.Database;
 using CommunityToolkit.Maui;
 using Maui.NullableDateTimePicker;
 using Microcharts.Maui;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace BookCollector
 {
@@ -38,6 +41,17 @@ namespace BookCollector
 #endif
 
             builder.Services.AddSingleton<BookCollectorDatabase>();
+
+            var a = Assembly.GetExecutingAssembly();
+            using var stream = a.GetManifestResourceStream("BookCollector.appsettings.json");
+
+            var config = new ConfigurationBuilder()
+                        .AddJsonStream(stream)
+                        .Build();
+
+            builder.Configuration.AddConfiguration(config);
+
+            GoogleBooksAPI.Initialize(builder.Configuration);
 
             return builder.Build();
         }

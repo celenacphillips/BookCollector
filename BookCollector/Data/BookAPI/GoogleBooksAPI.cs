@@ -2,11 +2,14 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace BookCollector.Data.BookAPI
 {
@@ -15,18 +18,26 @@ namespace BookCollector.Data.BookAPI
     /// </summary>
     public class GoogleBooksAPI : BaseViewModel
     {
-        private const string APIKEY = "";
+        private static IConfiguration configuration;
+
+        public static void Initialize(IConfiguration config)
+        {
+            configuration = config;
+        }
 
         public static async Task<(ObservableCollection<Item>?, int)> Search(string input)
         {
             var items = new ObservableCollection<Item>();
             var totalItemCount = 0;
 
+            var baseURI = configuration.GetRequiredSection("Settings").GetRequiredSection("BaseURI").Value;
+            var apiKey = configuration.GetRequiredSection("Settings").GetRequiredSection("APIKey").Value;
+
             HttpClient client = new ()
             {
-                BaseAddress = new Uri($"https://www.googleapis.com/books/v1/volumes?key={APIKEY}&q=isbn:"),
+                BaseAddress = new Uri(baseURI),
             };
-            var endpoint = $"{client.BaseAddress}{input}";
+            var endpoint = $"{client.BaseAddress}?key={apiKey}&q=isbn:{input}";
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
