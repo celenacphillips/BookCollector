@@ -4,13 +4,21 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Main.ExportImportView"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Main"
              x:DataType="viewModel:ExportImportViewModel"
              Title="{x:Static localization:AppStringResources.Export_Import}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"/>
+        <ToolbarItem Command="{Binding InfoPopupCommand}"
+                     IsEnabled="{Binding RefreshEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -22,20 +30,24 @@
                          Command="{Binding RefreshCommand}"
                          IsEnabled="{Binding RefreshEnabled}">
 
-                <ScrollView>
+                <ScrollView IsEnabled="{Binding IsEnabled}"
+                            IsVisible="{Binding IsVisible}">
                     <VerticalStackLayout Margin="20">
 
-                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}" />
+                        <Label Text="{x:Static localization:AppStringResources.Export_Import_Question}"
+                               HorizontalOptions="Center"/>
 
-                        <Grid Margin="20">
+                        <Grid Margin="20"
+                              HorizontalOptions="Center">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Button Text="{x:Static localization:AppStringResources.Export}"
                                     Margin="10"
+                                    Padding="50,0"
                                     Command="{Binding ExportCommand}"
                                     Grid.Row="0" Grid.Column="0"
                                     IsEnabled="{Binding ExportEnabled}"
@@ -43,6 +55,7 @@
 
                             <Button Text="{x:Static localization:AppStringResources.Import}"
                                     Margin="10"
+                                    Padding="50,0"
                                     Command="{Binding ImportCommand}"
                                     Grid.Row="0" Grid.Column="1"
                                     IsEnabled="{Binding ImportEnabled}"
@@ -50,7 +63,7 @@
 
                         </Grid>
 
-                        <Grid HorizontalOptions="Start"
+                        <Grid HorizontalOptions="Center"
                               IsVisible="{Binding OutputVisible}">
 
                             <Grid.ColumnDefinitions>
@@ -122,7 +135,8 @@
 
                             <Label Text="{Binding FinalOutput}"
                                    Grid.Row="10" Grid.Column="0"
-                                   Margin="10,5"/>
+                                   Margin="10,5"
+                                   x:Name="finalOutput"/>
 
                         </Grid>
 
@@ -246,15 +260,7 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
     

@@ -1,3 +1,8 @@
+// <copyright file="ReadingView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Library;
 
 namespace BookCollector.Views.Library;
@@ -8,22 +13,57 @@ public partial class ReadingView : ContentPage
     {
         // Put on first view to set the status bar to whatever color the user wants the app to be.
         var savedColor = Preferences.Get("AppColor", "#336699" /* Default */);
-#if ANDROID
-        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(savedColor));
-#endif
+
+        //if (DeviceInfo.Platform == DevicePlatform.Android)
+        //{
+        //    try
+        //    {
+        //        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(savedColor));
+        //    }
+        //    catch
+        //    {
+        //    }
+        //}
 
         this.ViewModel = new ReadingViewModel(this);
         this.BindingContext = this.ViewModel;
 
         this.InitializeComponent();
+        this.bookCollectionList.IsVisible = false;
+        this.rootLayout.SizeChanged += this.OnLayoutMeasured;
+    }
+
+    private void OnLayoutMeasured(object sender, EventArgs e)
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            // Wait until the label AND search bar have real heights
+            if (this.totalString.Height <= 0 || this.searchBar.Height <= 0)
+            {
+                return;
+            }
+
+            // Measure the components above the CollectionView
+            var headerHeight = this.totalString.Height;
+            var searchHeight = this.searchBar.Height;
+
+            var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, searchHeight);
+
+            if (usableHeight > 0)
+            {
+                this.bookCollectionList.FindByName<CollectionView>("bookList").HeightRequest = usableHeight;
+                this.ViewModel.ShowCollectionViewFooter = this.ViewModel.FilteredBooksCount > 0;
+                this.bookCollectionList.IsVisible = true;
+            }
+        });
     }
 
     private ReadingViewModel ViewModel { get; set; }
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        using var variable = this.ViewModel.SetViewModelData();
+        await this.ViewModel.SetViewModelData();
     }
 }

@@ -1,9 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="FilterPopupViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Views.Controls;
+using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Popups
 {
@@ -13,7 +20,7 @@ namespace BookCollector.ViewModels.Popups
         public bool favoriteVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? favoritePicker;
+        public List<string>? favoritePicker;
 
         [ObservableProperty]
         public string? favoriteOption;
@@ -24,7 +31,7 @@ namespace BookCollector.ViewModels.Popups
         public bool formatVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? formatPicker;
+        public List<string>? formatPicker;
 
         [ObservableProperty]
         public string? formatOption;
@@ -35,7 +42,7 @@ namespace BookCollector.ViewModels.Popups
         public bool authorVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? authorPicker;
+        public List<string>? authorPicker;
 
         [ObservableProperty]
         public string? authorOption;
@@ -46,7 +53,7 @@ namespace BookCollector.ViewModels.Popups
         public bool publisherVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? publisherPicker;
+        public List<string>? publisherPicker;
 
         [ObservableProperty]
         public string? publisherOption;
@@ -57,7 +64,7 @@ namespace BookCollector.ViewModels.Popups
         public bool publishYearVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? publishYearPicker;
+        public List<string>? publishYearPicker;
 
         [ObservableProperty]
         public string? publishYearOption;
@@ -68,7 +75,7 @@ namespace BookCollector.ViewModels.Popups
         public bool languageVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? languagePicker;
+        public List<string>? languagePicker;
 
         [ObservableProperty]
         public string? languageOption;
@@ -79,7 +86,7 @@ namespace BookCollector.ViewModels.Popups
         public bool ratingVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? ratingPicker;
+        public List<string>? ratingPicker;
 
         [ObservableProperty]
         public string? ratingOption;
@@ -90,7 +97,7 @@ namespace BookCollector.ViewModels.Popups
         public bool locationVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? locationPicker;
+        public List<string>? locationPicker;
 
         [ObservableProperty]
         public string? locationOption;
@@ -101,21 +108,28 @@ namespace BookCollector.ViewModels.Popups
         public bool seriesVisible;
 
         [ObservableProperty]
-        public ObservableCollection<string>? seriesPicker;
+        public List<string>? seriesPicker;
 
         [ObservableProperty]
         public string? seriesOption;
 
-        public FilterPopupViewModel(Popup popup, string viewTitle)
+        /********************************************************/
+
+        public FilterPopupViewModel(Popup popup, string viewTitle, ContentPage view)
         {
             this.Popup = popup;
             this.ViewTitle = viewTitle;
-            this.PopupWidth = this.DeviceWidth - 50;
+            this.View = view;
+            this.PopupWidth = this.DeviceWidth - 30;
+
+            this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
 
         public double PopupWidth { get; set; }
 
         private Popup Popup { get; set; }
+
+        public Grid OverlaySection { get; set; }
 
         [RelayCommand]
         public async Task Close()
@@ -129,7 +143,12 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetFavoritePicker()
         {
-            this.FavoritePicker = [AppStringResources.Both, AppStringResources.Favorites, AppStringResources.NonFavorites];
+            this.FavoritePicker =
+            [
+                AppStringResources.Both,
+                AppStringResources.Favorites,
+                AppStringResources.NonFavorites,
+            ];
         }
 
         public void SetFormatPicker(ObservableCollection<string>? formats)
@@ -168,7 +187,16 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetRatingPicker()
         {
-            this.RatingPicker = [AppStringResources.AllRatings, $"0", $"1", $"2", $"3", $"4", $"5"];
+            this.RatingPicker =
+            [
+                AppStringResources.AllRatings,
+                AppStringResources.ZeroStars,
+                AppStringResources.OneStar,
+                AppStringResources.TwoStars,
+                AppStringResources.ThreeStars,
+                AppStringResources.FourStars,
+                AppStringResources.FiveStars,
+            ];
         }
 
         public void SetLocationPicker(ObservableCollection<string>? locations)
@@ -183,6 +211,132 @@ namespace BookCollector.ViewModels.Popups
             this.SeriesPicker = series != null ? [.. series] : null;
             this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
             this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
+        }
+
+        [RelayCommand]
+        public async Task FavoriteChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.Favorite,
+                this.FavoritePicker,
+                this.FavoriteOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task AuthorChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.Authors,
+                this.AuthorPicker,
+                this.AuthorOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task PublisherChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookPublisher,
+                this.PublisherPicker,
+                this.PublisherOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task PublishYearChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookPublishYear,
+                this.PublishYearPicker,
+                this.PublishYearOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task FormatChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookFormat,
+                this.FormatPicker,
+                this.FormatOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task LanguageChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookLanguage,
+                this.LanguagePicker,
+                this.LanguageOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task RatingChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookRating,
+                this.RatingPicker,
+                this.RatingOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task LocationChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookLocation,
+                this.LocationPicker,
+                this.LocationOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        [RelayCommand]
+        public async Task SeriesChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookSeries,
+                this.SeriesPicker,
+                this.SeriesOption,
+                true,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
         }
 
         private void SetPreferences()

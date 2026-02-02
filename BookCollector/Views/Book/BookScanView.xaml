@@ -14,7 +14,7 @@
                                  OnDetected="CameraView_OnDetected"
                                  TorchOn="False"
                                  VibrationOnDetected="True"
-                                 ScanInterval="50"
+                                 ScanInterval="25"
                                  x:Name="barcodeScannerView"/>
             </ScrollView>
         </RefreshView>

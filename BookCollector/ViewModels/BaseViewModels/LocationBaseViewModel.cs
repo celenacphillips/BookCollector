@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="LocationBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
 using BookCollector.Views.Location;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<LocationModel>? fullLocationList;
 
         [ObservableProperty]
-        public static ObservableCollection<LocationModel>? filteredLocationList;
+        public static ObservableCollection<LocationModel>? filteredLocationList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<LocationModel>? filteredLocationList2;
 
         [ObservableProperty]
         public int totalLocationsCount;

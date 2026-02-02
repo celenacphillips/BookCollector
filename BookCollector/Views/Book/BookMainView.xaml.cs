@@ -1,3 +1,7 @@
+// <copyright file="BookMainView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Book;
 
@@ -7,9 +11,9 @@ public partial class BookMainView : ContentPage
 {
     private BookMainViewModel viewModel;
 
-    public BookMainView(BookModel book, string viewTitle)
+    public BookMainView(BookModel book, string viewTitle, object? previousViewModel = null)
     {
-        this.viewModel = new BookMainViewModel(book, this)
+        this.viewModel = new BookMainViewModel(book, this, previousViewModel)
         {
             ViewTitle = viewTitle,
         };
@@ -20,8 +24,8 @@ public partial class BookMainView : ContentPage
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        using var variable = this.viewModel.SetViewModelData();
+        await this.viewModel.SetViewModelData();
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Support.DataStorageView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             Title="{x:Static localization:AppStringResources.DataStorage}">
+    
+    <VerticalStackLayout Margin="20"
+                         HorizontalOptions="Center">
+        <Label Text="{x:Static localization:AppStringResources.DataStorageInfoText}"
+               Margin="10,0"
+               MaximumWidthRequest="500"
+               HorizontalTextAlignment="Center"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -120,8 +120,8 @@
   <data name="AppTheme" xml:space="preserve">
     <value>App Theme</value>
   </data>
-  <data name="Color" xml:space="preserve">
-    <value>Color</value>
+  <data name="AppColor" xml:space="preserve">
+    <value>App Color</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
@@ -135,8 +135,8 @@
   <data name="ExportLocation" xml:space="preserve">
     <value>Export Location</value>
   </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
+  <data name="AppLanguage" xml:space="preserve">
+    <value>App Language</value>
   </data>
   <data name="ShowComments" xml:space="preserve">
     <value>Show Comments in books</value>
@@ -206,9 +206,6 @@
   </data>
   <data name="Paperback" xml:space="preserve">
     <value>Paperback</value>
-  </data>
-  <data name="ApplicationTitle" xml:space="preserve">
-    <value>Book Collector</value>
   </data>
   <data name="Hardcover" xml:space="preserve">
     <value>Hardcover</value>
@@ -367,19 +364,22 @@
     <value>Add Existing Book</value>
   </data>
   <data name="HideCollection_Question" xml:space="preserve">
-    <value>Hide Collection when Settings &gt; Show Hidden Collections is off?</value>
+    <value>Hide Collection when Settings &gt; Show Hidden Collections is off? This will also hide any books associated with this collection.</value>
   </data>
   <data name="HideGenre_Question" xml:space="preserve">
-    <value>Hide Genre when Settings &gt; Show Hidden Genres is off?</value>
+    <value>Hide Genre when Settings &gt; Show Hidden Genres is off? This will also hide any books associated with this genre.</value>
   </data>
   <data name="HideSeries_Question" xml:space="preserve">
-    <value>Hide Series when Settings &gt; Show Hidden Series is off?</value>
+    <value>Hide Series when Settings &gt; Show Hidden Series is off? This will also hide any books associated with this series.</value>
   </data>
   <data name="HideLocation_Question" xml:space="preserve">
-    <value>Hide Location when Settings &gt; Show Hidden Location is off?</value>
+    <value>Hide Location when Settings &gt; Show Hidden Location is off? This will also hide any books associated with this location.</value>
   </data>
   <data name="HideAuthor_Question" xml:space="preserve">
-    <value>Hide Author when Settings &gt; Show Hidden Authors is off?</value>
+    <value>Hide Author when Settings &gt; Show Hidden Authors is off? This will also hide any books associated with this author.</value>
+  </data>
+  <data name="Blank1OfBlank2ItemsBlank3Unread" xml:space="preserve">
+    <value>Blank1 of Blank2 items (Blank3 unread)</value>
   </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
@@ -533,6 +533,12 @@
   </data>
   <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
     <value>Please allow Camera permission to scan barcodes!</value>
+  </data>
+  <data name="PleaseAllowPhotoPermissionToDownloadBookCoverPhotos" xml:space="preserve">
+    <value>Please allow Photos permission to automatically upload book cover photos!</value>
+  </data>
+  <data name="PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos" xml:space="preserve">
+    <value>Please allow Photos permission to download book cover photos!</value>
   </data>
   <data name="PleaseConnectToInternetToSearch" xml:space="preserve">
     <value>Please connect to Internet to search!</value>
@@ -699,8 +705,8 @@
   <data name="EndOfList" xml:space="preserve">
     <value>End of List</value>
   </data>
-  <data name="Currency" xml:space="preserve">
-    <value>Currency</value>
+  <data name="AppCurrency" xml:space="preserve">
+    <value>App Currency</value>
   </data>
   <data name="SelectYourAppCurrency" xml:space="preserve">
     <value>Select your app currency</value>
@@ -762,8 +768,8 @@
   <data name="NoSeries" xml:space="preserve">
     <value>No Series</value>
   </data>
-  <data name="BlankItems" xml:space="preserve">
-    <value>Blank items</value>
+  <data name="Blank1ItemsBlank2Unread" xml:space="preserve">
+    <value>Blank1 items (Blank2 unread)</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sort By</value>
@@ -846,12 +852,6 @@
   <data name="TopXLocations" xml:space="preserve">
     <value>Top x Locations</value>
   </data>
-  <data name="BooksReadThisYear" xml:space="preserve">
-    <value>Books Read This Year: yyyy</value>
-  </data>
-  <data name="PagesReadThisYear" xml:space="preserve">
-    <value>Pages Read This Year: yyyy</value>
-  </data>
   <data name="ZeroStars" xml:space="preserve">
     <value>Zero Stars</value>
   </data>
@@ -907,7 +907,8 @@
     <value>Import</value>
   </data>
   <data name="Export_Import_Question" xml:space="preserve">
-    <value>Would you like to import or export your data?</value>
+    <value>Would you like to import your data from or export your data to a spreadsheet?
+Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="ExportImportView_InfoText" xml:space="preserve">
     <value>Since all data is stored locally, you may wish to back up your data or move it to another device. You can even modify the output and reimport back into your library (please do so with caution).</value>
@@ -973,7 +974,7 @@
     <value>Chapters</value>
   </data>
   <data name="ChapterGuid" xml:space="preserve">
-    <value>Chapter Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>ChapterGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="ChapterOrder" xml:space="preserve">
     <value>Chapter Order</value>
@@ -982,28 +983,31 @@
     <value>Error saving chapter!</value>
   </data>
   <data name="CollectionGuid" xml:space="preserve">
-    <value>Collection Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>CollectionGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="ErrorSavingCollection" xml:space="preserve">
     <value>Error saving collection!</value>
   </data>
   <data name="GenreGuid" xml:space="preserve">
-    <value>Genre Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>GenreGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="ErrorSavingGenre" xml:space="preserve">
     <value>Error saving genre!</value>
   </data>
   <data name="SeriesGuid" xml:space="preserve">
-    <value>Series Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>SeriesGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="ErrorSavingSeries" xml:space="preserve">
     <value>Error saving series!</value>
   </data>
   <data name="BookAuthorGuid" xml:space="preserve">
-    <value>Book Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>BookAuthorGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="AuthorGuid" xml:space="preserve">
-    <value>Author Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>Author Guid</value>
+  </data>
+  <data name="AuthorGuid_Blank" xml:space="preserve">
+    <value>AuthorGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="ErrorSavingBookAuthor" xml:space="preserve">
     <value>Error saving book author!</value>
@@ -1018,13 +1022,13 @@
     <value>Error saving location!</value>
   </data>
   <data name="LocationGuid" xml:space="preserve">
-    <value>Location Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>LocationGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="Table_Waiting" xml:space="preserve">
     <value>Table: Waiting...</value>
   </data>
-  <data name="BookImportExportFileLocation" xml:space="preserve">
-    <value>Book Import Export File Location</value>
+  <data name="BookCoverFileName" xml:space="preserve">
+    <value>Book Cover File Name</value>
   </data>
   <data name="UploadExistingFile" xml:space="preserve">
     <value>Upload Existing File</value>
@@ -1060,10 +1064,11 @@
     <value>Et al.</value>
   </data>
   <data name="BookGuid_Blank" xml:space="preserve">
-    <value>Book Guid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
+    <value>BookGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD]</value>
   </data>
   <data name="BookCoverImages" xml:space="preserve">
-    <value>Book Cover Images</value>
+    <value>Book Cover Images
+(Must be checked with Books or Wishlist)</value>
   </data>
   <data name="ExistingBooks_Object" xml:space="preserve">
     <value>ExistingBooks_Object</value>
@@ -1079,5 +1084,320 @@
   </data>
   <data name="WarningThisActionCannotBeUndone" xml:space="preserve">
     <value>Warning! This action cannot be undone!</value>
+  </data>
+  <data name="AllDataHasBeenDeleted" xml:space="preserve">
+    <value>All data has been deleted.</value>
+  </data>
+  <data name="Hide_Question" xml:space="preserve">
+    <value>Hide?</value>
+  </data>
+  <data name="SelectAnAuthor" xml:space="preserve">
+    <value>Select an Author</value>
+  </data>
+  <data name="AuthorFullName" xml:space="preserve">
+    <value>Author Full Name</value>
+  </data>
+  <data name="CreateNewAuthor" xml:space="preserve">
+    <value>Create New Author</value>
+  </data>
+  <data name="CleaningUpTheData" xml:space="preserve">
+    <value>Cleaning up the data...</value>
+  </data>
+  <data name="ErrorParsingDataFromBook" xml:space="preserve">
+    <value>Error parsing data from book! Please contact support!</value>
+  </data>
+  <data name="UnableToOverwriteFile" xml:space="preserve">
+    <value>Unable to Overwrite File</value>
+  </data>
+  <data name="UnableToOverwriteFile_PleaseDelete" xml:space="preserve">
+    <value>Unable to overwrite file. Please delete filePath and try again.</value>
+  </data>
+  <data name="UnableToFindBook" xml:space="preserve">
+    <value>Unable to find book with api.</value>
+  </data>
+  <data name="EnterBookTitle" xml:space="preserve">
+    <value>Enter Book Title</value>
+  </data>
+  <data name="EnterBookNumber" xml:space="preserve">
+    <value>Enter Book Number</value>
+  </data>
+  <data name="EnterStartDate" xml:space="preserve">
+    <value>Enter Start Date</value>
+  </data>
+  <data name="EnterEndDate" xml:space="preserve">
+    <value>Enter End Date</value>
+  </data>
+  <data name="EnterChapterName" xml:space="preserve">
+    <value>Enter Chapter Name</value>
+  </data>
+  <data name="EnterPageRange" xml:space="preserve">
+    <value>Enter Page Range</value>
+  </data>
+  <data name="EnterPublisher" xml:space="preserve">
+    <value>Enter Publisher</value>
+  </data>
+  <data name="EnterPublishYear" xml:space="preserve">
+    <value>Enter Publish Year</value>
+  </data>
+  <data name="EnterBookIdentifier" xml:space="preserve">
+    <value>Enter Book Identifier/ISBN</value>
+  </data>
+  <data name="EnterBookLanguage" xml:space="preserve">
+    <value>Enter Book Language</value>
+  </data>
+  <data name="EnterBookURL" xml:space="preserve">
+    <value>Enter Book URL</value>
+  </data>
+  <data name="EnterName" xml:space="preserve">
+    <value>Enter Name</value>
+  </data>
+  <data name="EnterDate" xml:space="preserve">
+    <value>Enter Date</value>
+  </data>
+  <data name="EnterBookSummary" xml:space="preserve">
+    <value>Enter Book Summary</value>
+  </data>
+  <data name="EnterBookComments" xml:space="preserve">
+    <value>Enter Book Comments</value>
+  </data>
+  <data name="EnterSeriesName" xml:space="preserve">
+    <value>Enter Series Name</value>
+  </data>
+  <data name="EnterTotalBooksInSeries" xml:space="preserve">
+    <value>Enter Total Books in Series</value>
+  </data>
+  <data name="EnterCollectionName" xml:space="preserve">
+    <value>Enter Collection Name</value>
+  </data>
+  <data name="EnterAuthorFirstName" xml:space="preserve">
+    <value>Enter Author First Name</value>
+  </data>
+  <data name="EnterAuthorLastName" xml:space="preserve">
+    <value>Enter Author Last Name</value>
+  </data>
+  <data name="EnterGenreName" xml:space="preserve">
+    <value>Enter Genre Name</value>
+  </data>
+  <data name="EnterLocationName" xml:space="preserve">
+    <value>Enter Location Name</value>
+  </data>
+  <data name="EnterBookSeries" xml:space="preserve">
+    <value>Enter Book Series</value>
+  </data>
+  <data name="EnterWhereToBuy" xml:space="preserve">
+    <value>Enter Where to Buy</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="BooksRead" xml:space="preserve">
+    <value>Books Read</value>
+  </data>
+  <data name="ReadingData_InfoText" xml:space="preserve">
+    <value>This is a running total of all the books and pages you have completed in the past number years. A book is considered completed in a year if the reading end date is in that year, and all the pages in the book are counted for that year.</value>
+  </data>
+  <data name="LoadingDataPleaseWait" xml:space="preserve">
+    <value>Loading Data. Please Wait...</value>
+  </data>
+  <data name="AudiobookHours" xml:space="preserve">
+    <value>Audiobook Hours</value>
+  </data>
+  <data name="ClickToSearchWithGoogleBooks" xml:space="preserve">
+    <value>Click to Search with Google Books</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="BookLocations" xml:space="preserve">
+    <value>Book Locations</value>
+  </data>
+  <data name="ANewBook" xml:space="preserve">
+    <value>A New Book</value>
+  </data>
+  <data name="TotalBooksOwned" xml:space="preserve">
+    <value>Total Books Owned</value>
+  </data>
+  <data name="TotalPriceOfBooksOwned" xml:space="preserve">
+    <value>Total Price of Books Owned</value>
+  </data>
+  <data name="AddNewAuthorToBook" xml:space="preserve">
+    <value>Add New Author to Book</value>
+  </data>
+  <data name="AddNewChapterToBook" xml:space="preserve">
+    <value>Add New Chapter To Book</value>
+  </data>
+  <data name="CreateNewSeries" xml:space="preserve">
+    <value>Create New Series</value>
+  </data>
+  <data name="CreateNewCollection" xml:space="preserve">
+    <value>Create New Collection</value>
+  </data>
+  <data name="CreateNewGenre" xml:space="preserve">
+    <value>Create New Genre</value>
+  </data>
+  <data name="CreateNewLocation" xml:space="preserve">
+    <value>Create New Location</value>
+  </data>
+  <data name="ChangeLog" xml:space="preserve">
+    <value>Change Log</value>
+  </data>
+  <data name="SupportInfoText" xml:space="preserve">
+    <value>Found a bug? Want to suggest a new feature? Need additional help?
+
+Email us!</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SearchList" xml:space="preserve">
+    <value>Search list...</value>
+  </data>
+  <data name="ThereAreNoItems" xml:space="preserve">
+    <value>There are no items.</value>
+  </data>
+  <data name="YearCount" xml:space="preserve">
+    <value>Year Count</value>
+  </data>
+  <data name="EnterYearCount" xml:space="preserve">
+    <value>Enter Year Count</value>
+  </data>
+  <data name="BlankPages" xml:space="preserve">
+    <value>Blank pages</value>
+  </data>
+  <data name="Blank1HoursBlank2Minutes" xml:space="preserve">
+    <value>Blank1 hours, Blank2 minutes</value>
+  </data>
+  <data name="TotalHours" xml:space="preserve">
+    <value>Total Hours</value>
+  </data>
+  <data name="TotalMinutes" xml:space="preserve">
+    <value>Total Minutes</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ListenTime" xml:space="preserve">
+    <value>Listen Time</value>
+  </data>
+  <data name="SelectHourListenedTo" xml:space="preserve">
+    <value>Select Hour Listened To</value>
+  </data>
+  <data name="SelectMinuteListenedTo" xml:space="preserve">
+    <value>Select Minute Listened To</value>
+  </data>
+  <data name="HoursListened" xml:space="preserve">
+    <value>Hours Listened</value>
+  </data>
+  <data name="MinutesListened" xml:space="preserve">
+    <value>Minutes Listened</value>
+  </data>
+  <data name="TotalTime" xml:space="preserve">
+    <value>Total Time</value>
+  </data>
+  <data name="ListenHours" xml:space="preserve">
+    <value>Listen Hours</value>
+  </data>
+  <data name="ListenMinutes" xml:space="preserve">
+    <value>Listen Minutes</value>
+  </data>
+  <data name="BlankHours" xml:space="preserve">
+    <value>Blank hours</value>
+  </data>
+  <data name="EnterHours" xml:space="preserve">
+    <value>Enter Hours</value>
+  </data>
+  <data name="EnterMinutes" xml:space="preserve">
+    <value>Enter Minutes</value>
+  </data>
+  <data name="Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="Internet" xml:space="preserve">
+    <value>Internet</value>
+  </data>
+  <data name="Files_Photos" xml:space="preserve">
+    <value>Files / Photos</value>
+  </data>
+  <data name="Camera_Description" xml:space="preserve">
+    <value>This app only needs permission to the Camera when you scan a barcode. If you will not be scanning barcodes, you do not need the permission granted.</value>
+  </data>
+  <data name="Internet_Description" xml:space="preserve">
+    <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
+  </data>
+  <data name="Files_Photos_Description" xml:space="preserve">
+    <value>This app only needs permission to Files and Photos importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process.</value>
+  </data>
+  <data name="DataStorage" xml:space="preserve">
+    <value>Data Storage</value>
+  </data>
+  <data name="PageCountBookTime" xml:space="preserve">
+    <value>Page Count / Book Time</value>
+  </data>
+  <data name="AreYouSureImageImport_Question" xml:space="preserve">
+    <value>Are you sure you want to import your images from a file? If so, please select the top level folder for the images.</value>
+  </data>
+  <data name="BookCovers" xml:space="preserve">
+    <value>Book Covers</value>
+  </data>
+  <data name="LibraryBookCovers" xml:space="preserve">
+    <value>Library Book Covers</value>
+  </data>
+  <data name="WishlistBookCovers" xml:space="preserve">
+    <value>Wishlist Book Covers</value>
+  </data>
+  <data name="BookCoverUploads" xml:space="preserve">
+    <value>Book Cover Uploads</value>
+  </data>
+  <data name="BookCoverDownloads" xml:space="preserve">
+    <value>Book Cover Downloads</value>
+  </data>
+  <data name="WishlistBooks" xml:space="preserve">
+    <value>Wishlist Books</value>
+  </data>
+  <data name="DataStorageInfoText" xml:space="preserve">
+    <value>All data is stored locally on your device.
+Nothing is uploaded to a cloud service.
+
+If you delete your data, either through Settings &gt; Delete All Data in the app or by using your device’s Clear Storage option, it cannot be recovered.
+
+Please export and back up your data regularly.</value>
+  </data>
+  <data name="PictogrammersCredit" xml:space="preserve">
+    <value>Icons (minus App Icon) by Pictogrammers.
+Special thanks to the team and their open-source icons!
+Visit them at </value>
+  </data>
+  <data name="ImportErrors" xml:space="preserve">
+    <value>Some spreadsheets were not imported because they either did not exist in the workbook, the spreadsheet did not have any values, or the columns were not in the right order for import.</value>
+  </data>
+  <data name="ImportErrorsTitle" xml:space="preserve">
+    <value>Import Errors!</value>
+  </data>
+  <data name="BookCoversDownloadMessage" xml:space="preserve">
+    <value>Because Book Cover Images is selected, any book covers with a URL will be downloaded to your device. You can save or delete these. They are created for archival purposes, should the book cover URL no longer exist.</value>
+  </data>
+  <data name="UserSelectedImagesMessage" xml:space="preserve">
+    <value>You have previously selected specific images to share with this app. If you would like to change that, visit the app settings to add or remove images, select to share all images, or remove image sharing from the app.</value>
+  </data>
+  <data name="Caution_" xml:space="preserve">
+    <value>Caution!</value>
+  </data>
+  <data name="PleaseSelectAnotherFolder" xml:space="preserve">
+    <value>Cannot access this folder. Please select another.</value>
   </data>
 </root>

@@ -7,32 +7,48 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
              x:DataType="viewModel:BookBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredBookList}"
-                    SelectionMode="Single"
+    <CollectionView ItemsSource="{Binding FilteredBookList2}"
+                    SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedBook}"
                     SelectionChangedCommand="{Binding BookSelectionChangedCommand}"
                     SelectionChangedCommandParameter="{Binding SelectedBook}"
                     ItemSizingStrategy="MeasureAllItems"
-                    HeightRequest="{Binding CollectionViewHeight}">
+                    HeightRequest="{Binding CollectionViewHeight}"
+                    x:Name="bookList">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <VerticalStackLayout>
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup Name="CommonStates">
+                            <VisualState Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource Tertiary}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+
                     <controls:BookCollectionItem/>
                 </VerticalStackLayout>
             </DataTemplate>
         </CollectionView.ItemTemplate>
 
         <CollectionView.ItemsLayout>
-            <LinearItemsLayout Orientation="Vertical"
-                               SnapPointsType="Mandatory"
-                               SnapPointsAlignment="Start" />
+            <LinearItemsLayout Orientation="Vertical" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.EmptyView>
             <ContentView>
                 <VerticalStackLayout HorizontalOptions="Center"
                                      HeightRequest="200"
-                                     VerticalOptions="Start">
+                                     VerticalOptions="Start"
+                                     IsEnabled="False">
                     <Label Text="{x:Static localization:AppStringResources.ThereAreNoBooks}"
                            Margin="10,25,10,10"
                            HorizontalTextAlignment="Center"

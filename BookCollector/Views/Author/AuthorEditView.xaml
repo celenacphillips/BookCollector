@@ -5,13 +5,21 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Author.AuthorEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Author"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:AuthorEditViewModel"
              x:Name="AuthorEditPage"
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/save_icon_light.svg, Dark=Icons/save_icon_dark.svg}"
-                     Command="{Binding SaveAuthorCommand}"/>
+        <ToolbarItem Command="{Binding SaveAuthorCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0193;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -22,14 +30,32 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <VerticalStackLayout Padding="10">
+                <VerticalStackLayout Padding="10"
+                                     IsEnabled="{Binding IsEnabled}"
+                                     IsVisible="{Binding IsVisible}">
 
                     <!-- Author First Name -->
-                    <Label Text="{x:Static localization:AppStringResources.AuthorFirstName}"
-                           Style="{StaticResource Header}"
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.AuthorFirstName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
+
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
+                               Style="{DynamicResource Header_Warning}"
+                               IsVisible="{Binding AuthorFirstNameNotValid}"
+                               HorizontalOptions="Start" />
+                    </Grid>
+
                     <Editor Text="{Binding EditedAuthor.FirstName}"
-                            Placeholder="{x:Static localization:AppStringResources.AuthorFirstName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterAuthorFirstName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="FirstNameEditor">
@@ -52,11 +78,27 @@
                     <!-- Author First Name -->
 
                     <!-- Author Last Name -->
-                    <Label Text="{x:Static localization:AppStringResources.AuthorLastName}"
-                           Style="{StaticResource Header}"
-                           HorizontalOptions="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="{x:Static localization:AppStringResources.AuthorLastName}"
+                               Style="{DynamicResource Header}"
+                               HorizontalOptions="Center" />
+
+                        <Label Grid.Column="2" Grid.Row="0"
+                               Text=" *"
+                               Style="{DynamicResource Header_Warning}"
+                               IsVisible="{Binding AuthorLastNameNotValid}"
+                               HorizontalOptions="Start" />
+                    </Grid>
+
                     <Editor Text="{Binding EditedAuthor.LastName}"
-                            Placeholder="{x:Static localization:AppStringResources.AuthorLastName}"
+                            Placeholder="{x:Static localization:AppStringResources.EnterAuthorLastName}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center"
                             x:Name="LastNameEditor">
@@ -92,17 +134,9 @@
             </RefreshView>
         </StackLayout>
         <!-- Main Content -->
-        
-        <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 

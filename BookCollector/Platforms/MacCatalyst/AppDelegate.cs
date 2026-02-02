@@ -1,4 +1,8 @@
-﻿using Foundation;
+﻿// <copyright file="AppDelegate.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using Foundation;
 
 namespace BookCollector
 {

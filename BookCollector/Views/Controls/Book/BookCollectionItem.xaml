@@ -12,7 +12,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout>
+    <VerticalStackLayout IsEnabled="{Binding IsEnabled}">
         <Grid HeightRequest="100"
               Margin="10"
               x:DataType="dataModels:BookModel">
@@ -52,7 +52,7 @@
                    VerticalTextAlignment="Center"
                    Grid.Row="0" Grid.Column="1"/>
 
-            <Label Text="{Binding AuthorListstring}" 
+            <Label Text="{Binding AuthorListString}" 
                    FontSize="10"
                    MaxLines="1"
                    LineBreakMode="TailTruncation"
@@ -63,6 +63,8 @@
             <Label Text="{Binding PublisherPublishDatestring}"
                    FontSize="10"
                    VerticalTextAlignment="Start"
+                   MaxLines="1"
+                   LineBreakMode="TailTruncation"
                    Grid.Row="2" Grid.Column="1"/>
 
             <Label Text="{Binding PageReadPercent}"
@@ -74,11 +76,8 @@
 
             <HorizontalStackLayout HorizontalOptions="End"
                                    Grid.Row="1" Grid.Column="2">
-                <Label Text="{Binding BookPageTotal}"
+                <Label Text="{Binding BookDurationTotal}"
                            FontSize="10"/>
-                <Label Text=" " />
-                <Label Text="{x:Static localization:AppStringResources.Pages}"
-                       FontSize="10"/>
             </HorizontalStackLayout>
 
             <Label Text="{Binding BookFormat}"

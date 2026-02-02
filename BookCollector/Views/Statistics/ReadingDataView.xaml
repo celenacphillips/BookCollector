@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookCollector.Views.Statistics.ReadingDataView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Statistics"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
+             x:DataType="viewModel:ReadingDataViewModel"
+             x:Name="ReadingDataPage"
+             Title="{x:Static localization:AppStringResources.ReadingData}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <Grid>
+        <!-- Main Content -->
+        <StackLayout IsEnabled="{Binding IsEnabled}"
+                     IsVisible="{Binding IsVisible}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="1" Grid.Row="0"
+                       Text="{x:Static localization:AppStringResources.YearCount}"
+                       Style="{DynamicResource Header}"
+                       HorizontalOptions="Center" />
+
+                <Label Grid.Column="2" Grid.Row="0"
+                       Text=" *"
+                       Style="{DynamicResource Header_Warning}"
+                       IsVisible="{Binding YearCountNotValid}"
+                       HorizontalOptions="Start" />
+            </Grid>
+
+            <Editor Text="{Binding YearCount}"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    WidthRequest="200"
+                    Keyboard="Numeric"
+                    MaxLength="2"
+                    Placeholder="{x:Static localization:AppStringResources.EnterYearCount}">
+                <Editor.Behaviors>
+                    <toolkit:EventToCommandBehavior EventName="TextChanged"
+                                                    Command="{Binding UpdateMaxNumberCommand}"
+                                                    BindingContext="{Binding BindingContext, Source={x:Reference ReadingDataPage}}"/>
+                </Editor.Behaviors>
+            </Editor>
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <ScrollView>
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
+                        <Grid Margin="20,20,20,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{x:Static localization:AppStringResources.Year}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="End"
+                                   Grid.Row="0" Grid.Column="0"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.BooksRead}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="End"
+                                   Grid.Row="0" Grid.Column="1"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.PagesRead}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="End"
+                                   Grid.Row="0" Grid.Column="2"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.AudiobookHours}"
+                                   Style="{StaticResource Header}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="End"
+                                   Grid.Row="0" Grid.Column="3"/>
+                        </Grid>
+                        <CollectionView ItemsSource="{Binding ReadingDataList}">
+                            
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dataModels:ReadingData">
+                                    <Grid Margin="20,20,20,10">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="{Binding Year}"
+                                               Style="{StaticResource Header}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="0" Grid.Column="0"/>
+
+                                        <Label Text="{Binding BooksReadCount, StringFormat='{0:N0}'}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="1" Grid.Column="1"/>
+
+                                        <Label Text="{Binding PagesReadCount, StringFormat='{0:N0}'}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="1" Grid.Column="2"/>
+
+                                        <Label Text="{Binding AudiobookTime, StringFormat='{}{0:#,##0.00}'}"
+                                               HorizontalTextAlignment="Center"
+                                               Grid.Row="1" Grid.Column="3"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
+
+        </StackLayout>
+        <!-- Main Content -->
+
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
+        <!-- Activity Indicator -->
+    </Grid>
+</ContentPage>

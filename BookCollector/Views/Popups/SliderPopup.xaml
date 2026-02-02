@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               x:Class="BookCollector.Views.Popups.SliderPopup"
+               x:TypeArguments="x:Int32"
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               WidthRequest="{Binding PopupWidth}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               x:Name="this"
+               Margin="0">
+
+    <VerticalStackLayout BindingContext="{x:Reference this}">
+
+        <Grid Margin="0,10">
+                
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{Binding Title}"
+                    Style="{DynamicResource Header}"
+                    FontSize="Subtitle"
+                    HorizontalOptions="Center"
+                    VerticalOptions="End"
+                    Grid.Row="0" Grid.Column="0"/>
+
+            <Label x:Name="InputValueLabel"
+                    Style="{DynamicResource Header}"
+                    FontSize="Subtitle"
+                    VerticalOptions="End"
+                    Grid.Row="0" Grid.Column="1"/>
+
+            <ImageButton HorizontalOptions="End"
+                         Margin="10,10,15,0"
+                         Padding="10,5"
+                         Grid.Row="0" Grid.Column="2"
+                         Clicked="OnClose">
+                <ImageButton.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                     Glyph="&#xF0193;"
+                                     Size="28"
+                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            </Grid>
+
+            <Slider Maximum="{Binding MaxSliderValue}"
+                    Minimum="0"
+                    Value="{Binding InputValue}"
+                    Margin="20,10,20,30"
+                    ValueChanged="OnSliderValueChanged" />
+            
+        </VerticalStackLayout>
+        
+</toolkit:Popup>

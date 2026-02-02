@@ -1,4 +1,9 @@
+// <copyright file="WishListStatisticsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.ViewModels.Statistics;
+using Microcharts.Maui;
 
 namespace BookCollector.Views.Statistics;
 
@@ -14,8 +19,14 @@ public partial class WishListStatisticsView : ContentPage
         this.InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        using var variable = this.viewModel.SetViewModelData();
+        this.formats.ClearValue(ChartView.ChartProperty);
+        this.formatprices.ClearValue(ChartView.ChartProperty);
+        this.series.ClearValue(ChartView.ChartProperty);
+        this.authors.ClearValue(ChartView.ChartProperty);
+        this.locations.ClearValue(ChartView.ChartProperty);
+
+        await this.viewModel.SetViewModelData();
     }
 }

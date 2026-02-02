@@ -1,10 +1,17 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="SeriesEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Series;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Series
 {
@@ -14,7 +21,7 @@ namespace BookCollector.ViewModels.Series
         public SeriesModel editedSeries;
 
         [ObservableProperty]
-        public bool seriesNameValid;
+        public bool seriesNameNotValid;
 
         public SeriesEditViewModel(SeriesModel series, ContentPage view)
         {
@@ -35,7 +42,7 @@ namespace BookCollector.ViewModels.Series
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -44,47 +51,46 @@ namespace BookCollector.ViewModels.Series
         [RelayCommand]
         public async Task SaveSeries()
         {
-            if (!this.SeriesNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewSeries}"))
+                if (this.SeriesNameNotValid)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertSeries(this.EditedSeries);
-                    }
-                    else
-                    {
-                    }
+                    await DisplayMessage(AppStringResources.SeriesNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {
-                    if (TestData.UseTestData)
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
                     {
-                        TestData.UpdateSeries(this.EditedSeries);
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
                     }
-                    else
+#endif
+
+                    this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
+                    AddToStaticList(this.EditedSeries);
+
+                    if (this.InsertMainViewBefore)
                     {
+                        var view = new SeriesMainView(this.EditedSeries, $"{this.EditedSeries.SeriesName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
-                }
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new SeriesMainView(this.EditedSeries, $"{this.EditedSeries.SeriesName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    await Shell.Current.Navigation.PopAsync();
                 }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
 
-                await Shell.Current.Navigation.PopAsync();
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 
@@ -104,20 +110,67 @@ namespace BookCollector.ViewModels.Series
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedSeries.SeriesName))
+            this.SeriesNameNotValid = string.IsNullOrEmpty(this.EditedSeries.SeriesName);
+        }
+
+        public static async Task AddToStaticList(SeriesModel series)
+        {
+            if (SeriesViewModel.fullSeriesList != null)
             {
-                var seriesNameEditor = this.View.FindByName<Editor>("SeriesNameEditor");
-                seriesNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                seriesNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.SeriesNameValid = false;
+                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList2);
             }
-            else
+        }
+
+        private static async Task<bool> AddSeriesToStaticList(SeriesModel series, ObservableCollection<SeriesModel> seriesList, ObservableCollection<SeriesModel>? filteredSeriesList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
             {
-                var seriesNameEditor = this.View.FindByName<Editor>("SeriesNameEditor");
-                seriesNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                seriesNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.SeriesNameValid = true;
+                series.SetTotalBooks(true),
+                series.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldSeries = seriesList.FirstOrDefault(x => x.SeriesGuid == series.SeriesGuid);
+
+                if (oldSeries != null)
+                {
+                    var index = seriesList.IndexOf(oldSeries);
+                    seriesList.Remove(oldSeries);
+                    seriesList.Insert(index, series);
+                    refresh = true;
+                }
+                else
+                {
+                    seriesList.Add(series);
+                    refresh = true;
+                }
+
+                if (filteredSeriesList != null)
+                {
+                    var filteredSeries = filteredSeriesList.FirstOrDefault(x => x.SeriesGuid == series.SeriesGuid);
+
+                    if (filteredSeries != null)
+                    {
+                        var index = filteredSeriesList.IndexOf(filteredSeries);
+                        filteredSeriesList.Remove(filteredSeries);
+                        filteredSeriesList.Insert(index, series);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredSeriesList.Add(series);
+                        refresh = true;
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

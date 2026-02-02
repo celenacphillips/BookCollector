@@ -1,4 +1,8 @@
-﻿using BookCollector.Resources.Localization;
+﻿// <copyright file="StringManipulation.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Resources.Localization;
 
 namespace BookCollector.Data
 {
@@ -9,9 +13,14 @@ namespace BookCollector.Data
             return AppStringResources.Blank1OfBlank2Items.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
         }
 
-        public static string SetTotalBooksString(int totalCount)
+        public static string SetTotalBooksString(int filteredCount, int totalCount, int unreadCount)
         {
-            return AppStringResources.BlankItems.Replace("Blank", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+            return AppStringResources.Blank1OfBlank2ItemsBlank3Unread.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("Blank3", $"{unreadCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+        }
+
+        public static string SetTotalBooksAndUnreadString(int totalCount, int unreadCount)
+        {
+            return AppStringResources.Blank1ItemsBlank2Unread.Replace("Blank1", $"{totalCount}").Replace("Blank2", $"{unreadCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
         }
 
         public static string SetTotalCollectionsString(int filteredCount, int totalCount)

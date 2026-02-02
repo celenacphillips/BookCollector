@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             x:Class="BookCollector.Views.Controls.FilterablePickerOverlay"
+             x:Name="overlay">
+
+    <Grid BindingContext="{x:Reference overlay}"
+          IsVisible="{Binding IsOverlayVisible}"
+          Padding="0,30">
+
+        <BoxView Color="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
+                 Opacity="0.8"
+                 Margin="-100">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOverlayTapped" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <Border VerticalOptions="Center"          
+                Stroke="White"
+                StrokeThickness="2"
+                Background="#F5F5F5"
+                StrokeShape="RoundRectangle 16"
+                Shadow="{OnPlatform Default='10,10,20,Black,0.3'}"
+                Padding="0">
+            
+            <VerticalStackLayout BackgroundColor="{AppThemeBinding Dark={DynamicResource BackgroundDark}, Light={DynamicResource BackgroundLight}}">
+                <Label Text="{Binding Title}"
+                       Style="{DynamicResource Header}"
+                       FontSize="Subtitle"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Margin="0,10"/>
+
+                <controls:FilterablePicker SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                           Items="{Binding Items}"
+                                           ShowFilter="{Binding ShowFilter}"
+                                           TotalItemsColor="{DynamicResource Tertiary}"
+                                           MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                           SelectedItemColor="{DynamicResource Primary}"/>
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+</ContentView>

@@ -1,9 +1,18 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="LibraryStatisticsViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
+using BookCollector.ViewModels.Library;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Vml;
+using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -25,18 +34,6 @@ namespace BookCollector.ViewModels.Statistics
         public bool showGenres;
 
         [ObservableProperty]
-        public string booksReadstring;
-
-        [ObservableProperty]
-        public int booksReadCount;
-
-        [ObservableProperty]
-        public string pagesReadstring;
-
-        [ObservableProperty]
-        public int pagesReadCount;
-
-        [ObservableProperty]
         public string? topXCollections;
 
         [ObservableProperty]
@@ -45,8 +42,6 @@ namespace BookCollector.ViewModels.Statistics
         public LibraryStatisticsViewModel(ContentPage view)
         {
             this.View = view;
-            this.BooksReadstring = AppStringResources.BooksReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
-            this.PagesReadstring = AppStringResources.PagesReadThisYear.Replace("yyyy", DateTime.Now.Year.ToString());
             this.MaxListNumber = 5;
         }
 
@@ -56,62 +51,168 @@ namespace BookCollector.ViewModels.Statistics
             {
                 this.SetIsBusyTrue();
 
+                if (string.IsNullOrEmpty(this.CostBooks))
+                {
+                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureInfo = new CultureInfo(cultureCode);
+                    this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                }
+
                 this.GetPreferences();
+
+                List<Task> taskList = new List<Task>();
+                List<Task<int>> dataTasks = new List<Task<int>>();
+
+                if (ToBeReadViewModel.filteredBookList1 == null || ToBeReadViewModel.RefreshView)
+                {
+                    taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (ReadViewModel.filteredBookList1 == null || ReadViewModel.RefreshView)
+                {
+                    taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (ReadingViewModel.filteredBookList1 == null || ReadingViewModel.RefreshView)
+                {
+                    taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
+                }
+
+                if (CollectionsViewModel.filteredCollectionList1 == null || CollectionsViewModel.RefreshView)
+                {
+                    taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
+                }
+
+                if (GenresViewModel.filteredGenreList1 == null || GenresViewModel.RefreshView)
+                {
+                    taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
+                }
+
+                if (SeriesViewModel.filteredSeriesList1 == null || SeriesViewModel.RefreshView)
+                {
+                    taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
+                }
+
+                if (AuthorsViewModel.filteredAuthorList1 == null || AuthorsViewModel.RefreshView)
+                {
+                    taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
+                }
+
+                if (LocationsViewModel.filteredLocationList1 == null || LocationsViewModel.RefreshView)
+                {
+                    taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
+                }
+
+                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
+                {
+                    await AllBooksViewModel.SetList(this.ShowHiddenBooks);
+                }
+
+                var cost = GetCounts.GetPriceOfAllBooks(this.ShowHiddenBooks);
+                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
+
+                Task<int>? favoriteCount = null;
+                Task<int>? nonFavoriteCount = null;
+
+                if (this.ShowFavorites)
+                {
+                    favoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true);
+                    nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false);
+
+                    dataTasks.Add(favoriteCount);
+                    dataTasks.Add(nonFavoriteCount);
+                }
+
+                Task<int>? zeroCount = null;
+                Task<int>? oneCount = null;
+                Task<int>? twoCount = null;
+                Task<int>? threeCount = null;
+                Task<int>? fourCount = null;
+                Task<int>? fiveCount = null;
+
+                if (this.ShowRatings)
+                {
+                    zeroCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0);
+                    oneCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1);
+                    twoCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2);
+                    threeCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3);
+                    fourCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4);
+                    fiveCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5);
+
+                    dataTasks.Add(zeroCount);
+                    dataTasks.Add(oneCount);
+                    dataTasks.Add(twoCount);
+                    dataTasks.Add(threeCount);
+                    dataTasks.Add(fourCount);
+                    dataTasks.Add(fiveCount);
+                }
+
+                await Task.WhenAll(taskList);
+
+                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber);
+                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber);
+                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
 
                 this.GetColors();
 
-                int toBeRead = 0, reading = 0, read = 0;
-                int favorite = 0, nonFavorite = 0;
-                int zero = 0, one = 0, two = 0, three = 0, four = 0, five = 0;
-                List<CountModel> collectionCounts = [];
-                List<CountModel> genreCounts = [];
-                List<CountModel> seriesCounts = [];
-                List<CountModel> authorCounts = [];
-                List<CountModel> locationCounts = [];
-                List<CountModel> formatCounts = [];
-                List<CountModel> formatPriceCounts = [];
+                await Task.WhenAll(
+                    cost,
+                    collections,
+                    genres,
+                    series,
+                    authors,
+                    locations,
+                    formats,
+                    formatPrices);
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.BooksReadCount = await FilterLists.GetBookCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
-                    Task.Run(async () => this.PagesReadCount = await FilterLists.GetBookPageCountReadInYear(DateTime.Now.Year, this.ShowHiddenBooks)),
-                    Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllBooks(this.ShowHiddenBooks)),
-                    Task.Run(async () => this.TotalBooks = await FilterLists.GetAllBooksListCount(this.ShowHiddenBooks)),
-                    Task.Run(async () => toBeRead = await FilterLists.GetToBeReadBooksListCount(this.ShowHiddenBooks)),
-                    Task.Run(async () => reading = await FilterLists.GetReadingBooksListCount(this.ShowHiddenBooks)),
-                    Task.Run(async () => read = await FilterLists.GetReadBooksListCount(this.ShowHiddenBooks)),
-                    Task.Run(async () => favorite = await FilterLists.GetBooksListCountByFavorite(this.ShowHiddenBooks, true)),
-                    Task.Run(async () => nonFavorite = await FilterLists.GetBooksListCountByFavorite(this.ShowHiddenBooks, false)),
-                    Task.Run(async () => zero = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 0)),
-                    Task.Run(async () => one = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 1)),
-                    Task.Run(async () => two = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 2)),
-                    Task.Run(async () => three = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 3)),
-                    Task.Run(async () => four = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 4)),
-                    Task.Run(async () => five = await FilterLists.GetBooksListCountByRating(this.ShowHiddenBooks, 5)),
-                    Task.Run(async () => collectionCounts = await FilterLists.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => genreCounts = await FilterLists.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => seriesCounts = await FilterLists.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => authorCounts = await FilterLists.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(async () => locationCounts = await FilterLists.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber)),
-                    Task.Run(() => formatCounts = FilterLists.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks)),
-                    Task.Run(() => formatPriceCounts = FilterLists.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks)),
-                ]);
+                await Task.WhenAll(dataTasks);
+
+                this.CostBooks = cost.Result;
+                this.TotalBooks = AllBooksViewModel.filteredBookList1!.Count;
+                var toBeRead = ToBeReadViewModel.filteredBookList1!.Count;
+                var reading = ReadingViewModel.filteredBookList1!.Count;
+                var read = ReadViewModel.filteredBookList1!.Count;
+                var favorite = favoriteCount != null ? favoriteCount.Result : 0;
+                var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
+                var zero = zeroCount != null ? zeroCount.Result : 0;
+                var one = oneCount != null ? oneCount.Result : 0;
+                var two = twoCount != null ? twoCount.Result : 0;
+                var three = threeCount != null ? threeCount.Result : 0;
+                var four = fourCount != null ? fourCount.Result : 0;
+                var five = fiveCount != null ? fiveCount.Result : 0;
+                var collectionCounts = collections.Result;
+                var genresCounts = genres.Result;
+                var seriesCounts = series.Result;
+                var authorsCounts = authors.Result;
+                var locationsCounts = locations.Result;
+                var formatsCounts = formats.Result;
+                var formatPricesCounts = formatPrices.Result;
 
                 this.SetUpReadingStatusChart(toBeRead, reading, read);
                 this.SetUpFavoritesChart(favorite, nonFavorite);
                 this.SetUpRatingsChart(zero, one, two, three, four, five);
                 this.SetUpCollectionsChart(collectionCounts);
-                this.SetUpGenresChart(genreCounts);
+                this.SetUpGenresChart(genresCounts);
                 this.SetUpSeriesChart(seriesCounts);
-                this.SetUpAuthorsChart(authorCounts);
-                this.SetUpLocationsChart(locationCounts);
-                this.SetUpFormatsChart(formatCounts);
-                this.SetUpFormatPricesChart(formatPriceCounts);
+                this.SetUpAuthorsChart(authorsCounts);
+                this.SetUpLocationsChart(locationsCounts);
+                this.SetUpFormatsChart(formatsCounts);
+                this.SetUpFormatPricesChart(formatPricesCounts);
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                 this.SetIsBusyFalse();
             }
         }

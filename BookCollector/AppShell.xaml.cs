@@ -1,32 +1,29 @@
-﻿namespace BookCollector
-{
-    using BookCollector.Data;
-    using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
+﻿// <copyright file="AppShell.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
 
+namespace BookCollector
+{
+    /// <summary>
+    /// App Shell class.
+    /// </summary>
     public partial class AppShell : Shell
     {
         public AppShell()
         {
-            this.Year = DateTime.Now.Year.ToString();
+            this.VersionString = $"v {AppInfo.VersionString}";
+            this.ApplicationTitleString = $"{AppInfo.Current.Name}, {DateTime.Now.Year}";
+
             this.InitializeComponent();
 
             AppShell.RegisterRoutes();
-            BookBaseViewModel.bookFormats = [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
-
-            TestData.UseTestData = true;
-
-            if (TestData.UseTestData)
-            {
-                // var testData = new TestData();
-                TestData.AddBooksToList();
-                TestData.AddWishListBooksToList();
-            }
 
             this.BindingContext = this;
         }
 
-        public string Year { get; set; }
+        public string ApplicationTitleString { get; set; }
+
+        public string VersionString { get; set; }
 
         private static void RegisterRoutes()
         {

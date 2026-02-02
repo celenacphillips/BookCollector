@@ -1,3 +1,7 @@
+// <copyright file="AuthorCollectionList.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 namespace BookCollector.Views.Controls.Author;
 
 public partial class AuthorCollectionList : ContentView
@@ -5,5 +9,13 @@ public partial class AuthorCollectionList : ContentView
     public AuthorCollectionList()
     {
         this.InitializeComponent();
+    }
+
+    protected override void OnBindingContextChanged()
+    {
+        base.OnBindingContextChanged();
+
+        // Reset visual state when the cell is reused
+        VisualStateManager.GoToState(this, "Normal");
     }
 }

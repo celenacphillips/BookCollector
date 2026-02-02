@@ -6,21 +6,40 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Book"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:BookMainViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
-                     Command="{Binding ShareListCommand}"/>
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding ShareListCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0497;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        
         <ToolbarItem Text="{x:Static localization:AppStringResources.EditBook}"
                      Command="{Binding EditBookCommand}"
-                     Order="Secondary"/>
+                     Order="Secondary"
+                     IsEnabled="{Binding IsEnabled}"/>
+        
         <ToolbarItem Text="{x:Static localization:AppStringResources.DeleteBook}"
                      Command="{Binding DeleteBookCommand}"
-                     Order="Secondary"/>
+                     Order="Secondary"
+                     IsEnabled="{Binding IsEnabled}"/>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -31,7 +50,8 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <ScrollView IsEnabled="{Binding IsVisible}">
+                <ScrollView IsVisible="{Binding IsVisible}"
+                            IsEnabled="{Binding IsEnabled}">
                     <VerticalStackLayout Padding="10">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -43,7 +63,7 @@
                             <!-- Rating -->
                             <controls:Rating CurrentValue="{Binding SelectedBook.Rating}"
                                              Grid.Column="0" Grid.Row="0"
-                                             HorizontalOptions="Center"
+                                             HorizontalOptions="Start"
                                              IsEnabled="False"
                                              IsVisible="{Binding ShowRatings}"/>
                             <!-- Rating -->
@@ -89,7 +109,7 @@
                         <!-- Book Title -->
 
                         <!-- Book Cover -->
-                        <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookMainViewModel}}, Path=BookCover}"
+                        <ImageButton Source="{Binding SelectedBook.BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
                                      IsVisible="{Binding SelectedBook.HasBookCover}"
@@ -158,7 +178,7 @@
                         <!-- Book Collection -->
 
                         <!-- Reading Data -->
-                        <toolkit:Expander IsExpanded="{Binding ReadingDataSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding ReadingDataSectionValue, Mode=TwoWay}"
                                           Command="{Binding ReadingDataChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -172,19 +192,32 @@
                                            Style="{DynamicResource expanderHeaderLabel}" 
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding ReadingDataOpen}"
+                                    <Image IsVisible="{Binding ReadingDataOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding ReadingDataNotOpen}"
+                                    <Image IsVisible="{Binding ReadingDataNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
+                            
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
 
@@ -255,7 +288,8 @@
 
                                     <!-- Total Pages -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
+                                                         Grid.Row="0" Grid.Column="0"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.TotalPages}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
@@ -273,9 +307,31 @@
                                     </VerticalStackLayout>
                                     <!-- Total Pages -->
 
+                                    <!-- Total Time -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0"
+                                                         IsVisible="{Binding ShowTime}">
+                                        <Label Text="{x:Static localization:AppStringResources.TotalTime}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.TotalTimeString}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.TotalTimeString}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Total Time -->
+
                                     <!-- Pages Read -->
                                     <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
+                                                         Grid.Row="0" Grid.Column="1"
+                                                         IsVisible="{Binding ShowPages}">
                                         <Label Text="{x:Static localization:AppStringResources.PagesRead}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
@@ -292,6 +348,27 @@
                                         </Label>
                                     </VerticalStackLayout>
                                     <!-- Pages Read -->
+
+                                    <!-- Listened Time -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1"
+                                                         IsVisible="{Binding ShowTime}">
+                                        <Label Text="{x:Static localization:AppStringResources.ListenTime}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.ListenTimeString}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.ListenTimeString}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Listened Time -->
                                 </Grid>
 
                                 <!-- Reading Progress -->
@@ -300,7 +377,7 @@
                                            Style="{DynamicResource Header}"
                                            Margin="0,0,0,20"/>
                                     <ProgressBar Progress="{Binding SelectedBook.Progress}"/>
-                                    <Grid>
+                                    <Grid IsVisible="{Binding ShowCheckpoints}">
 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.95*" />
@@ -311,23 +388,52 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label Text="0"
-                                               Grid.Row="0" Grid.Column="0" />
+                                               Grid.Row="0" Grid.Column="0"
+                                               IsVisible="{Binding ShowPages}"/>
 
-                                        <Label Text="{Binding SelectedBook.Fourth}"
+                                        <Label Text="{Binding SelectedBook.FourthPage}"
                                                Grid.Row="0" Grid.Column="1"
-                                               HorizontalTextAlignment="Start"/>
+                                               HorizontalTextAlignment="Start"
+                                               IsVisible="{Binding ShowPages}"/>
 
-                                        <Label Text="{Binding SelectedBook.Half}"
+                                        <Label Text="{Binding SelectedBook.HalfPage}"
                                                Grid.Row="0" Grid.Column="2"
-                                               HorizontalTextAlignment="Center" />
+                                               HorizontalTextAlignment="Center"
+                                               IsVisible="{Binding ShowPages}"/>
 
-                                        <Label Text="{Binding SelectedBook.ThreeFourth}"
+                                        <Label Text="{Binding SelectedBook.ThreeFourthPage}"
                                                HorizontalTextAlignment="End"
-                                               Grid.Row="0" Grid.Column="3"/>
+                                               Grid.Row="0" Grid.Column="3"
+                                               IsVisible="{Binding ShowPages}"/>
 
                                         <Label Text="{Binding SelectedBook.BookPageTotal}"
                                                Grid.Row="0" Grid.Column="4"
-                                               HorizontalTextAlignment="End"/>
+                                               HorizontalTextAlignment="End"
+                                               IsVisible="{Binding ShowPages}"/>
+
+                                        <Label Text="0.00"
+                                               Grid.Row="0" Grid.Column="0"
+                                               IsVisible="{Binding ShowTime}"/>
+
+                                        <Label Text="{Binding SelectedBook.FourthHours, StringFormat='{0:0.00}'}"
+                                               Grid.Row="0" Grid.Column="1"
+                                               HorizontalTextAlignment="Start"
+                                               IsVisible="{Binding ShowTime}"/>
+
+                                        <Label Text="{Binding SelectedBook.HalfHours, StringFormat='{0:0.00}'}"
+                                               Grid.Row="0" Grid.Column="2"
+                                               HorizontalTextAlignment="Center"
+                                               IsVisible="{Binding ShowTime}"/>
+
+                                        <Label Text="{Binding SelectedBook.ThreeFourthHours, StringFormat='{0:0.00}'}"
+                                               HorizontalTextAlignment="End"
+                                               Grid.Row="0" Grid.Column="3"
+                                               IsVisible="{Binding ShowTime}"/>
+
+                                        <Label Text="{Binding SelectedBook.BookTotalTime, StringFormat='{0:0.00}'}"
+                                               Grid.Row="0" Grid.Column="4"
+                                               HorizontalTextAlignment="End"
+                                               IsVisible="{Binding ShowTime}"/>
                                     </Grid>
                                     <Label HorizontalOptions="Center">
                                         <Label.FormattedText>
@@ -350,7 +456,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Chapters -->
-                        <toolkit:Expander IsExpanded="{Binding ChapterListSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding ChapterListSectionValue, Mode=TwoWay}"
                                           Command="{Binding ChapterListChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowChapters}">
@@ -366,17 +472,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding ChapterListOpen}"
+                                    <Image IsVisible="{Binding ChapterListOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding ChapterListNotOpen}"
+                                    <Image IsVisible="{Binding ChapterListNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -427,7 +545,7 @@
                         <!-- Chapters -->
 
                         <!-- Authors -->
-                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue, Mode=TwoWay}"
                                           Command="{Binding AuthorListChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -442,23 +560,35 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding AuthorListOpen}"
+                                    <Image IsVisible="{Binding AuthorListOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding AuthorListNotOpen}"
+                                    <Image IsVisible="{Binding AuthorListNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
                             <VerticalStackLayout Margin="0,-10"
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
-                                <CollectionView ItemsSource="{Binding AuthorList}"
+                                <CollectionView ItemsSource="{Binding SelectedAuthorList}"
                                                 MinimumHeightRequest="25"
                                                 Margin="10">
 
@@ -500,7 +630,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Book Information -->
-                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue, Mode=TwoWay}"
                                           Command="{Binding BookInfoChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -515,17 +645,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding BookInfoOpen}"
+                                    <Image IsVisible="{Binding BookInfoOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding BookInfoNotOpen}"
+                                    <Image IsVisible="{Binding BookInfoNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -769,7 +911,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Summary -->
-                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue, Mode=TwoWay}"
                                           Command="{Binding SummaryChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -784,17 +926,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding SummaryOpen}"
+                                    <Image IsVisible="{Binding SummaryOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding SummaryNotOpen}"
+                                    <Image IsVisible="{Binding SummaryNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -820,7 +974,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Comments -->
-                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue, Mode=TwoWay}"
                                           Command="{Binding CommentsChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowComments}">
@@ -836,17 +990,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding CommentsOpen}"
+                                    <Image IsVisible="{Binding CommentsOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding CommentsNotOpen}"
+                                    <Image IsVisible="{Binding CommentsNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -877,17 +1043,9 @@
             </RefreshView>
         </StackLayout>
         <!-- Main Content -->
-        
-        <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 </ContentPage>

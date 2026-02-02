@@ -1,26 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="CollectionModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
 
 namespace BookCollector.Data.Models
 {
-    public partial class CollectionModel : ObservableObject, ICloneable
+    public partial class CollectionModel : CollectionDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? collectionName;
-        [ObservableProperty]
-        public string? totalBooksstring;
-        [ObservableProperty]
-        public bool hideCollection;
-
         public CollectionModel()
         {
-            this.CollectionGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? CollectionGuid { get; set; }
-
-        public int? ID { get; set; }
+        public CollectionModel(CollectionDatabaseModel dbModel)
+        {
+            this.CollectionGuid = dbModel.CollectionGuid;
+            this.CollectionName = dbModel.CollectionName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideCollection = dbModel.HideCollection;
+            this.CollectionTotalBooks = dbModel.CollectionTotalBooks;
+        }
 
         public string? ParsedCollectionName
         {
@@ -32,32 +32,32 @@ namespace BookCollector.Data.Models
                         : this.CollectionName;
         }
 
-        public int CollectionTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public async void SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(bool showHiddenBooks)
         {
-            var list = await FilterLists.GetAllBooksInCollectionList(this.CollectionGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInCollectionList(this.CollectionGuid, showHiddenBooks);
             var count = 0;
+            var unread = 0;
 
             if (list != null)
             {
                 count = list.Count;
+                unread = list.Count(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
+                    && !x.UpNext);
             }
 
-            this.TotalBooksstring = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
             this.CollectionTotalBooks = count;
         }
 
-        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInCollectionList(this.CollectionGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInCollectionList(this.CollectionGuid, showHiddenBooks);
         }
     }
 }

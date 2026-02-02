@@ -1,8 +1,14 @@
-﻿using BookCollector.Data;
-using BookCollector.Data.Models;
+﻿// <copyright file="WishListStatisticsViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 using CommunityToolkit.Mvvm.Input;
+using System.Globalization;
 
 namespace BookCollector.ViewModels.Statistics
 {
@@ -20,37 +26,62 @@ namespace BookCollector.ViewModels.Statistics
             {
                 this.SetIsBusyTrue();
 
+                if (string.IsNullOrEmpty(this.CostBooks))
+                {
+                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureInfo = new CultureInfo(cultureCode);
+                    this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
+                }
+
                 this.GetPreferences();
+
+                if (WishListViewModel.filteredWishlistBookList1 == null || WishListViewModel.RefreshView)
+                {
+                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
+                }
+
+                var cost = GetCounts.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks);
+                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
 
                 this.GetColors();
 
-                List<CountModel> seriesCounts = [];
-                List<CountModel> authorCounts = [];
-                List<CountModel> locationCounts = [];
-                List<CountModel> formatCounts = [];
-                List<CountModel> formatPriceCounts = [];
+                await Task.WhenAll(
+                    cost,
+                    series,
+                    authors,
+                    locations,
+                    formats,
+                    formatPrices);
 
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.CostBooks = await FilterLists.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks)),
-                    Task.Run(async () => this.TotalBooks = await FilterLists.GetAllWishListBooksListCount(this.ShowHiddenWishlistBooks)),
-                    Task.Run(async () => seriesCounts = await FilterLists.GetAllWishListBooksAndSeriesList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
-                    Task.Run(async () => authorCounts = await FilterLists.GetAllWishListBooksAndAuthorList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
-                    Task.Run(async () => locationCounts = await FilterLists.GetAllWishListBooksAndLocationList(this.ShowHiddenWishlistBooks, this.MaxListNumber)),
-                    Task.Run(() => formatCounts = FilterLists.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks)),
-                    Task.Run(() => formatPriceCounts = FilterLists.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks)),
-                ]);
+                this.CostBooks = cost.Result;
+                this.TotalBooks = WishListViewModel.filteredWishlistBookList1!.Count;
+                var seriesCounts = series.Result;
+                var authorsCounts = authors.Result;
+                var locationsCounts = locations.Result;
+                var formatsCounts = formats.Result;
+                var formatPricesCounts = formatPrices.Result;
 
                 this.SetUpSeriesChart(seriesCounts);
-                this.SetUpAuthorsChart(authorCounts);
-                this.SetUpLocationsChart(locationCounts);
-                this.SetUpFormatsChart(formatCounts);
-                this.SetUpFormatPricesChart(formatPriceCounts);
+                this.SetUpAuthorsChart(authorsCounts);
+                this.SetUpLocationsChart(locationsCounts);
+                this.SetUpFormatsChart(formatsCounts);
+                this.SetUpFormatPricesChart(formatPricesCounts);
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                 this.SetIsBusyFalse();
             }
         }

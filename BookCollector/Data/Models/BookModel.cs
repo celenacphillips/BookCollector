@@ -1,89 +1,85 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="BookModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using System.Globalization;
+using BookCollector.Data.Database;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
 
 namespace BookCollector.Data.Models
 {
-    public partial class BookModel : ObservableObject, ICloneable
+    public partial class BookModel : BookDatabaseModel, ICloneable
     {
         [ObservableProperty]
-        public string? bookTitle;
-        [ObservableProperty]
-        public double? bookNumberInSeries;
-        [ObservableProperty]
-        public string? bookPublisher;
-        [ObservableProperty]
-        public string? bookPublishYear;
-        [ObservableProperty]
-        public string? bookIdentifier;
-        [ObservableProperty]
-        public string? bookFormat;
-        [ObservableProperty]
-        public string? bookLanguage;
-        [ObservableProperty]
-        public string? bookPrice;
-        [ObservableProperty]
-        public string? bookSummary;
-        [ObservableProperty]
-        public int bookPageRead;
-        [ObservableProperty]
-        public int bookPageTotal;
-        [ObservableProperty]
-        public double progress;
-        [ObservableProperty]
-        public string? pageReadPercent;
-        [ObservableProperty]
-        public string? bookStartDate;
-        [ObservableProperty]
-        public string? bookEndDate;
-        [ObservableProperty]
-        public string? bookComments;
-        [ObservableProperty]
-        public string? bookCoverUrl;
-        [ObservableProperty]
-        public bool hasBookCover;
-        [ObservableProperty]
-        public bool hasNoBookCover;
-        [ObservableProperty]
-        public bool hasSeries;
-        [ObservableProperty]
-        public bool hasCollection;
-        [ObservableProperty]
-        public string? bookURL;
-        [ObservableProperty]
-        public string? bookWhereToBuy;
-        [ObservableProperty]
-        public string? loanedTo;
-        [ObservableProperty]
-        public string? bookLoanedOutOn;
-        [ObservableProperty]
-        public bool upNext;
-        [ObservableProperty]
-        public bool hideBook;
-        [ObservableProperty]
-        public int half;
-        [ObservableProperty]
-        public int fourth;
-        [ObservableProperty]
-        public int threeFourth;
-        [ObservableProperty]
-        public string? partOfSeries;
-        [ObservableProperty]
-        public string? partOfCollection;
-        [ObservableProperty]
         public ImageSource? bookCover;
-        [ObservableProperty]
-        public string? bookCoverFileLocation;
+
+        internal static BookCollectorDatabase Database;
 
         public BookModel()
         {
-            this.BookGuid = Guid.NewGuid();
+            Database = new BookCollectorDatabase();
         }
 
-        [PrimaryKey]
-        public Guid? BookGuid { get; set; }
+        public BookModel(BookDatabaseModel dbModel)
+        {
+            this.BookGuid = dbModel.BookGuid;
+            this.BookTitle = dbModel.BookTitle;
+            this.BookNumberInSeries = dbModel.BookNumberInSeries;
+            this.BookPublisher = dbModel.BookPublisher;
+            this.BookPublishYear = dbModel.BookPublishYear;
+            this.BookFormat = dbModel.BookFormat;
+            this.BookLanguage = dbModel.BookLanguage;
+            this.BookPrice = dbModel.BookPrice;
+            this.BookSummary = dbModel.BookSummary;
+            this.BookPageRead = dbModel.BookPageRead;
+            this.BookHourListened = dbModel.BookHourListened;
+            this.BookMinuteListened = dbModel.BookMinuteListened;
+            this.BookPageTotal = dbModel.BookPageTotal;
+            this.BookHoursTotal = dbModel.BookHoursTotal;
+            this.BookMinutesTotal = dbModel.BookMinutesTotal;
+            this.Progress = dbModel.Progress;
+            this.PageReadPercent = dbModel.PageReadPercent;
+            this.BookStartDate = dbModel.BookStartDate;
+            this.BookEndDate = dbModel.BookEndDate;
+            this.BookComments = dbModel.BookComments;
+            this.BookCoverUrl = dbModel.BookCoverUrl;
+            this.HasBookCover = dbModel.HasBookCover;
+            this.HasNoBookCover = dbModel.HasNoBookCover;
+            this.HasSeries = dbModel.HasSeries;
+            this.HasCollection = dbModel.HasCollection;
+            this.BookURL = dbModel.BookURL;
+            this.BookWhereToBuy = dbModel.BookWhereToBuy;
+            this.LoanedTo = dbModel.LoanedTo;
+            this.BookLoanedOutOn = dbModel.BookLoanedOutOn;
+            this.UpNext = dbModel.UpNext;
+            this.HideBook = dbModel.HideBook;
+            this.HalfPage = dbModel.HalfPage;
+            this.FourthPage = dbModel.FourthPage;
+            this.ThreeFourthPage = dbModel.ThreeFourthPage;
+            this.HalfHours = dbModel.HalfHours;
+            this.FourthHours = dbModel.FourthHours;
+            this.ThreeFourthHours = dbModel.ThreeFourthHours;
+            this.PartOfSeries = dbModel.PartOfSeries;
+            this.PartOfCollection = dbModel.PartOfCollection;
+            this.BookCoverFileName = dbModel.BookCoverFileName;
+            this.BookSeriesGuid = dbModel.BookSeriesGuid;
+            this.BookCollectionGuid = dbModel.BookCollectionGuid;
+            this.BookGenreGuid = dbModel.BookGenreGuid;
+            this.BookLocationGuid = dbModel.BookLocationGuid;
+            this.AuthorListString = dbModel.AuthorListString;
+            this.IsFavorite = dbModel.IsFavorite;
+            this.Rating = dbModel.Rating;
+            this.BookAuthors = dbModel.BookAuthors;
+            this.BookSeries = dbModel.BookSeries;
+            this.BookIdentifier = dbModel.BookIdentifier;
+        }
+
+        public List<AuthorModel?>? SelectedAuthors { get; set; }
 
         public string PublisherPublishDatestring
         {
@@ -102,7 +98,7 @@ namespace BookCollector.Data.Models
 
         public double BookPriceValue
         {
-            get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice[1..]) : 0;
+            get => !string.IsNullOrEmpty(this.BookPrice) ? (this.BookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol) ? double.Parse(this.BookPrice[1..]) : double.Parse(this.BookPrice)) : 0;
         }
 
         public DateTime? StartDateValue
@@ -120,23 +116,30 @@ namespace BookCollector.Data.Models
             get => !string.IsNullOrEmpty(this.BookLoanedOutOn) ? DateTime.Parse(this.BookLoanedOutOn) : null;
         }
 
-        public Guid? BookSeriesGuid { get; set; }
+        public string? BookDurationTotal
+        {
+            get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
+                AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
+                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString()).Replace("Blank2", this.BookMinutesTotal.ToString());
+        }
 
-        public Guid? BookCollectionGuid { get; set; }
+        [ObservableProperty]
+        public double? bookTotalTime;
 
-        public Guid? BookGenreGuid { get; set; }
+        [ObservableProperty]
+        public TimeSpan totalTimeSpan;
 
-        public Guid? BookLocationGuid { get; set; }
+        [ObservableProperty]
+        public string totalTimeString;
 
-        public string? AuthorListstring { get; set; }
+        [ObservableProperty]
+        public TimeSpan listenTimeSpan;
 
-        public bool IsFavorite { get; set; }
+        [ObservableProperty]
+        public double? bookListenedTime;
 
-        public int Rating { get; set; }
-
-        public string? BookAuthors { get; set; }
-
-        public string? BookSeries { get; set; }
+        [ObservableProperty]
+        public string listenTimeString;
 
         public static string? SetDate(string? input)
         {
@@ -155,17 +158,38 @@ namespace BookCollector.Data.Models
             return this.MemberwiseClone();
         }
 
-        public void SetReadingProgress()
+        public async Task SetReadingProgress()
         {
-            this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
+            if (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook)))
+            {
+                this.Progress = this.BookPageTotal != 0 ? this.BookPageRead / (double)this.BookPageTotal : 0;
+            }
+            else
+            {
+                this.SetBookListenedTime();
+                this.SetBookTotalTime();
+                this.Progress = (double)((this.BookTotalTime != null && this.BookTotalTime != 0) ? this.BookListenedTime / (double)this.BookTotalTime : 0);
+            }
+
             this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
-        public void SetBookCheckpoints()
+        public void SetBookCheckpoints(bool showCheckpoints)
         {
-            this.Half = this.BookPageTotal / 2;
-            this.Fourth = this.BookPageTotal / 4;
-            this.ThreeFourth = this.Half + this.Fourth;
+            if (showCheckpoints && (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook))))
+            {
+                this.HalfPage = this.BookPageTotal / 2;
+                this.FourthPage = this.BookPageTotal / 4;
+                this.ThreeFourthPage = this.HalfPage + this.FourthPage;
+            }
+
+            if (showCheckpoints && this.BookFormat != null && this.BookFormat!.Equals(AppStringResources.Audiobook))
+            {
+                this.SetBookTotalTime();
+                this.HalfHours = (double)this.BookTotalTime / 2;
+                this.FourthHours = (double)this.BookTotalTime / 4;
+                this.ThreeFourthHours = this.HalfHours + this.FourthHours;
+            }
         }
 
         public async Task SetPartOfSeries()
@@ -175,7 +199,9 @@ namespace BookCollector.Data.Models
 
             if (this.BookSeriesGuid != null)
             {
-                var series = await FilterLists.GetSeriesForBook(this.BookSeriesGuid);
+                var series = await GetItems.GetSeriesForBook(this.BookSeriesGuid);
+
+                this.BookSeries = null;
 
                 if (series != null)
                 {
@@ -219,7 +245,7 @@ namespace BookCollector.Data.Models
 
             if (this.BookCollectionGuid != null)
             {
-                var collection = await FilterLists.GetCollectionForBook(this.BookCollectionGuid);
+                var collection = await GetItems.GetCollectionForBook(this.BookCollectionGuid);
 
                 if (collection != null)
                 {
@@ -230,51 +256,53 @@ namespace BookCollector.Data.Models
             this.PartOfCollection = output;
         }
 
-        public void SetCoverDisplay()
+        public async Task SetCoverDisplay()
         {
-            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileLocation) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
-            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileLocation) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
+            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileName) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
+            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileName) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
+
+            BaseViewModel.SetBookCover(this);
         }
 
-        public async Task SetAuthorListstring()
+        public async Task SetAuthorListString()
         {
-            ObservableCollection<AuthorModel>? authorList = null;
-            ObservableCollection<BookAuthorModel>? bookAuthorList = await FilterLists.GetAllBookAuthorsForBook(this.BookGuid);
+            Database = Database ?? new BookCollectorDatabase();
 
-            if (TestData.UseTestData)
+            ObservableCollection<AuthorModel>? authorList = [];
+            ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
+
+            if (authorGuidList != null && authorGuidList.Count > 0)
             {
-                authorList = TestData.AuthorList;
+                var list = await Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
+                authorList = list.ToObservableCollection();
             }
-            else
-            {
-            }
 
-            if (bookAuthorList != null && bookAuthorList.Any(x => x.BookGuid == this.BookGuid) && authorList != null)
+            if (authorList != null)
             {
-                this.AuthorListstring = string.Empty;
+                this.AuthorListString = string.Empty;
 
-                for (int i = 0; i < bookAuthorList.Count; i++)
+                for (int i = 0; i < authorList.Count; i++)
                 {
-                    var author = authorList.FirstOrDefault(x => x.AuthorGuid == bookAuthorList[i].AuthorGuid);
+                    var author = authorList[i];
 
                     if (author != null)
                     {
-                        this.AuthorListstring += author.ReverseFullName;
+                        this.AuthorListString += author.ReverseFullName;
 
-                        if (i != bookAuthorList.Count - 1)
+                        if (i != authorList.Count - 1)
                         {
-                            this.AuthorListstring += "; ";
+                            this.AuthorListString += "; ";
                         }
                     }
                 }
             }
         }
 
-        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListstring(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
+        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
         {
             var bookAuthorList = new ObservableCollection<BookAuthorModel>();
 
-            this.AuthorListstring = string.Empty;
+            this.AuthorListString = string.Empty;
 
             if (authorList != null)
             {
@@ -292,16 +320,16 @@ namespace BookCollector.Data.Models
                             });
                         }
 
-                        this.AuthorListstring += authorList[i].ReverseFullName;
+                        this.AuthorListString += authorList[i].ReverseFullName;
 
                         if (i != authorList.Count - 1)
                         {
-                            this.AuthorListstring += "; ";
+                            this.AuthorListString += "; ";
                         }
                     }
                     else
                     {
-                        this.AuthorListstring = this.AuthorListstring[.. (this.AuthorListstring.LastIndexOf("; ") - 1)];
+                        this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
                     }
                 }
             }
@@ -311,6 +339,8 @@ namespace BookCollector.Data.Models
 
         public async Task SetBookChapters(ObservableCollection<ChapterModel>? chaptersList)
         {
+            Database = Database ?? new BookCollectorDatabase();
+
             if (chaptersList != null)
             {
                 foreach (var chapter in chaptersList)
@@ -319,13 +349,7 @@ namespace BookCollector.Data.Models
                     {
                         chapter.BookGuid = (Guid)this.BookGuid;
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.UpdateChapter(chapter);
-                        }
-                        else
-                        {
-                        }
+                        await Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }
@@ -333,25 +357,21 @@ namespace BookCollector.Data.Models
 
         public async Task RemoveBookChapters(List<ChapterModel>? chaptersList)
         {
+            Database = Database ?? new BookCollectorDatabase();
+
             if (chaptersList != null)
             {
                 foreach (var chapter in chaptersList)
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteChapter(chapter);
-                        }
-                        else
-                        {
-                        }
+                        await Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }
         }
 
-        public async Task SetBookPrice()
+        public void SetBookPrice()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
 
@@ -363,6 +383,21 @@ namespace BookCollector.Data.Models
 
                 this.BookPrice = string.Format(cultureInfo, "{0:C}", parsed ? price : 0);
             }
+        }
+
+        public void SetBookListenedTime()
+        {
+            this.BookListenedTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHourListened + ((double)this.BookMinuteListened / 60) : null;
+        }
+
+        public async Task SetBookTotalTime()
+        {
+            this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
+        }
+
+        public TimeSpan SetTime(int hour, int minute)
+        {
+            return new TimeSpan(hour, minute, 0);
         }
     }
 }

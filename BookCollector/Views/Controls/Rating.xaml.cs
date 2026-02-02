@@ -1,3 +1,7 @@
+// <copyright file="Rating.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Enums;
 using Colors = Microsoft.Maui.Graphics.Colors;
 
@@ -40,15 +44,26 @@ public partial class Rating : ContentView
     {
         return state switch
         {
-            StarState.Empty => Application.Current?.UserAppTheme switch
+            StarState.Empty => new FontImageSource
             {
-                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_empty_dark.svg"),
-                _ => ImageSource.FromFile("Icons/star_icon_empty_light.svg"),
+                Glyph = "\U000F04D2",
+                FontFamily = "MaterialDesignIcons",
+                Size = 22,
+                Color = Color.FromArgb("#cc9900"),
             },
-            StarState.Full => Application.Current?.UserAppTheme switch
+            StarState.Half => new FontImageSource
             {
-                AppTheme.Dark => ImageSource.FromFile("Icons/star_icon_full_dark.svg"),
-                _ => ImageSource.FromFile("Icons/star_icon_full_light.svg"),
+                Glyph = "\U000F04D0",
+                FontFamily = "MaterialDesignIcons",
+                Size = 22,
+                Color = Color.FromArgb("#cc9900"),
+            },
+            StarState.Full => new FontImageSource
+            {
+                Glyph = "\U000F04CE",
+                FontFamily = "MaterialDesignIcons",
+                Size = 22,
+                Color = Color.FromArgb("#cc9900"),
             },
             _ => throw new NotImplementedException(),
         };

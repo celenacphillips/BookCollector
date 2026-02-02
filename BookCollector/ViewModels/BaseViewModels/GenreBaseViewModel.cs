@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="GenreBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
 using BookCollector.Views.Genre;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<GenreModel>? fullGenreList;
 
         [ObservableProperty]
-        public static ObservableCollection<GenreModel>? filteredGenreList;
+        public static ObservableCollection<GenreModel>? filteredGenreList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<GenreModel>? filteredGenreList2;
 
         [ObservableProperty]
         public int totalGenresCount;

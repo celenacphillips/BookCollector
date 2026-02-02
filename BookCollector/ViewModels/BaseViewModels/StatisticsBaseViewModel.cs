@@ -1,4 +1,8 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="StatisticsBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,7 +21,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public int totalBooks;
 
         [ObservableProperty]
-        public string? totalBooksstring;
+        public string? totalBooksString;
 
         [ObservableProperty]
         public bool showSeries;
@@ -72,8 +76,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var section = (ChartView)this.View.FindByName(sectionName);
 
-            section.Chart = null;
-
             List<ChartEntry> entries = [];
 
             foreach (var chartValue in chartValues)
@@ -94,7 +96,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 Entries = entries,
                 LabelMode = LabelMode.RightOnly,
                 BackgroundColor = SKColor.Empty,
-                LabelTextSize = 30,
+                LabelTextSize = ConvertMauiFontToSkiaPixels(14f),
                 GraphPosition = GraphPosition.AutoFill,
             };
         }
@@ -105,8 +107,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             var textDark = (Color?)Application.Current?.Resources["TextDark"];
 
             var section = (ChartView)this.View.FindByName(sectionName);
-
-            section.Chart = null;
 
             List<ChartEntry> entries = [];
 
@@ -126,12 +126,12 @@ namespace BookCollector.ViewModels.BaseViewModels
             section.Chart = new BarChart
             {
                 Entries = entries,
-                BarAreaAlpha = 0,
+                BarAreaAlpha = 2,
                 LabelOrientation = Orientation.Vertical,
                 ValueLabelOrientation = Orientation.Horizontal,
                 BackgroundColor = SKColor.Empty,
-                LabelTextSize = 30,
-                ValueLabelTextSize = 30,
+                LabelTextSize = ConvertMauiFontToSkiaPixels(14f),
+                ValueLabelTextSize = ConvertMauiFontToSkiaPixels(14f),
                 MaxValue = this.TotalBooks,
             };
         }
@@ -150,7 +150,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void GetPreferences()
         {
-            this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
             this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
             this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
@@ -159,6 +159,12 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+        }
+
+        public static float ConvertMauiFontToSkiaPixels(float mauiFontSizeDp)
+        {
+            float density = (float)DeviceDisplay.MainDisplayInfo.Density;
+            return mauiFontSizeDp * density;
         }
 
         /*********************** Series Methods ***********************/
@@ -358,7 +364,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 List<ChartValues> values = [];
 
-                var max = 5;
+                var max = this.MaxListNumber;
 
                 if (counts.Count < max)
                 {

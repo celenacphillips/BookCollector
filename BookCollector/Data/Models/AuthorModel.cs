@@ -1,29 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="AuthorModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
 
 namespace BookCollector.Data.Models
 {
-    public partial class AuthorModel : ObservableObject, ICloneable
+    public partial class AuthorModel : AuthorDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? firstName;
-
-        [ObservableProperty]
-        public string? lastName;
-
-        [ObservableProperty]
-        public string? totalBooksstring;
-
-        [ObservableProperty]
-        public bool hideAuthor;
-
         public AuthorModel()
         {
-            this.AuthorGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? AuthorGuid { get; set; }
+        public AuthorModel(AuthorDatabaseModel dbModel)
+        {
+            this.AuthorGuid = dbModel.AuthorGuid;
+            this.FirstName = dbModel.FirstName;
+            this.LastName = dbModel.LastName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideAuthor = dbModel.HideAuthor;
+            this.AuthorTotalBooks = dbModel.AuthorTotalBooks;
+        }
 
         public string FullName
         {
@@ -35,30 +33,32 @@ namespace BookCollector.Data.Models
             get => $"{this.LastName}, {this.FirstName}";
         }
 
-        public int AuthorTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public async void SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(bool showHiddenBooks)
         {
-            var bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(this.AuthorGuid);
+            var list = await FillLists.GetAllBooksInAuthorList(this.AuthorGuid, showHiddenBooks);
+            var count = 0;
+            var unread = 0;
 
-            var list = await FilterLists.GetAllBooksInAuthorList(bookAuthorList, showHiddenBooks);
+            if (list != null)
+            {
+                count = list.Count;
+                unread = list.Count(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
+                    && !x.UpNext);
+            }
 
-            this.TotalBooksstring = StringManipulation.SetTotalBooksString(list.Count);
-            this.AuthorTotalBooks = list.Count;
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
+            this.AuthorTotalBooks = count;
         }
 
-        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            var bookAuthorList = await FilterLists.GetAllBookAuthorsForAuthor(this.AuthorGuid);
-
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInAuthorList(bookAuthorList, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInAuthorList(this.AuthorGuid, showHiddenBooks);
         }
     }
 }

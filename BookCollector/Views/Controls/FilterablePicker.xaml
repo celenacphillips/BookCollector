@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             x:Class="BookCollector.Views.Controls.FilterablePicker"
+             x:Name="this">
+    
+    <VerticalStackLayout BindingContext="{x:Reference this}"
+                         Margin="10">
+
+        <Label Text="{Binding TotalItemsString}"
+               HorizontalOptions="End"
+               TextColor="{Binding TotalItemsColor}"
+               FontAttributes="Italic"
+               IsVisible="{Binding ShowFilter}"/>
+        
+        <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchList}"
+                   TextChanged="SearchBar_TextChanged"
+                   TextColor="{Binding MainTextColor}"
+                   IsVisible="{Binding ShowFilter}"/>
+
+
+        <CollectionView ItemsSource="{Binding FilteredItems}"
+                        SelectedItem="{Binding SelectedItem}"
+                        SelectionMode="Single"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        MaximumHeightRequest="{Binding CollectionViewHeight}"
+                        x:Name="collectionView">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid x:Name="Root">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{Binding SelectedItemColor, Source={x:Reference this}}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+
+                        <Label Text="{Binding .}"
+                               HeightRequest="50"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="TailTruncation"
+                               TextColor="{Binding MainTextColor}"
+                               MaxLines="3"/>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         HeightRequest="200"
+                                         VerticalOptions="Start">
+                        <Label Text="{x:Static localization:AppStringResources.ThereAreNoItems}"
+                               Margin="10,25,10,10"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{Binding MainTextColor}"
+                               FontAttributes="Italic"/>
+                    </VerticalStackLayout>
+                </ContentView>
+            </CollectionView.EmptyView>
+
+            <CollectionView.Footer>
+                <Label Margin="0,5,0,0"
+                       Text="{x:Static localization:AppStringResources.EndOfList}"
+                       TextColor="{Binding MainTextColor}"
+                       HorizontalTextAlignment="Center"
+                       FontAttributes="Italic"/>
+            </CollectionView.Footer>
+            
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

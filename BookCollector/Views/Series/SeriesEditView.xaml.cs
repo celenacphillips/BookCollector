@@ -1,3 +1,7 @@
+// <copyright file="SeriesEditView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Series;
 
@@ -21,8 +25,8 @@ public partial class SeriesEditView : ContentPage
 
     // Need this to make sure new info populates when you
     // navigate back to the view.
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
-        using var variable = this.ViewModel.SetViewModelData();
+        await this.ViewModel.SetViewModelData();
     }
 }

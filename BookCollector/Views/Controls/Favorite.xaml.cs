@@ -1,3 +1,7 @@
+// <copyright file="Favorite.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
 using BookCollector.Data.Enums;
 
 namespace BookCollector.Views.Controls;
@@ -38,15 +42,19 @@ public partial class Favorite : ContentView
     {
         return state switch
         {
-            HeartState.Empty => Application.Current?.UserAppTheme switch
+            HeartState.Empty => new FontImageSource
             {
-                AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_empty_dark.svg"),
-                _ => ImageSource.FromFile("Icons/heart_icon_empty_light.svg")
+                Glyph = "\U000F0A57",
+                FontFamily = "MaterialDesignIcons",
+                Size = 18,
+                Color = Color.FromArgb("#ff0000"),
             },
-            HeartState.Full => Application.Current?.UserAppTheme switch
+            HeartState.Full => new FontImageSource
             {
-                AppTheme.Dark => ImageSource.FromFile("Icons/heart_icon_full_dark.svg"),
-                _ => ImageSource.FromFile("Icons/heart_icon_full_light.svg"),
+                Glyph = "\U000F0A56",
+                FontFamily = "MaterialDesignIcons",
+                Size = 18,
+                Color = Color.FromArgb("#ff0000"),
             },
             _ => throw new NotImplementedException(),
         };

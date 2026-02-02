@@ -7,54 +7,57 @@
              x:Class="BookCollector.Views.Statistics.WishListStatisticsView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Statistics"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:WishListStatisticsViewModel"
              Title="{x:Static localization:AppStringResources.Wishlist}">
 
 
     <Grid>
         <!-- Main Content -->
-        <StackLayout>
+        <StackLayout IsEnabled="{Binding IsEnabled}"
+                     IsVisible="{Binding IsVisible}">
+
+            <Grid Margin="20,20,20,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Number of Books -->
+                <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="{Binding TotalBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="0"/>
+                <!-- Number of Books -->
+
+                <!-- Total Value -->
+                <Label Text="{x:Static localization:AppStringResources.TotalValue}"
+                       Style="{StaticResource Header}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding CostBooks}"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1" Grid.Column="1"/>
+                <!-- Total Value -->
+            </Grid>
+
+            <Label Style="{StaticResource ShortSeparator}" />
 
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
                 <ScrollView>
                     <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                        <Grid Margin="20,20,20,40">
-                            
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!-- Number of Books -->
-                            <Label Text="{x:Static localization:AppStringResources.NumberOfBooks}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="0" Grid.Column="0"/>
-                            <Label Text="{Binding TotalBooks}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="1" Grid.Column="0"/>
-                            <!-- Number of Books -->
-
-                            <!-- Total Value -->
-                            <Label Text="{x:Static localization:AppStringResources.TotalValue}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="0" Grid.Column="1"/>
-                            <Label Text="{Binding CostBooks}"
-                                   HorizontalTextAlignment="Center"
-                                   Grid.Row="1" Grid.Column="1"/>
-                            <!-- Total Value -->
-                        </Grid>
-
-                        <Label Style="{StaticResource ShortSeparator}" />
-
+                        
                         <!-- Book Formats -->
                         <VerticalStackLayout IsVisible="{Binding ShowFormats}">
                             <Label Text="{x:Static localization:AppStringResources.BookFormat}"
@@ -148,15 +151,7 @@
         <!-- Main Content -->
 
         <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-        </Grid>
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 </ContentPage>

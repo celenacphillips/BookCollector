@@ -1,21 +1,28 @@
+// <copyright file="MainSettingsView.xaml.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.Database;
 using BookCollector.Resources.Localization;
+using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Views.Controls;
+using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Storage;
 
 namespace BookCollector.Views.Settings;
 
 public partial class MainSettingsView : ContentPage
 {
+    internal static BookCollectorDatabase Database;
+
     public MainSettingsView()
     {
-        var userAppTheme = Application.Current?.UserAppTheme;
-
-        if (userAppTheme == AppTheme.Unspecified)
-        {
-            userAppTheme = Application.Current?.PlatformAppTheme;
-        }
+        Database = new BookCollectorDatabase();
 
         this.AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
-        this.SelectedAppTheme = userAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
+        this.SelectedAppTheme = Application.Current?.UserAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
 
         this.ColorList = [AppStringResources.BlueGray, "Red", "Purple", "Green", "Orange", "Teal", "Magenta"];
         var color = (Color?)Application.Current?.Resources["Primary"];
@@ -46,80 +53,73 @@ public partial class MainSettingsView : ContentPage
 
     public List<string> AppThemeList { get; set; }
 
-    public string SelectedAppTheme { get; set; }
+    private string selectedAppThemeField;
 
-    public List<string> ColorList { get; set; }
-
-    public string SelectedColor { get; set; }
-
-    public List<string> LanguageList { get; set; }
-
-    public string SelectedLanguage { get; set; }
-
-    public List<string> CurrencyList { get; set; }
-
-    public string SelectedCurrency { get; set; }
-
-    public string SelectedExportLocation { get; set; }
-
-    public void OnAppThemePickerSelectedIndexChanged(object sender, EventArgs e)
+    public string SelectedAppTheme
     {
-        var picker = (Picker)sender;
-        var item = picker.SelectedItem.ToString();
-
-        if (!string.IsNullOrEmpty(item))
+        get => this.selectedAppThemeField;
+        set
         {
-            Application.Current?.UserAppTheme = item.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
-            Preferences.Set("AppTheme", picker.SelectedItem.ToString());
-        }
-    }
-
-    public void OnColorPickerSelectedIndexChanged(object sender, EventArgs e)
-    {
-        var picker = (Picker)sender;
-        var colorName = picker.SelectedItem.ToString();
-        string hexCode = colorName switch
-        {
-            "Red" => "ff0000",
-            "Purple" => "#751aff",
-            "Green" => "#2db300",
-            "Orange" => "#b36b00",
-            "Teal" => "#248f8f",
-            "Magenta" => "#b300b3",
-            _ => "#336699"
-        };
-
-        Data.Colors.SetColors(hexCode);
-
-#if ANDROID
-        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
-#endif
-
-        Preferences.Set("AppColor", hexCode);
-    }
-
-    public void OnLanguagePickerSelectedIndexChanged(object sender, EventArgs e)
-    {
-        var picker = (Picker)sender;
-        Preferences.Set("Language", picker.SelectedItem.ToString());
-    }
-
-    public void OnCurrencyPickerSelectedIndexChanged(object sender, EventArgs e)
-    {
-        var picker = (Picker)sender;
-
-        var item = picker.SelectedItem.ToString();
-
-        if (!string.IsNullOrEmpty(item))
-        {
-            Preferences.Set("Currency", picker.SelectedItem.ToString());
-
-            if (item.Equals("$ USD"))
+            if (this.selectedAppThemeField != value)
             {
-                Preferences.Set("CultureCode", "en-US");
+                this.selectedAppThemeField = value;
+                this.OnPropertyChanged();
             }
         }
     }
+
+    public List<string> ColorList { get; set; }
+
+    private string selectedColorField;
+
+    public string SelectedColor
+    {
+        get => this.selectedColorField;
+        set
+        {
+            if (this.selectedColorField != value)
+            {
+                this.selectedColorField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    public List<string> LanguageList { get; set; }
+
+    private string selectedLanguageField;
+
+    public string SelectedLanguage
+    {
+        get => this.selectedLanguageField;
+        set
+        {
+            if (this.selectedLanguageField != value)
+            {
+                this.selectedLanguageField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    public List<string> CurrencyList { get; set; }
+
+    private string selectedCurrencyField;
+
+    public string SelectedCurrency
+    {
+        get => this.selectedCurrencyField;
+        set
+        {
+            if (this.selectedCurrencyField != value)
+            {
+                this.selectedCurrencyField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    public string SelectedExportLocation { get; set; }
 
     public async void OnExportLocationButtonClicked(object sender, EventArgs e)
     {
@@ -132,6 +132,143 @@ public partial class MainSettingsView : ContentPage
             this.SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             Preferences.Set("ExportLocation", folder.Path);
+        }
+    }
+
+    public async void OnDeleteButtonClicked(object sender, EventArgs e)
+    {
+        var inputTitle = AppStringResources.DeleteAllData_Question;
+
+        var inputConfirm = AppStringResources.Yes;
+
+        var inputDeny = AppStringResources.No;
+
+        var inputMessage = AppStringResources.WarningThisActionCannotBeUndone;
+
+        var action = await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm, inputDeny);
+
+        if (action)
+        {
+            await Database.DropAllTables();
+            BaseViewModel.ClearAllLists();
+
+            await Shell.Current.DisplayAlertAsync(AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, AppStringResources.OK);
+        }
+        else
+        {
+            await Shell.Current.DisplayAlertAsync(AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, AppStringResources.OK);
+        }
+    }
+
+    private async void AppThemePickerButton_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var filterablePopup = new FilterableListPopup(
+                AppStringResources.SelectYourAppTheme,
+                this.AppThemeList.ToList(),
+                this.SelectedAppTheme,
+                false);
+            var result = await this.ShowPopupAsync<string?>(filterablePopup);
+
+            if (!string.IsNullOrEmpty(result.Result))
+            {
+                this.SelectedAppTheme = result.Result;
+                Application.Current?.UserAppTheme = result.Result.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
+                Preferences.Set("AppTheme", result.Result.ToString());
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private async void ColorPickerButton_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var filterablePopup = new FilterableListPopup(
+                AppStringResources.SelectYourAppColor,
+                this.ColorList.ToList(),
+                this.SelectedColor,
+                false);
+            var result = await this.ShowPopupAsync<string?>(filterablePopup);
+
+            if (!string.IsNullOrEmpty(result.Result))
+            {
+                this.SelectedColor = result.Result;
+
+                string hexCode = this.SelectedColor switch
+                {
+                    "Red" => "ff0000",
+                    "Purple" => "#751aff",
+                    "Green" => "#2db300",
+                    "Orange" => "#b36b00",
+                    "Teal" => "#248f8f",
+                    "Magenta" => "#b300b3",
+                    _ => "#336699"
+                };
+
+                Data.Colors.SetColors(hexCode);
+
+//#if ANDROID
+//                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
+//#endif
+
+                Preferences.Set("AppColor", hexCode);
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private async void LanguagePickerButton_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var filterablePopup = new FilterableListPopup(
+                AppStringResources.SelectYourAppLanguage,
+                this.LanguageList.ToList(),
+                this.SelectedLanguage,
+                true);
+            var result = await this.ShowPopupAsync<string?>(filterablePopup);
+
+            if (!string.IsNullOrEmpty(result.Result))
+            {
+                this.SelectedLanguage = result.Result;
+                Preferences.Set("Language", this.SelectedLanguage);
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private async void CurrencyPickerButton_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var filterablePopup = new FilterableListPopup(
+                AppStringResources.SelectYourAppCurrency,
+                this.CurrencyList.ToList(),
+                this.SelectedCurrency,
+                true);
+            var result = await this.ShowPopupAsync<string?>(filterablePopup);
+
+            if (!string.IsNullOrEmpty(result.Result))
+            {
+                this.SelectedAppTheme = result.Result;
+                Preferences.Set("Currency", this.SelectedAppTheme);
+
+                if (this.SelectedAppTheme.Equals("$ USD"))
+                {
+                    Preferences.Set("CultureCode", "en-US");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
         }
     }
 }

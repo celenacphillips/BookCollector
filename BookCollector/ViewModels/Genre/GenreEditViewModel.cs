@@ -1,10 +1,17 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="GenreEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Genre;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Genre
 {
@@ -14,7 +21,7 @@ namespace BookCollector.ViewModels.Genre
         public GenreModel editedGenre;
 
         [ObservableProperty]
-        public bool genreNameValid;
+        public bool genreNameNotValid;
 
         public GenreEditViewModel(GenreModel genre, ContentPage view)
         {
@@ -35,7 +42,7 @@ namespace BookCollector.ViewModels.Genre
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -44,47 +51,46 @@ namespace BookCollector.ViewModels.Genre
         [RelayCommand]
         public async Task SaveGenre()
         {
-            if (!this.GenreNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.GenreNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewGenre}"))
+                if (this.GenreNameNotValid)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertGenre(this.EditedGenre);
-                    }
-                    else
-                    {
-                    }
+                    await DisplayMessage(AppStringResources.GenreNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {
-                    if (TestData.UseTestData)
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
                     {
-                        TestData.UpdateGenre(this.EditedGenre);
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
                     }
-                    else
+#endif
+
+                    this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
+                    AddToStaticList(this.EditedGenre);
+
+                    if (this.InsertMainViewBefore)
                     {
+                        var view = new GenreMainView(this.EditedGenre, $"{this.EditedGenre.GenreName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
-                }
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new GenreMainView(this.EditedGenre, $"{this.EditedGenre.GenreName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    await Shell.Current.Navigation.PopAsync();
                 }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
 
-                await Shell.Current.Navigation.PopAsync();
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 
@@ -104,20 +110,67 @@ namespace BookCollector.ViewModels.Genre
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedGenre.GenreName))
+            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
+        }
+
+        public static async Task AddToStaticList(GenreModel genre)
+        {
+            if (GenresViewModel.fullGenreList != null)
             {
-                var genreNameEditor = this.View.FindByName<Editor>("GenreNameEditor");
-                genreNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                genreNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.GenreNameValid = false;
+                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
             }
-            else
+        }
+
+        private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
             {
-                var genreNameEditor = this.View.FindByName<Editor>("GenreNameEditor");
-                genreNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                genreNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.GenreNameValid = true;
+                genre.SetTotalBooks(true),
+                genre.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldGenre = genreList.FirstOrDefault(x => x.GenreGuid == genre.GenreGuid);
+
+                if (oldGenre != null)
+                {
+                    var index = genreList.IndexOf(oldGenre);
+                    genreList.Remove(oldGenre);
+                    genreList.Insert(index, genre);
+                    refresh = true;
+                }
+                else
+                {
+                    genreList.Add(genre);
+                    refresh = true;
+                }
+
+                if (filteredGenreList != null)
+                {
+                    var filteredGenre = filteredGenreList.FirstOrDefault(x => x.GenreGuid == genre.GenreGuid);
+
+                    if (filteredGenre != null)
+                    {
+                        var index = filteredGenreList.IndexOf(filteredGenre);
+                        filteredGenreList.Remove(filteredGenre);
+                        filteredGenreList.Insert(index, genre);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredGenreList.Add(genre);
+                        refresh = true;
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

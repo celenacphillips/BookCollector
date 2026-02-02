@@ -1,4 +1,8 @@
-﻿using BookCollector.ViewModels.BaseViewModels;
+﻿// <copyright file="SortPopupViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.ViewModels.BaseViewModels;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -104,10 +108,10 @@ namespace BookCollector.ViewModels.Popups
         /********************************************************/
 
         [ObservableProperty]
-        public bool pageCountVisible;
+        public bool pageCountTimeVisible;
 
         [ObservableProperty]
-        public bool pageCountChecked;
+        public bool pageCountTimeChecked;
 
         /********************************************************/
 
@@ -224,9 +228,9 @@ namespace BookCollector.ViewModels.Popups
                 Preferences.Set($"{this.ViewTitle}_BookFormatSelection", this.BookFormatChecked);
             }
 
-            if (this.PageCountVisible)
+            if (this.PageCountTimeVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_PageCountSelection", this.PageCountChecked);
+                Preferences.Set($"{this.ViewTitle}_PageCountBookTimeSelection", this.PageCountTimeChecked);
             }
 
             if (this.TotalPriceVisible)

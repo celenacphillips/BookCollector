@@ -6,24 +6,45 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.WishListBook"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:WishListBookMainViewModel"
              xmlns:dataModels="clr-namespace:BookCollector.Data.Models"
              Title="{Binding ViewTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/info_icon_light.svg, Dark=Icons/info_icon_dark.svg}"
-                     Command="{Binding InfoPopupCommand}"/>
-        <ToolbarItem IconImageSource="{AppThemeBinding Light=Icons/share_icon_light.svg, Dark=Icons/share_icon_dark.svg}"
-                     Command="{Binding ShareListCommand}"/>
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding ShareListCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0497;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        
         <ToolbarItem Text="{x:Static localization:AppStringResources.EditBook}"
                      Command="{Binding EditBookCommand}"
-                     Order="Secondary"/>
+                     Order="Secondary"
+                     IsEnabled="{Binding IsEnabled}"/>
+        
         <ToolbarItem Text="{x:Static localization:AppStringResources.DeleteBook}"
                      Command="{Binding DeleteBookCommand}"
-                     Order="Secondary"/>
+                     Order="Secondary"
+                     IsEnabled="{Binding IsEnabled}"/>
+        
         <ToolbarItem Text="{x:Static localization:AppStringResources.AddToLibrary}"
                      Command="{Binding AddToLibraryCommand}"
-                     Order="Secondary"/>
+                     Order="Secondary"
+                     IsEnabled="{Binding IsEnabled}"/>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -34,7 +55,8 @@
             <RefreshView IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding RefreshCommand}">
 
-                <ScrollView IsEnabled="{Binding IsVisible}">
+                <ScrollView IsVisible="{Binding IsVisible}"
+                            IsEnabled="{Binding IsEnabled}">
                     <VerticalStackLayout Padding="10">
 
                         <!-- Book Title -->
@@ -42,11 +64,11 @@
                                Margin="0,10,0,0">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="{Binding SelectedBook.BookTitle}"
+                                    <Span Text="{Binding SelectedWishlistBook.BookTitle}"
                                           FontAttributes="Bold">
                                         <Span.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                  CommandParameter="{Binding SelectedBook.BookTitle}"/>
+                                                                  CommandParameter="{Binding SelectedWishlistBook.BookTitle}"/>
                                         </Span.GestureRecognizers>
                                     </Span>
                                 </FormattedString>
@@ -58,14 +80,14 @@
                         <ImageButton Source="{Binding Source={RelativeSource AncestorType={x:Type viewModel:WishListBookMainViewModel}}, Path=BookCover}"
                                      HeightRequest="200"
                                      WidthRequest="150"
-                                     IsVisible="{Binding SelectedBook.HasBookCover}"
+                                     IsVisible="{Binding SelectedWishlistBook.HasBookCover}"
                                      Command="{Binding BookCoverPopupCommand}"
                                      BackgroundColor="Transparent"/>
 
                         <Label Text="{x:Static localization:AppStringResources.NoBookCoverSelected}"
                                HeightRequest="200"
                                WidthRequest="150"
-                               IsVisible="{Binding SelectedBook.HasNoBookCover}"
+                               IsVisible="{Binding SelectedWishlistBook.HasNoBookCover}"
                                Style="{DynamicResource NoCover}"/>
                         <!-- Book Cover -->
 
@@ -74,11 +96,11 @@
                             <Label>
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding SelectedBook.BookFormat}"
+                                        <Span Text="{Binding SelectedWishlistBook.BookFormat}"
                                               Style="{DynamicResource SubTitle}">
                                             <Span.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                      CommandParameter="{Binding SelectedBook.BookFormat}"/>
+                                                                      CommandParameter="{Binding SelectedWishlistBook.BookFormat}"/>
                                             </Span.GestureRecognizers>
                                         </Span>
                                     </FormattedString>
@@ -89,14 +111,14 @@
 
                         <!-- Book Series -->
                         <HorizontalStackLayout HorizontalOptions="Center"
-                                               IsVisible="{Binding SelectedBook.HasSeries}">
+                                               IsVisible="{Binding SelectedWishlistBook.HasSeries}">
                             <Label>
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding SelectedBook.PartOfSeries}">
+                                        <Span Text="{Binding SelectedWishlistBook.PartOfSeries}">
                                             <Span.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                      CommandParameter="{Binding SelectedBook.PartOfSeries}"/>
+                                                                      CommandParameter="{Binding SelectedWishlistBook.PartOfSeries}"/>
                                             </Span.GestureRecognizers>
                                         </Span>
                                     </FormattedString>
@@ -106,7 +128,7 @@
                         <!-- Book Series -->
 
                         <!-- Authors -->
-                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding AuthorListSectionValue, Mode=TwoWay}"
                                           Command="{Binding AuthorListChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -121,17 +143,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding AuthorListOpen}"
+                                    <Image IsVisible="{Binding AuthorListOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding AuthorListNotOpen}"
+                                    <Image IsVisible="{Binding AuthorListNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -179,7 +213,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Book Information -->
-                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding BookInfoSectionValue, Mode=TwoWay}"
                                           Command="{Binding BookInfoChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -194,17 +228,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding BookInfoOpen}"
+                                    <Image IsVisible="{Binding BookInfoOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding BookInfoNotOpen}"
+                                    <Image IsVisible="{Binding BookInfoNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -212,16 +258,17 @@
                                                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
 
                                 <!-- Total Pages -->
-                                <VerticalStackLayout Margin="10">
+                                <VerticalStackLayout Margin="10"
+                                                     IsVisible="{Binding ShowPages}">
                                     <Label Text="{x:Static localization:AppStringResources.TotalPages}"
                                            Style="{DynamicResource Header}"/>
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding SelectedBook.BookPageTotal}">
+                                                <Span Text="{Binding SelectedWishlistBook.BookPageTotal}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                              CommandParameter="{Binding SelectedBook.BookPageTotal}"/>
+                                                                              CommandParameter="{Binding SelectedWishlistBook.BookPageTotal}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
                                             </FormattedString>
@@ -230,6 +277,26 @@
                                 </VerticalStackLayout>
                                 <!-- Total Pages -->
 
+                                <!-- Total Time -->
+                                <VerticalStackLayout Margin="10"
+                                                     IsVisible="{Binding ShowTime}">
+                                    <Label Text="{x:Static localization:AppStringResources.TotalTime}"
+                                           Style="{DynamicResource Header}"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding SelectedWishlistBook.TotalTimeSpan, StringFormat='{}{0:hh\\:mm}'}">
+                                                    <Span.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                              CommandParameter="{Binding SelectedWishlistBook.TotalTimeSpan, StringFormat='{}{0:hh\\:mm}'}"/>
+                                                    </Span.GestureRecognizers>
+                                                </Span>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <!-- Total Time -->
+
                                 <!-- Book Location -->
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.WhereToBuy}"
@@ -237,10 +304,10 @@
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding SelectedBook.BookWhereToBuy}">
+                                                <Span Text="{Binding SelectedWishlistBook.BookWhereToBuy}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                              CommandParameter="{Binding SelectedBook.BookWhereToBuy}"/>
+                                                                              CommandParameter="{Binding SelectedWishlistBook.BookWhereToBuy}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
                                             </FormattedString>
@@ -263,10 +330,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookPublisher}">
+                                                    <Span Text="{Binding SelectedWishlistBook.BookPublisher}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookPublisher}"/>
+                                                                                  CommandParameter="{Binding SelectedWishlistBook.BookPublisher}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -283,10 +350,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookPublishYear}">
+                                                    <Span Text="{Binding SelectedWishlistBook.BookPublishYear}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookPublishYear}"/>
+                                                                                  CommandParameter="{Binding SelectedWishlistBook.BookPublishYear}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -303,10 +370,10 @@
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding SelectedBook.BookIdentifier}">
+                                                <Span Text="{Binding SelectedWishlistBook.BookIdentifier}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                              CommandParameter="{Binding SelectedBook.BookIdentifier}"/>
+                                                                              CommandParameter="{Binding SelectedWishlistBook.BookIdentifier}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
                                             </FormattedString>
@@ -330,10 +397,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookLanguage}">
+                                                    <Span Text="{Binding SelectedWishlistBook.BookLanguage}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookLanguage}"/>
+                                                                                  CommandParameter="{Binding SelectedWishlistBook.BookLanguage}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -350,10 +417,10 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding SelectedBook.BookPrice}">
+                                                    <Span Text="{Binding SelectedWishlistBook.BookPrice}">
                                                         <Span.GestureRecognizers>
                                                             <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                                  CommandParameter="{Binding SelectedBook.BookPrice}"/>
+                                                                                  CommandParameter="{Binding SelectedWishlistBook.BookPrice}"/>
                                                         </Span.GestureRecognizers>
                                                     </Span>
                                                 </FormattedString>
@@ -370,10 +437,10 @@
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding SelectedBook.BookURL}">
+                                                <Span Text="{Binding SelectedWishlistBook.BookURL}">
                                                     <Span.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                              CommandParameter="{Binding SelectedBook.BookURL}"/>
+                                                                              CommandParameter="{Binding SelectedWishlistBook.BookURL}"/>
                                                     </Span.GestureRecognizers>
                                                 </Span>
                                             </FormattedString>
@@ -386,7 +453,7 @@
                                 <VerticalStackLayout Margin="10">
                                     <Label Text="{x:Static localization:AppStringResources.HideWishlistBook_Question}"
                                            Style="{DynamicResource Header}"/>
-                                    <Switch IsToggled="{Binding SelectedBook.HideBook}"
+                                    <Switch IsToggled="{Binding SelectedWishlistBook.HideBook}"
                                             IsEnabled="False"
                                             HorizontalOptions="Start"
                                             Margin="-10"/>
@@ -400,7 +467,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Summary -->
-                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding SummarySectionValue, Mode=TwoWay}"
                                           Command="{Binding SummaryChangedCommand}"
                                           Margin="0,0,0,15">
                             <toolkit:Expander.Header>
@@ -415,17 +482,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding SummaryOpen}"
+                                    <Image IsVisible="{Binding SummaryOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding SummaryNotOpen}"
+                                    <Image IsVisible="{Binding SummaryNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -435,10 +514,10 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{Binding SelectedBook.BookSummary}">
+                                            <Span Text="{Binding SelectedWishlistBook.BookSummary}">
                                                 <Span.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                          CommandParameter="{Binding SelectedBook.BookSummary}"/>
+                                                                          CommandParameter="{Binding SelectedWishlistBook.BookSummary}"/>
                                                 </Span.GestureRecognizers>
                                             </Span>
                                         </FormattedString>
@@ -451,7 +530,7 @@
                         <Label Style="{DynamicResource ShortSeparator}"/>
 
                         <!-- Comments -->
-                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue}"
+                        <toolkit:Expander IsExpanded="{Binding CommentsSectionValue, Mode=TwoWay}"
                                           Command="{Binding CommentsChangedCommand}"
                                           Margin="0,0,0,15"
                                           IsVisible="{Binding ShowComments}">
@@ -467,17 +546,29 @@
                                            Style="{DynamicResource expanderHeaderLabel}"
                                            Grid.Row="0" Grid.Column="0"/>
 
-                                    <Image Source="{FontImageSource &#709;, Size=18, Color=White}"
-                                           IsVisible="{Binding CommentsOpen}"
+                                    <Image IsVisible="{Binding CommentsOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0140;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
 
-                                    <Image Source="{FontImageSource &#708;, Size=18, Color=White}"
-                                           IsVisible="{Binding CommentsNotOpen}"
+                                    <Image IsVisible="{Binding CommentsNotOpen}"
                                            HorizontalOptions="End"
                                            Margin="0,7,10,2"
-                                           Grid.Row="0" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF0143;"
+                                                             Size="24"
+                                                             Color="{DynamicResource TextDark}" />
+                                        </Image.Source>
+                                    </Image>
                                 </Grid>
                             </toolkit:Expander.Header>
 
@@ -487,10 +578,10 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{Binding SelectedBook.BookComments}">
+                                            <Span Text="{Binding SelectedWishlistBook.BookComments}">
                                                 <Span.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding TapCommand}"
-                                                                          CommandParameter="{Binding SelectedBook.BookComments}"/>
+                                                                          CommandParameter="{Binding SelectedWishlistBook.BookComments}"/>
                                                 </Span.GestureRecognizers>
                                             </Span>
                                         </FormattedString>
@@ -508,17 +599,9 @@
             </RefreshView>
         </StackLayout>
         <!-- Main Content -->
-        
-        <!-- Activity Indicator -->
-        <Grid IsVisible="{Binding IsBusy}"
-              BackgroundColor="Gray"
-              Opacity="0.5">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-        </Grid>
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
         <!-- Activity Indicator -->
     </Grid>
 </ContentPage>

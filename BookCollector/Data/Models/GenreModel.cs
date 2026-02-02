@@ -1,26 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="GenreModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
+using System.Threading;
 
 namespace BookCollector.Data.Models
 {
-    public partial class GenreModel : ObservableObject, ICloneable
+    public partial class GenreModel : GenreDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? genreName;
-
-        [ObservableProperty]
-        public string? totalBooksstring;
-
-        [ObservableProperty]
-        public bool hideGenre;
-
         public GenreModel()
         {
-            this.GenreGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? GenreGuid { get; set; }
+        public GenreModel(GenreDatabaseModel dbModel)
+        {
+            this.GenreGuid = dbModel.GenreGuid;
+            this.GenreName = dbModel.GenreName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideGenre = dbModel.HideGenre;
+            this.GenreTotalBooks = dbModel.GenreTotalBooks;
+        }
 
         public string? ParsedGenreName
         {
@@ -32,34 +33,32 @@ namespace BookCollector.Data.Models
                         : this.GenreName;
         }
 
-        public int GenreTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
-        public int? ID { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public async void SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(bool showHiddenBooks)
         {
-            var list = await FilterLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
             var count = 0;
+            var unread = 0;
 
             if (list != null)
             {
                 count = list.Count;
+                unread = list.Count(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
+                    && !x.UpNext);
             }
 
-            this.TotalBooksstring = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
             this.GenreTotalBooks = count;
         }
 
-        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInGenreList(this.GenreGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInGenreList(this.GenreGuid, showHiddenBooks);
         }
     }
 }

@@ -13,41 +13,52 @@
               x:DataType="dataModels:CollectionModel">
             
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="6*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="{AppThemeBinding Light=Icons/collection_icon_light.svg, Dark=Icons/collection_icon_dark.svg}"
-                   HeightRequest="30"
-                   HorizontalOptions="Start"
-                   Grid.Row="0" Grid.Column="0"/>
+            <Image HorizontalOptions="Center"
+                   Grid.Row="0" Grid.Column="0">
+                <Image.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                     Glyph="&#xF196C;"
+                                     Size="34"
+                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                </Image.Source>
+            </Image>
 
             <VerticalStackLayout VerticalOptions="Center"
                                  HorizontalOptions="Start"
-                                 Grid.Row="0" Grid.Column="1">
+                                 Grid.Row="0" Grid.Column="1"
+                                 Padding="10,0,0,0">
                 
                 <Label Text="{Binding CollectionName}"
-                       TextColor="{StaticResource Primary}"/>
+                       TextColor="{DynamicResource Primary}"/>
 
-                <Label Text="{Binding TotalBooksstring}"
-                       Style="{StaticResource SubTitle}"
+                <Label Text="{Binding TotalBooksString}"
+                       Style="{DynamicResource SubTitle}"
                        FontSize="12"/>
             </VerticalStackLayout>
 
-            <HorizontalStackLayout Grid.Row="0" Grid.Column="2">
-                <ImageButton Source="{AppThemeBinding Light=Icons/vertical_dots_light.svg, Dark=Icons/vertical_dots_dark.svg}"
-                             WidthRequest="20"
-                             HeightRequest="20"
-                             HorizontalOptions="End"
-                             Margin="10"
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="2"
+                                   HorizontalOptions="End">
+                <ImageButton HorizontalOptions="End"
                              Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CollectionsViewModel}}, Path=PopupMenuCollectionCommand}"
                              CommandParameter="{Binding CollectionGuid}"
-                             BackgroundColor="Transparent"/>
+                             BackgroundColor="Transparent"
+                             Padding="10,0">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF01D9;"
+                                         Size="24"
+                                         Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                    </ImageButton.Source>
+                </ImageButton>
             </HorizontalStackLayout>
         </Grid>
 
-        <Label Style="{StaticResource LongSeparator}"/>
+        <Label Style="{DynamicResource LongSeparator}"/>
 
     </VerticalStackLayout>
 </ContentView>

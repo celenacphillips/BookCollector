@@ -10,11 +10,12 @@
                WidthRequest="{Binding PopupWidth}"
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                Margin="0">
-    <VerticalStackLayout>
+
+    <VerticalStackLayout HorizontalOptions="Center">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Label Text="{x:Static localization:AppStringResources.SortBy}"
@@ -24,11 +25,18 @@
                    VerticalOptions="End"
                    Grid.Row="0" Grid.Column="0"/>
 
-            <Button Text="{x:Static localization:AppStringResources.Save}" 
-                    HorizontalOptions="End"
-                    Margin="10,10,10,0"
-                    Command="{Binding CloseCommand}"
-                    Grid.Row="0" Grid.Column="1"/>
+            <ImageButton HorizontalOptions="End"
+                         Margin="10,10,10,0"
+                         Padding="10,5"
+                         Command="{Binding CloseCommand}"
+                         Grid.Row="0" Grid.Column="1">
+                <ImageButton.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                     Glyph="&#xF0193;"
+                                     Size="28"
+                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                </ImageButton.Source>
+            </ImageButton>
         </Grid>
 
         <VerticalStackLayout>
@@ -36,8 +44,8 @@
             <Grid IsVisible="True"
                   Margin="0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <VerticalStackLayout Grid.Row="0" Grid.Column="0"
@@ -92,7 +100,7 @@
                     <!-- Book Reading Date -->
 
                     <!-- Total Books -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.TotalBooks}"
+                    <RadioButton Content="{x:Static localization:AppStringResources.TotalBooksOwned}"
                                  IsVisible="{Binding TotalBooksVisible}"
                                  IsChecked="{Binding TotalBooksChecked}"/>
                     <!-- Total Books -->
@@ -121,14 +129,14 @@
                                  IsChecked="{Binding BookFormatChecked}"/>
                     <!-- Book Format -->
 
-                    <!-- Page Count -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.PageCount}"
-                                 IsVisible="{Binding PageCountVisible}"
-                                 IsChecked="{Binding PageCountChecked}"/>
-                    <!-- Page Count -->
+                    <!-- Page Count / Book Time -->
+                    <RadioButton Content="{x:Static localization:AppStringResources.PageCountBookTime}"
+                                 IsVisible="{Binding PageCountTimeVisible}"
+                                 IsChecked="{Binding PageCountTimeChecked}"/>
+                    <!-- Page Count / Book Time -->
 
                     <!-- Total Price -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.TotalPrice}"
+                    <RadioButton Content="{x:Static localization:AppStringResources.TotalPriceOfBooksOwned}"
                                  IsVisible="{Binding TotalPriceVisible}"
                                  IsChecked="{Binding TotalPriceChecked}"/>
                     <!-- Total Price -->

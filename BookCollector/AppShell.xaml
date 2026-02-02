@@ -10,9 +10,9 @@
     xmlns:groupingsViews="clr-namespace:BookCollector.Views.Groupings"
     xmlns:statisticsViews="clr-namespace:BookCollector.Views.Statistics"
     xmlns:settingsViews="clr-namespace:BookCollector.Views.Settings"
+    xmlns:supportViews="clr-namespace:BookCollector.Views.Support"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    Shell.FlyoutBehavior="Flyout"
-    Title="{x:Static localization:AppStringResources.ApplicationTitle}">
+    Shell.FlyoutBehavior="Flyout">
 
     <Shell.ItemTemplate>
         <DataTemplate>
@@ -20,13 +20,13 @@
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
-                            
+
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" Value="Transparent" />
                                 </VisualState.Setters>
                             </VisualState>
-                            
+
                             <VisualState x:Name="Selected">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor"
@@ -59,6 +59,12 @@
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Library}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF125F;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
             <ShellContent Title="{x:Static localization:AppStringResources.Reading}"
                           ContentTemplate="{DataTemplate libraryViews:ReadingView}"/>
 
@@ -75,6 +81,12 @@
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Groupings}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF196C;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+
             <ShellContent Title="{x:Static localization:AppStringResources.Collections}"
                           ContentTemplate="{DataTemplate groupingsViews:CollectionsView}"/>
 
@@ -89,27 +101,71 @@
 
             <ShellContent Title="{x:Static localization:AppStringResources.Locations}"
                           ContentTemplate="{DataTemplate groupingsViews:LocationsView}"/>
+
+            <!-- Added to fix bug with MAUI where it selects the wrong item -->
+            <!--<ShellContent Title=""
+                          Route="Spacer"
+                          ContentTemplate="{DataTemplate ContentPage}"
+                          IsVisible="False" />-->
+
         </Tab>
     </FlyoutItem>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Statistics}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF012B;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
             <ShellContent Title="{x:Static localization:AppStringResources.Library}"
                           ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
                           ContentTemplate="{DataTemplate statisticsViews:WishListStatisticsView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.ReadingData}"
+                          ContentTemplate="{DataTemplate statisticsViews:ReadingDataView}"/>
         </Tab>
     </FlyoutItem>
 
-    <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
-                  ContentTemplate="{DataTemplate mainViews:WishListView}"/>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="{x:Static localization:AppStringResources.Wishlist}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF0E44;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
+            <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
+                          ContentTemplate="{DataTemplate mainViews:WishListView}"/>
+        </Tab>
+    </FlyoutItem>
 
-    <ShellContent Title="{x:Static localization:AppStringResources.Export_Import}"
-                  ContentTemplate="{DataTemplate mainViews:ExportImportView}"/>
+    
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="{x:Static localization:AppStringResources.Export_Import}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF0BCE;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
+            <ShellContent Title="{x:Static localization:AppStringResources.Export_Import}"
+                          ContentTemplate="{DataTemplate mainViews:ExportImportView}"/>
+        </Tab>
+    </FlyoutItem>
+    
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Settings}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF0493;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
             <ShellContent Title="{x:Static localization:AppStringResources.MainSettings}"
                           ContentTemplate="{DataTemplate settingsViews:MainSettingsView}"/>
 
@@ -118,16 +174,52 @@
         </Tab>
     </FlyoutItem>
 
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="{x:Static localization:AppStringResources.Support}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF02D6;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
+            
+            <ShellContent Title="{x:Static localization:AppStringResources.FAQ}"
+                          ContentTemplate="{DataTemplate supportViews:FAQView}"
+                          IsVisible="False"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.Support}"
+                          ContentTemplate="{DataTemplate supportViews:SupportView}"/>
+            
+            <ShellContent Title="{x:Static localization:AppStringResources.ChangeLog}"
+                          ContentTemplate="{DataTemplate supportViews:ChangeLogView}"
+                          IsVisible="False"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.DataStorage}"
+                          ContentTemplate="{DataTemplate supportViews:DataStorageView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.Permissions}"
+                          ContentTemplate="{DataTemplate supportViews:PermissionsView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.Credits}"
+                          ContentTemplate="{DataTemplate supportViews:CreditsView}"/>
+
+            <!-- Added to fix bug with MAUI where it selects the wrong item -->
+            <!--<ShellContent Title=""
+                          Route="Spacer"
+                          ContentTemplate="{DataTemplate ContentPage}"
+                          IsVisible="False" />-->
+        </Tab>
+    </FlyoutItem>
+
     <Shell.FlyoutFooter>
-        <HorizontalStackLayout HorizontalOptions="Center"
-                               Margin="10">
-            <Label Text="{x:Static localization:AppStringResources.ApplicationTitle}"
-                   Style="{StaticResource Header}"/>
-            <Label Text=", "
-                   Style="{StaticResource Header}"/>
-            <Label Text="{Binding Year}"
-                   Style="{StaticResource Header}"/>
-        </HorizontalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="{Binding ApplicationTitleString}"
+                   Style="{StaticResource Header}"
+                   HorizontalOptions="Center"/>
+            <Label Text="{Binding VersionString}"
+                   Style="{StaticResource Subtitle}"
+                   HorizontalOptions="Center"
+                   Margin="10"/>
+        </VerticalStackLayout>
     </Shell.FlyoutFooter>
     
 </Shell>

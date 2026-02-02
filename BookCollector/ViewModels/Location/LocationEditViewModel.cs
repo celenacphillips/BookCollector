@@ -1,10 +1,17 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="LocationEditViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Groupings;
 using BookCollector.Views.Location;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Location
 {
@@ -14,7 +21,7 @@ namespace BookCollector.ViewModels.Location
         public LocationModel editedLocation;
 
         [ObservableProperty]
-        public bool locationNameValid;
+        public bool locationNameNotValid;
 
         public LocationEditViewModel(LocationModel location, ContentPage view)
         {
@@ -35,7 +42,7 @@ namespace BookCollector.ViewModels.Location
 
                 this.SetIsBusyFalse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.SetIsBusyFalse();
             }
@@ -44,47 +51,46 @@ namespace BookCollector.ViewModels.Location
         [RelayCommand]
         public async Task SaveLocation()
         {
-            if (!this.LocationNameValid)
+            try
             {
-                await DisplayMessage(AppStringResources.LocationNameNotValid, null);
-            }
-            else
-            {
-#if ANDROID
-                if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                {
-                    Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                }
-#endif
+                this.SetIsBusyTrue();
 
-                if (!string.IsNullOrEmpty(this.ViewTitle) && this.ViewTitle.Equals($"{AppStringResources.AddNewLocation}"))
+                if (this.LocationNameNotValid)
                 {
-                    if (TestData.UseTestData)
-                    {
-                        TestData.InsertLocation(this.EditedLocation);
-                    }
-                    else
-                    {
-                    }
+                    await DisplayMessage(AppStringResources.LocationNameNotValid, null);
+                    this.SetIsBusyFalse();
                 }
                 else
                 {
-                    if (TestData.UseTestData)
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
                     {
-                        TestData.UpdateLocation(this.EditedLocation);
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
                     }
-                    else
+#endif
+
+                    this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
+                    AddToStaticList(this.EditedLocation);
+
+                    if (this.InsertMainViewBefore)
                     {
+                        var view = new LocationMainView(this.EditedLocation, $"{this.EditedLocation.LocationName}");
+                        Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
-                }
 
-                if (this.InsertMainViewBefore)
-                {
-                    var view = new LocationMainView(this.EditedLocation, $"{this.EditedLocation.LocationName}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
+                    await Shell.Current.Navigation.PopAsync();
                 }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await DisplayMessage("Error!", ex.Message);
+#endif
 
-                await Shell.Current.Navigation.PopAsync();
+#if RELEASE
+                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                this.SetIsBusyFalse();
             }
         }
 
@@ -104,20 +110,67 @@ namespace BookCollector.ViewModels.Location
 
         private void ValidateEntry()
         {
-            if (string.IsNullOrEmpty(this.EditedLocation.LocationName))
+            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
+        }
+
+        public static async Task AddToStaticList(LocationModel location)
+        {
+            if (LocationsViewModel.fullLocationList != null)
             {
-                var locationNameEditor = this.View.FindByName<Editor>("LocationNameEditor");
-                locationNameEditor.TextColor = (Color?)Application.Current?.Resources["Warning"];
-                locationNameEditor.PlaceholderColor = (Color?)Application.Current?.Resources["Warning"];
-                this.LocationNameValid = false;
+                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
             }
-            else
+        }
+
+        private static async Task<bool> AddLocationToStaticList(LocationModel location, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(new Task[]
             {
-                var locationNameEditor = this.View.FindByName<Editor>("LocationNameEditor");
-                locationNameEditor.TextColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                locationNameEditor.PlaceholderColor = Application.Current?.UserAppTheme == AppTheme.Light ? (Color?)Application.Current?.Resources["TextLight"] : (Color?)Application.Current?.Resources["TextDark"];
-                this.LocationNameValid = true;
+                location.SetTotalBooks(true),
+                location.SetTotalCostOfBooks(true),
+            });
+
+            try
+            {
+                var oldLocation = locationList.FirstOrDefault(x => x.LocationGuid == location.LocationGuid);
+
+                if (oldLocation != null)
+                {
+                    var index = locationList.IndexOf(oldLocation);
+                    locationList.Remove(oldLocation);
+                    locationList.Insert(index, location);
+                    refresh = true;
+                }
+                else
+                {
+                    locationList.Add(location);
+                    refresh = true;
+                }
+
+                if (filteredLocationList != null)
+                {
+                    var filteredLocation = filteredLocationList.FirstOrDefault(x => x.LocationGuid == location.LocationGuid);
+
+                    if (filteredLocation != null)
+                    {
+                        var index = filteredLocationList.IndexOf(filteredLocation);
+                        filteredLocationList.Remove(filteredLocation);
+                        filteredLocationList.Insert(index, location);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredLocationList.Add(location);
+                        refresh = true;
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
         }
     }
 }

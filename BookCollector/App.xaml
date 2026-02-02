@@ -9,6 +9,74 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="RadioButtonTemplate">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="8"
+                      MinimumHeightRequest="44">
+
+                    <!-- Radio circle -->
+                    <Grid Grid.Column="0" Grid.Row="0"
+                          WidthRequest="20"
+                          HeightRequest="20"
+                          VerticalOptions="Center">
+
+                        <!-- Outer circle -->
+                        <Border Stroke="{DynamicResource Primary}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+                                StrokeThickness="2"
+                                HeightRequest="20"
+                                WidthRequest="20"
+                                StrokeShape="Ellipse" />
+
+                        <!-- Inner circle container -->
+                        <Border x:Name="checkContainer"
+                                BackgroundColor="{DynamicResource Primary}"
+                                HeightRequest="10"
+                                WidthRequest="10"
+                                StrokeShape="Ellipse"
+                                Opacity="0" />
+                    </Grid>
+
+                    <!-- Label -->
+                    <ContentPresenter Grid.Column="1" Grid.Row="0"
+                                      VerticalOptions="Center"
+                                      HorizontalOptions="Start"/>
+
+                    <!-- Visual States -->
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+
+                                <!-- Change the opacity of the inner circle -->
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter TargetName="checkContainer"
+                                                Property="Opacity"
+                                                Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Change the opacity of the inner circle -->
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter TargetName="checkContainer"
+                                                Property="Opacity"
+                                                Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Grid>
+            </ControlTemplate>
+
+            <Style TargetType="RadioButton">
+                <Setter Property="ControlTemplate"
+                        Value="{StaticResource RadioButtonTemplate}" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

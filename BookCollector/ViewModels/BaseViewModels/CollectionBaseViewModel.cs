@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿// <copyright file="CollectionBaseViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using System.Collections.ObjectModel;
 using BookCollector.Data.Models;
 using BookCollector.Views.Collection;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +16,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static ObservableCollection<CollectionModel>? fullCollectionList;
 
         [ObservableProperty]
-        public static ObservableCollection<CollectionModel>? filteredCollectionList;
+        public static ObservableCollection<CollectionModel>? filteredCollectionList1;
+
+        [ObservableProperty]
+        public static ObservableCollection<CollectionModel>? filteredCollectionList2;
 
         [ObservableProperty]
         public int totalCollectionsCount;

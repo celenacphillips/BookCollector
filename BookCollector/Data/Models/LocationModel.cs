@@ -1,24 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SQLite;
+﻿// <copyright file="LocationModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data.DatabaseModels;
+using System.Threading;
 
 namespace BookCollector.Data.Models
 {
-    public partial class LocationModel : ObservableObject, ICloneable
+    public partial class LocationModel : LocationDatabaseModel, ICloneable
     {
-        [ObservableProperty]
-        public string? locationName;
-        [ObservableProperty]
-        public string? totalBooksstring;
-        [ObservableProperty]
-        public bool hideLocation;
-
         public LocationModel()
         {
-            this.LocationGuid = Guid.NewGuid();
         }
 
-        [PrimaryKey]
-        public Guid? LocationGuid { get; set; }
+        public LocationModel(LocationDatabaseModel dbModel)
+        {
+            this.LocationGuid = dbModel.LocationGuid;
+            this.LocationName = dbModel.LocationName;
+            this.TotalBooksString = dbModel.TotalBooksString;
+            this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
+            this.HideLocation = dbModel.HideLocation;
+            this.TotalCostOfBooks = dbModel.LocationTotalBooks;
+        }
 
         public string? ParsedLocationName
         {
@@ -30,34 +33,32 @@ namespace BookCollector.Data.Models
                         : this.LocationName;
         }
 
-        public int LocationTotalBooks { get; set; }
-
-        public double TotalCostOfBooks { get; set; }
-
-        public int? ID { get; set; }
-
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public async void SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(bool showHiddenBooks)
         {
-            var list = await FilterLists.GetAllBooksInLocationList(this.LocationGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInLocationList(this.LocationGuid, showHiddenBooks);
             var count = 0;
+            var unread = 0;
 
             if (list != null)
             {
                 count = list.Count;
+                unread = list.Count(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
+                    && !x.UpNext);
             }
 
-            this.TotalBooksstring = StringManipulation.SetTotalBooksString(count);
+            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
             this.LocationTotalBooks = count;
         }
 
-        public async void SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
         {
-            this.TotalCostOfBooks = await FilterLists.GetAllBookPricesInLocationList(this.LocationGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInLocationList(this.LocationGuid, showHiddenBooks);
         }
     }
 }

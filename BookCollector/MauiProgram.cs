@@ -1,9 +1,16 @@
-﻿using BarcodeScanner.Mobile;
-using BookCollector.Views.Controls;
+﻿// <copyright file="MauiProgram.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BarcodeScanner.Mobile;
+using BookCollector.Data.BookAPI;
+using BookCollector.Data.Database;
 using CommunityToolkit.Maui;
 using Maui.NullableDateTimePicker;
 using Microcharts.Maui;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace BookCollector
 {
@@ -19,6 +26,7 @@ namespace BookCollector
                 .UseMicrocharts()
                 .ConfigureFonts(fonts =>
                 {
+                    fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
@@ -28,9 +36,22 @@ namespace BookCollector
                     handlers.AddBarcodeScannerHandler();
                 });
 
-            #if DEBUG
+#if DEBUG
             builder.Logging.AddDebug();
-            #endif
+#endif
+
+            builder.Services.AddSingleton<BookCollectorDatabase>();
+
+            var a = Assembly.GetExecutingAssembly();
+            using var stream = a.GetManifestResourceStream("BookCollector.appsettings.json");
+
+            var config = new ConfigurationBuilder()
+                        .AddJsonStream(stream)
+                        .Build();
+
+            builder.Configuration.AddConfiguration(config);
+
+            GoogleBooksAPI.Initialize(builder.Configuration);
 
             return builder.Build();
         }

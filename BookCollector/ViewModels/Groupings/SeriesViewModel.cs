@@ -1,7 +1,13 @@
-﻿using BookCollector.Data;
+﻿// <copyright file="SeriesViewModel.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
+
+using BookCollector.Data;
+using BookCollector.Data.DatabaseModels;
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Popups;
 using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
@@ -9,6 +15,8 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Groupings
 {
@@ -20,9 +28,10 @@ namespace BookCollector.ViewModels.Groupings
         public SeriesViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight - this.DoubleMenuBar;
+            this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesView_InfoText}";
             this.ViewTitle = AppStringResources.Series;
+            RefreshView = true;
         }
 
         private bool ShowHiddenSeries { get; set; }
@@ -33,89 +42,146 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
+        public static bool RefreshView { get; set; }
+
+        public static async Task SetList(bool showHiddenSeries)
+        {
+            if (fullSeriesList == null)
+            {
+                fullSeriesList = await FillLists.GetAllSeriesList();
+            }
+
+            if (!showHiddenSeries)
+            {
+                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!.Where(x => !x.HideSeries));
+            }
+            else
+            {
+                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!);
+            }
+        }
+
+        public static async Task HideBooks(bool showHiddenSeries)
+        {
+            if (!showHiddenSeries)
+            {
+                var hideList = new ObservableCollection<SeriesModel>(fullSeriesList!.Where(x => x.HideSeries));
+
+                foreach (var item in hideList)
+                {
+                    var books = AllBooksViewModel.filteredBookList1?
+                        .Where(x => x.BookSeriesGuid == item.SeriesGuid && !x.HideBook)
+                        .ToObservableCollection();
+
+                    foreach (var book in books)
+                    {
+                        book.HideBook = true;
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    }
+                }
+            }
+        }
+
         public async Task SetViewModelData()
         {
-            try
+            if (RefreshView)
             {
-                this.SetIsBusyTrue();
-
-                this.GetPreferences();
-
-                Task.WaitAll(
-                [
-                    Task.Run(async () => this.FullSeriesList = await FilterLists.GetAllSeriesList(this.ShowHiddenSeries)),
-                ]);
-
-                if (this.FullSeriesList != null)
+                try
                 {
-                    this.TotalSeriesCount = this.FullSeriesList.Count;
+                    this.SetIsBusyTrue();
 
-                    this.FilteredSeriesList = this.FullSeriesList;
+                    this.GetPreferences();
 
-                    foreach (var series in this.FullSeriesList)
+                    await SetList(this.ShowHiddenSeries);
+
+                    if (this.FilteredSeriesList1 != null)
                     {
-                        series.SetTotalBooks(this.ShowHiddenBook);
-                        series.SetTotalCostOfBooks(this.ShowHiddenBook);
+                        this.FilteredSeriesList2 = this.FilteredSeriesList1;
+
+                        this.TotalSeriesCount = this.FilteredSeriesList1 != null ? this.FilteredSeriesList1.Count : 0;
+
+                        this.SearchOnSeries(this.Searchstring);
+
+                        await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
+                        await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
+
+                        var sortList = SortLists.SortSeriesList(
+                                this.FilteredSeriesList2,
+                                this.SeriesNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+                        this.FilteredSeriesCount = this.FilteredSeriesList2.Count;
+
+                        this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
+
+                        this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
+
+                        await Task.WhenAll(sortList);
+
+                        this.FilteredSeriesList2 = sortList.Result;
                     }
 
-                    Task.WaitAll(
-                    [
-                        Task.Run(async () => this.FilteredSeriesList = await FilterLists.SortSeriesList(
-                            this.FilteredSeriesList,
-                            this.SeriesNameChecked,
-                            this.TotalBooksChecked,
-                            this.TotalPriceChecked,
-                            this.AscendingChecked,
-                            this.DescendingChecked)),
-                    ]);
-
-                    this.FilteredSeriesCount = this.FilteredSeriesList.Count;
-
-                    this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
-
-                    this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
                 }
+                catch (Exception ex)
+                {
+#if DEBUG
+                    await DisplayMessage("Error!", ex.Message);
+#endif
 
-                this.SetIsBusyFalse();
-            }
-            catch (Exception)
-            {
-                this.SetIsBusyFalse();
+#if RELEASE
+                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
             }
         }
 
         [RelayCommand]
-        public void SearchOnSeries(string? input)
+        public async void SearchOnSeries(string? input)
         {
-            this.SetIsBusyTrue();
-
             this.Searchstring = input;
 
-            if (this.FilteredSeriesList != null)
+            if (this.FilteredSeriesList2 != null && this.FilteredSeriesList1 != null)
             {
                 if (!string.IsNullOrEmpty(this.Searchstring))
                 {
-                    this.FilteredSeriesList = this.FilteredSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredSeriesList2 = this.FilteredSeriesList1.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredSeriesList = this.FullSeriesList;
+                    this.FilteredSeriesList2 = this.FilteredSeriesList1;
                 }
 
-                this.FilteredSeriesCount = this.FilteredSeriesList != null ? this.FilteredSeriesList.Count : 0;
+                this.FilteredSeriesCount = this.FilteredSeriesList2 != null ? this.FilteredSeriesList2.Count : 0;
 
                 this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
             }
 
-            this.SetIsBusyFalse();
+            var sortList = SortLists.SortSeriesList(
+                                this.FilteredSeriesList2,
+                                this.SeriesNameChecked,
+                                this.TotalBooksChecked,
+                                this.TotalPriceChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            await Task.WhenAll(sortList);
+
+            this.FilteredSeriesList2 = sortList.Result;
         }
 
         [RelayCommand]
         public async Task PopupMenuSeries(Guid? input)
         {
-            if (this.FilteredSeriesList != null)
+            if (this.FilteredSeriesList2 != null)
             {
-                var selected = this.FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
+                var selected = this.FilteredSeriesList2.FirstOrDefault(x => x.SeriesGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.SeriesName))
                 {
@@ -138,6 +204,7 @@ namespace BookCollector.ViewModels.Groupings
         public async Task Refresh()
         {
             this.SetRefreshTrue();
+            RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -179,13 +246,9 @@ namespace BookCollector.ViewModels.Groupings
                     {
                         this.SetIsBusyTrue();
 
-                        if (TestData.UseTestData)
-                        {
-                            TestData.DeleteSeries(selected);
-                        }
-                        else
-                        {
-                        }
+                        await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
+                        this.RemoveFromStaticList(selected);
+                        this.RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.SeriesName);
 
@@ -193,8 +256,15 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.SetIsBusyFalse();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+#if DEBUG
+                        await DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
                         await CanceledAction();
                     }
                 }
@@ -225,15 +295,19 @@ namespace BookCollector.ViewModels.Groupings
 
                 popup.BindingContext = viewModel;
 
-                await this.View.ShowPopupAsync(popup);
-                await this.SetViewModelData();
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    RefreshView = true;
+                    await this.SetViewModelData();
+                }
             }
         }
 
         private void GetPreferences()
         {
             this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            this.ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
 
             this.SeriesNameChecked = Preferences.Get($"{this.ViewTitle}_SeriesNameSelection", true /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
@@ -241,6 +315,58 @@ namespace BookCollector.ViewModels.Groupings
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+        }
+
+        private void RemoveFromStaticList(SeriesModel selected)
+        {
+            if (SeriesViewModel.fullSeriesList != null)
+            {
+                SeriesViewModel.RefreshView = this.RemoveSeriesFromStaticList(selected, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList2);
+            }
+        }
+
+        private bool RemoveSeriesFromStaticList(SeriesModel selected, ObservableCollection<SeriesModel> seriesList, ObservableCollection<SeriesModel>? filteredSeriesList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldSeries = seriesList.FirstOrDefault(x => x.SeriesGuid == selected.SeriesGuid);
+
+                if (oldSeries != null)
+                {
+                    seriesList.Remove(oldSeries);
+                    refresh = true;
+                }
+
+                if (filteredSeriesList != null)
+                {
+                    var filteredSeries = filteredSeriesList.FirstOrDefault(x => x.SeriesGuid == selected.SeriesGuid);
+
+                    if (filteredSeries != null)
+                    {
+                        filteredSeriesList.Remove(filteredSeries);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
+        }
+
+        private void RemoveBookFromGrouping(SeriesModel series)
+        {
+            var books = AllBooksViewModel.fullBookList?.Where(x => x.BookSeriesGuid == series.SeriesGuid).ToList();
+
+            foreach (var book in books)
+            {
+                book.BookSeriesGuid = null;
+                Database.SaveBookAsync(book);
+                BookBaseViewModel.AddToStaticList(book);
+            }
         }
     }
 }
