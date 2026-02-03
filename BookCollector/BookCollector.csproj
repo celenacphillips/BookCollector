@@ -3,6 +3,10 @@
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-maccatalyst;net10.0-android36.0;net10.0-ios</TargetFrameworks>
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)'=='net10.0-android36.0'">23</SupportedOSPlatformVersion>
+		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+			android-arm;android-arm64;android-x86;android-x64
+		</RuntimeIdentifiers>
+
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 
@@ -57,42 +61,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
 	  <AndroidKeyStore>True</AndroidKeyStore>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
 		<AndroidSigningKeyStore>X:\Storage\Celena_Files\Keystores\bookcollector.keystore</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>bookcollector_key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningKeyPass>
+		<ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 

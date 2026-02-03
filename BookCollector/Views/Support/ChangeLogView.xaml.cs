@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data;
+using BookCollector.Resources.Localization;
 
 namespace BookCollector.Views.Support;
 
@@ -22,8 +23,8 @@ public partial class ChangeLogView : ContentPage
     {
         this.Versions.Add(new ChangeLogModel()
         {
-            Version = "Question 1",
-            Changes = "Answer 1",
+            Version = "v 1.0.1",
+            Changes = AppStringResources.v101_ChangeLogEntry,
         });
     }
 }
