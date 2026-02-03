@@ -133,7 +133,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add New Chapter To Book.
+        ///   Looks up a localized string similar to Add New Chapter to Book.
         /// </summary>
         internal static string AddNewChapterToBook {
             get {
@@ -268,7 +268,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All Publish Years.
+        ///   Looks up a localized string similar to All Published Years.
         /// </summary>
         internal static string AllPublishYears {
             get {
@@ -367,7 +367,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to import your images from a file? If so, please select the top level folder for the images..
+        ///   Looks up a localized string similar to Are you sure you want to import your images from a folder? If so, please select the top level folder for the images..
         /// </summary>
         internal static string AreYouSureImageImport_Question {
             get {
@@ -511,7 +511,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author/s.
+        ///   Looks up a localized string similar to Author(s).
         /// </summary>
         internal static string Authors_Slash {
             get {
@@ -674,7 +674,7 @@ namespace BookCollector.Resources.Localization {
         
         /// <summary>
         ///   Looks up a localized string similar to Book Cover Images
-        ///(Must be checked with Books or Wishlist).
+        ///(Requires Books or Wishlist to be selected).
         /// </summary>
         internal static string BookCoverImages {
             get {
@@ -746,7 +746,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Format not valid..
+        ///   Looks up a localized string similar to Book Format not valid!.
         /// </summary>
         internal static string BookFormatNotValid {
             get {
@@ -755,7 +755,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Formats By Price.
+        ///   Looks up a localized string similar to Book Formats by Price.
         /// </summary>
         internal static string BookFormatsByPrice {
             get {
@@ -809,7 +809,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Identifier/ISBN.
+        ///   Looks up a localized string similar to Book Identifier / ISBN.
         /// </summary>
         internal static string BookIdentifier {
             get {
@@ -836,7 +836,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Loaned Out On.
+        ///   Looks up a localized string similar to Loaned Out On.
         /// </summary>
         internal static string BookLoanedOutOn {
             get {
@@ -926,7 +926,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Publish Year.
+        ///   Looks up a localized string similar to Publish Year.
         /// </summary>
         internal static string BookPublishYear {
             get {
@@ -1043,7 +1043,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Title not valid..
+        ///   Looks up a localized string similar to Book Title not valid!.
         /// </summary>
         internal static string BookTitleNotValid {
             get {
@@ -1169,7 +1169,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chapter/s.
+        ///   Looks up a localized string similar to Chapter(s).
         /// </summary>
         internal static string Chapters_Slash {
             get {
@@ -1178,7 +1178,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cleaning up the data....
+        ///   Looks up a localized string similar to Cleaning up data....
         /// </summary>
         internal static string CleaningUpTheData {
             get {
@@ -1525,7 +1525,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter Book Identifier/ISBN.
+        ///   Looks up a localized string similar to Enter Book Identifier / ISBN.
         /// </summary>
         internal static string EnterBookIdentifier {
             get {
@@ -1994,7 +1994,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Files / Photos.
+        ///   Looks up a localized string similar to Files and Photos.
         /// </summary>
         internal static string Files_Photos {
             get {
@@ -2003,7 +2003,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This app only needs permission to Files and Photos importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process..
+        ///   Looks up a localized string similar to This app only needs permission to Files and Photos when importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process..
         /// </summary>
         internal static string Files_Photos_Description {
             get {
@@ -2561,7 +2561,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Date.
+        ///   Looks up a localized string similar to No Date Set.
         /// </summary>
         internal static string NoDate {
             get {
@@ -2797,7 +2797,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please allow Camera permission to scan barcodes!.
+        ///   Looks up a localized string similar to Please allow camera access to scan barcodes!.
         /// </summary>
         internal static string PleaseAllowCameraPermissionToScanBarcodes {
             get {
@@ -2806,7 +2806,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please allow Photo permission to add cover!.
+        ///   Looks up a localized string similar to Please allow photo access to add cover!.
         /// </summary>
         internal static string PleaseAllowPhotoPermissionToAddCover {
             get {
@@ -2815,7 +2815,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please allow Photos permission to download book cover photos!.
+        ///   Looks up a localized string similar to Please allow photo access to automatically upload book cover photos!.
         /// </summary>
         internal static string PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos {
             get {
@@ -2824,7 +2824,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please allow Photos permission to automatically upload book cover photos!.
+        ///   Looks up a localized string similar to Please allow photo access to download book cover photos!.
         /// </summary>
         internal static string PleaseAllowPhotoPermissionToDownloadBookCoverPhotos {
             get {
@@ -2833,7 +2833,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please connect to Internet to find book cover!.
+        ///   Looks up a localized string similar to Please connect to the Internet to find book cover!.
         /// </summary>
         internal static string PleaseConnectToInternetToFindBookCover {
             get {
@@ -2842,7 +2842,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please connect to Internet to search!.
+        ///   Looks up a localized string similar to Please connect to the Internet to search!.
         /// </summary>
         internal static string PleaseConnectToInternetToSearch {
             get {
@@ -2959,7 +2959,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of all the books you have read. Books will show up here if you have marked it has 100% read..
+        ///   Looks up a localized string similar to This is a list of all the books you have read. Books will show up here if you have marked it as 100% read..
         /// </summary>
         internal static string ReadView_InfoText {
             get {
@@ -2986,7 +2986,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search authors....
+        ///   Looks up a localized string similar to Search Authors....
         /// </summary>
         internal static string SearchAuthors {
             get {
@@ -2995,7 +2995,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search books....
+        ///   Looks up a localized string similar to Search Books....
         /// </summary>
         internal static string SearchBooks {
             get {
@@ -3004,7 +3004,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search collections....
+        ///   Looks up a localized string similar to Search Collections....
         /// </summary>
         internal static string SearchCollections {
             get {
@@ -3013,7 +3013,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search for book by ISBN. Click correct result to add..
+        ///   Looks up a localized string similar to Search for book by ISBN. Tap the correct result to add it..
         /// </summary>
         internal static string SearchForBookByISBNClickCorrectResultToAdd {
             get {
@@ -3022,7 +3022,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search genres....
+        ///   Looks up a localized string similar to Search Genres....
         /// </summary>
         internal static string SearchGenres {
             get {
@@ -3031,7 +3031,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search list....
+        ///   Looks up a localized string similar to Search List....
         /// </summary>
         internal static string SearchList {
             get {
@@ -3040,7 +3040,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search locations....
+        ///   Looks up a localized string similar to Search Locations....
         /// </summary>
         internal static string SearchLocations {
             get {
@@ -3049,7 +3049,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search series....
+        ///   Looks up a localized string similar to Search Series....
         /// </summary>
         internal static string SearchSeries {
             get {
@@ -3139,7 +3139,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select your app currency.
+        ///   Looks up a localized string similar to Select your App Currency.
         /// </summary>
         internal static string SelectYourAppCurrency {
             get {
@@ -3229,7 +3229,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A series of books are books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book..
+        ///   Looks up a localized string similar to A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book..
         /// </summary>
         internal static string SeriesView_InfoText {
             get {
@@ -3274,7 +3274,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Hidden Authors in list.
+        ///   Looks up a localized string similar to Show Hidden Authors in lists.
         /// </summary>
         internal static string ShowHiddenAuthors {
             get {
@@ -3798,7 +3798,17 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning! This action cannot be undone!.
+        ///   Looks up a localized string similar to Resolved Play Store compatibility errors.
+        ///Updated verbiage in app..
+        /// </summary>
+        internal static string v101_ChangeLogEntry {
+            get {
+                return ResourceManager.GetString("v101_ChangeLogEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning! This action cannot be undone..
         /// </summary>
         internal static string WarningThisActionCannotBeUndone {
             get {

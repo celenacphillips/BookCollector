@@ -220,7 +220,7 @@
     <value>Pages</value>
   </data>
   <data name="SearchBooks" xml:space="preserve">
-    <value>Search books...</value>
+    <value>Search Books...</value>
   </data>
   <data name="Read_Question" xml:space="preserve">
     <value>Read?</value>
@@ -244,13 +244,13 @@
     <value>Percentage Read</value>
   </data>
   <data name="Chapters_Slash" xml:space="preserve">
-    <value>Chapter/s</value>
+    <value>Chapter(s)</value>
   </data>
   <data name="NoChaptersAvailable" xml:space="preserve">
     <value>No Chapters Available.</value>
   </data>
   <data name="Authors_Slash" xml:space="preserve">
-    <value>Author/s</value>
+    <value>Author(s)</value>
   </data>
   <data name="NoAuthorsAvailable" xml:space="preserve">
     <value>No Authors Available.</value>
@@ -265,10 +265,10 @@
     <value>Book Publisher</value>
   </data>
   <data name="BookPublishYear" xml:space="preserve">
-    <value>Book Publish Year</value>
+    <value>Publish Year</value>
   </data>
   <data name="BookIdentifier" xml:space="preserve">
-    <value>Book Identifier/ISBN</value>
+    <value>Book Identifier / ISBN</value>
   </data>
   <data name="BookLocation" xml:space="preserve">
     <value>Book Location</value>
@@ -292,7 +292,7 @@
     <value>Book Loaned To</value>
   </data>
   <data name="BookLoanedOutOn" xml:space="preserve">
-    <value>Book Loaned Out On</value>
+    <value>Loaned Out On</value>
   </data>
   <data name="HideBook_Question" xml:space="preserve">
     <value>Hide Book when Settings &gt; Show Hidden Books is off?</value>
@@ -334,22 +334,22 @@
     <value>Book</value>
   </data>
   <data name="SearchCollections" xml:space="preserve">
-    <value>Search collections...</value>
+    <value>Search Collections...</value>
   </data>
   <data name="Groupings" xml:space="preserve">
     <value>Groupings</value>
   </data>
   <data name="SearchGenres" xml:space="preserve">
-    <value>Search genres...</value>
+    <value>Search Genres...</value>
   </data>
   <data name="SearchSeries" xml:space="preserve">
-    <value>Search series...</value>
+    <value>Search Series...</value>
   </data>
   <data name="SearchLocations" xml:space="preserve">
-    <value>Search locations...</value>
+    <value>Search Locations...</value>
   </data>
   <data name="SearchAuthors" xml:space="preserve">
-    <value>Search authors...</value>
+    <value>Search Authors...</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
@@ -430,7 +430,7 @@
     <value>No Publisher</value>
   </data>
   <data name="NoDate" xml:space="preserve">
-    <value>No Date</value>
+    <value>No Date Set</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -481,7 +481,7 @@
     <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
   </data>
   <data name="ReadView_InfoText" xml:space="preserve">
-    <value>This is a list of all the books you have read. Books will show up here if you have marked it has 100% read.</value>
+    <value>This is a list of all the books you have read. Books will show up here if you have marked it as 100% read.</value>
   </data>
   <data name="ReadingView_InfoText" xml:space="preserve">
     <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next.</value>
@@ -499,7 +499,7 @@
     <value>Scan Barcode</value>
   </data>
   <data name="SearchForBookByISBNClickCorrectResultToAdd" xml:space="preserve">
-    <value>Search for book by ISBN. Click correct result to add.</value>
+    <value>Search for book by ISBN. Tap the correct result to add it.</value>
   </data>
   <data name="EnterOnlyISBNs" xml:space="preserve">
     <value>Enter only ISBNs</value>
@@ -532,16 +532,16 @@
     <value>Error saving book!</value>
   </data>
   <data name="PleaseAllowCameraPermissionToScanBarcodes" xml:space="preserve">
-    <value>Please allow Camera permission to scan barcodes!</value>
+    <value>Please allow camera access to scan barcodes!</value>
   </data>
   <data name="PleaseAllowPhotoPermissionToDownloadBookCoverPhotos" xml:space="preserve">
-    <value>Please allow Photos permission to automatically upload book cover photos!</value>
+    <value>Please allow photo access to download book cover photos!</value>
   </data>
   <data name="PleaseAllowPhotoPermissionToAutomaticallyUploadBookCoverPhotos" xml:space="preserve">
-    <value>Please allow Photos permission to download book cover photos!</value>
+    <value>Please allow photo access to automatically upload book cover photos!</value>
   </data>
   <data name="PleaseConnectToInternetToSearch" xml:space="preserve">
-    <value>Please connect to Internet to search!</value>
+    <value>Please connect to the Internet to search!</value>
   </data>
   <data name="BarcodeScanned" xml:space="preserve">
     <value>Barcode Scanned!</value>
@@ -550,7 +550,7 @@
     <value>Please scan a book barcode!</value>
   </data>
   <data name="PleaseAllowPhotoPermissionToAddCover" xml:space="preserve">
-    <value>Please allow Photo permission to add cover!</value>
+    <value>Please allow photo access to add cover!</value>
   </data>
   <data name="Locations" xml:space="preserve">
     <value>Locations</value>
@@ -583,7 +583,7 @@
     <value>Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book.</value>
   </data>
   <data name="SeriesView_InfoText" xml:space="preserve">
-    <value>A series of books are books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book.</value>
+    <value>A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book.</value>
   </data>
   <data name="LocationView_InfoText" xml:space="preserve">
     <value>Locations are a way to group and see where your books physically are. You can add a location here or in the book.</value>
@@ -697,7 +697,7 @@
     <value>Show Hidden Genres in lists</value>
   </data>
   <data name="ShowHiddenAuthors" xml:space="preserve">
-    <value>Show Hidden Authors in list</value>
+    <value>Show Hidden Authors in lists</value>
   </data>
   <data name="ShowHiddenLocations" xml:space="preserve">
     <value>Show Hidden Locations in lists</value>
@@ -709,7 +709,7 @@
     <value>App Currency</value>
   </data>
   <data name="SelectYourAppCurrency" xml:space="preserve">
-    <value>Select your app currency</value>
+    <value>Select your App Currency</value>
   </data>
   <data name="FilterBy" xml:space="preserve">
     <value>Filter By</value>
@@ -739,7 +739,7 @@
     <value>All Publishers</value>
   </data>
   <data name="AllPublishYears" xml:space="preserve">
-    <value>All Publish Years</value>
+    <value>All Published Years</value>
   </data>
   <data name="AllLanguages" xml:space="preserve">
     <value>All Languages</value>
@@ -895,7 +895,7 @@
     <value>Top Series</value>
   </data>
   <data name="BookFormatsByPrice" xml:space="preserve">
-    <value>Book Formats By Price</value>
+    <value>Book Formats by Price</value>
   </data>
   <data name="Export_Import" xml:space="preserve">
     <value>Export/Import</value>
@@ -1034,13 +1034,13 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Upload Existing File</value>
   </data>
   <data name="PleaseConnectToInternetToFindBookCover" xml:space="preserve">
-    <value>Please connect to Internet to find book cover!</value>
+    <value>Please connect to the Internet to find book cover!</value>
   </data>
   <data name="BookTitleNotValid" xml:space="preserve">
-    <value>Book Title not valid.</value>
+    <value>Book Title not valid!</value>
   </data>
   <data name="BookFormatNotValid" xml:space="preserve">
-    <value>Book Format not valid.</value>
+    <value>Book Format not valid!</value>
   </data>
   <data name="SeriesNameNotValid" xml:space="preserve">
     <value>Series Name not valid!</value>
@@ -1068,7 +1068,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="BookCoverImages" xml:space="preserve">
     <value>Book Cover Images
-(Must be checked with Books or Wishlist)</value>
+(Requires Books or Wishlist to be selected)</value>
   </data>
   <data name="ExistingBooks_Object" xml:space="preserve">
     <value>ExistingBooks_Object</value>
@@ -1083,7 +1083,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Delete All Data?</value>
   </data>
   <data name="WarningThisActionCannotBeUndone" xml:space="preserve">
-    <value>Warning! This action cannot be undone!</value>
+    <value>Warning! This action cannot be undone.</value>
   </data>
   <data name="AllDataHasBeenDeleted" xml:space="preserve">
     <value>All data has been deleted.</value>
@@ -1101,7 +1101,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Create New Author</value>
   </data>
   <data name="CleaningUpTheData" xml:space="preserve">
-    <value>Cleaning up the data...</value>
+    <value>Cleaning up data...</value>
   </data>
   <data name="ErrorParsingDataFromBook" xml:space="preserve">
     <value>Error parsing data from book! Please contact support!</value>
@@ -1140,7 +1140,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Enter Publish Year</value>
   </data>
   <data name="EnterBookIdentifier" xml:space="preserve">
-    <value>Enter Book Identifier/ISBN</value>
+    <value>Enter Book Identifier / ISBN</value>
   </data>
   <data name="EnterBookLanguage" xml:space="preserve">
     <value>Enter Book Language</value>
@@ -1227,7 +1227,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Add New Author to Book</value>
   </data>
   <data name="AddNewChapterToBook" xml:space="preserve">
-    <value>Add New Chapter To Book</value>
+    <value>Add New Chapter to Book</value>
   </data>
   <data name="CreateNewSeries" xml:space="preserve">
     <value>Create New Series</value>
@@ -1253,7 +1253,7 @@ Email us!</value>
     <value>Email</value>
   </data>
   <data name="SearchList" xml:space="preserve">
-    <value>Search list...</value>
+    <value>Search List...</value>
   </data>
   <data name="ThereAreNoItems" xml:space="preserve">
     <value>There are no items.</value>
@@ -1331,7 +1331,7 @@ Email us!</value>
     <value>Internet</value>
   </data>
   <data name="Files_Photos" xml:space="preserve">
-    <value>Files / Photos</value>
+    <value>Files and Photos</value>
   </data>
   <data name="Camera_Description" xml:space="preserve">
     <value>This app only needs permission to the Camera when you scan a barcode. If you will not be scanning barcodes, you do not need the permission granted.</value>
@@ -1340,7 +1340,7 @@ Email us!</value>
     <value>This app only needs permission to the Internet to search for a book or to download a book cover from a URL.</value>
   </data>
   <data name="Files_Photos_Description" xml:space="preserve">
-    <value>This app only needs permission to Files and Photos importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process.</value>
+    <value>This app only needs permission to Files and Photos when importing or exporting data to or from a spreadsheet, or when uploading a book cover photo manually in the book view or automatically through the import process.</value>
   </data>
   <data name="DataStorage" xml:space="preserve">
     <value>Data Storage</value>
@@ -1349,7 +1349,7 @@ Email us!</value>
     <value>Page Count / Book Time</value>
   </data>
   <data name="AreYouSureImageImport_Question" xml:space="preserve">
-    <value>Are you sure you want to import your images from a file? If so, please select the top level folder for the images.</value>
+    <value>Are you sure you want to import your images from a folder? If so, please select the top level folder for the images.</value>
   </data>
   <data name="BookCovers" xml:space="preserve">
     <value>Book Covers</value>
@@ -1399,5 +1399,9 @@ Visit them at </value>
   </data>
   <data name="PleaseSelectAnotherFolder" xml:space="preserve">
     <value>Cannot access this folder. Please select another.</value>
+  </data>
+  <data name="v101_ChangeLogEntry" xml:space="preserve">
+    <value>Resolved Play Store compatibility errors.
+Updated verbiage in app.</value>
   </data>
 </root>
