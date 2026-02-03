@@ -1404,4 +1404,7 @@ Visit them at </value>
     <value>Resolved Play Store compatibility errors.
 Updated verbiage in app.</value>
   </data>
+  <data name="v102_ChangeLogEntry" xml:space="preserve">
+    <value>Remove legacy permissions for device compatibility.</value>
+  </data>
 </root>

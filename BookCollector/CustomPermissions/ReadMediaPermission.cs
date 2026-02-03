@@ -22,7 +22,6 @@ namespace BookCollector.CustomPermissions
 #if ANDROID
         private const string ReadMediaImages = Manifest.Permission.ReadMediaImages;
         private const string UserSelectedImages = "android.permission.READ_MEDIA_VISUAL_USER_SELECTED";
-        private const string READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
 #endif
 
         public override async Task<PermissionStatus> CheckStatusAsync()
@@ -70,12 +69,6 @@ namespace BookCollector.CustomPermissions
             {
                 throw new PermissionException(
                     $"{UserSelectedImages} is not declared in AndroidManifest.xml");
-            }
-
-            if (!Permissions.IsDeclaredInManifest(READ_EXTERNAL_STORAGE))
-            {
-                throw new PermissionException(
-                    $"{READ_EXTERNAL_STORAGE} is not declared in AndroidManifest.xml");
             }
 #else
         throw new NotImplementedException();

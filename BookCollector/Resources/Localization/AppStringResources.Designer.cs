@@ -3808,6 +3808,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove legacy permissions for device compatibility..
+        /// </summary>
+        internal static string v102_ChangeLogEntry {
+            get {
+                return ResourceManager.GetString("v102_ChangeLogEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warning! This action cannot be undone..
         /// </summary>
         internal static string WarningThisActionCannotBeUndone {
