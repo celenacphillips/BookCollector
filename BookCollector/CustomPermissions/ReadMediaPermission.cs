@@ -48,7 +48,8 @@ namespace BookCollector.CustomPermissions
             }
             else
             {
-                return await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+                // Android 12 and below: no permission needed or possible
+                return PermissionStatus.Granted;
             }
 
 #else
@@ -135,7 +136,8 @@ namespace BookCollector.CustomPermissions
             }
             else
             {
-                return await Permissions.RequestAsync<Permissions.StorageRead>();
+                // Android 12 and below: no permission needed or possible
+                return PermissionStatus.Granted;
             }
 #else
             throw new NotImplementedException();
@@ -164,7 +166,7 @@ namespace BookCollector.CustomPermissions
             }
             else
             {
-                return Permissions.ShouldShowRationale<Permissions.StorageRead>();
+                return false;
             }
 #else
             throw new NotImplementedException();
