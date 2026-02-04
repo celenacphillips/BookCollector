@@ -173,14 +173,7 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
-                    var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-
-                    if (status != PermissionStatus.Granted)
-                    {
-                        status = await Permissions.RequestAsync<Permissions.StorageWrite>();
-                    }
-
-                    if (status == PermissionStatus.Granted)
+                    if (true)
                     {
                         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
 
@@ -202,9 +195,8 @@ namespace BookCollector.ViewModels.Main
                                 this.ExportEnabled = !this.IsBusy;
                                 this.RefreshEnabled = !this.IsBusy;
                             }
-
-
                         }
+
                         if (this.ImagesChecked)
                         {
                             this.imageLocation = $"{exportLocation}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
