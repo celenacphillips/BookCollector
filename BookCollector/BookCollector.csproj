@@ -61,48 +61,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
 	  <AndroidKeyStore>True</AndroidKeyStore>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
 		<AndroidSigningKeyStore>X:\Storage\Celena_Files\Keystores\bookcollector.keystore</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>bookcollector_key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningKeyPass>
-		<ApplicationVersion>4</ApplicationVersion>
+		<ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 

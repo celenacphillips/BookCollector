@@ -6,6 +6,7 @@
 using Android;
 using Android.Content.PM;
 using Android.Provider;
+using Android.Util;
 using AndroidX.Core.Content;
 #endif
 using BookCollector.CustomPermissions;
@@ -620,7 +621,7 @@ namespace BookCollector.ViewModels.Main
             this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
         }
 
-        private void GetFiles(string directory, string fileName)
+        private async Task GetFiles(string directory, string fileName)
         {
             if (this.selectedFiles.Count > 0)
             {
@@ -639,7 +640,20 @@ namespace BookCollector.ViewModels.Main
                     }
 
                     var appFilePath = $"{appDirectory}/{fi.Name}";
+
+#if ANDROID
+                    // Convert the fake path to a URI
+                    var uri = ToUri(file);
+
+                    // Copy the URI to a real temp file
+                    var tempFilePath = await CopyUriToTempFileAsync(uri);
+
+                    // Now your existing logic works unchanged
+                    File.Copy(tempFilePath, appFilePath, true);
+#else
                     File.Copy(file, appFilePath, true);
+#endif
+
                 }
             }
             else
@@ -665,7 +679,20 @@ namespace BookCollector.ViewModels.Main
                             }
 
                             var appFilePath = $"{appDirectory}/{fi.Name}";
+
+#if ANDROID
+                            // Convert the fake path to a URI
+                            var uri = ToUri(file);
+
+                            // Copy the URI to a real temp file
+                            var tempFilePath = await CopyUriToTempFileAsync(uri);
+
+                            // Now your existing logic works unchanged
+                            File.Copy(tempFilePath, appFilePath, true);
+#else
                             File.Copy(file, appFilePath, true);
+#endif
+
                         }
                     }
                 }
@@ -676,11 +703,31 @@ namespace BookCollector.ViewModels.Main
                 {
                     foreach (var internalFolder in internalFolders)
                     {
-                        this.GetFiles(internalFolder, fileName);
+                        await this.GetFiles(internalFolder, fileName);
                     }
                 }
             }
         }
+
+#if ANDROID
+        public static async Task<string> CopyUriToTempFileAsync(Android.Net.Uri uri)
+        {
+            var context = Platform.AppContext;
+            using var input = context.ContentResolver.OpenInputStream(uri);
+
+            var tempPath = Path.Combine(FileSystem.CacheDirectory, Guid.NewGuid().ToString());
+            using var output = File.OpenWrite(tempPath);
+
+            await input.CopyToAsync(output);
+
+            return tempPath;
+        }
+
+        public static Android.Net.Uri ToUri(string path)
+        {
+            return Android.Net.Uri.FromFile(new Java.IO.File(path));
+        }
+#endif
 
         private List<string?> SetBookColumns()
         {
@@ -1069,10 +1116,11 @@ namespace BookCollector.ViewModels.Main
                             {
                                 try
                                 {
-                                    this.GetFiles(this.imageLocation, book.BookCoverFileName);
+                                    await this.GetFiles(this.imageLocation, book.BookCoverFileName);
                                 }
                                 catch (Exception ex)
                                 {
+                                    await DisplayMessage("Import Log", ex.Message);
                                     book.BookCoverFileName = null;
                                 }
                             }
@@ -1327,7 +1375,7 @@ namespace BookCollector.ViewModels.Main
                             {
                                 try
                                 {
-                                    this.GetFiles(this.imageLocation, book.BookCoverFileName);
+                                    await this.GetFiles(this.imageLocation, book.BookCoverFileName);
                                 }
                                 catch (Exception ex)
                                 {

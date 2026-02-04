@@ -183,8 +183,7 @@
             </Tab.Icon>
             
             <ShellContent Title="{x:Static localization:AppStringResources.FAQ}"
-                          ContentTemplate="{DataTemplate supportViews:FAQView}"
-                          IsVisible="False"/>
+                          ContentTemplate="{DataTemplate supportViews:FAQView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.Support}"
                           ContentTemplate="{DataTemplate supportViews:SupportView}"/>

@@ -1967,6 +1967,44 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Yes, you can add books using an ISBN.
+        ///Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN. After that, you can search for the book using api..
+        /// </summary>
+        internal static string FAQ_Answer1 {
+            get {
+                return ResourceManager.GetString("FAQ_Answer1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can create any of these options directly within the book and then select the one you want, or you can create them under the Groupings tab.
+        ///From the Groupings tab, you can add new or existing books directly to the group..
+        /// </summary>
+        internal static string FAQ_Answer2 {
+            get {
+                return ResourceManager.GetString("FAQ_Answer2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can I add books with an ISBN?.
+        /// </summary>
+        internal static string FAQ_Question1 {
+            get {
+                return ResourceManager.GetString("FAQ_Question1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How can I add a series, genre, collection, author, or location to a book?.
+        /// </summary>
+        internal static string FAQ_Question2 {
+            get {
+                return ResourceManager.GetString("FAQ_Question2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Favorite.
         /// </summary>
         internal static string Favorite {
