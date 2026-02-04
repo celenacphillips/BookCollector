@@ -23,6 +23,12 @@ public partial class ChangeLogView : ContentPage
     {
         this.Versions.Add(new ChangeLogModel()
         {
+            Version = "v 1.0.2",
+            Changes = AppStringResources.v102_ChangeLogEntry,
+        });
+
+        this.Versions.Add(new ChangeLogModel()
+        {
             Version = "v 1.0.1",
             Changes = AppStringResources.v101_ChangeLogEntry,
         });
