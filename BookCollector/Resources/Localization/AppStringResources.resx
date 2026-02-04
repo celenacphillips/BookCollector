@@ -1407,4 +1407,18 @@ Updated verbiage in app.</value>
   <data name="v102_ChangeLogEntry" xml:space="preserve">
     <value>Remove legacy permissions for device compatibility.</value>
   </data>
+  <data name="FAQ_Question1" xml:space="preserve">
+    <value>Can I add books with an ISBN?</value>
+  </data>
+  <data name="FAQ_Question2" xml:space="preserve">
+    <value>How can I add a series, genre, collection, author, or location to a book?</value>
+  </data>
+  <data name="FAQ_Answer1" xml:space="preserve">
+    <value>Yes, you can add books using an ISBN.
+Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN. After that, you can search for the book using api.</value>
+  </data>
+  <data name="FAQ_Answer2" xml:space="preserve">
+    <value>You can create any of these options directly within the book and then select the one you want, or you can create them under the Groupings tab.
+From the Groupings tab, you can add new or existing books directly to the group.</value>
+  </data>
 </root>

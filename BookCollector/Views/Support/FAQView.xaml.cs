@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data;
+using BookCollector.Resources.Localization;
 
 namespace BookCollector.Views.Support;
 
@@ -22,8 +23,14 @@ public partial class FAQView : ContentPage
     {
         this.Questions.Add(new FAQModel()
         {
-            Question = "Question 1",
-            Answer = "Answer 1",
+            Question = AppStringResources.FAQ_Question1,
+            Answer = AppStringResources.FAQ_Answer1.Replace("api", "Google Books"),
+        });
+
+        this.Questions.Add(new FAQModel()
+        {
+            Question = AppStringResources.FAQ_Question2,
+            Answer = AppStringResources.FAQ_Answer2,
         });
     }
 }
