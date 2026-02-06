@@ -5,9 +5,14 @@
 #if ANDROID
 using Android;
 using Android.Content.PM;
+using Android.OS;
 using Android.Provider;
 using Android.Util;
 using AndroidX.Core.Content;
+using AndroidX.DocumentFile.Provider;
+using BookCollector.CustomPicker;
+using static Android.Graphics.ImageDecoder;
+using Android.Content;
 #endif
 using BookCollector.CustomPermissions;
 using BookCollector.Data;
@@ -28,7 +33,13 @@ using BookCollector.ViewModels.WishListBook;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls.PlatformConfiguration;
+using System.Threading.Tasks;
 using Color = Microsoft.Maui.Graphics.Color;
+using ImageInfo = BookCollector.Data.ImageInfo;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Maui.Controls;
+using System.Net.Http;
 
 namespace BookCollector.ViewModels.Main
 {
@@ -126,7 +137,7 @@ namespace BookCollector.ViewModels.Main
 
         private string imageLocation = string.Empty;
 
-        private List<string> selectedFiles = new List<string>();
+        private List<ImageInfo> selectedFiles = new List<ImageInfo>();
 
         public ExportImportViewModel(ContentPage view)
         {
@@ -138,11 +149,11 @@ namespace BookCollector.ViewModels.Main
         {
             this.SetIsBusyTrue();
 
-            this.ExportEnabled = this.IsBusy;
-            this.ImportEnabled = this.IsBusy;
-            this.RefreshEnabled = this.IsBusy;
-            this.CheckboxesVisible = this.IsBusy;
-            this.OutputVisible = !this.IsBusy;
+            this.ExportEnabled = true;
+            this.ImportEnabled = true;
+            this.RefreshEnabled = true;
+            this.CheckboxesVisible = true;
+            this.OutputVisible = false;
             this.BooksChecked = true;
             this.ChaptersChecked = true;
             this.BookAuthorsChecked = true;
@@ -174,80 +185,77 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
-                    if (true)
+                    var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
+
+                    if (exportLocation == null || exportLocation.Equals(AppStringResources.DefaultExportLocation))
                     {
-                        var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
+                        var result = await FolderPicker.PickAsync(CancellationToken.None);
 
-                        if (exportLocation == null || exportLocation.Equals(AppStringResources.DefaultExportLocation))
+                        if (result != null && result.Folder != null)
                         {
-                            var result = await FolderPicker.PickAsync(CancellationToken.None);
-
-                            if (result != null && result.Folder != null)
-                            {
-                                exportLocation = result.Folder.Path;
-                                Preferences.Set("ExportLocation", result.Folder.Path);
-                            }
-                            else
-                            {
-                                await CanceledAction();
-
-                                this.SetIsBusyFalse();
-                                this.ImportEnabled = !this.IsBusy;
-                                this.ExportEnabled = !this.IsBusy;
-                                this.RefreshEnabled = !this.IsBusy;
-                            }
+                            exportLocation = result.Folder.Path;
+                            Preferences.Set("ExportLocation", result.Folder.Path);
                         }
-
-                        if (this.ImagesChecked)
+                        else
                         {
-                            this.imageLocation = $"{exportLocation}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+                            await CanceledAction();
 
-                            if (!Directory.Exists(this.imageLocation))
-                            {
-                                Directory.CreateDirectory(this.imageLocation);
-                            }
-
-                            await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
+                            this.SetIsBusyFalse();
+                            this.ImportEnabled = true;
+                            this.ExportEnabled = true;
+                            this.RefreshEnabled = true;
                         }
-
-                        await Task.Delay(1);
-
-                        this.SetIsBusyTrue();
-
-                        this.ImportEnabled = !this.IsBusy;
-                        this.ExportEnabled = !this.IsBusy;
-                        this.RefreshEnabled = !this.IsBusy;
-
-                        this.ResetOutput();
-                        this.OutputVisible = this.IsBusy;
-                        this.CheckboxesVisible = !this.IsBusy;
-
-                        var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
-                        this.mainFilePath = filePath;
-
-                        this.StartOutput = AppStringResources.ExportResultsStart;
-
-                        this.SetOutputWaiting();
-
-                        await Task.Delay(1);
-
-                        await this.WriteWishListBooksToSpreadsheet();
-                        await this.WriteBooksToSpreadsheet();
-                        await this.WriteChaptersToSpreadsheet();
-                        await this.WriteCollectionsToSpreadsheet();
-                        await this.WriteGenresToSpreadsheet();
-                        await this.WriteSeriesToSpreadsheet();
-                        await this.WriteLocationsToSpreadsheet();
-                        await this.WriteBookAuthorsToSpreadsheet();
-                        await this.WriteAuthorsToSpreadsheet();
-
-                        this.FinalOutput = AppStringResources.ExportResultsFinish;
-
-                        await DisplayMessage(AppStringResources.ExportComplete, null);
-
-                        this.SetIsBusyFalse();
-                        this.RefreshEnabled = !this.IsBusy;
                     }
+
+                    if (this.ImagesChecked)
+                    {
+                        this.imageLocation = $"{exportLocation}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        if (!Directory.Exists(this.imageLocation))
+                        {
+                            Directory.CreateDirectory(this.imageLocation);
+                        }
+
+                        await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
+                    }
+
+                    await Task.Delay(1);
+
+                    this.SetIsBusyTrue();
+
+                    this.ImportEnabled = false;
+                    this.ExportEnabled = false;
+                    this.RefreshEnabled = false;
+
+                    this.ResetOutput();
+                    this.OutputVisible = true;
+                    this.CheckboxesVisible = false;
+
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
+                    this.mainFilePath = filePath;
+
+                    this.StartOutput = AppStringResources.ExportResultsStart;
+
+                    this.SetOutputWaiting();
+
+                    await Task.Delay(1);
+
+                    await this.WriteWishListBooksToSpreadsheet();
+                    await this.WriteBooksToSpreadsheet();
+                    await this.WriteChaptersToSpreadsheet();
+                    await this.WriteCollectionsToSpreadsheet();
+                    await this.WriteGenresToSpreadsheet();
+                    await this.WriteSeriesToSpreadsheet();
+                    await this.WriteLocationsToSpreadsheet();
+                    await this.WriteBookAuthorsToSpreadsheet();
+                    await this.WriteAuthorsToSpreadsheet();
+
+                    this.FinalOutput = AppStringResources.ExportResultsFinish;
+
+                    await DisplayMessage(AppStringResources.ExportComplete, null);
+
+                    this.SetIsBusyFalse();
+                    this.RefreshEnabled = true;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -261,9 +269,9 @@ namespace BookCollector.ViewModels.Main
                     await DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.ImportEnabled = !this.IsBusy;
-                    this.ExportEnabled = !this.IsBusy;
-                    this.RefreshEnabled = !this.IsBusy;
+                    this.ImportEnabled = true;
+                    this.ExportEnabled = true;
+                    this.RefreshEnabled = true;
                     this.CheckboxesVisible = true;
                     this.OutputVisible = false;
                 }
@@ -278,9 +286,9 @@ namespace BookCollector.ViewModels.Main
                     await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.ImportEnabled = !this.IsBusy;
-                    this.ExportEnabled = !this.IsBusy;
-                    this.RefreshEnabled = !this.IsBusy;
+                    this.ImportEnabled = true;
+                    this.ExportEnabled = true;
+                    this.RefreshEnabled = true;
                     this.ResetColorOutput();
                 }
             }
@@ -314,8 +322,6 @@ namespace BookCollector.ViewModels.Main
 
                     if (result != null)
                     {
-                        FolderPickerResult? bookCoverResult = null;
-
                         if (this.ImagesChecked)
                         {
                             var status = await Permissions.CheckStatusAsync<ReadMediaPermission>();
@@ -336,20 +342,26 @@ namespace BookCollector.ViewModels.Main
 
                                 if (userSelectedImages.Count <= 0)
                                 {
-                                    var imageAction = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImageImport_Question, null, null);
+                                    var version = 0;
+#if ANDROID
+                                    version = (int)Build.VERSION.SdkInt;
+#endif
 
-                                    if (imageAction)
+                                    if (version >= 33)
                                     {
-                                        bookCoverResult = await FolderPicker.PickAsync(CancellationToken.None);
+                                        await DisplayMessage(AppStringResources.PleaseSelectTheImages, null);
 
-                                        if (bookCoverResult != null && bookCoverResult.Folder != null)
+#if ANDROID
+                                        var picker = ServiceHelper.GetService<IAndroidImagePicker>();
+                                        var uris = await picker.PickImagesAsync();
+
+                                        foreach (var uri in uris)
                                         {
-                                            this.imageLocation = bookCoverResult.Folder.Path;
+                                            var info = this.GetImageInfo(uri);
+                                            this.selectedFiles.Add(info);
                                         }
-                                    }
-                                    else
-                                    {
-                                        this.ImagesChecked = false;
+
+#endif
                                     }
                                 }
                                 else
@@ -361,61 +373,49 @@ namespace BookCollector.ViewModels.Main
                             }
                         }
 
-                        if (!this.ImagesChecked || bookCoverResult != null || this.selectedFiles.Count > 0)
+                        this.SetIsBusyTrue();
+
+                        this.mainFilePath = result.FullPath;
+
+                        this.ImportEnabled = false;
+                        this.ExportEnabled = false;
+                        this.RefreshEnabled = false;
+
+                        this.ResetOutput();
+                        this.OutputVisible = true;
+                        this.CheckboxesVisible = false;
+
+                        this.StartOutput = AppStringResources.ImportResultsStart;
+
+                        this.SetOutputWaiting();
+
+                        var errors = 0;
+
+                        await Task.Delay(1);
+
+                        errors += await this.ReadWishListBooksFromSpreadsheet();
+                        errors += await this.ReadAuthorsFromSpreadsheet();
+                        errors += await this.ReadChaptersFromSpreadsheet();
+                        errors += await this.ReadCollectionsFromSpreadsheet();
+                        errors += await this.ReadGenresFromSpreadsheet();
+                        errors += await this.ReadSeriesFromSpreadsheet();
+                        errors += await this.ReadLocationsFromSpreadsheet();
+                        errors += await this.ReadBooksFromSpreadsheet();
+                        errors += await this.ReadBookAuthorsFromSpreadsheet();
+
+                        await DataCleanup(this.BooksChecked, this.AuthorsChecked, this.BookAuthorsChecked);
+
+                        this.FinalOutput = AppStringResources.ImportResultsFinish;
+
+                        await DisplayMessage(AppStringResources.ImportComplete, null);
+
+                        if (errors > 0)
                         {
-                            this.SetIsBusyTrue();
-
-                            this.mainFilePath = result.FullPath;
-
-                            this.ImportEnabled = !this.IsBusy;
-                            this.ExportEnabled = !this.IsBusy;
-                            this.RefreshEnabled = !this.IsBusy;
-
-                            this.ResetOutput();
-                            this.OutputVisible = this.IsBusy;
-                            this.CheckboxesVisible = !this.IsBusy;
-
-                            this.StartOutput = AppStringResources.ImportResultsStart;
-
-                            this.SetOutputWaiting();
-
-                            var errors = 0;
-
-                            await Task.Delay(1);
-
-                            errors += await this.ReadWishListBooksFromSpreadsheet();
-                            errors += await this.ReadAuthorsFromSpreadsheet();
-                            errors += await this.ReadChaptersFromSpreadsheet();
-                            errors += await this.ReadCollectionsFromSpreadsheet();
-                            errors += await this.ReadGenresFromSpreadsheet();
-                            errors += await this.ReadSeriesFromSpreadsheet();
-                            errors += await this.ReadLocationsFromSpreadsheet();
-                            errors += await this.ReadBooksFromSpreadsheet();
-                            errors += await this.ReadBookAuthorsFromSpreadsheet();
-
-                            await DataCleanup(this.BooksChecked, this.AuthorsChecked, this.BookAuthorsChecked);
-
-                            this.FinalOutput = AppStringResources.ImportResultsFinish;
-
-                            await DisplayMessage(AppStringResources.ImportComplete, null);
-
-                            if (errors > 0)
-                            {
-                                await DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
-                            }
-
-                            this.SetIsBusyFalse();
-                            this.RefreshEnabled = !this.IsBusy;
+                            await DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
                         }
-                        else
-                        {
-                            await CanceledAction();
 
-                            this.SetIsBusyFalse();
-                            this.ImportEnabled = !this.IsBusy;
-                            this.ExportEnabled = !this.IsBusy;
-                            this.RefreshEnabled = !this.IsBusy;
-                        }
+                        this.SetIsBusyFalse();
+                        this.RefreshEnabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -429,9 +429,9 @@ namespace BookCollector.ViewModels.Main
                     await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.ImportEnabled = !this.IsBusy;
-                    this.ExportEnabled = !this.IsBusy;
-                    this.RefreshEnabled = !this.IsBusy;
+                    this.ImportEnabled = true;
+                    this.ExportEnabled = true;
+                    this.RefreshEnabled = true;
                     this.ResetColorOutput();
                 }
             }
@@ -530,6 +530,129 @@ namespace BookCollector.ViewModels.Main
             LocationsViewModel.RefreshView = true;
         }
 
+        private static async Task ManuallySetBookCover(BookModel book, bool imagesChecked)
+        {
+            if (imagesChecked)
+            {
+                var answer = await DisplayMessage(AppStringResources.Warning_, AppStringResources.CouldNotAutomaticallyUploadCoverPhoto.Replace("Book", book.BookTitle), null, null);
+
+                if (answer)
+                {
+                    MediaPickerOptions pickerOptions = new();
+
+                    try
+                    {
+                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
+
+                        if (photos?.Count > 0)
+                        {
+                            var firstPhoto = photos.First();
+                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
+                            book.HasBookCover = true;
+                            book.HasNoBookCover = false;
+
+                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(directory))
+                            {
+                                Directory.CreateDirectory(directory);
+                            }
+
+                            var fi = new FileInfo(firstPhoto.FullPath);
+                            var filePath = $"{directory}/{fi.Name}";
+                            File.Copy(firstPhoto.FullPath, filePath, true);
+
+                            book.BookCoverFileName = fi.Name;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+        }
+
+        private static async Task ManuallySetBookCover(WishlistBookModel book, bool imagesChecked)
+        {
+            if (imagesChecked)
+            {
+                var answer = await DisplayMessage(AppStringResources.Warning_, AppStringResources.CouldNotAutomaticallyUploadCoverPhoto.Replace("Book", book.BookTitle), null, null);
+
+                if (answer)
+                {
+                    MediaPickerOptions pickerOptions = new();
+
+                    try
+                    {
+                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
+
+                        if (photos?.Count > 0)
+                        {
+                            var firstPhoto = photos.First();
+                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
+                            book.HasBookCover = true;
+                            book.HasNoBookCover = false;
+
+                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(directory))
+                            {
+                                Directory.CreateDirectory(directory);
+                            }
+
+                            var fi = new FileInfo(firstPhoto.FullPath);
+                            var filePath = $"{directory}/{fi.Name}";
+                            File.Copy(firstPhoto.FullPath, filePath, true);
+
+                            book.BookCoverFileName = fi.Name;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+        }
+
+#if ANDROID
+        private ImageInfo GetImageInfo(Android.Net.Uri uri)
+        {
+            // Example: content://media/external/images/media/12345
+            var id = ContentUris.ParseId(uri);
+
+            var projection = new[]
+            {
+                MediaStore.Images.Media.InterfaceConsts.Id,
+                MediaStore.Images.Media.InterfaceConsts.DisplayName,
+                MediaStore.Images.Media.InterfaceConsts.Data
+            };
+
+            using var cursor = Platform.CurrentActivity.ContentResolver.Query(
+                MediaStore.Images.Media.ExternalContentUri,
+                projection,
+                $"{MediaStore.Images.Media.InterfaceConsts.Id} = ?",
+                new[] { id.ToString() },
+                null
+            );
+
+            if (cursor != null && cursor.MoveToFirst())
+            {
+                var name = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.DisplayName));
+                var path = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Data));
+
+                return new ImageInfo
+                {
+                    OriginalFileName = name,
+                    MediaStorePath = path,
+                    UriString = uri.ToString(),
+                };
+            }
+
+            return null;
+
+        }
+#endif
+
         private void ResetOutput()
         {
             this.BooksOutput = string.Empty;
@@ -621,113 +744,67 @@ namespace BookCollector.ViewModels.Main
             this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
         }
 
-        private async Task GetFiles(string directory, string fileName)
+        private async Task<bool> GetFiles(string fileName)
         {
+            var fileFound = false;
+
             if (this.selectedFiles.Count > 0)
             {
-                var file = this.selectedFiles.FirstOrDefault(x => new FileInfo(x).Name.Equals(fileName));
+                var file = this.selectedFiles.FirstOrDefault(x => x.OriginalFileName.Equals(fileName));
 
-                var fi = new FileInfo(file);
-
-                if (fi.Name.Equals(fileName))
+                if (file != null)
                 {
-                    var filePath = ImageSource.FromFile(file);
-                    var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                    if (!Directory.Exists(appDirectory))
+                    try
                     {
-                        Directory.CreateDirectory(appDirectory);
-                    }
+                        Stream stream;
 
-                    var appFilePath = $"{appDirectory}/{fi.Name}";
-
-#if ANDROID
-                    // Convert the fake path to a URI
-                    var uri = ToUri(file);
-
-                    // Copy the URI to a real temp file
-                    var tempFilePath = await CopyUriToTempFileAsync(uri);
-
-                    // Now your existing logic works unchanged
-                    File.Copy(tempFilePath, appFilePath, true);
-#else
-                    File.Copy(file, appFilePath, true);
-#endif
-
-                }
-            }
-            else
-            {
-                var folderFiles = Directory.GetFiles(directory);
-
-                if (folderFiles.Length > 0)
-                {
-                    var file = folderFiles.FirstOrDefault(x => new FileInfo(x).Name.Equals(fileName));
-
-                    if (file != null)
-                    {
-                        var fi = new FileInfo(file);
-
-                        if (fi.Name.Equals(fileName))
+                        if (file.UriString != null)
                         {
-                            var filePath = ImageSource.FromFile(file);
-                            var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                            if (!Directory.Exists(appDirectory))
-                            {
-                                Directory.CreateDirectory(appDirectory);
-                            }
-
-                            var appFilePath = $"{appDirectory}/{fi.Name}";
-
 #if ANDROID
-                            // Convert the fake path to a URI
-                            var uri = ToUri(file);
-
-                            // Copy the URI to a real temp file
-                            var tempFilePath = await CopyUriToTempFileAsync(uri);
-
-                            // Now your existing logic works unchanged
-                            File.Copy(tempFilePath, appFilePath, true);
+                            var androidUri = Android.Net.Uri.Parse(file.UriString);
+                            var resolver = Platform.CurrentActivity.ContentResolver;
+                            stream = resolver.OpenInputStream(androidUri);
 #else
-                            File.Copy(file, appFilePath, true);
+                            var systemUri = new Uri(file.UriString);
+                            var httpClient = new HttpClient();
+                            stream = await httpClient.GetStreamAsync(systemUri);
 #endif
 
                         }
+                        else
+                        {
+                            stream = File.OpenRead(file.MediaStorePath);
+                        }
+
+                        var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        if (!Directory.Exists(appDirectory))
+                        {
+                            Directory.CreateDirectory(appDirectory);
+                        }
+
+                        var appFilePath = $"{appDirectory}/{file.OriginalFileName}";
+
+                        using (var fileStream = File.Create(appFilePath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                        }
+
+                        fileFound = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
                     }
                 }
-
-                var internalFolders = Directory.GetDirectories(directory);
-
-                if (internalFolders.Length > 0)
+                else
                 {
-                    foreach (var internalFolder in internalFolders)
-                    {
-                        await this.GetFiles(internalFolder, fileName);
-                    }
+                    throw new Exception("File not found.");
                 }
             }
+
+            return fileFound;
         }
-
-#if ANDROID
-        public static async Task<string> CopyUriToTempFileAsync(Android.Net.Uri uri)
-        {
-            var context = Platform.AppContext;
-            using var input = context.ContentResolver.OpenInputStream(uri);
-
-            var tempPath = Path.Combine(FileSystem.CacheDirectory, Guid.NewGuid().ToString());
-            using var output = File.OpenWrite(tempPath);
-
-            await input.CopyToAsync(output);
-
-            return tempPath;
-        }
-
-        public static Android.Net.Uri ToUri(string path)
-        {
-            return Android.Net.Uri.FromFile(new Java.IO.File(path));
-        }
-#endif
 
         private List<string?> SetBookColumns()
         {
@@ -871,7 +948,16 @@ namespace BookCollector.ViewModels.Main
 
         private string BookCoverFileName(string bookTitle, string extension)
         {
-            string output = bookTitle.Replace(" ", "_");
+            string output = bookTitle.Replace(" ", "_")
+                                     .Replace("<", "_")
+                                     .Replace(">", "_")
+                                     .Replace(":", "_")
+                                     .Replace("\"", "_")
+                                     .Replace("|", "_")
+                                     .Replace("\\", "_")
+                                     .Replace("?", "_")
+                                     .Replace("*", "_")
+                                     .Replace("/", "_");
 
             return $"{output}{extension}";
         }
@@ -1086,7 +1172,7 @@ namespace BookCollector.ViewModels.Main
                                 BookCoverFileName = values[30],
                             };
 
-                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
+                            if (!string.IsNullOrEmpty(book.BookCoverUrl))
                             {
                                 PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
 
@@ -1116,12 +1202,16 @@ namespace BookCollector.ViewModels.Main
                             {
                                 try
                                 {
-                                    await this.GetFiles(this.imageLocation, book.BookCoverFileName);
+                                    var fileFound = await this.GetFiles(book.BookCoverFileName);
+
+                                    if (!fileFound)
+                                    {
+                                        await ManuallySetBookCover(book, this.ImagesChecked);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
-                                    await DisplayMessage("Import Log", ex.Message);
-                                    book.BookCoverFileName = null;
+                                    await ManuallySetBookCover(book, this.ImagesChecked);
                                 }
                             }
 
@@ -1351,7 +1441,7 @@ namespace BookCollector.ViewModels.Main
                                 BookCoverFileName = values[20],
                             };
 
-                            if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverUrl))
+                            if (!string.IsNullOrEmpty(book.BookCoverUrl))
                             {
                                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                                 {
@@ -1375,12 +1465,16 @@ namespace BookCollector.ViewModels.Main
                             {
                                 try
                                 {
-                                    await this.GetFiles(this.imageLocation, book.BookCoverFileName);
+                                    var fileFound = await this.GetFiles(book.BookCoverFileName);
+
+                                    if (!fileFound)
+                                    {
+                                        await ManuallySetBookCover(book, this.ImagesChecked);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
-                                    book.BookCoverFileName = null;
-                                    book.HasBookCover = false;
+                                    await ManuallySetBookCover(book, this.ImagesChecked);
                                 }
 
                                 book.HasNoBookCover = !book.HasBookCover;

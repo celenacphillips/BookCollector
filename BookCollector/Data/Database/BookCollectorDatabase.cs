@@ -446,6 +446,34 @@ namespace BookCollector.Data.Database
             }
         }
 
+        public async Task<List<BookModel>> GetAllBooksWithoutBookCoversAsync(bool showHiddenBooks)
+        {
+            try
+            {
+                await this.Init();
+
+                var books = await this.database.Table<BookDatabaseModel>()
+                    .Where(x => x.HasNoBookCover || !x.HasBookCover)
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new BookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                if (!showHiddenBooks)
+                {
+                    return [.. booksList.Where(x => !x.HideBook)];
+                }
+
+                return booksList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /*********************** Book Methods ***********************/
 
         /*********************** Wishlist Book Methods ***********************/
@@ -828,6 +856,34 @@ namespace BookCollector.Data.Database
                     .FirstOrDefaultAsync();
 
                 return book;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithoutBookCoversAsync(bool showHiddenBooks)
+        {
+            try
+            {
+                await this.Init();
+
+                var books = await this.database.Table<WishlistBookDatabaseModel>()
+                    .Where(x => x.HasNoBookCover)
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new WishlistBookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                if (!showHiddenBooks)
+                {
+                    return [.. booksList.Where(x => !x.HideBook)];
+                }
+
+                return booksList;
             }
             catch (Exception ex)
             {

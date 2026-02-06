@@ -799,7 +799,7 @@
     <value>Book Cover URL</value>
   </data>
   <data name="AnErrorOccurred" xml:space="preserve">
-    <value>An Error Occurred</value>
+    <value>An Error Occurred! Please contact support!</value>
   </data>
   <data name="ErrorDownloadingImage" xml:space="preserve">
     <value>There was an error downloading the image. Try another URL.</value>
@@ -1420,5 +1420,17 @@ Just tap to add a new book, then select the search icon. You can scan the bookâ€
   <data name="FAQ_Answer2" xml:space="preserve">
     <value>You can create any of these options directly within the book and then select the one you want, or you can create them under the Groupings tab.
 From the Groupings tab, you can add new or existing books directly to the group.</value>
+  </data>
+  <data name="CouldNotAutomaticallyUploadCoverPhoto" xml:space="preserve">
+    <value>Could not automatically upload the book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later.</value>
+  </data>
+  <data name="Warning_" xml:space="preserve">
+    <value>Warning!</value>
+  </data>
+  <data name="PleaseSelectTheImageForBook" xml:space="preserve">
+    <value>Please select the image for book.</value>
+  </data>
+  <data name="PleaseSelectTheImages" xml:space="preserve">
+    <value>Please select the images you would like to automatically upload.</value>
   </data>
 </root>
