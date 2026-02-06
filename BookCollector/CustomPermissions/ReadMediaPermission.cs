@@ -10,10 +10,10 @@ using Android.Provider;
 using Android.Views;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
-using BookCollector;
 #endif
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Data;
 
 namespace BookCollector.CustomPermissions
 {
@@ -90,7 +90,7 @@ namespace BookCollector.CustomPermissions
             if (api >= 33)
             {
                 while (Platform.CurrentActivity is not { IsFinishing: false, IsDestroyed: false } ||
-               Platform.CurrentActivity?.Window?.DecorView?.WindowVisibility != ViewStates.Visible)
+                Platform.CurrentActivity?.Window?.DecorView?.WindowVisibility != ViewStates.Visible)
                 {
                     await Task.Delay(50);
                 }
@@ -173,15 +173,15 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
-        public static List<string> CheckForUserSelectedImages()
+        public static List<ImageInfo> CheckForUserSelectedImages()
         {
-            List<string> filePaths = new List<string>();
+            List<ImageInfo> imageInfos = new List<ImageInfo>();
 
 #if ANDROID
             var activity = Platform.CurrentActivity!;
             var context = activity.ApplicationContext;
 
-            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) != Permission.Granted && 
+            if (ContextCompat.CheckSelfPermission(context, ReadMediaImages) != Permission.Granted &&
                 ContextCompat.CheckSelfPermission(context, UserSelectedImages) == Permission.Granted)
             {
                 var collection = MediaStore.Images.Media.ExternalContentUri;
@@ -189,6 +189,7 @@ namespace BookCollector.CustomPermissions
                 var projection = new[]
                 {
                     MediaStore.Images.Media.InterfaceConsts.Id,
+                    MediaStore.Images.Media.InterfaceConsts.DisplayName,
                     MediaStore.Images.Media.InterfaceConsts.Data,
                 };
 
@@ -203,13 +204,19 @@ namespace BookCollector.CustomPermissions
                 while (cursor.MoveToNext())
                 {
                     var id = cursor.GetLong(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Id));
+                    var name = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.DisplayName));
                     var path = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Data));
-                    filePaths.Add(path);
+
+                    imageInfos.Add(new ImageInfo
+                    {
+                        OriginalFileName = name,
+                        MediaStorePath = path,
+                    });
                 }
             }
 #endif
 
-            return filePaths;
+            return imageInfos;
         }
     }
 }

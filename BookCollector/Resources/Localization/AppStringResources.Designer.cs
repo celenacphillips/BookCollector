@@ -295,7 +295,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An Error Occurred.
+        ///   Looks up a localized string similar to An Error Occurred! Please contact support!.
         /// </summary>
         internal static string AnErrorOccurred {
             get {
@@ -1264,6 +1264,15 @@ namespace BookCollector.Resources.Localization {
         internal static string CollectionView_InfoText {
             get {
                 return ResourceManager.GetString("CollectionView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not automatically upload the book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later..
+        /// </summary>
+        internal static string CouldNotAutomaticallyUploadCoverPhoto {
+            get {
+                return ResourceManager.GetString("CouldNotAutomaticallyUploadCoverPhoto", resourceCulture);
             }
         }
         
@@ -2907,6 +2916,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select the image for book..
+        /// </summary>
+        internal static string PleaseSelectTheImageForBook {
+            get {
+                return ResourceManager.GetString("PleaseSelectTheImageForBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the images you would like to automatically upload..
+        /// </summary>
+        internal static string PleaseSelectTheImages {
+            get {
+                return ResourceManager.GetString("PleaseSelectTheImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rating Status.
         /// </summary>
         internal static string RatingStatus {
@@ -3851,6 +3878,15 @@ namespace BookCollector.Resources.Localization {
         internal static string v102_ChangeLogEntry {
             get {
                 return ResourceManager.GetString("v102_ChangeLogEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning!.
+        /// </summary>
+        internal static string Warning_ {
+            get {
+                return ResourceManager.GetString("Warning_", resourceCulture);
             }
         }
         
