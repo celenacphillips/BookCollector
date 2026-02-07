@@ -23,7 +23,13 @@ namespace BookCollector.ViewModels.Book
     public partial class BookSearchViewModel : BookBaseViewModel
     {
         [ObservableProperty]
-        public string? input;
+        public string? isbnInput;
+
+        [ObservableProperty]
+        public string? titleInput;
+
+        [ObservableProperty]
+        public string? authorInput;
 
         [ObservableProperty]
         public string totalItemsstring;
@@ -43,10 +49,12 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public WishlistBookModel? selectedWishListBook;
 
-        public BookSearchViewModel(string? inputIsbn, ContentPage view)
+        public BookSearchViewModel(string? inputIsbn, string? inputTitle, string? inputAuthorName, ContentPage view)
         {
             this.View = view;
-            this.Input = inputIsbn;
+            this.IsbnInput = inputIsbn;
+            this.TitleInput = inputTitle;
+            this.AuthorInput = inputAuthorName;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
             this.CollectionViewHeight = this.DeviceHeight;
             this.ShowCollectionViewFooter = false;
@@ -70,16 +78,6 @@ namespace BookCollector.ViewModels.Book
             this.TotalItems = 0;
             this.IsbnItems = null;
 
-            if (string.IsNullOrEmpty(this.Input))
-            {
-                this.SetIsBusyFalse();
-                await DisplayMessage($"{AppStringResources.NoISBNEntered}", null);
-
-                return;
-            }
-
-            this.Input = this.Input.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
-
             PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
 
             if (internetStatus != PermissionStatus.Granted)
@@ -91,7 +89,32 @@ namespace BookCollector.ViewModels.Book
             {
                 try
                 {
-                    var (items, totalItems) = await GoogleBooksAPI.Search(this.Input);
+                    List<Item>? items = new List<Item>();
+                    int totalItems = 0;
+
+                    if (!string.IsNullOrEmpty(this.IsbnInput))
+                    {
+                        this.IsbnInput = this.IsbnInput.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
+                        var (isbnItems, totalIsbnItems) = await GoogleBooksAPI.SearchIsbn(this.IsbnInput);
+                        items.AddRange(isbnItems);
+                        totalItems += totalIsbnItems;
+                    }
+
+                    if (!string.IsNullOrEmpty(this.TitleInput))
+                    {
+                        var input = this.TitleInput.Trim().Replace(" ", "+");
+                        var (titleItems, totalTitleItems) = await GoogleBooksAPI.SearchTitle(input);
+                        items.AddRange(titleItems);
+                        totalItems += totalTitleItems;
+                    }
+
+                    if (!string.IsNullOrEmpty(this.AuthorInput))
+                    {
+                        var input = this.AuthorInput.Trim().Replace(" ", "+");
+                        var (authorItems, totalAuthorItems) = await GoogleBooksAPI.SearchAuthorName(input);
+                        items.AddRange(authorItems);
+                        totalItems += totalAuthorItems;
+                    }
 
                     this.SetIsBusyFalse();
 
@@ -105,7 +128,7 @@ namespace BookCollector.ViewModels.Book
                     }
                     else
                     {
-                        this.IsbnItems = items;
+                        this.IsbnItems = items.ToObservableCollection();
                         this.TotalItems = totalItems;
                     }
 
@@ -206,7 +229,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier))
                     {
-                        this.SelectedBook.BookIdentifier = this.Input;
+                        this.SelectedBook.BookIdentifier = this.IsbnInput;
                     }
                 }
 
@@ -214,7 +237,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier))
                     {
-                        this.SelectedWishListBook.BookIdentifier = this.Input;
+                        this.SelectedWishListBook.BookIdentifier = this.IsbnInput;
                     }
                 }
 
@@ -305,9 +328,14 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
-                if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier))
+                if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier) && !string.IsNullOrEmpty(this.IsbnInput))
                 {
-                    this.SelectedBook.BookIdentifier = this.Input;
+                    this.SelectedBook.BookIdentifier = this.IsbnInput;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedBook.BookIdentifier) && string.IsNullOrEmpty(this.IsbnInput))
+                {
+                    this.SelectedBook.BookIdentifier = this.SelectedISBNItem?.VolumeInfo?.industryIdentifiers.FirstOrDefault(x => x.type.Equals("ISBN_13"))?.identifier;
                 }
             }
 
@@ -395,9 +423,14 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
-                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier))
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier) && !string.IsNullOrEmpty(this.IsbnInput))
                 {
-                    this.SelectedWishListBook.BookIdentifier = this.Input;
+                    this.SelectedWishListBook.BookIdentifier = this.IsbnInput;
+                }
+
+                if (string.IsNullOrEmpty(this.SelectedWishListBook.BookIdentifier) && string.IsNullOrEmpty(this.IsbnInput))
+                {
+                    this.SelectedWishListBook.BookIdentifier = this.SelectedISBNItem?.VolumeInfo?.industryIdentifiers.FirstOrDefault(x => x.type.Equals("ISBN_13"))?.identifier;
                 }
             }
         }

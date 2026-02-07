@@ -391,7 +391,7 @@ namespace BookCollector.ViewModels.Book
         {
             this.SetIsBusyTrue();
 
-            var view = new BookSearchView(null, this.EditedBook, this);
+            var view = new BookSearchView(null, null, null, this.EditedBook, this);
 
             await Shell.Current.Navigation.PushModalAsync(view);
             this.SetIsBusyFalse();
@@ -875,6 +875,8 @@ namespace BookCollector.ViewModels.Book
                     this.ShowTime = true;
                     this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
                 }
+
+                this.UpdateProgress();
             }
             catch (Exception ex)
             {

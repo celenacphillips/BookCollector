@@ -11,9 +11,9 @@ namespace BookCollector.Views.Book;
 
 public partial class BookSearchView : ContentPage
 {
-    public BookSearchView(string? inputIsbn, BookModel? book, object? previousViewModel)
+    public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, BookModel? book, object? previousViewModel)
     {
-        var viewModel = new BookSearchViewModel(inputIsbn, this)
+        var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
         {
             ViewTitle = $"{AppStringResources.BookSearch}",
             SelectedBook = book,
@@ -26,9 +26,9 @@ public partial class BookSearchView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    public BookSearchView(string? inputIsbn, WishlistBookModel? book, object? previousViewModel)
+    public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, WishlistBookModel? book, object? previousViewModel)
     {
-        var viewModel = new BookSearchViewModel(inputIsbn, this)
+        var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
         {
             ViewTitle = $"{AppStringResources.BookSearch}",
             SelectedWishListBook = book,

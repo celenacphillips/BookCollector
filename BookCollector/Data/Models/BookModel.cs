@@ -120,7 +120,7 @@ namespace BookCollector.Data.Models
         {
             get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
                 AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
-                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString()).Replace("Blank2", this.BookMinutesTotal.ToString());
+                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString().PadLeft(2, '0')).Replace("Blank2", this.BookMinutesTotal.ToString().PadLeft(2, '0'));
         }
 
         [ObservableProperty]

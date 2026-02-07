@@ -73,12 +73,12 @@
                         <!-- This is needed to allow the refresh view to work. -->
                         <VerticalStackLayout  Padding="10">
                             <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
-                                       Text="{Binding Searchstring}"
+                                       Text="{Binding SearchString}"
                                        IsReadOnly="{Binding IsBusy}"
                                        x:Name="searchBar">
                                 <SearchBar.Behaviors>
                                     <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
-                                                                    CommandParameter="{Binding Searchstring}"
+                                                                    CommandParameter="{Binding SearchString}"
                                                                     EventName="TextChanged"
                                                                     BindingContext="{Binding BindingContext, Source={x:Reference CollectionMainPage}}"/>
                                 </SearchBar.Behaviors>

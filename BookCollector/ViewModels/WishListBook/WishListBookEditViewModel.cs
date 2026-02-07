@@ -195,7 +195,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             this.SetIsBusyTrue();
 
-            var view = new BookSearchView(null, this.EditedWishlistBook, this);
+            var view = new BookSearchView(null, null, null, this.EditedWishlistBook, this);
 
             await Shell.Current.Navigation.PushModalAsync(view);
 

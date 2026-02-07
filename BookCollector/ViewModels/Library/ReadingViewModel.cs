@@ -29,6 +29,9 @@ namespace BookCollector.ViewModels.Library
         public static ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
+        public ObservableCollection<string>? bookAuthorList;
+
+        [ObservableProperty]
         public static int totalBooksCount;
 
         [ObservableProperty]
@@ -44,6 +47,8 @@ namespace BookCollector.ViewModels.Library
             this.ViewTitle = AppStringResources.Reading;
             RefreshView = true;
         }
+
+        public string? BookAuthorOption { get; set; }
 
         public static async Task SetList(bool showHiddenBooks)
         {
@@ -78,6 +83,9 @@ namespace BookCollector.ViewModels.Library
                     {
                         this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
+                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
                         var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
                         var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
                         var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
@@ -89,7 +97,8 @@ namespace BookCollector.ViewModels.Library
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                this.BookAuthorOption,
+                                this.SearchString);
 
                         await Task.WhenAll(filteredList);
 
@@ -98,7 +107,6 @@ namespace BookCollector.ViewModels.Library
                         if (this.FilteredBookList2 != null)
                         {
                             await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetReadingProgress()));
-                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetAuthorListString()));
                             await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetCoverDisplay()));
                             await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetBookTotalTime()));
 
@@ -127,11 +135,12 @@ namespace BookCollector.ViewModels.Library
                             this.FilteredBookList2 = sortList.Result;
                         }
 
-                        await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
+                        await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors);
 
                         this.BookPublisherList = bookPublishers.Result;
                         this.BookLanguageList = bookLanguages.Result;
                         this.BookPublishYearList = bookPublishYears.Result;
+                        this.BookAuthorList = authors.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -155,7 +164,7 @@ namespace BookCollector.ViewModels.Library
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
             {
@@ -173,7 +182,8 @@ namespace BookCollector.ViewModels.Library
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                this.BookAuthorOption,
+                                this.SearchString);
                 }
 
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
@@ -217,6 +227,8 @@ namespace BookCollector.ViewModels.Library
                 var popup = new FilterPopup();
                 var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View)
                 {
+                    AuthorVisible = true,
+                    AuthorOption = this.BookAuthorOption,
                     FavoriteVisible = this.ShowFavoriteBooks,
                     FavoriteOption = this.FavoriteBooksOption,
                     FormatVisible = true,
@@ -230,6 +242,7 @@ namespace BookCollector.ViewModels.Library
                     RatingVisible = this.ShowBookRatings,
                     RatingOption = this.BookRatingOption,
                 };
+                viewModel.SetAuthorPicker(this.BookAuthorList);
                 viewModel.SetFavoritePicker();
                 viewModel.SetFormatPicker(this.BookFormats);
                 viewModel.SetPublisherPicker(this.BookPublisherList);
@@ -295,6 +308,7 @@ namespace BookCollector.ViewModels.Library
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
             this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", AppStringResources.Both /* Default */);
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
             this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);

@@ -20,6 +20,7 @@ namespace BookCollector.Data
             string? languageOption,
             string? ratingOption,
             string? publishYearOption,
+            string? authorOption,
             string? searchString)
         {
             var filteredList = bookList;
@@ -43,6 +44,11 @@ namespace BookCollector.Data
             }
 
             filteredList = FilterBookPublishYear(filteredList, publishYearOption);
+
+            if (!string.IsNullOrEmpty(authorOption))
+            {
+                filteredList = FilterBookAuthor(filteredList, authorOption);
+            }
 
             return filteredList;
         }
@@ -281,6 +287,26 @@ namespace BookCollector.Data
             if (!ratingOption.Equals(AppStringResources.AllRatings))
             {
                 filterList = bookList.Where(x => x.Rating == int.Parse(ratingOption))
+                                     .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel> FilterBookAuthor(ObservableCollection<BookModel> bookList, string? authorOption)
+        {
+            var filterList = bookList;
+            var newFilteredList = new ObservableCollection<BookModel>();
+
+            if (!string.IsNullOrEmpty(authorOption) && authorOption.Equals(AppStringResources.NoAuthor))
+            {
+                filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString))
+                                     .ToObservableCollection();
+            }
+
+            if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
+            {
+                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
                                      .ToObservableCollection();
             }
 

@@ -29,6 +29,9 @@ namespace BookCollector.ViewModels.Genre
         public ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
+        public ObservableCollection<string>? bookAuthorList;
+
+        [ObservableProperty]
         public int totalBooksCount;
 
         [ObservableProperty]
@@ -44,6 +47,8 @@ namespace BookCollector.ViewModels.Genre
             this.InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{this.SelectedGenre.GenreName}")}";
             RefreshView = true;
         }
+
+        public string? BookAuthorOption { get; set; }
 
         public async Task SetList(bool showHiddenBooks)
         {
@@ -76,8 +81,11 @@ namespace BookCollector.ViewModels.Genre
 
                     if (this.FilteredBookList1 != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1.Count;
+                        this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
+                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
                         var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
                         var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
                         var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
@@ -89,7 +97,8 @@ namespace BookCollector.ViewModels.Genre
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                this.BookAuthorOption,
+                                this.SearchString);
 
                         await Task.WhenAll(filteredList);
 
@@ -127,11 +136,12 @@ namespace BookCollector.ViewModels.Genre
                             this.FilteredBookList2 = sortList.Result;
                         }
 
-                        await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears);
+                        await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors);
 
                         this.BookPublisherList = bookPublishers.Result;
                         this.BookLanguageList = bookLanguages.Result;
                         this.BookPublishYearList = bookPublishYears.Result;
+                        this.BookAuthorList = authors.Result;
                     }
 
                     this.SetIsBusyFalse();
@@ -155,7 +165,7 @@ namespace BookCollector.ViewModels.Genre
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
             {
@@ -173,7 +183,8 @@ namespace BookCollector.ViewModels.Genre
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                this.BookAuthorOption,
+                                this.SearchString);
                 }
 
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
@@ -248,6 +259,8 @@ namespace BookCollector.ViewModels.Genre
                 var popup = new FilterPopup();
                 var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View)
                 {
+                    AuthorVisible = true,
+                    AuthorOption = this.BookAuthorOption,
                     FavoriteVisible = this.ShowFavoriteBooks,
                     FavoriteOption = this.FavoriteBooksOption,
                     FormatVisible = true,
@@ -261,6 +274,7 @@ namespace BookCollector.ViewModels.Genre
                     RatingVisible = this.ShowBookRatings,
                     RatingOption = this.BookRatingOption,
                 };
+                viewModel.SetAuthorPicker(this.BookAuthorList);
                 viewModel.SetFavoritePicker();
                 viewModel.SetFormatPicker(this.BookFormats);
                 viewModel.SetPublisherPicker(this.BookPublisherList);
@@ -326,6 +340,7 @@ namespace BookCollector.ViewModels.Genre
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
             this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", AppStringResources.Both /* Default */);
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
             this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);

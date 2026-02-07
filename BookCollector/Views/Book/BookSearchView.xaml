@@ -28,8 +28,20 @@
                         <Label Text="{x:Static localization:AppStringResources.SearchForBookByISBNClickCorrectResultToAdd}"
                                HorizontalTextAlignment="Center"/>
 
-                        <Editor Text="{Binding Input}"
+                        <Editor Text="{Binding IsbnInput}"
                                 Placeholder="{x:Static localization:AppStringResources.EnterOnlyISBNs}"
+                                HorizontalTextAlignment="Center"
+                                AutoSize="TextChanges"
+                                Margin="10"/>
+
+                        <Editor Text="{Binding TitleInput}"
+                                Placeholder="{x:Static localization:AppStringResources.EnterBookTitle}"
+                                HorizontalTextAlignment="Center"
+                                AutoSize="TextChanges"
+                                Margin="10"/>
+
+                        <Editor Text="{Binding AuthorInput}"
+                                Placeholder="{x:Static localization:AppStringResources.EnterAuthorName}"
                                 HorizontalTextAlignment="Center"
                                 AutoSize="TextChanges"
                                 Margin="10"/>

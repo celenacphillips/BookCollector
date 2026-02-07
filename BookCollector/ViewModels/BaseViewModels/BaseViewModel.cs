@@ -42,7 +42,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public string infoText;
 
         [ObservableProperty]
-        public string? searchstring;
+        public string? searchString;
 
         internal static BookCollectorDatabase Database;
 

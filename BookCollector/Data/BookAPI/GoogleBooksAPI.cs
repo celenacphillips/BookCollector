@@ -4,12 +4,9 @@
 
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Maui.Controls;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace BookCollector.Data.BookAPI
 {
@@ -25,19 +22,35 @@ namespace BookCollector.Data.BookAPI
             configuration = config;
         }
 
-        public static async Task<(ObservableCollection<Item>?, int)> Search(string input)
+        public static async Task<(ObservableCollection<Item>?, int)> SearchIsbn(string input)
+        {
+            var queryString = $"isbn:{input}";
+            return await Search(queryString);
+        }
+
+        public static async Task<(ObservableCollection<Item>?, int)> SearchTitle(string input)
+        {
+            var queryString = $"intitle:{input}";
+            return await Search(queryString);
+        }
+
+        public static async Task<(ObservableCollection<Item>?, int)> SearchAuthorName(string input)
+        {
+            var queryString = $"inauthor:{input}";
+            return await Search(queryString);
+        }
+
+        public static async Task<(ObservableCollection<Item>?, int)> Search(string queryString)
         {
             var items = new ObservableCollection<Item>();
             var totalItemCount = 0;
 
+            HttpClient client = new ();
+
             var baseURI = configuration.GetRequiredSection("Settings").GetRequiredSection("BaseURI").Value;
             var apiKey = configuration.GetRequiredSection("Settings").GetRequiredSection("APIKey").Value;
 
-            HttpClient client = new ()
-            {
-                BaseAddress = new Uri(baseURI),
-            };
-            var endpoint = $"{client.BaseAddress}?key={apiKey}&q=isbn:{input}";
+            var endpoint = $"{baseURI}?key={apiKey}&q={queryString}";
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
@@ -69,9 +82,9 @@ namespace BookCollector.Data.BookAPI
                                 }
 
                                 items = [.. isbnResponse.items];
-                            }
 
-                            totalItemCount = isbnResponse.totalItems;
+                                totalItemCount = isbnResponse.items.Count;
+                            }
 
                             if (totalItemCount == 0)
                             {

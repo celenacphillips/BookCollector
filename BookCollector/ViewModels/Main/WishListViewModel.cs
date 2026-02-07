@@ -112,7 +112,7 @@ namespace BookCollector.ViewModels.Main
                                 this.BookAuthorOption,
                                 this.BookLocationOption,
                                 this.BookSeriesOption,
-                                this.Searchstring);
+                                this.SearchString);
 
                         await Task.WhenAll(filteredList);
 
@@ -179,7 +179,7 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredWishlistBookList2 != null && this.FilteredWishlistBookList1 != null)
             {
@@ -198,7 +198,7 @@ namespace BookCollector.ViewModels.Main
                                 this.BookAuthorOption,
                                 this.BookLocationOption,
                                 this.BookSeriesOption,
-                                this.Searchstring);
+                                this.SearchString);
                 }
 
                 this.FilteredBooksCount = this.FilteredWishlistBookList2 != null ? this.FilteredWishlistBookList2.Count : 0;
@@ -382,7 +382,7 @@ namespace BookCollector.ViewModels.Main
                     }
                     else
                     {
-                        text = $"{AppStringResources.BookTitle.Replace("Book Title", book.BookTitle)}";
+                        text = $"{AppStringResources.BookTitle_Replace.Replace("Book Title", book.BookTitle)}";
                     }
 
                     if (!string.IsNullOrEmpty(book.BookWhereToBuy))

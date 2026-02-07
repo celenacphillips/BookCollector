@@ -76,7 +76,7 @@ namespace BookCollector.ViewModels.Author
 
                     if (this.FilteredBookList1 != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1.Count;
+                        this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
                         var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
                         var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
@@ -89,7 +89,8 @@ namespace BookCollector.ViewModels.Author
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                null,
+                                this.SearchString);
 
                         await Task.WhenAll(filteredList);
 
@@ -155,7 +156,7 @@ namespace BookCollector.ViewModels.Author
         [RelayCommand]
         public async void BookSearchOnTitle(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
             {
@@ -173,7 +174,8 @@ namespace BookCollector.ViewModels.Author
                                 this.BookLanguageOption,
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
-                                this.Searchstring);
+                                null,
+                                this.SearchString);
                 }
 
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
