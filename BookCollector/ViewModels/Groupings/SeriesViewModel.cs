@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalSeriesCount = this.FilteredSeriesList1 != null ? this.FilteredSeriesList1.Count : 0;
 
-                        this.SearchOnSeries(this.Searchstring);
+                        this.SearchOnSeries(this.SearchString);
 
                         await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredSeriesList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -145,13 +145,13 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async void SearchOnSeries(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredSeriesList2 != null && this.FilteredSeriesList1 != null)
             {
-                if (!string.IsNullOrEmpty(this.Searchstring))
+                if (!string.IsNullOrEmpty(this.SearchString))
                 {
-                    this.FilteredSeriesList2 = this.FilteredSeriesList1.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.Searchstring.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredSeriesList2 = this.FilteredSeriesList1.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {

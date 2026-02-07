@@ -302,7 +302,7 @@ namespace BookCollector.ViewModels.WishListBook
                 }
                 else
                 {
-                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedWishlistBook.BookTitle)}";
+                    text = $"{AppStringResources.BookTitle_Replace.Replace("Book Title", this.SelectedWishlistBook.BookTitle)}";
                 }
 
                 if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookURL))

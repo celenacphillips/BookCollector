@@ -302,9 +302,11 @@
   </data>
   <data name="PartOfCollection" xml:space="preserve">
     <value>Part of blank Collection</value>
+    <comment>blank should not be translated.</comment>
   </data>
   <data name="PartofSeries" xml:space="preserve">
     <value>Part of blank</value>
+    <comment>blank should not be translated.</comment>
   </data>
   <data name="Of" xml:space="preserve">
     <value>Of</value>
@@ -380,9 +382,11 @@
   </data>
   <data name="Blank1OfBlank2ItemsBlank3Unread" xml:space="preserve">
     <value>Blank1 of Blank2 items (Blank3 unread)</value>
+    <comment>Blank1, Blank2, and Blank3 should not be translated.</comment>
   </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
+    <comment>Blank1 and Blank2 should not be translated.</comment>
   </data>
   <data name="ThereAreNoBooks" xml:space="preserve">
     <value>There are no books.</value>
@@ -461,6 +465,7 @@
   </data>
   <data name="BookNumberOfTotal" xml:space="preserve">
     <value>Book number of total</value>
+    <comment>number and total should not be translated.</comment>
   </data>
   <data name="UpNext_Question" xml:space="preserve">
     <value>Queue this book up next for reading?</value>
@@ -476,6 +481,7 @@
   </data>
   <data name="BookMainView_InfoText" xml:space="preserve">
     <value>You can view all the information related to 'book'. You can also tap on some of the data to copy.</value>
+    <comment>book should not be translated.</comment>
   </data>
   <data name="ToBeReadView_InfoText" xml:space="preserve">
     <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
@@ -487,7 +493,8 @@
     <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next.</value>
   </data>
   <data name="BookEditView_InfoText" xml:space="preserve">
-    <value>This is where you can add or edit data for book.</value>
+    <value>This is where you can add or edit data for 'book'.</value>
+    <comment>book should not be translated.</comment>
   </data>
   <data name="BookSearch" xml:space="preserve">
     <value>Book Search</value>
@@ -496,10 +503,10 @@
     <value>Total Items</value>
   </data>
   <data name="ScanBarcode" xml:space="preserve">
-    <value>Scan Barcode</value>
+    <value>Optional: Scan Barcode</value>
   </data>
   <data name="SearchForBookByISBNClickCorrectResultToAdd" xml:space="preserve">
-    <value>Search for book by ISBN. Tap the correct result to add it.</value>
+    <value>Search for book by ISBN, Book Title, or Author Name. Tap the correct result to add it.</value>
   </data>
   <data name="EnterOnlyISBNs" xml:space="preserve">
     <value>Enter only ISBNs</value>
@@ -641,21 +648,27 @@
   </data>
   <data name="CollectionMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have in 'collection'. You can click from here to add a new or existing book.</value>
+    <comment>collection should not be translated.</comment>
   </data>
   <data name="AuthorMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have for 'author'. You can click from here to add a new or existing book.</value>
+    <comment>author should not be translated.</comment>
   </data>
   <data name="GenreMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have in 'genre'. You can click from here to add a new or existing book.</value>
+    <comment>genre should not be translated.</comment>
   </data>
   <data name="SeriesMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have in 'series'. You can click from here to add a new or existing book.</value>
+    <comment>series should not be translated.</comment>
   </data>
   <data name="LocationMainView_InfoText" xml:space="preserve">
     <value>This is a list of books you have in 'location'. You can click from here to add a new or existing book.</value>
+    <comment>location should not be translated.</comment>
   </data>
   <data name="AreYouSureYouWantToDeleteItem_Question" xml:space="preserve">
     <value>Are you sure you want to delete item?</value>
+    <comment>item should not be translated.</comment>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
@@ -671,21 +684,26 @@
   </data>
   <data name="ItemWasDeleted" xml:space="preserve">
     <value>Item was deleted.</value>
+    <comment>Item should not be translated.</comment>
   </data>
   <data name="ItemDeleted" xml:space="preserve">
     <value>Item Deleted</value>
+    <comment>Item should not be translated.</comment>
   </data>
   <data name="AddBook" xml:space="preserve">
     <value>Add Book</value>
   </data>
   <data name="BookHasBeenAddedToGrouping" xml:space="preserve">
     <value>Book has been added to grouping.</value>
+    <comment>Book and grouping should not be translated.</comment>
   </data>
   <data name="AddBookToGrouping_Question" xml:space="preserve">
     <value>Add book to grouping?</value>
+    <comment>grouping should not be translated.</comment>
   </data>
   <data name="ExistingBooksView_InfoText" xml:space="preserve">
     <value>This is a list of books that aren't associated to 'grouping.' Click a book to add it.</value>
+    <comment>grouping should not be translated.</comment>
   </data>
   <data name="ShowHiddenCollections" xml:space="preserve">
     <value>Show Hidden Collections in lists</value>
@@ -770,6 +788,7 @@
   </data>
   <data name="Blank1ItemsBlank2Unread" xml:space="preserve">
     <value>Blank1 items (Blank2 unread)</value>
+    <comment>Blank1 and Blank2 should not be translated.</comment>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sort By</value>
@@ -818,6 +837,7 @@
   </data>
   <data name="AreYouSureYouWantToMoveBookToYourLibrary_Question" xml:space="preserve">
     <value>Are you sure you want to move book to your library?</value>
+    <comment>book should not be translated.</comment>
   </data>
   <data name="BookWasAddedToLibrary" xml:space="preserve">
     <value>Book was added to library and the wish list item was deleted.</value>
@@ -839,18 +859,23 @@
   </data>
   <data name="TopXCollections" xml:space="preserve">
     <value>Top x Collections</value>
+    <comment>x should not be translated.</comment>
   </data>
   <data name="TopXGenres" xml:space="preserve">
     <value>Top x Genres</value>
+    <comment>x should not be translated.</comment>
   </data>
   <data name="TopXSeries" xml:space="preserve">
     <value>Top x Series</value>
+    <comment>x should not be translated.</comment>
   </data>
   <data name="TopXAuthors" xml:space="preserve">
     <value>Top x Authors</value>
+    <comment>x should not be translated.</comment>
   </data>
   <data name="TopXLocations" xml:space="preserve">
     <value>Top x Locations</value>
+    <comment>x should not be translated.</comment>
   </data>
   <data name="ZeroStars" xml:space="preserve">
     <value>Zero Stars</value>
@@ -939,12 +964,15 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="Table_GettingItems" xml:space="preserve">
     <value>Table: Getting items...</value>
+    <comment>Table should not be translated.</comment>
   </data>
   <data name="ItemSkipped" xml:space="preserve">
     <value>Item Skipped.</value>
+    <comment>Item should not be translated.</comment>
   </data>
   <data name="Table_XRetrieved" xml:space="preserve">
     <value>Table: x retrieved...</value>
+    <comment>Table and x should not be translated.</comment>
   </data>
   <data name="BookGuid" xml:space="preserve">
     <value>Book Guid</value>
@@ -963,9 +991,11 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="Table_YExported" xml:space="preserve">
     <value>Table: y/z exported...</value>
+    <comment>Table, y, and z  should not be translated.</comment>
   </data>
   <data name="Table_XImported" xml:space="preserve">
     <value>Table: x/z imported...</value>
+    <comment>Table, x, and z should not be translated.</comment>
   </data>
   <data name="BookAuthors" xml:space="preserve">
     <value>Book Authors</value>
@@ -1026,6 +1056,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="Table_Waiting" xml:space="preserve">
     <value>Table: Waiting...</value>
+    <comment>Table should not be translated.</comment>
   </data>
   <data name="BookCoverFileName" xml:space="preserve">
     <value>Book Cover File Name</value>
@@ -1059,6 +1090,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="BookTitleByAuthorName" xml:space="preserve">
     <value>Book Title by Author Name</value>
+    <comment>Book Title and Author Name should not be translated.</comment>
   </data>
   <data name="EtAl" xml:space="preserve">
     <value>Et al.</value>
@@ -1072,6 +1104,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="ExistingBooks_Object" xml:space="preserve">
     <value>ExistingBooks_Object</value>
+    <comment>Object should not be translated.</comment>
   </data>
   <data name="MainSettings" xml:space="preserve">
     <value>Main Settings</value>
@@ -1111,9 +1144,11 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="UnableToOverwriteFile_PleaseDelete" xml:space="preserve">
     <value>Unable to overwrite file. Please delete filePath and try again.</value>
+    <comment>filePath should not be translated.</comment>
   </data>
   <data name="UnableToFindBook" xml:space="preserve">
     <value>Unable to find book with api.</value>
+    <comment>api should not be translated.</comment>
   </data>
   <data name="EnterBookTitle" xml:space="preserve">
     <value>Enter Book Title</value>
@@ -1195,6 +1230,7 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="ReadingData_InfoText" xml:space="preserve">
     <value>This is a running total of all the books and pages you have completed in the past number years. A book is considered completed in a year if the reading end date is in that year, and all the pages in the book are counted for that year.</value>
+    <comment>number should not be translated.</comment>
   </data>
   <data name="LoadingDataPleaseWait" xml:space="preserve">
     <value>Loading Data. Please Wait...</value>
@@ -1266,9 +1302,11 @@ Email us!</value>
   </data>
   <data name="BlankPages" xml:space="preserve">
     <value>Blank pages</value>
+    <comment>Blank should not be translated.</comment>
   </data>
   <data name="Blank1HoursBlank2Minutes" xml:space="preserve">
-    <value>Blank1 hours, Blank2 minutes</value>
+    <value>Blank1:Blank2</value>
+    <comment>Blank1 and Blank2 should not be translated.</comment>
   </data>
   <data name="TotalHours" xml:space="preserve">
     <value>Total Hours</value>
@@ -1311,6 +1349,7 @@ Email us!</value>
   </data>
   <data name="BlankHours" xml:space="preserve">
     <value>Blank hours</value>
+    <comment>Blank should not be translated.</comment>
   </data>
   <data name="EnterHours" xml:space="preserve">
     <value>Enter Hours</value>
@@ -1415,7 +1454,8 @@ Updated verbiage in app.</value>
   </data>
   <data name="FAQ_Answer1" xml:space="preserve">
     <value>Yes, you can add books using an ISBN.
-Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN. After that, you can search for the book using api.</value>
+Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN, Book Title, or Author's Name. After that, you can search for the book using api.</value>
+    <comment>api should not be translated.</comment>
   </data>
   <data name="FAQ_Answer2" xml:space="preserve">
     <value>You can create any of these options directly within the book and then select the one you want, or you can create them under the Groupings tab.
@@ -1423,6 +1463,7 @@ From the Groupings tab, you can add new or existing books directly to the group.
   </data>
   <data name="CouldNotAutomaticallyUploadCoverPhoto" xml:space="preserve">
     <value>Could not automatically upload the book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later.</value>
+    <comment>Book should not be translated.</comment>
   </data>
   <data name="Warning_" xml:space="preserve">
     <value>Warning!</value>
@@ -1432,5 +1473,12 @@ From the Groupings tab, you can add new or existing books directly to the group.
   </data>
   <data name="PleaseSelectTheImages" xml:space="preserve">
     <value>Please select the images you would like to automatically upload.</value>
+  </data>
+  <data name="EnterAuthorName" xml:space="preserve">
+    <value>Enter Author Name</value>
+  </data>
+  <data name="BookTitle_Replace" xml:space="preserve">
+    <value>Book Title</value>
+    <comment>Book Title should not be translated.</comment>
   </data>
 </root>

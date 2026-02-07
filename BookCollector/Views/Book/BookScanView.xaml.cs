@@ -46,7 +46,7 @@ public partial class BookScanView : ContentPage
     {
         if (this.ReturnViewModel != null)
         {
-            this.ReturnViewModel.Input = this.Inputstring;
+            this.ReturnViewModel.IsbnInput = this.Inputstring;
             await this.ReturnViewModel.Search();
         }
     }

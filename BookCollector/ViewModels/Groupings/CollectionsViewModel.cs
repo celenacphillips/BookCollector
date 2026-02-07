@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalCollectionsCount = this.FilteredCollectionList1 != null ? this.FilteredCollectionList1.Count : 0;
 
-                        this.SearchOnCollection(this.Searchstring);
+                        this.SearchOnCollection(this.SearchString);
 
                         await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -145,7 +145,7 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async void SearchOnCollection(string? input)
         {
-            this.Searchstring = input;
+            this.SearchString = input;
 
             if (this.FilteredCollectionList2 != null && this.FilteredCollectionList1 != null)
             {

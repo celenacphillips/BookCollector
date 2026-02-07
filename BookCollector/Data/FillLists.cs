@@ -160,7 +160,8 @@ namespace BookCollector.Data
 
         public static async Task<ObservableCollection<string>> GetAllAuthorsInBookList(ObservableCollection<BookModel> bookList)
         {
-            var authorList = new ObservableCollection<string>();
+            var authorListNames = new ObservableCollection<string>();
+            var authorList = new ObservableCollection<AuthorModel>();
 
             foreach (var book in bookList)
             {
@@ -170,15 +171,24 @@ namespace BookCollector.Data
 
                     foreach (var author in list)
                     {
-                        if (!authorList.Any(x => x.Equals(author)))
-                        {
-                            authorList.Add(author.FullName);
-                        }
+                        authorList.Add(author);
                     }
                 }
             }
 
-            return authorList;
+            authorList = authorList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).ToObservableCollection();
+
+            foreach (var author in authorList)
+            {
+                if (!authorListNames.Any(x => x.Equals(author.ReverseFullName)))
+                {
+                    authorListNames.Add(author.ReverseFullName);
+                }
+            }
+
+            authorListNames = authorListNames.Distinct().ToObservableCollection();
+
+            return authorListNames;
         }
 
         public static async Task<ObservableCollection<string>> GetAllAuthorsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)

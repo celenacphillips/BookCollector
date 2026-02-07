@@ -236,7 +236,7 @@ namespace BookCollector.ViewModels.Book
                 }
                 else
                 {
-                    text = $"{AppStringResources.BookTitle.Replace("Book Title", this.SelectedBook.BookTitle)}";
+                    text = $"{AppStringResources.BookTitle_Replace.Replace("Book Title", this.SelectedBook.BookTitle)}";
                 }
 
                 if (!string.IsNullOrEmpty(this.SelectedBook.BookURL))

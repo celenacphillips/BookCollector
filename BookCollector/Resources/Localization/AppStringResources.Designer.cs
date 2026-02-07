@@ -538,7 +538,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blank1 hours, Blank2 minutes.
+        ///   Looks up a localized string similar to Blank1:Blank2.
         /// </summary>
         internal static string Blank1HoursBlank2Minutes {
             get {
@@ -728,7 +728,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is where you can add or edit data for book..
+        ///   Looks up a localized string similar to This is where you can add or edit data for &apos;book&apos;..
         /// </summary>
         internal static string BookEditView_InfoText {
             get {
@@ -1030,6 +1030,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookTitle {
             get {
                 return ResourceManager.GetString("BookTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Title.
+        /// </summary>
+        internal static string BookTitle_Replace {
+            get {
+                return ResourceManager.GetString("BookTitle_Replace", resourceCulture);
             }
         }
         
@@ -1525,6 +1534,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Author Name.
+        /// </summary>
+        internal static string EnterAuthorName {
+            get {
+                return ResourceManager.GetString("EnterAuthorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter Book Comments.
         /// </summary>
         internal static string EnterBookComments {
@@ -1977,7 +1995,7 @@ namespace BookCollector.Resources.Localization {
         
         /// <summary>
         ///   Looks up a localized string similar to Yes, you can add books using an ISBN.
-        ///Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN. After that, you can search for the book using api..
+        ///Just tap to add a new book, then select the search icon. You can scan the book’s barcode or manually type in the ISBN, Book Title, or Author&apos;s Name. After that, you can search for the book using api..
         /// </summary>
         internal static string FAQ_Answer1 {
             get {
@@ -3042,7 +3060,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scan Barcode.
+        ///   Looks up a localized string similar to Optional: Scan Barcode.
         /// </summary>
         internal static string ScanBarcode {
             get {
@@ -3078,7 +3096,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search for book by ISBN. Tap the correct result to add it..
+        ///   Looks up a localized string similar to Search for book by ISBN, Book Title, or Author Name. Tap the correct result to add it..
         /// </summary>
         internal static string SearchForBookByISBNClickCorrectResultToAdd {
             get {
