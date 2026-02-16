@@ -29,149 +29,166 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
+                <Label Text="{x:Static localization:AppStringResources.BookSettings}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="0"
+                       HorizontalOptions="Center"
+                       Style="{DynamicResource Header}"
+                       Grid.ColumnSpan="2"/>
 
                 <!-- Comments -->
                 <Label Text="{x:Static localization:AppStringResources.ShowComments}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="0" Grid.Column="0"/>
+                       Grid.Row="1" Grid.Column="0"/>
                 <Switch IsToggled="{Binding CommentsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnCommentsToggled"
-                        Grid.Row="0" Grid.Column="1"/>
+                        Grid.Row="1" Grid.Column="1"/>
                 <!-- Comments -->
 
                 <!-- Chapters -->
                 <Label Text="{x:Static localization:AppStringResources.ShowChapters}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="1" Grid.Column="0"/>
+                       Grid.Row="2" Grid.Column="0"/>
                 <Switch IsToggled="{Binding ChaptersOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnChaptersToggled"
-                        Grid.Row="1" Grid.Column="1"/>
+                        Grid.Row="2" Grid.Column="1"/>
                 <!-- Chapters -->
 
                 <!-- Favorites -->
                 <Label Text="{x:Static localization:AppStringResources.ShowFavorites}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="2" Grid.Column="0"/>
+                       Grid.Row="3" Grid.Column="0"/>
                 <Switch IsToggled="{Binding FavoritesOn, Mode=TwoWay}"
                         IsEnabled="True"
-                        Margin="0,-5"
+                        Margin="0,5,0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnFavoritesToggled"
-                        Grid.Row="2" Grid.Column="1"/>
+                        Grid.Row="3" Grid.Column="1"/>
                 <!-- Favorites -->
 
                 <!-- Ratings -->
                 <Label Text="{x:Static localization:AppStringResources.ShowRatings}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="3" Grid.Column="0"/>
+                       Grid.Row="4" Grid.Column="0"/>
                 <Switch IsToggled="{Binding RatingsOn, Mode=TwoWay}"
                         IsEnabled="True" 
-                        Margin="0,-5"
+                        Margin="0,5,0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnRatingsToggled"
-                        Grid.Row="3" Grid.Column="1"/>
+                        Grid.Row="4" Grid.Column="1"/>
                 <!-- Ratings -->
+
+                <Label Text="{x:Static localization:AppStringResources.ListSettings}"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="5" Grid.Column="0"
+                       HorizontalOptions="Center"
+                       Style="{DynamicResource Header}"
+                       Margin="10,5"
+                       Grid.ColumnSpan="2"/>
 
                 <!-- Hidden Books -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenBooks}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="4" Grid.Column="0"/>
+                       Grid.Row="6" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenBooksOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenBooksToggled"
-                        Grid.Row="4" Grid.Column="1"/>
+                        Grid.Row="6" Grid.Column="1"/>
                 <!-- Hidden Books -->
 
                 <!-- Hidden Collections -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenCollections}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="5" Grid.Column="0"/>
+                       Grid.Row="7" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenCollectionsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenCollectionsToggled"
-                        Grid.Row="5" Grid.Column="1"/>
+                        Grid.Row="7" Grid.Column="1"/>
                 <!-- Hidden Collections -->
 
                 <!-- Hidden Genres -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenGenres}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="6" Grid.Column="0"/>
+                       Grid.Row="8" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenGenresOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenGenresToggled"
-                        Grid.Row="6" Grid.Column="1"/>
+                        Grid.Row="8" Grid.Column="1"/>
                 <!-- Hidden Genres -->
 
                 <!-- Hidden Series -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenSeries}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="7" Grid.Column="0"/>
+                       Grid.Row="9" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenSeriesOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenSeriesToggled"
-                        Grid.Row="7" Grid.Column="1"/>
+                        Grid.Row="9" Grid.Column="1"/>
                 <!-- Hidden Series -->
 
                 <!-- Hidden Authors -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenAuthors}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="8" Grid.Column="0"/>
+                       Grid.Row="10" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenAuthorsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenAuthorsToggled"
-                        Grid.Row="8" Grid.Column="1"/>
+                        Grid.Row="10" Grid.Column="1"/>
                 <!-- Hidden Authors -->
 
                 <!-- Hidden Locations -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenLocations}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="9" Grid.Column="0"/>
+                       Grid.Row="11" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenLocationsOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenLocationsToggled"
-                        Grid.Row="9" Grid.Column="1"/>
+                        Grid.Row="11" Grid.Column="1"/>
                 <!-- Hidden Locations -->
 
                 <!-- Hidden Wishlist Books -->
                 <Label Text="{x:Static localization:AppStringResources.ShowHiddenWishlistBooks}"
                        VerticalTextAlignment="Center"
-                       Grid.Row="10" Grid.Column="0"/>
+                       Grid.Row="12" Grid.Column="0"/>
                 <Switch IsToggled="{Binding HiddenWishlistBooksOn, Mode=TwoWay}"
                         IsEnabled="True"
                         Margin="0,-5"
                         HorizontalOptions="Center"
                         VerticalOptions="Start"
                         Toggled="OnHiddenWishlistBooksToggled"
-                        Grid.Row="10" Grid.Column="1"/>
+                        Grid.Row="12" Grid.Column="1"/>
                 <!-- Hidden Wishlist Books -->
 
             </Grid>

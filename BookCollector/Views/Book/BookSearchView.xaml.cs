@@ -53,8 +53,9 @@ public partial class BookSearchView : ContentPage
 
             // Measure the components above the CollectionView
             var headerHeight = this.header.Height;
+            var formHeight = -this.form.Height;
 
-            var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, 0);
+            var usableHeight = BaseViewModel.SetCollectionViewHeight(this.rootLayout.Height, headerHeight, formHeight);
 
             if (usableHeight > 0)
             {

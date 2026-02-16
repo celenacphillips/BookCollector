@@ -145,10 +145,10 @@
     <value>Show Chapters in books</value>
   </data>
   <data name="ShowFavorites" xml:space="preserve">
-    <value>Show Favorite option in books</value>
+    <value>Show Favorite option in books, statistics, and filters</value>
   </data>
   <data name="ShowRatings" xml:space="preserve">
-    <value>Show Rating option in books</value>
+    <value>Show Rating option in books, statistics, and filters</value>
   </data>
   <data name="ShowHiddenBooks" xml:space="preserve">
     <value>Show Hidden Books in lists</value>
@@ -1480,5 +1480,20 @@ From the Groupings tab, you can add new or existing books directly to the group.
   <data name="BookTitle_Replace" xml:space="preserve">
     <value>Book Title</value>
     <comment>Book Title should not be translated.</comment>
+  </data>
+  <data name="AuthorName" xml:space="preserve">
+    <value>Author Name</value>
+  </data>
+  <data name="BookISBN" xml:space="preserve">
+    <value>Book ISBN</value>
+  </data>
+  <data name="SearchForm" xml:space="preserve">
+    <value>Search Form</value>
+  </data>
+  <data name="BookSettings" xml:space="preserve">
+    <value>Book Settings</value>
+  </data>
+  <data name="ListSettings" xml:space="preserve">
+    <value>List Settings</value>
   </data>
 </root>

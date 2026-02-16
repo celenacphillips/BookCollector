@@ -30,13 +30,45 @@ namespace BookCollector.Data.BookAPI
 
         public static async Task<(ObservableCollection<Item>?, int)> SearchTitle(string input)
         {
-            var queryString = $"intitle:{input}";
+            var queryString = $"intitle:\"{input}\"";
             return await Search(queryString);
         }
 
         public static async Task<(ObservableCollection<Item>?, int)> SearchAuthorName(string input)
         {
-            var queryString = $"inauthor:{input}";
+            var queryString = $"inauthor:\"{input}\"";
+            return await Search(queryString);
+        }
+
+        public static async Task<(ObservableCollection<Item>?, int)> CombinedSearch(string? isbn, string? title, string? name)
+        {
+            var queryString = string.Empty;
+
+            if (!string.IsNullOrEmpty(isbn))
+            {
+                queryString += $"isbn:{isbn}";
+            }
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                if (!string.IsNullOrEmpty(queryString))
+                {
+                    queryString += "+";
+                }
+
+                queryString += $"intitle:\"{title}\"";
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (!string.IsNullOrEmpty(queryString))
+                {
+                    queryString += "+";
+                }
+
+                queryString += $"inauthor:\"{name}\"";
+            }
+
             return await Search(queryString);
         }
 
@@ -50,7 +82,7 @@ namespace BookCollector.Data.BookAPI
             var baseURI = configuration.GetRequiredSection("Settings").GetRequiredSection("BaseURI").Value;
             var apiKey = configuration.GetRequiredSection("Settings").GetRequiredSection("APIKey").Value;
 
-            var endpoint = $"{baseURI}?key={apiKey}&q={queryString}";
+            var endpoint = $"{baseURI}?key={apiKey}&q={queryString}&maxResults=40";
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
