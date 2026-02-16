@@ -946,7 +946,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private string BookCoverFileName(string bookTitle, string extension)
+        private string BookCoverFileName(string bookTitle, string format, string extension)
         {
             string output = bookTitle.Replace(" ", "_")
                                      .Replace("<", "_")
@@ -959,7 +959,7 @@ namespace BookCollector.ViewModels.Main
                                      .Replace("*", "_")
                                      .Replace("/", "_");
 
-            return $"{output}{extension}";
+            return $"{output}-{format}{extension}";
         }
 
         /*********************** Table Methods ***********************/
@@ -1073,7 +1073,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     var byteArray = DownloadImage(book.BookCoverUrl);
                                     var fi = new FileInfo(book.BookCoverUrl);
-                                    var fileName = this.BookCoverFileName(book.BookTitle, fi.Extension);
+                                    var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
                                     var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                     File.WriteAllBytes(exportLocation, byteArray);
                                 }
@@ -1356,7 +1356,7 @@ namespace BookCollector.ViewModels.Main
                                 var byteArray = DownloadImage(book.BookCoverUrl);
 
                                 var fi = new FileInfo(book.BookCoverUrl);
-                                var fileName = this.BookCoverFileName(book.BookTitle, fi.Extension);
+                                var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
                                 var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                 File.WriteAllBytes(exportLocation, byteArray);
                             }

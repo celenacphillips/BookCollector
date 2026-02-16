@@ -15,7 +15,6 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Configuration;
 using System.Collections.ObjectModel;
 
 namespace BookCollector.ViewModels.Book
@@ -49,6 +48,15 @@ namespace BookCollector.ViewModels.Book
         [ObservableProperty]
         public WishlistBookModel? selectedWishListBook;
 
+        [ObservableProperty]
+        public bool searchFormSectionValue;
+
+        [ObservableProperty]
+        public bool searchFormOpen;
+
+        [ObservableProperty]
+        public bool searchFormNotOpen;
+
         public BookSearchViewModel(string? inputIsbn, string? inputTitle, string? inputAuthorName, ContentPage view)
         {
             this.View = view;
@@ -58,6 +66,9 @@ namespace BookCollector.ViewModels.Book
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
             this.CollectionViewHeight = this.DeviceHeight;
             this.ShowCollectionViewFooter = false;
+
+            this.SearchFormSectionValue = false;
+            this.SearchFormChanged();
         }
 
         public object? PreviousViewModel { get; set; }
@@ -71,9 +82,18 @@ namespace BookCollector.ViewModels.Book
         }
 
         [RelayCommand]
+        public void SearchFormChanged()
+        {
+            this.SearchFormOpen = this.SearchFormSectionValue;
+            this.SearchFormNotOpen = !this.SearchFormSectionValue;
+        }
+
+        [RelayCommand]
         public async Task Search()
         {
             this.SetIsBusyTrue();
+
+            this.SearchFormSectionValue = false;
 
             this.TotalItems = 0;
             this.IsbnItems = null;
@@ -92,29 +112,9 @@ namespace BookCollector.ViewModels.Book
                     List<Item>? items = new List<Item>();
                     int totalItems = 0;
 
-                    if (!string.IsNullOrEmpty(this.IsbnInput))
-                    {
-                        this.IsbnInput = this.IsbnInput.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
-                        var (isbnItems, totalIsbnItems) = await GoogleBooksAPI.SearchIsbn(this.IsbnInput);
-                        items.AddRange(isbnItems);
-                        totalItems += totalIsbnItems;
-                    }
-
-                    if (!string.IsNullOrEmpty(this.TitleInput))
-                    {
-                        var input = this.TitleInput.Trim().Replace(" ", "+");
-                        var (titleItems, totalTitleItems) = await GoogleBooksAPI.SearchTitle(input);
-                        items.AddRange(titleItems);
-                        totalItems += totalTitleItems;
-                    }
-
-                    if (!string.IsNullOrEmpty(this.AuthorInput))
-                    {
-                        var input = this.AuthorInput.Trim().Replace(" ", "+");
-                        var (authorItems, totalAuthorItems) = await GoogleBooksAPI.SearchAuthorName(input);
-                        items.AddRange(authorItems);
-                        totalItems += totalAuthorItems;
-                    }
+                    var (combinedItems, totalCombinedItems) = await GoogleBooksAPI.CombinedSearch(this.IsbnInput, this.TitleInput, this.AuthorInput);
+                    items.AddRange(combinedItems);
+                    totalItems += totalCombinedItems;
 
                     this.SetIsBusyFalse();
 
@@ -124,7 +124,7 @@ namespace BookCollector.ViewModels.Book
                     {
                         await DisplayMessage(AppStringResources.UnableToFindBook.Replace("api", "Google Books API"), null);
                         this.SetIsBusyFalse();
-                        this.ShowAddISBN = true;
+                        this.ShowAddISBN = !string.IsNullOrEmpty(this.IsbnInput);
                     }
                     else
                     {
