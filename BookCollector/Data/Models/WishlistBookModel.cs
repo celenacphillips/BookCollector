@@ -2,21 +2,27 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Database;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Globalization;
-
 namespace BookCollector.Data.Models
 {
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using BookCollector.Data.Database;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+
     public partial class WishlistBookModel : WishlistBookDatabaseModel, ICloneable
     {
         [ObservableProperty]
         public ImageSource? bookCover;
+
+        [ObservableProperty]
+        public double? bookTotalTime;
+
+        [ObservableProperty]
+        public TimeSpan totalTimeSpan;
 
         internal static BookCollectorDatabase Database;
 
@@ -85,12 +91,6 @@ namespace BookCollector.Data.Models
                 AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
                 AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString().PadLeft(2, '0')).Replace("Blank2", this.BookMinutesTotal.ToString().PadLeft(2, '0'));
         }
-
-        [ObservableProperty]
-        public double? bookTotalTime;
-
-        [ObservableProperty]
-        public TimeSpan totalTimeSpan;
 
         public object Clone()
         {
@@ -161,7 +161,7 @@ namespace BookCollector.Data.Models
                     {
                         if (authorList.Count > 1)
                         {
-                            this.AuthorListString = this.AuthorListString[..(this.AuthorListString.LastIndexOf("; ") - 1)];
+                            this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
                         }
                     }
                 }
@@ -189,7 +189,7 @@ namespace BookCollector.Data.Models
             this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
         }
 
-        public TimeSpan SetTime(int hour, int minute)
+        public static TimeSpan SetTime(int hour, int minute)
         {
             return new TimeSpan(hour, minute, 0);
         }

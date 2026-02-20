@@ -2,10 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace BookCollector.Data.Models
 {
+    using CommunityToolkit.Mvvm.ComponentModel;
+
     public partial class ReadingData : ObservableObject
     {
         [ObservableProperty]

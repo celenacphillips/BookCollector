@@ -1,26 +1,26 @@
 ﻿// <copyright file="BaseViewModel.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
-#if ANDROID
-using AndroidX.Core.View;
-using Android.OS;
-#endif
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.Database;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
+#if ANDROID
+    using Android.OS;
+    using AndroidX.Core.View;
+#endif
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data.Database;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Main;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Alerts;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class BaseViewModel : ObservableObject
     {
         [ObservableProperty]
@@ -191,7 +191,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     string[] name = authorName.Split(",");
 
-                    AuthorModel author1 = new ()
+                    AuthorModel author1 = new()
                     {
                         FirstName = name[1].Trim(),
                         LastName = name[0].Trim(),

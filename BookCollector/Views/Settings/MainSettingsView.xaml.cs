@@ -2,24 +2,36 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
+namespace BookCollector.Views.Settings;
+
 using BookCollector.Data.Database;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Views.Controls;
 using BookCollector.Views.Popups;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Storage;
 
-namespace BookCollector.Views.Settings;
-
+/// <summary>
+/// MainSettingsView class.
+/// </summary>
 public partial class MainSettingsView : ContentPage
 {
-    internal static BookCollectorDatabase Database;
+    private static BookCollectorDatabase database;
 
+    private string selectedAppThemeField;
+
+    private string selectedColorField;
+
+    private string selectedLanguageField;
+
+    private string selectedCurrencyField;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainSettingsView"/> class.
+    /// </summary>
     public MainSettingsView()
     {
-        Database = new BookCollectorDatabase();
+        database = new BookCollectorDatabase();
 
         this.AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
         this.SelectedAppTheme = Application.Current?.UserAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
@@ -51,10 +63,14 @@ public partial class MainSettingsView : ContentPage
         this.BindingContext = this;
     }
 
+    /// <summary>
+    /// Gets or sets the list of app themes.
+    /// </summary>
     public List<string> AppThemeList { get; set; }
 
-    private string selectedAppThemeField;
-
+    /// <summary>
+    /// Gets or sets the selected app theme.
+    /// </summary>
     public string SelectedAppTheme
     {
         get => this.selectedAppThemeField;
@@ -68,10 +84,14 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
+    /// <summary>
+    /// Gets or sets the list of colors.
+    /// </summary>
     public List<string> ColorList { get; set; }
 
-    private string selectedColorField;
-
+    /// <summary>
+    /// Gets or sets the selected color.
+    /// </summary>
     public string SelectedColor
     {
         get => this.selectedColorField;
@@ -85,10 +105,14 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
+    /// <summary>
+    /// Gets or sets the list of languages.
+    /// </summary>
     public List<string> LanguageList { get; set; }
 
-    private string selectedLanguageField;
-
+    /// <summary>
+    /// Gets or sets the selected language.
+    /// </summary>
     public string SelectedLanguage
     {
         get => this.selectedLanguageField;
@@ -102,10 +126,14 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
+    /// <summary>
+    /// Gets or sets the list of currencies.
+    /// </summary>
     public List<string> CurrencyList { get; set; }
 
-    private string selectedCurrencyField;
-
+    /// <summary>
+    /// Gets or sets the selected currency.
+    /// </summary>
     public string SelectedCurrency
     {
         get => this.selectedCurrencyField;
@@ -119,9 +147,12 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
+    /// <summary>
+    /// Gets or sets the selected export location.
+    /// </summary>
     public string SelectedExportLocation { get; set; }
 
-    public async void OnExportLocationButtonClicked(object sender, EventArgs e)
+    private async void OnExportLocationButtonClicked(object sender, EventArgs e)
     {
         var result = await FolderPicker.Default.PickAsync(CancellationToken.None);
 
@@ -135,7 +166,7 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
-    public async void OnDeleteButtonClicked(object sender, EventArgs e)
+    private async void OnDeleteButtonClicked(object sender, EventArgs e)
     {
         var inputTitle = AppStringResources.DeleteAllData_Question;
 
@@ -149,7 +180,7 @@ public partial class MainSettingsView : ContentPage
 
         if (action)
         {
-            await Database.DropAllTables();
+            await database.DropAllTables();
             BaseViewModel.ClearAllLists();
 
             await Shell.Current.DisplayAlertAsync(AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, AppStringResources.OK);
@@ -166,7 +197,7 @@ public partial class MainSettingsView : ContentPage
         {
             var filterablePopup = new FilterableListPopup(
                 AppStringResources.SelectYourAppTheme,
-                this.AppThemeList.ToList(),
+                [.. this.AppThemeList],
                 this.SelectedAppTheme,
                 false);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);
@@ -189,7 +220,7 @@ public partial class MainSettingsView : ContentPage
         {
             var filterablePopup = new FilterableListPopup(
                 AppStringResources.SelectYourAppColor,
-                this.ColorList.ToList(),
+                [.. this.ColorList],
                 this.SelectedColor,
                 false);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);
@@ -211,9 +242,9 @@ public partial class MainSettingsView : ContentPage
 
                 Data.Colors.SetColors(hexCode);
 
-//#if ANDROID
-//                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
-//#endif
+                //#if ANDROID
+                //                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(hexCode));
+                //#endif
 
                 Preferences.Set("AppColor", hexCode);
             }
@@ -229,7 +260,7 @@ public partial class MainSettingsView : ContentPage
         {
             var filterablePopup = new FilterableListPopup(
                 AppStringResources.SelectYourAppLanguage,
-                this.LanguageList.ToList(),
+                [.. this.LanguageList],
                 this.SelectedLanguage,
                 true);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);
@@ -251,7 +282,7 @@ public partial class MainSettingsView : ContentPage
         {
             var filterablePopup = new FilterableListPopup(
                 AppStringResources.SelectYourAppCurrency,
-                this.CurrencyList.ToList(),
+                [.. this.CurrencyList],
                 this.SelectedCurrency,
                 true);
             var result = await this.ShowPopupAsync<string?>(filterablePopup);

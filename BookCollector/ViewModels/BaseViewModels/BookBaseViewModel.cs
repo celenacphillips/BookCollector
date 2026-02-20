@@ -2,29 +2,29 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.Collection;
-using BookCollector.ViewModels.Genre;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Location;
-using BookCollector.ViewModels.Series;
-using BookCollector.Views.Book;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-
 namespace BookCollector.ViewModels.BaseViewModels
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.Author;
+    using BookCollector.ViewModels.Collection;
+    using BookCollector.ViewModels.Genre;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Location;
+    using BookCollector.ViewModels.Series;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class BookBaseViewModel : BaseViewModel
     {
+        [ObservableProperty]
+        public static ObservableCollection<BookModel>? filteredBookList2;
+
         [ObservableProperty]
         public static ObservableCollection<string>? bookFormats;
 
@@ -198,10 +198,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                         if (!skip)
                         {
-                            if (author == null)
-                            {
-                                author = new AuthorModel();
-                            }
+                            author ??= new AuthorModel();
 
                             author.FirstName = item.FirstName;
                             author.LastName = item.LastName;
@@ -283,7 +280,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task BookCoverPopup()
         {
-            this.View.ShowPopup(new BookCoverPopup(this.BookCover));
+            this.View.ShowPopup(new BookCoverPopup(this.BookCover!));
         }
 
         public static async Task AddToStaticList(BookModel book, object? previousViewModel = null)
@@ -313,9 +310,9 @@ namespace BookCollector.ViewModels.BaseViewModels
                 ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList2);
             }
 
-            if ((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
-                ((book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0) &&
-                ReadViewModel.fullBookList != null))
+            if (((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
+                (book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0)) &&
+                ReadViewModel.fullBookList != null)
             {
                 ReadViewModel.RefreshView = await AddBookToStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList2);
                 ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList2);
@@ -352,11 +349,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                             collectionViewModel.RefreshView = await AddBookToStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList2);
                         }
 
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
 
@@ -401,11 +398,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                             genreViewModel.RefreshView = await AddBookToStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList2);
                         }
 
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
 
@@ -450,11 +447,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                             seriesViewModel.RefreshView = await AddBookToStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList2);
                         }
 
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
 
@@ -503,11 +500,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                                 authorViewModel.RefreshView = await AddBookToStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList2);
                             }
 
-                            await Task.WhenAll(new Task[]
-                            {
+                            await Task.WhenAll(
+                            [
                                 selected.SetTotalBooks(true),
                                 selected.SetTotalCostOfBooks(true),
-                            });
+                            ]);
                         }
                     }
                 }
@@ -553,11 +550,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                             locationViewModel.RefreshView = await AddBookToStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList2);
                         }
 
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
 
@@ -579,60 +576,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             LocationsViewModel.RefreshView = true;
         }
 
-        private static async Task<bool> AddBookToStaticList(BookModel book, ObservableCollection<BookModel> bookList, ObservableCollection<BookModel>? filteredBookList)
-        {
-            var refresh = false;
-
-            await Task.WhenAll(new Task[]
-            {
-                book.SetReadingProgress(),
-                //book.SetAuthorListString(),
-                book.SetCoverDisplay(),
-            });
-
-            try
-            {
-                var oldBook = bookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
-
-                if (oldBook != null)
-                {
-                    var index = bookList.IndexOf(oldBook);
-                    bookList.Remove(oldBook);
-                    bookList.Insert(index, book);
-                    refresh = true;
-                }
-                else
-                {
-                    bookList.Add(book);
-                    refresh = true;
-                }
-
-                if (filteredBookList != null)
-                {
-                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
-
-                    if (filteredBook != null)
-                    {
-                        var index = filteredBookList.IndexOf(filteredBook);
-                        filteredBookList.Remove(filteredBook);
-                        filteredBookList.Insert(index, book);
-                        refresh = true;
-                    }
-                    else
-                    {
-                        filteredBookList.Add(book);
-                        refresh = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-
-            return refresh;
-        }
-
-        public async Task RemoveFromStaticList(BookModel book)
+        public static async Task RemoveFromStaticList(BookModel book)
         {
             if (AllBooksViewModel.fullBookList != null)
             {
@@ -670,11 +614,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                     if (selected != null)
                     {
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
             }
@@ -687,11 +631,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                     if (selected != null)
                     {
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
             }
@@ -704,11 +648,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                     if (selected != null)
                     {
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
             }
@@ -725,11 +669,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                         if (selected != null)
                         {
-                            await Task.WhenAll(new Task[]
-                            {
+                            await Task.WhenAll(
+                            [
                                 selected.SetTotalBooks(true),
                                 selected.SetTotalCostOfBooks(true),
-                            });
+                            ]);
                         }
                     }
                 }
@@ -743,11 +687,11 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                     if (selected != null)
                     {
-                        await Task.WhenAll(new Task[]
-                        {
+                        await Task.WhenAll(
+                        [
                             selected.SetTotalBooks(true),
                             selected.SetTotalCostOfBooks(true),
-                        });
+                        ]);
                     }
                 }
             }
@@ -777,6 +721,59 @@ namespace BookCollector.ViewModels.BaseViewModels
                     if (filteredBook != null)
                     {
                         filteredBookList.Remove(filteredBook);
+                        refresh = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
+        }
+
+        private static async Task<bool> AddBookToStaticList(BookModel book, ObservableCollection<BookModel> bookList, ObservableCollection<BookModel>? filteredBookList)
+        {
+            var refresh = false;
+
+            await Task.WhenAll(
+            [
+                book.SetReadingProgress(),
+                //book.SetAuthorListString(),
+                book.SetCoverDisplay(),
+            ]);
+
+            try
+            {
+                var oldBook = bookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                if (oldBook != null)
+                {
+                    var index = bookList.IndexOf(oldBook);
+                    bookList.Remove(oldBook);
+                    bookList.Insert(index, book);
+                    refresh = true;
+                }
+                else
+                {
+                    bookList.Add(book);
+                    refresh = true;
+                }
+
+                if (filteredBookList != null)
+                {
+                    var filteredBook = filteredBookList.FirstOrDefault(x => x.BookGuid == book.BookGuid);
+
+                    if (filteredBook != null)
+                    {
+                        var index = filteredBookList.IndexOf(filteredBook);
+                        filteredBookList.Remove(filteredBook);
+                        filteredBookList.Insert(index, book);
+                        refresh = true;
+                    }
+                    else
+                    {
+                        filteredBookList.Add(book);
                         refresh = true;
                     }
                 }

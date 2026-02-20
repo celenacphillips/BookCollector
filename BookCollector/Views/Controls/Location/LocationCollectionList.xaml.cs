@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.Location;
 
+/// <summary>
+/// LocationCollectionList class.
+/// </summary>
 public partial class LocationCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocationCollectionList"/> class.
+    /// </summary>
     public LocationCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

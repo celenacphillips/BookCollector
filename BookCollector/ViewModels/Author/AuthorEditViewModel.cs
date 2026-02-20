@@ -2,19 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Author;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Author
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Author;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class AuthorEditViewModel : AuthorBaseViewModel
     {
         [ObservableProperty]
@@ -77,7 +76,7 @@ namespace BookCollector.ViewModels.Author
 #endif
 
                     this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
-                    AddToStaticList(this.EditedAuthor);
+                    await AddToStaticList(this.EditedAuthor);
 
                     if (this.InsertMainViewBefore)
                     {

@@ -2,13 +2,13 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.ViewModels.Popups
 {
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Maui.Views;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class SortPopupViewModel : BaseViewModel
     {
         [ObservableProperty]

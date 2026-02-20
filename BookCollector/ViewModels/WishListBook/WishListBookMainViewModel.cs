@@ -2,24 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using BookCollector.ViewModels.Series;
-using BookCollector.Views.WishListBook;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.WishListBook
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.Author;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Main;
+    using BookCollector.ViewModels.Series;
+    using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class WishListBookMainViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -52,7 +50,7 @@ namespace BookCollector.ViewModels.WishListBook
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
-                    if (!this.SelectedWishlistBook.BookFormat.Equals(AppStringResources.Audiobook))
+                    if (!this.SelectedWishlistBook.BookFormat!.Equals(AppStringResources.Audiobook))
                     {
                         this.ShowPages = true;
                         this.ShowTime = false;
@@ -101,7 +99,7 @@ namespace BookCollector.ViewModels.WishListBook
                         Task.Run(() => this.SelectedWishlistBook.SetCoverDisplay()),
                         Task.Run(() => this.SelectedWishlistBook.SetPartOfSeries()),
                         Task.Run(() => this.SelectedWishlistBook.SetBookPrice()),
-                        Task.Run(() => this.SelectedWishlistBook.TotalTimeSpan = this.SelectedWishlistBook.SetTime(this.SelectedWishlistBook.BookHoursTotal, this.SelectedWishlistBook.BookMinutesTotal)),
+                        Task.Run(() => this.SelectedWishlistBook.TotalTimeSpan = WishlistBookModel.SetTime(this.SelectedWishlistBook.BookHoursTotal, this.SelectedWishlistBook.BookMinutesTotal)),
                     };
 
                     await Task.WhenAll(authors);
@@ -217,7 +215,7 @@ namespace BookCollector.ViewModels.WishListBook
                                 };
 
                                 series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
-                                SeriesEditViewModel.AddToStaticList(series);
+                                await SeriesEditViewModel.AddToStaticList(series);
                                 SeriesViewModel.RefreshView = true;
                             }
 
@@ -226,7 +224,7 @@ namespace BookCollector.ViewModels.WishListBook
                         }
 
                         this.SelectedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedWishlistBook)));
-                        AddToStaticList(ConvertTo<BookModel>(this.SelectedWishlistBook));
+                        await AddToStaticList(ConvertTo<BookModel>(this.SelectedWishlistBook));
 
                         await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
                         this.RemoveFromStaticList();
@@ -250,7 +248,7 @@ namespace BookCollector.ViewModels.WishListBook
                                 {
                                     addAuthor.AuthorGuid = Guid.NewGuid();
                                     await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
-                                    AuthorEditViewModel.AddToStaticList(addAuthor);
+                                    await AuthorEditViewModel.AddToStaticList(addAuthor);
                                     AuthorsViewModel.RefreshView = true;
                                 }
                             }

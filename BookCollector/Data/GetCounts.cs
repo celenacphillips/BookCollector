@@ -2,23 +2,20 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using CommunityToolkit.Maui.Core.Extensions;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using static System.Reflection.Metadata.BlobBuilder;
-
 namespace BookCollector.Data
 {
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using BookCollector.Data.Models;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Main;
+    using CommunityToolkit.Maui.Core.Extensions;
+
     public partial class GetCounts : BaseViewModel
     {
-        public static async Task<int> GetBooksListCountByFavorite(bool showHiddenBooks, bool favoriteValue)
+        public static async Task<int> GetBooksListCountByFavorite(bool favoriteValue)
         {
             ObservableCollection<BookModel>? filteredList;
 
@@ -31,7 +28,7 @@ namespace BookCollector.Data
             return count;
         }
 
-        public static async Task<int> GetBooksListCountByRating(bool showHiddenBooks, int starRating)
+        public static async Task<int> GetBooksListCountByRating(int starRating)
         {
             ObservableCollection<BookModel>? filteredList;
 
@@ -144,7 +141,7 @@ namespace BookCollector.Data
             return price;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksAndBookFormatsList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetAllBooksAndBookFormatsList()
         {
             ObservableCollection<BookModel>? bookList = null;
 
@@ -175,7 +172,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetPriceOfBooksAndBookFormatsList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetPriceOfBooksAndBookFormatsList()
         {
             ObservableCollection<BookModel>? bookList = null;
 
@@ -206,7 +203,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndBookFormatsList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndBookFormatsList()
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
@@ -237,7 +234,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetPriceOfWishListBooksAndBookFormatsList(bool showHiddenBooks)
+        public static async Task<List<CountModel>> GetPriceOfWishListBooksAndBookFormatsList()
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
@@ -269,7 +266,7 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<int> GetBookCountReadInYear(int year, bool showHiddenBooks)
+        public static async Task<int> GetBookCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList;
 
@@ -282,25 +279,24 @@ namespace BookCollector.Data
             return count;
         }
 
-        public static async Task<int> GetBookPageCountReadInYear(int year, bool showHiddenBooks)
+        public static async Task<int> GetBookPageCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var count = 0;
 
             filteredList = AllBooksViewModel.filteredBookList1?
-                .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year &&
-                            x.BookPageTotal != null)
+                .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
                 .ToObservableCollection();
 
             if (filteredList != null)
             {
-                count = filteredList.Sum(x => (int)x.BookPageTotal);
+                count = filteredList.Sum(x => x.BookPageTotal);
             }
 
             return count;
         }
 
-        public static async Task<double> GetBookTimeCountReadInYear(int year, bool showHiddenBooks)
+        public static async Task<double> GetBookTimeCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var count = 0.0;
@@ -312,7 +308,7 @@ namespace BookCollector.Data
 
             if (filteredList != null)
             {
-                filteredList.ToList().ForEach(x => x.SetBookTotalTime());
+                await Task.WhenAll(filteredList.ToList().Select(x => x.SetBookTotalTime()));
 
                 count = filteredList.Sum(x => (double)x.BookTotalTime);
             }
@@ -320,7 +316,7 @@ namespace BookCollector.Data
             return count;
         }
 
-        public static async Task<string> GetPriceOfAllBooks(bool showHiddenBooks)
+        public static async Task<string> GetPriceOfAllBooks()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
             var cultureInfo = new CultureInfo(cultureCode);
@@ -340,7 +336,7 @@ namespace BookCollector.Data
             return string.Format(cultureInfo, "{0:C}", price);
         }
 
-        public static async Task<string> GetPriceOfAllWishListBooks(bool showHiddenBooks)
+        public static async Task<string> GetPriceOfAllWishListBooks()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
             var cultureInfo = new CultureInfo(cultureCode);
@@ -382,9 +378,8 @@ namespace BookCollector.Data
         public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenAuthors, bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<AuthorModel>? filteredList = null;
-            ObservableCollection<BookModel>? filteredBookList = null;
 
-            await Task.WhenAll(AuthorsViewModel.filteredAuthorList1?.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(AuthorsViewModel.filteredAuthorList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
             filteredList = AuthorsViewModel.filteredAuthorList1?.OrderByDescending(x => x.FirstName)?.OrderByDescending(x => x.LastName).ToObservableCollection();
 
@@ -414,12 +409,11 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenCollections, bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<CollectionModel>? filteredList = null;
-            ObservableCollection<BookModel>? filteredBookList = null;
 
-            await Task.WhenAll(CollectionsViewModel.filteredCollectionList1?.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(CollectionsViewModel.filteredCollectionList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
             filteredList = CollectionsViewModel.filteredCollectionList1?.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
 
@@ -449,12 +443,11 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenGenres, bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<GenreModel>? filteredList = null;
-            ObservableCollection<BookModel>? filteredBookList = null;
 
-            await Task.WhenAll(GenresViewModel.filteredGenreList1?.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(GenresViewModel.filteredGenreList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
             filteredList = GenresViewModel.filteredGenreList1?.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
 
@@ -484,12 +477,11 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenSeries, bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<SeriesModel>? filteredList = null;
-            ObservableCollection<BookModel>? filteredBookList = null;
 
-            await Task.WhenAll(SeriesBaseViewModel.filteredSeriesList1?.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(SeriesBaseViewModel.filteredSeriesList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
             filteredList = SeriesViewModel.filteredSeriesList1?.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
 
@@ -519,12 +511,11 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenLocations, bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<LocationModel>? filteredList = null;
-            ObservableCollection<BookModel>? filteredBookList = null;
 
-            await Task.WhenAll(LocationsViewModel.filteredLocationList1?.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(LocationsViewModel.filteredLocationList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
             filteredList = LocationsViewModel.filteredLocationList1?.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
 
@@ -554,10 +545,9 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndLocationList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndLocationList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
-            ObservableCollection<WishlistBookModel>? filteredList2 = null;
             List<string?>? list = null;
 
             filteredList1 = WishListViewModel.filteredWishlistBookList1?
@@ -600,10 +590,9 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndSeriesList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndSeriesList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
-            ObservableCollection<WishlistBookModel>? filteredList2 = null;
             List<string?>? list = null;
 
             filteredList1 = WishListViewModel.filteredWishlistBookList1?
@@ -646,10 +635,9 @@ namespace BookCollector.Data
             return counts;
         }
 
-        public static async Task<List<CountModel>> GetAllWishListBooksAndAuthorList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllWishListBooksAndAuthorList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
-            ObservableCollection<WishlistBookModel>? filteredList2 = null;
             List<string?>? authorStringList = null;
 
             filteredList1 = WishListViewModel.filteredWishlistBookList1?

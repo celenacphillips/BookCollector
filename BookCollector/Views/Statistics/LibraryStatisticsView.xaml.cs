@@ -2,15 +2,21 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Statistics;
+
 using BookCollector.ViewModels.Statistics;
 using Microcharts.Maui;
 
-namespace BookCollector.Views.Statistics;
-
+/// <summary>
+/// LibraryStatisticsView class.
+/// </summary>
 public partial class LibraryStatisticsView : ContentPage
 {
     private LibraryStatisticsViewModel viewModel;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LibraryStatisticsView"/> class.
+    /// </summary>
     public LibraryStatisticsView()
     {
         this.viewModel = new LibraryStatisticsViewModel(this);
@@ -19,6 +25,9 @@ public partial class LibraryStatisticsView : ContentPage
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         this.readingStatus.ClearValue(ChartView.ChartProperty);

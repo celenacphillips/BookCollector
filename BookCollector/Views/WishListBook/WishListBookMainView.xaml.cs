@@ -2,15 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.WishListBook;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.WishListBook;
 
-namespace BookCollector.Views.WishListBook;
-
+/// <summary>
+/// WishListBookMainView class.
+/// </summary>
 public partial class WishListBookMainView : ContentPage
 {
     private WishListBookMainViewModel viewModel;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WishListBookMainView"/> class.
+    /// </summary>
+    /// <param name="book">Book to view.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
     public WishListBookMainView(WishlistBookModel book, string viewTitle)
     {
         this.viewModel = new WishListBookMainViewModel(book, this)
@@ -22,8 +30,9 @@ public partial class WishListBookMainView : ContentPage
         this.InitializeComponent();
     }
 
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         await this.viewModel.SetViewModelData();

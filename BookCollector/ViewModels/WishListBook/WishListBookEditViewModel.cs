@@ -2,26 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Book;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using BookCollector.Views.Book;
-using BookCollector.Views.Popups;
-using BookCollector.Views.WishListBook;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.WishListBook
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Main;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Popups;
+    using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class WishListBookEditViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -135,7 +131,7 @@ namespace BookCollector.ViewModels.WishListBook
                         Task.Run(() => this.BookInfoChanged()),
                         Task.Run(() => this.SummaryChanged()),
                         Task.Run(() => this.CommentsChanged()),
-                        Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = this.EditedWishlistBook.SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
+                        Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = WishlistBookModel.SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
                     };
 
                     await Task.WhenAll(authors);
@@ -294,7 +290,7 @@ namespace BookCollector.ViewModels.WishListBook
 
                 if (storageReadStatus == PermissionStatus.Granted)
                 {
-                    MediaPickerOptions pickerOptions = new ();
+                    MediaPickerOptions pickerOptions = new();
 
                     try
                     {
@@ -440,12 +436,6 @@ namespace BookCollector.ViewModels.WishListBook
             this.ValidateEntry();
         }
 
-        private void ValidateEntry()
-        {
-            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
-            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
-        }
-
         [RelayCommand]
         public async Task TotalTimePopup()
         {
@@ -470,7 +460,7 @@ namespace BookCollector.ViewModels.WishListBook
             {
                 var filterablePopup = new FilterableListPopup(
                     AppStringResources.SelectABookFormat,
-                    BookFormats.ToList(),
+                    [.. this.BookFormats!],
                     this.EditedWishlistBook.BookFormat,
                     false);
                 var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
@@ -505,6 +495,12 @@ namespace BookCollector.ViewModels.WishListBook
             {
                 WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList2);
             }
+        }
+
+        private void ValidateEntry()
+        {
+            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
+            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
         }
 
         private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)

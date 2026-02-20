@@ -2,20 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.ViewModels.Statistics
 {
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class ReadingDataViewModel : StatisticsBaseViewModel
     {
         [ObservableProperty]
         public List<ReadingData> readingDataList;
+
+        [ObservableProperty]
+        public bool yearCountNotValid;
 
         public ReadingDataViewModel(ContentPage view)
         {
@@ -26,9 +29,6 @@ namespace BookCollector.ViewModels.Statistics
 
         public string YearCount { get; set; }
 
-        [ObservableProperty]
-        public bool yearCountNotValid;
-
         public async Task SetViewModelData()
         {
             try
@@ -37,7 +37,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                this.ReadingDataList = new List<ReadingData>();
+                this.ReadingDataList = [];
 
                 if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
                 {
@@ -48,9 +48,9 @@ namespace BookCollector.ViewModels.Statistics
                 {
                     var year = DateTime.Now.Year - i;
 
-                    var bookReadCount = GetCounts.GetBookCountReadInYear(year, this.ShowHiddenBooks);
-                    var pageReadCount = GetCounts.GetBookPageCountReadInYear(year, this.ShowHiddenBooks);
-                    var listenedTimeCount = GetCounts.GetBookTimeCountReadInYear(year, this.ShowHiddenBooks);
+                    var bookReadCount = GetCounts.GetBookCountReadInYear(year);
+                    var pageReadCount = GetCounts.GetBookPageCountReadInYear(year);
+                    var listenedTimeCount = GetCounts.GetBookTimeCountReadInYear(year);
 
                     await Task.WhenAll(bookReadCount, pageReadCount);
 

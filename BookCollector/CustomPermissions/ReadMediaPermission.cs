@@ -2,28 +2,37 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-#if ANDROID
-using Android;
-using Android.Content.PM;
-using Android.OS;
-using Android.Provider;
-using Android.Views;
-using AndroidX.Core.App;
-using AndroidX.Core.Content;
-#endif
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Data;
-
 namespace BookCollector.CustomPermissions
 {
+#if ANDROID
+    using Android;
+    using Android.Content.PM;
+    using Android.OS;
+    using Android.Provider;
+    using Android.Views;
+    using AndroidX.Core.App;
+    using AndroidX.Core.Content;
+#endif
+    using BookCollector.Data;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+
+    /// <summary>
+    /// ReadMediaPermission class.
+    /// </summary>
     public class ReadMediaPermission : Permissions.BasePermission
     {
 #if ANDROID
+#pragma warning disable CA1416 // Validate platform compatibility
         private const string ReadMediaImages = Manifest.Permission.ReadMediaImages;
+#pragma warning restore CA1416 // Validate platform compatibility
         private const string UserSelectedImages = "android.permission.READ_MEDIA_VISUAL_USER_SELECTED";
 #endif
 
+        /// <summary>
+        /// Overrides the CheckStatusAsync method to check the status of the Read Media permission.
+        /// </summary>
+        /// <returns>The permission status.</returns>
         public override async Task<PermissionStatus> CheckStatusAsync()
         {
             this.EnsureDeclared();
@@ -57,6 +66,10 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
+        /// <summary>
+        /// Overrides the EnsureDeclared method to ensure that the Read Media permission is
+        /// declared in the AndroidManifest.xml file.
+        /// </summary>
         public override void EnsureDeclared()
         {
 #if ANDROID
@@ -76,6 +89,10 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
+        /// <summary>
+        /// Overrides the RequestAsync method to request the Read Media permission from the user.
+        /// </summary>
+        /// <returns>The permission status.</returns>
         public override async Task<PermissionStatus> RequestAsync()
         {
             if (this.ShouldShowRationale())
@@ -145,6 +162,11 @@ namespace BookCollector.CustomPermissions
 
         }
 
+        /// <summary>
+        /// Overrides the ShouldShowRationale method to determine if the app should show a rationale
+        /// for requesting the Read Media permission.
+        /// </summary>
+        /// <returns>True if the rationale should show, else false.</returns>
         public override bool ShouldShowRationale()
         {
 #if ANDROID
@@ -173,9 +195,15 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
+        /// <summary>
+        /// Checks if the user has selected the READ_MEDIA_VISUAL_USER_SELECTED permission
+        /// and if so, retrieves the list of images the user has selected.
+        /// </summary>
+        /// <returns>A list of ImageInfo, which contains the image original name and the
+        /// original path of the image.</returns>
         public static List<ImageInfo> CheckForUserSelectedImages()
         {
-            List<ImageInfo> imageInfos = new List<ImageInfo>();
+            List<ImageInfo> imageInfos = [];
 
 #if ANDROID
             var activity = Platform.CurrentActivity!;
@@ -186,32 +214,37 @@ namespace BookCollector.CustomPermissions
             {
                 var collection = MediaStore.Images.Media.ExternalContentUri;
 
-                var projection = new[]
+                if (collection != null)
+                {
+                    var projection = new[]
                 {
                     MediaStore.Images.Media.InterfaceConsts.Id,
                     MediaStore.Images.Media.InterfaceConsts.DisplayName,
                     MediaStore.Images.Media.InterfaceConsts.Data,
                 };
 
-                var cursor = context.ContentResolver!.Query(
-                    collection,
-                    projection,
-                    null,
-                    null,
-                    null
-                );
+                    var cursor = context?.ContentResolver!.Query(
+                        collection,
+                        projection,
+                        null,
+                        null,
+                        null);
 
-                while (cursor.MoveToNext())
-                {
-                    var id = cursor.GetLong(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Id));
-                    var name = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.DisplayName));
-                    var path = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Data));
-
-                    imageInfos.Add(new ImageInfo
+                    if (cursor != null)
                     {
-                        OriginalFileName = name,
-                        MediaStorePath = path,
-                    });
+                        while (cursor.MoveToNext())
+                        {
+                            var id = cursor.GetLong(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Id));
+                            var name = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.DisplayName));
+                            var path = cursor.GetString(cursor.GetColumnIndexOrThrow(MediaStore.Images.Media.InterfaceConsts.Data));
+
+                            imageInfos.Add(new ImageInfo
+                            {
+                                OriginalFileName = name,
+                                MediaStorePath = path,
+                            });
+                        }
+                    }
                 }
             }
 #endif

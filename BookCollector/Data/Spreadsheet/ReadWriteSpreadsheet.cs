@@ -2,18 +2,16 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml.Office;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Xml;
-using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
-
 namespace BookCollector.Data.Spreadsheet
 {
+    using System.Xml;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using DocumentFormat.OpenXml;
+    using DocumentFormat.OpenXml.Packaging;
+    using DocumentFormat.OpenXml.Spreadsheet;
+    using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
+
     public class ReadWriteSpreadsheet : BaseViewModel
     {
         public static async Task<string> CreateSpreadsheet(string folderPath)
@@ -30,7 +28,7 @@ namespace BookCollector.Data.Spreadsheet
                 var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
 
                 // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
-                using (XmlTextWriter writer = new (coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+                using (XmlTextWriter writer = new(coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
                 {
                     writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
                     writer.Flush();
@@ -101,7 +99,7 @@ namespace BookCollector.Data.Spreadsheet
 
                     // Add the cell to the cell table
                     Cell? refCell = null;
-                    Cell newCell = new () { CellReference = $"{columnValue}{rowValue}" };
+                    Cell newCell = new() { CellReference = $"{columnValue}{rowValue}" };
                     row.InsertBefore(newCell, refCell);
 
                     // Set the cell value
@@ -302,7 +300,7 @@ namespace BookCollector.Data.Spreadsheet
             }
 
             // Append the new worksheet and associate it with the workbook.
-            Sheet sheet = new () { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+            Sheet sheet = new() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
             sheets.Append(sheet);
             workbookPart.Workbook.Save();
 

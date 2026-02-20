@@ -2,14 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Genre;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Genre;
 
-namespace BookCollector.Views.Genre;
-
+/// <summary>
+/// GenreMainView class.
+/// </summary>
 public partial class GenreMainView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenreMainView"/> class.
+    /// </summary>
+    /// <param name="genre">Genre to view.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
     public GenreMainView(GenreModel genre, string viewTitle)
     {
         this.ViewModel = new GenreMainViewModel(genre, this)
@@ -23,7 +31,17 @@ public partial class GenreMainView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private GenreMainViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -46,14 +64,5 @@ public partial class GenreMainView : ContentPage
                 this.bookCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private GenreMainViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        await this.ViewModel.SetViewModelData();
     }
 }

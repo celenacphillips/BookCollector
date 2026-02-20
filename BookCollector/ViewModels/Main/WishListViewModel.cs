@@ -2,20 +2,20 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Popups;
-using BookCollector.Views.WishListBook;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.ViewModels.Main
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Popups;
+    using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class WishListViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -45,8 +45,6 @@ namespace BookCollector.ViewModels.Main
         [ObservableProperty]
         public static int filteredBooksCount;
 
-        public static bool RefreshView { get; set; }
-
         public WishListViewModel(ContentPage view)
         {
             this.View = view;
@@ -55,6 +53,8 @@ namespace BookCollector.ViewModels.Main
             this.ViewTitle = AppStringResources.Wishlist;
             RefreshView = true;
         }
+
+        public static bool RefreshView { get; set; }
 
         public string? BookAuthorOption { get; set; }
 
@@ -66,10 +66,7 @@ namespace BookCollector.ViewModels.Main
 
         public static async Task SetList(bool showHiddenBooks)
         {
-            if (fullWishlistBookList == null)
-            {
-                fullWishlistBookList = await FillLists.GetBookWishList();
-            }
+            fullWishlistBookList ??= await FillLists.GetBookWishList();
 
             if (!showHiddenBooks)
             {
@@ -126,8 +123,6 @@ namespace BookCollector.ViewModels.Main
                             var sortList = SortLists.SortWishlistBookList(
                                     this.FilteredWishlistBookList2,
                                     this.BookTitleChecked,
-                                    this.BookReadingDateChecked,
-                                    this.BookReadPercentageChecked,
                                     this.BookPublisherChecked,
                                     this.BookPublishYearChecked,
                                     this.AuthorLastNameChecked,
@@ -177,7 +172,7 @@ namespace BookCollector.ViewModels.Main
         }
 
         [RelayCommand]
-        public async void BookSearchOnTitle(string? input)
+        public async Task BookSearchOnTitle(string? input)
         {
             this.SearchString = input;
 
@@ -204,13 +199,10 @@ namespace BookCollector.ViewModels.Main
                 this.FilteredBooksCount = this.FilteredWishlistBookList2 != null ? this.FilteredWishlistBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-            }
 
-            var sortList = SortLists.SortWishlistBookList(
-                                    this.FilteredWishlistBookList2,
+                var sortList = SortLists.SortWishlistBookList(
+                                    this.FilteredWishlistBookList2!,
                                     this.BookTitleChecked,
-                                    this.BookReadingDateChecked,
-                                    this.BookReadPercentageChecked,
                                     this.BookPublisherChecked,
                                     this.BookPublishYearChecked,
                                     this.AuthorLastNameChecked,
@@ -220,9 +212,10 @@ namespace BookCollector.ViewModels.Main
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredWishlistBookList2 = sortList.Result;
+                this.FilteredWishlistBookList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]

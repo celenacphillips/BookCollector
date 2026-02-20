@@ -2,16 +2,16 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microcharts;
-using Microcharts.Maui;
-using SkiaSharp;
-
 namespace BookCollector.ViewModels.BaseViewModels
 {
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using Microcharts;
+    using Microcharts.Maui;
+    using SkiaSharp;
+
     public partial class StatisticsBaseViewModel : BaseViewModel
     {
         [ObservableProperty]
@@ -150,7 +150,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public void GetPreferences()
         {
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+            this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
             this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
             this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
@@ -168,7 +168,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /*********************** Series Methods ***********************/
-        private void SetShowSeries(List<CountModel> counts)
+        internal void SetShowSeries(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
@@ -186,7 +186,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            counts = counts.Where(x => x.Count > 0).ToList();
+            counts = [.. counts.Where(x => x.Count > 0)];
 
             if (this.ShowSeries)
             {
@@ -226,7 +226,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /*********************** Series Methods ***********************/
 
         /*********************** Authors Methods ***********************/
-        private void SetShowAuthors(List<CountModel> counts)
+        internal void SetShowAuthors(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
@@ -244,7 +244,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            counts = counts.Where(x => x.Count > 0).ToList();
+            counts = [.. counts.Where(x => x.Count > 0)];
 
             if (this.ShowAuthors)
             {
@@ -284,7 +284,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /*********************** Authors Methods ***********************/
 
         /*********************** Locations Methods ***********************/
-        private void SetShowLocations(List<CountModel> counts)
+        internal void SetShowLocations(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
@@ -302,7 +302,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            counts = counts.Where(x => x.Count > 0).ToList();
+            counts = [.. counts.Where(x => x.Count > 0)];
 
             if (this.ShowLocations)
             {
@@ -342,7 +342,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /*********************** Locations Methods ***********************/
 
         /*********************** Formats Methods ***********************/
-        private void SetShowFormats(List<CountModel> counts)
+        internal void SetShowFormats(List<CountModel> counts)
         {
             if (counts.Any(x => x.Count > 0))
             {
@@ -389,7 +389,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /*********************** Formats Methods ***********************/
 
         /*********************** Format Prices Methods ***********************/
-        private void SetShowFormatPrices(List<CountModel> counts)
+        internal void SetShowFormatPrices(List<CountModel> counts)
         {
             if (counts.Any(x => x.CountDouble > 0))
             {

@@ -2,13 +2,24 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.WishListBook;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.WishListBook;
 
-namespace BookCollector.Views.WishListBook;
-
+/// <summary>
+/// WishListBookEditView class.
+/// </summary>
 public partial class WishListBookEditView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WishListBookEditView"/> class.
+    /// </summary>
+    /// <param name="book">Book to add or edit.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
+    /// <param name="removeMainViewBefore">The value to determine if Main view should be removed in
+    /// stack before this page or not. Default is false.</param>
+    /// <param name="mainViewBefore">The main view to insered before this page. Default is null.</param>
     public WishListBookEditView(WishlistBookModel book, string viewTitle, bool removeMainViewBefore = false, WishListBookMainView? mainViewBefore = null)
     {
         this.ViewModel = new WishListBookEditViewModel(book, this)
@@ -24,8 +35,9 @@ public partial class WishListBookEditView : ContentPage
 
     private WishListBookEditViewModel ViewModel { get; set; }
 
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         await this.ViewModel.SetViewModelData();

@@ -2,16 +2,15 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using CommunityToolkit.Mvvm.Input;
-using System.Globalization;
-
 namespace BookCollector.ViewModels.Statistics
 {
+    using System.Globalization;
+    using BookCollector.Data;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Main;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class WishListStatisticsViewModel : StatisticsBaseViewModel
     {
         public WishListStatisticsViewModel(ContentPage view)
@@ -40,12 +39,12 @@ namespace BookCollector.ViewModels.Statistics
                     await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
                 }
 
-                var cost = GetCounts.GetPriceOfAllWishListBooks(this.ShowHiddenWishlistBooks);
-                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
-                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.ShowHiddenWishlistBooks, this.MaxListNumber);
-                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
-                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.ShowHiddenWishlistBooks);
+                var cost = GetCounts.GetPriceOfAllWishListBooks();
+                var series = GetCounts.GetAllWishListBooksAndSeriesList(this.MaxListNumber);
+                var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.MaxListNumber);
+                var locations = GetCounts.GetAllWishListBooksAndLocationList(this.MaxListNumber);
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList();
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList();
 
                 this.GetColors();
 

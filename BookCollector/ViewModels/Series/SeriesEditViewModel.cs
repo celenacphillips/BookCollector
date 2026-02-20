@@ -2,19 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Series;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Series
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Series;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class SeriesEditViewModel : SeriesBaseViewModel
     {
         [ObservableProperty]
@@ -70,7 +69,7 @@ namespace BookCollector.ViewModels.Series
 #endif
 
                     this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
-                    AddToStaticList(this.EditedSeries);
+                    await AddToStaticList(this.EditedSeries);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -108,11 +107,6 @@ namespace BookCollector.ViewModels.Series
             this.ValidateEntry();
         }
 
-        private void ValidateEntry()
-        {
-            this.SeriesNameNotValid = string.IsNullOrEmpty(this.EditedSeries.SeriesName);
-        }
-
         public static async Task AddToStaticList(SeriesModel series)
         {
             if (SeriesViewModel.fullSeriesList != null)
@@ -121,15 +115,20 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        private void ValidateEntry()
+        {
+            this.SeriesNameNotValid = string.IsNullOrEmpty(this.EditedSeries.SeriesName);
+        }
+
         private static async Task<bool> AddSeriesToStaticList(SeriesModel series, ObservableCollection<SeriesModel> seriesList, ObservableCollection<SeriesModel>? filteredSeriesList)
         {
             var refresh = false;
 
-            await Task.WhenAll(new Task[]
-            {
+            await Task.WhenAll(
+            [
                 series.SetTotalBooks(true),
                 series.SetTotalCostOfBooks(true),
-            });
+            ]);
 
             try
             {

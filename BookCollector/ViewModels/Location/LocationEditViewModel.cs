@@ -2,19 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Location;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Location
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Location;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class LocationEditViewModel : LocationBaseViewModel
     {
         [ObservableProperty]
@@ -70,7 +69,7 @@ namespace BookCollector.ViewModels.Location
 #endif
 
                     this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
-                    AddToStaticList(this.EditedLocation);
+                    await AddToStaticList(this.EditedLocation);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -108,11 +107,6 @@ namespace BookCollector.ViewModels.Location
             this.ValidateEntry();
         }
 
-        private void ValidateEntry()
-        {
-            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
-        }
-
         public static async Task AddToStaticList(LocationModel location)
         {
             if (LocationsViewModel.fullLocationList != null)
@@ -121,15 +115,20 @@ namespace BookCollector.ViewModels.Location
             }
         }
 
+        private void ValidateEntry()
+        {
+            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
+        }
+
         private static async Task<bool> AddLocationToStaticList(LocationModel location, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
         {
             var refresh = false;
 
-            await Task.WhenAll(new Task[]
-            {
+            await Task.WhenAll(
+            [
                 location.SetTotalBooks(true),
                 location.SetTotalCostOfBooks(true),
-            });
+            ]);
 
             try
             {

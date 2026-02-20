@@ -2,21 +2,21 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Book;
-using BookCollector.Views.Groupings;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Series
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Groupings;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class SeriesMainViewModel : SeriesBaseViewModel
     {
         [ObservableProperty]
@@ -26,7 +26,7 @@ namespace BookCollector.ViewModels.Series
         public ObservableCollection<BookModel>? filteredBookList1;
 
         [ObservableProperty]
-        public ObservableCollection<BookModel>? filteredBookList2;
+        public new ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
         public ObservableCollection<string>? bookAuthorList;
@@ -37,16 +37,16 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         public int filteredBooksCount;
 
-        public bool RefreshView { get; set; }
-
         public SeriesMainViewModel(SeriesModel series, ContentPage view)
         {
             this.View = view;
             this.SelectedSeries = series;
             this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
-            RefreshView = true;
+            this.RefreshView = true;
         }
+
+        public bool RefreshView { get; set; }
 
         public string? BookAuthorOption { get; set; }
 
@@ -54,10 +54,7 @@ namespace BookCollector.ViewModels.Series
 
         public async Task SetList(bool showHiddenBooks)
         {
-            if (this.FullBookList == null)
-            {
-                this.FullBookList = await FillLists.GetAllBooksInSeriesList(this.SelectedSeries.SeriesGuid, ShowHiddenBook);
-            }
+            this.FullBookList ??= await FillLists.GetAllBooksInSeriesList(this.SelectedSeries?.SeriesGuid, ShowHiddenBook);
 
             if (!showHiddenBooks)
             {
@@ -71,7 +68,7 @@ namespace BookCollector.ViewModels.Series
 
         public async Task SetViewModelData()
         {
-            if (RefreshView && this.SelectedSeries != null)
+            if (this.RefreshView && this.SelectedSeries != null)
             {
                 try
                 {
@@ -85,14 +82,14 @@ namespace BookCollector.ViewModels.Series
                     {
                         this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.FilteredBookList1!.Select(x => x.SetAuthorListString()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1!);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1!);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1!);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1!);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.FilteredBookList1!,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -147,7 +144,7 @@ namespace BookCollector.ViewModels.Series
                     }
 
                     this.SetIsBusyFalse();
-                    RefreshView = false;
+                    this.RefreshView = false;
                 }
                 catch (Exception ex)
                 {
@@ -159,13 +156,13 @@ namespace BookCollector.ViewModels.Series
                     await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    RefreshView = false;
+                    this.RefreshView = false;
                 }
             }
         }
 
         [RelayCommand]
-        public async void BookSearchOnTitle(string? input)
+        public async Task BookSearchOnTitle(string? input)
         {
             this.SearchString = input;
 
@@ -192,10 +189,9 @@ namespace BookCollector.ViewModels.Series
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-            }
 
-            var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList2,
+                var sortList = SortLists.SortBookList(
+                                    this.FilteredBookList2!,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
                                     this.BookReadPercentageChecked,
@@ -208,16 +204,17 @@ namespace BookCollector.ViewModels.Series
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredBookList2 = sortList.Result;
+                this.FilteredBookList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
             this.SetRefreshTrue();
-            RefreshView = true;
+            this.RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -289,7 +286,7 @@ namespace BookCollector.ViewModels.Series
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -332,7 +329,7 @@ namespace BookCollector.ViewModels.Series
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.RefreshView = true;
                     await this.SetViewModelData();
                 }
             }

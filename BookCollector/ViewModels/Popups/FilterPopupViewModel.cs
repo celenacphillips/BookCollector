@@ -2,18 +2,16 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Views.Controls;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Popups
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.Views.Controls;
+    using CommunityToolkit.Maui.Views;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class FilterPopupViewModel : BaseViewModel
     {
         [ObservableProperty]
@@ -127,9 +125,9 @@ namespace BookCollector.ViewModels.Popups
 
         public double PopupWidth { get; set; }
 
-        private Popup Popup { get; set; }
-
         public Grid OverlaySection { get; set; }
+
+        private Popup Popup { get; set; }
 
         [RelayCommand]
         public async Task Close()
@@ -153,20 +151,20 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetFormatPicker(ObservableCollection<string>? formats)
         {
-            this.FormatPicker = formats != null ? [..formats] : null;
+            this.FormatPicker = formats != null ? [.. formats] : null;
             this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
         }
 
         public void SetAuthorPicker(ObservableCollection<string>? authorNames)
         {
-            this.AuthorPicker = authorNames != null ? [..authorNames] : null;
+            this.AuthorPicker = authorNames != null ? [.. authorNames] : null;
             this.AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
             this.AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
         }
 
         public void SetPublisherPicker(ObservableCollection<string>? publisherNames)
         {
-            this.PublisherPicker = publisherNames != null ? [..publisherNames] : null;
+            this.PublisherPicker = publisherNames != null ? [.. publisherNames] : null;
             this.PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
             this.PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
         }
@@ -180,7 +178,7 @@ namespace BookCollector.ViewModels.Popups
 
         public void SetLanguagePicker(ObservableCollection<string>? languages)
         {
-            this.LanguagePicker = languages != null ? [..languages] : null;
+            this.LanguagePicker = languages != null ? [.. languages] : null;
             this.LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
             this.LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
         }

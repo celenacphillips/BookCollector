@@ -2,15 +2,26 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Book;
+
 using BookCollector.Data.Models;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Book;
 
-namespace BookCollector.Views.Book;
-
+/// <summary>
+/// BookSearchView class.
+/// </summary>
 public partial class BookSearchView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookSearchView"/> class. BookModel version.
+    /// </summary>
+    /// <param name="inputIsbn">ISBN to send into the search view.</param>
+    /// <param name="inputTitle">Title to send into the search view.</param>
+    /// <param name="inputAuthorName">Author Name to send into the search view.</param>
+    /// <param name="book">The book to add the returned search data to.</param>
+    /// <param name="previousViewModel">he previous view model this method has been called from.</param>
     public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, BookModel? book, object? previousViewModel)
     {
         var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
@@ -26,6 +37,14 @@ public partial class BookSearchView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookSearchView"/> class. WishlistBookModel version.
+    /// </summary>
+    /// <param name="inputIsbn">ISBN to send into the search view.</param>
+    /// <param name="inputTitle">Title to send into the search view.</param>
+    /// <param name="inputAuthorName">Author Name to send into the search view.</param>
+    /// <param name="book">The book to add the returned search data to.</param>
+    /// <param name="previousViewModel">he previous view model this method has been called from.</param>
     public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, WishlistBookModel? book, object? previousViewModel)
     {
         var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
@@ -41,7 +60,7 @@ public partial class BookSearchView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {

@@ -2,13 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Collection;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Collection;
 
-namespace BookCollector.Views.Collection;
-
+/// <summary>
+/// CollectionEditView class.
+/// </summary>
 public partial class CollectionEditView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CollectionEditView"/> class.
+    /// </summary>
+    /// <param name="collection">Collection to add or edit.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
+    /// <param name="insertMainViewBefore">The value to determine if Main view should be inserted in
+    /// stack before this page or not. Default is false.</param>
     public CollectionEditView(CollectionModel collection, string viewTitle, bool insertMainViewBefore = false)
     {
         this.ViewModel = new CollectionEditViewModel(collection, this)
@@ -23,8 +33,9 @@ public partial class CollectionEditView : ContentPage
 
     private CollectionEditViewModel ViewModel { get; set; }
 
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         await this.ViewModel.SetViewModelData();

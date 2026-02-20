@@ -88,7 +88,7 @@
                                        Style="{DynamicResource Header}"/>
                                 <Switch x:Name="ReadToggle"
                                         IsToggled="{Binding BookIsRead}"
-                                        IsEnabled="{Binding StepperEnabled}"
+                                        IsEnabled="{Binding PagesReadStepperEnabled}"
                                         Margin="-10">
                                     <Switch.Behaviors>
                                         <toolkit:EventToCommandBehavior EventName="Toggled"

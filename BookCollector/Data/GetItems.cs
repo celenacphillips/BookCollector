@@ -2,11 +2,11 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Models;
-using BookCollector.ViewModels.BaseViewModels;
-
 namespace BookCollector.Data
 {
+    using BookCollector.Data.Models;
+    using BookCollector.ViewModels.BaseViewModels;
+
     public partial class GetItems : BaseViewModel
     {
         public static async Task<GenreModel?> GetGenreForBook(Guid? inputGuid)

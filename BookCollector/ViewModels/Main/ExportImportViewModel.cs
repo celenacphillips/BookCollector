@@ -2,47 +2,36 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-#if ANDROID
-using Android;
-using Android.Content.PM;
-using Android.OS;
-using Android.Provider;
-using Android.Util;
-using AndroidX.Core.Content;
-using AndroidX.DocumentFile.Provider;
-using BookCollector.CustomPicker;
-using static Android.Graphics.ImageDecoder;
-using Android.Content;
-#endif
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Data.Spreadsheet;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Book;
-using BookCollector.ViewModels.Collection;
-using BookCollector.ViewModels.Genre;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Location;
-using BookCollector.ViewModels.Series;
-using BookCollector.ViewModels.WishListBook;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls.PlatformConfiguration;
-using System.Threading.Tasks;
-using Color = Microsoft.Maui.Graphics.Color;
-using ImageInfo = BookCollector.Data.ImageInfo;
-using DocumentFormat.OpenXml.Bibliography;
-using Microsoft.Maui.Controls;
-using System.Net.Http;
-
 namespace BookCollector.ViewModels.Main
 {
+#if ANDROID
+    using Android.Content;
+    using Android.OS;
+    using Android.Provider;
+    using BookCollector.CustomPicker;
+#endif
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Data.Spreadsheet;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.Author;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Book;
+    using BookCollector.ViewModels.Collection;
+    using BookCollector.ViewModels.Genre;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Location;
+    using BookCollector.ViewModels.Series;
+    using BookCollector.ViewModels.WishListBook;
+    using CommunityToolkit.Maui.Storage;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+    using Color = Microsoft.Maui.Graphics.Color;
+    using ImageInfo = BookCollector.Data.ImageInfo;
+
     public partial class ExportImportViewModel : BaseViewModel
     {
         [ObservableProperty]
@@ -137,7 +126,7 @@ namespace BookCollector.ViewModels.Main
 
         private string imageLocation = string.Empty;
 
-        private List<ImageInfo> selectedFiles = new List<ImageInfo>();
+        private List<ImageInfo?> selectedFiles = [];
 
         public ExportImportViewModel(ContentPage view)
         {
@@ -231,7 +220,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = true;
                     this.CheckboxesVisible = false;
 
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation);
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!);
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -307,13 +296,14 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
+                    string[] acceptableFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
                     var customFileType = new FilePickerFileType(
                     new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
-                        { DevicePlatform.Android, new[] { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }, // MIME type
+                        { DevicePlatform.Android, acceptableFileTypes }, // MIME type
                     });
 
-                    PickOptions pickerOptions = new ()
+                    PickOptions pickerOptions = new()
                     {
                         FileTypes = customFileType,
                     };
@@ -340,7 +330,7 @@ namespace BookCollector.ViewModels.Main
                             {
                                 var userSelectedImages = ReadMediaPermission.CheckForUserSelectedImages();
 
-                                if (userSelectedImages.Count <= 0)
+                                if (userSelectedImages == null || userSelectedImages.Count <= 0)
                                 {
                                     var version = 0;
 #if ANDROID
@@ -351,16 +341,24 @@ namespace BookCollector.ViewModels.Main
                                     {
                                         await DisplayMessage(AppStringResources.PleaseSelectTheImages, null);
 
+                                        // Used custom picker for Android images, since the default MediaPicker.PickPhotosAsync()
+                                        // does not give access to the selected images' file names. Instead it creates a cached
+                                        // image to work from. While this is fine for most applications, I needed the ability to
+                                        // match file names the user put in the spreadsheet with the file names the user selected.
+                                        // Else the user would have to manually select each image for each book when it comes up.
 #if ANDROID
                                         var picker = ServiceHelper.GetService<IAndroidImagePicker>();
-                                        var uris = await picker.PickImagesAsync();
 
-                                        foreach (var uri in uris)
+                                        if (picker != null)
                                         {
-                                            var info = this.GetImageInfo(uri);
-                                            this.selectedFiles.Add(info);
-                                        }
+                                            var uris = await picker.PickImagesAsync();
 
+                                            foreach (var uri in uris)
+                                            {
+                                                var info = GetImageInfo(uri);
+                                                this.selectedFiles.Add(info);
+                                            }
+                                        }
 #endif
                                     }
                                 }
@@ -368,7 +366,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     await DisplayMessage($"{AppStringResources.Caution_}", AppStringResources.UserSelectedImagesMessage);
 
-                                    this.selectedFiles = userSelectedImages;
+                                    this.selectedFiles = userSelectedImages!;
                                 }
                             }
                         }
@@ -516,7 +514,7 @@ namespace BookCollector.ViewModels.Main
         {
             if (booksChecked && authorsChecked && bookAuthorsChecked)
             {
-                var authors = await Database.GetAllAuthorsAsync();
+                await Database.GetAllAuthorsAsync();
             }
 
             ReadingViewModel.RefreshView = true;
@@ -615,7 +613,7 @@ namespace BookCollector.ViewModels.Main
         }
 
 #if ANDROID
-        private ImageInfo GetImageInfo(Android.Net.Uri uri)
+        private static ImageInfo? GetImageInfo(Android.Net.Uri uri)
         {
             // Example: content://media/external/images/media/12345
             var id = ContentUris.ParseId(uri);
@@ -624,16 +622,15 @@ namespace BookCollector.ViewModels.Main
             {
                 MediaStore.Images.Media.InterfaceConsts.Id,
                 MediaStore.Images.Media.InterfaceConsts.DisplayName,
-                MediaStore.Images.Media.InterfaceConsts.Data
+                MediaStore.Images.Media.InterfaceConsts.Data,
             };
 
-            using var cursor = Platform.CurrentActivity.ContentResolver.Query(
-                MediaStore.Images.Media.ExternalContentUri,
+            using var cursor = Platform.CurrentActivity?.ContentResolver?.Query(
+                MediaStore.Images.Media.ExternalContentUri!,
                 projection,
                 $"{MediaStore.Images.Media.InterfaceConsts.Id} = ?",
-                new[] { id.ToString() },
-                null
-            );
+                [id.ToString()],
+                null);
 
             if (cursor != null && cursor.MoveToFirst())
             {
@@ -649,7 +646,6 @@ namespace BookCollector.ViewModels.Main
             }
 
             return null;
-
         }
 #endif
 
@@ -750,20 +746,24 @@ namespace BookCollector.ViewModels.Main
 
             if (this.selectedFiles.Count > 0)
             {
-                var file = this.selectedFiles.FirstOrDefault(x => x.OriginalFileName.Equals(fileName));
+                var file = this.selectedFiles.FirstOrDefault(x => x != null && !string.IsNullOrEmpty(x.OriginalFileName) && x.OriginalFileName.Equals(fileName));
 
                 if (file != null)
                 {
                     try
                     {
-                        Stream stream;
+                        Stream? stream = null;
 
                         if (file.UriString != null)
                         {
 #if ANDROID
                             var androidUri = Android.Net.Uri.Parse(file.UriString);
-                            var resolver = Platform.CurrentActivity.ContentResolver;
-                            stream = resolver.OpenInputStream(androidUri);
+                            var resolver = Platform.CurrentActivity?.ContentResolver;
+
+                            if (androidUri != null)
+                            {
+                                stream = resolver?.OpenInputStream(androidUri);
+                            }
 #else
                             var systemUri = new Uri(file.UriString);
                             var httpClient = new HttpClient();
@@ -773,7 +773,10 @@ namespace BookCollector.ViewModels.Main
                         }
                         else
                         {
-                            stream = File.OpenRead(file.MediaStorePath);
+                            if (!string.IsNullOrEmpty(file.MediaStorePath))
+                            {
+                                stream = File.OpenRead(file.MediaStorePath);
+                            }
                         }
 
                         var appDirectory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
@@ -785,8 +788,9 @@ namespace BookCollector.ViewModels.Main
 
                         var appFilePath = $"{appDirectory}/{file.OriginalFileName}";
 
-                        using (var fileStream = File.Create(appFilePath))
+                        if (stream != null)
                         {
+                            using var fileStream = File.Create(appFilePath);
                             await stream.CopyToAsync(fileStream);
                         }
 
@@ -806,7 +810,7 @@ namespace BookCollector.ViewModels.Main
             return fileFound;
         }
 
-        private List<string?> SetBookColumns()
+        private static List<string?> SetBookColumns()
         {
             return
             [
@@ -844,7 +848,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetWishlistBookColumns()
+        private static List<string?> SetWishlistBookColumns()
         {
             return
             [
@@ -872,7 +876,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetChapterColumns()
+        private static List<string?> SetChapterColumns()
         {
             return
             [
@@ -884,7 +888,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetCollectionColumns()
+        private static List<string?> SetCollectionColumns()
         {
             return
             [
@@ -894,7 +898,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetGenreColumns()
+        private static List<string?> SetGenreColumns()
         {
             return
             [
@@ -904,7 +908,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetSeriesColumns()
+        private static List<string?> SetSeriesColumns()
         {
             return
             [
@@ -915,7 +919,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetBookAuthorColumns()
+        private static List<string?> SetBookAuthorColumns()
         {
             return
             [
@@ -925,7 +929,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetAuthorColumns()
+        private static List<string?> SetAuthorColumns()
         {
             return
             [
@@ -936,7 +940,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private List<string?> SetLocationColumns()
+        private static List<string?> SetLocationColumns()
         {
             return
             [
@@ -946,7 +950,7 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
-        private string BookCoverFileName(string bookTitle, string format, string extension)
+        private static string BookCoverFileName(string bookTitle, string format, string extension)
         {
             string output = bookTitle.Replace(" ", "_")
                                      .Replace("<", "_")
@@ -986,7 +990,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetBookColumns(),
+                    SetBookColumns(),
                 };
 
                 if (bookList != null)
@@ -1073,7 +1077,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     var byteArray = DownloadImage(book.BookCoverUrl);
                                     var fi = new FileInfo(book.BookCoverUrl);
-                                    var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
+                                    var fileName = BookCoverFileName(book.BookTitle!, book.BookFormat!, fi.Extension);
                                     var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                     File.WriteAllBytes(exportLocation, byteArray);
                                 }
@@ -1113,7 +1117,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetBookColumns();
+                var columnNames = SetBookColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1121,7 +1125,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -1216,7 +1220,7 @@ namespace BookCollector.ViewModels.Main
                             }
 
                             await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                            BookEditViewModel.AddToStaticList(book);
+                            await BookEditViewModel.AddToStaticList(book);
 
                             importCount++;
                             this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1243,6 +1247,7 @@ namespace BookCollector.ViewModels.Main
 
             return 0;
         }
+
         /*********************** Book Methods ***********************/
 
         /*********************** WishListBook Methods ***********************/
@@ -1267,7 +1272,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetWishlistBookColumns(),
+                    SetWishlistBookColumns(),
                 };
 
                 if (bookList != null)
@@ -1356,7 +1361,7 @@ namespace BookCollector.ViewModels.Main
                                 var byteArray = DownloadImage(book.BookCoverUrl);
 
                                 var fi = new FileInfo(book.BookCoverUrl);
-                                var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
+                                var fileName = BookCoverFileName(book.BookTitle!, book.BookFormat!, fi.Extension);
                                 var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                 File.WriteAllBytes(exportLocation, byteArray);
                             }
@@ -1392,7 +1397,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetWishlistBookColumns();
+                var columnNames = SetWishlistBookColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1400,7 +1405,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -1533,7 +1538,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetChapterColumns(),
+                    SetChapterColumns(),
                 };
 
                 if (chapterList != null)
@@ -1582,7 +1587,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetChapterColumns();
+                var columnNames = SetChapterColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1590,7 +1595,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -1667,7 +1672,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetCollectionColumns(),
+                    SetCollectionColumns(),
                 };
 
                 if (collectionList != null)
@@ -1714,7 +1719,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetCollectionColumns();
+                var columnNames = SetCollectionColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1722,7 +1727,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -1746,7 +1751,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
-                            CollectionEditViewModel.AddToStaticList(collection);
+                            await CollectionEditViewModel.AddToStaticList(collection);
 
                             importCount++;
                             this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1798,7 +1803,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetGenreColumns(),
+                    SetGenreColumns(),
                 };
 
                 if (genreList != null)
@@ -1845,7 +1850,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetGenreColumns();
+                var columnNames = SetGenreColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1853,7 +1858,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -1877,7 +1882,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
-                            GenreEditViewModel.AddToStaticList(genre);
+                            await GenreEditViewModel.AddToStaticList(genre);
 
                             importCount++;
                             this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1929,7 +1934,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetSeriesColumns(),
+                    SetSeriesColumns(),
                 };
 
                 if (seriesList != null)
@@ -1977,7 +1982,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetSeriesColumns();
+                var columnNames = SetSeriesColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1985,7 +1990,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -2010,7 +2015,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
-                            SeriesEditViewModel.AddToStaticList(series);
+                            await SeriesEditViewModel.AddToStaticList(series);
 
                             importCount++;
                             this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -2062,7 +2067,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetBookAuthorColumns(),
+                    SetBookAuthorColumns(),
                 };
 
                 if (bookAuthorList != null)
@@ -2109,7 +2114,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetBookAuthorColumns();
+                var columnNames = SetBookAuthorColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2117,7 +2122,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -2192,7 +2197,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetAuthorColumns(),
+                    SetAuthorColumns(),
                 };
 
                 if (authorList != null)
@@ -2240,7 +2245,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetAuthorColumns();
+                var columnNames = SetAuthorColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2248,7 +2253,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -2273,7 +2278,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
-                            AuthorEditViewModel.AddToStaticList(author);
+                            await AuthorEditViewModel.AddToStaticList(author);
 
                             importCount++;
                             this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -2325,7 +2330,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetLocationColumns(),
+                    SetLocationColumns(),
                 };
 
                 if (locationList != null)
@@ -2372,7 +2377,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetLocationColumns();
+                var columnNames = SetLocationColumns();
 
                 List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2380,7 +2385,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
                     return 1;
@@ -2404,7 +2409,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
-                            LocationEditViewModel.AddToStaticList(location);
+                            await LocationEditViewModel.AddToStaticList(location);
 
                             importCount++;
                             this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");

@@ -1,26 +1,19 @@
 // <copyright file="BookCollectionList.xaml.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
-#if ANDROID
-using Android.Views;
-using AndroidX.Core.View;
-#endif
-using BookCollector.ViewModels.BaseViewModels;
 
 namespace BookCollector.Views.Controls.Book;
 
+/// <summary>
+/// BookCollectionList class.
+/// </summary>
 public partial class BookCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookCollectionList"/> class.
+    /// </summary>
     public BookCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookCollector.Views.Support.CreditsView"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
-             Title="{x:Static localization:AppStringResources.Credits}">
+             xmlns:local="clr-namespace:BookCollector.Views.Support"
+             Title="{x:Static localization:AppStringResources.Credits}"
+             x:DataType="local:CreditsView">
 
     <VerticalStackLayout Margin="20,0">
         <Image Source="{AppThemeBinding Light=pictogrammers_full_black.svg, Dark=pictogrammers_full_white.svg}"

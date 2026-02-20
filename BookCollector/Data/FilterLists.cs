@@ -2,14 +2,14 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Core.Extensions;
-
 namespace BookCollector.Data
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Maui.Core.Extensions;
+
     public partial class FilterLists : BookBaseViewModel
     {
         public static async Task<ObservableCollection<BookModel>> FilterBookList(
@@ -235,7 +235,7 @@ namespace BookCollector.Data
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookLanguage(ObservableCollection<BookModel> bookList,  string? languageOption)
+        private static ObservableCollection<BookModel> FilterBookLanguage(ObservableCollection<BookModel> bookList, string? languageOption)
         {
             var filterList = bookList;
 

@@ -2,25 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Author;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Author;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class AuthorsViewModel : AuthorBaseViewModel
     {
         [ObservableProperty]
@@ -35,20 +33,17 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        public static bool RefreshView { get; set; }
+
         private bool ShowHiddenAuthors { get; set; }
 
         private bool TotalBooksChecked { get; set; }
 
         private bool TotalPriceChecked { get; set; }
 
-        public static bool RefreshView { get; set; }
-
         public static async Task SetList(bool showHiddenAuthors)
         {
-            if (fullAuthorList == null)
-            {
-                fullAuthorList = await FillLists.GetAllAuthorsList();
-            }
+            fullAuthorList ??= await FillLists.GetAllAuthorsList();
 
             if (!showHiddenAuthors)
             {
@@ -72,10 +67,13 @@ namespace BookCollector.ViewModels.Groupings
 
                     books = books?.Where(x => !x.HideBook).ToObservableCollection();
 
-                    foreach (var book in books)
+                    if (books != null)
                     {
-                        book.HideBook = true;
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        foreach (var book in books)
+                        {
+                            book.HideBook = true;
+                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        }
                     }
                 }
             }
@@ -99,7 +97,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalAuthorsCount = this.FilteredAuthorList1 != null ? this.FilteredAuthorList1.Count : 0;
 
-                        this.SearchOnAuthor(this.SearchString);
+                        await this.SearchOnAuthor(this.SearchString);
 
                         await Task.WhenAll(this.FilteredAuthorList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredAuthorList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -142,7 +140,7 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async void SearchOnAuthor(string? input)
+        public async Task SearchOnAuthor(string? input)
         {
             this.SearchString = input;
 
@@ -160,19 +158,19 @@ namespace BookCollector.ViewModels.Groupings
                 this.FilteredAuthorsCount = this.FilteredAuthorList2 != null ? this.FilteredAuthorList2.Count : 0;
 
                 this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
-            }
 
-            var sortList = SortLists.SortAuthorList(
-                                this.FilteredAuthorList2,
+                var sortList = SortLists.SortAuthorList(
+                                this.FilteredAuthorList2!,
                                 this.AuthorLastNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredAuthorList2 = sortList.Result;
+                this.FilteredAuthorList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
@@ -244,8 +242,8 @@ namespace BookCollector.ViewModels.Groupings
                     this.SetIsBusyTrue();
 
                     await Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
-                    this.RemoveFromStaticList(selected);
-                    this.RemoveBookFromGrouping(selected);
+                    RemoveFromStaticList(selected);
+                    await RemoveBookFromGrouping(selected);
 
                     await ConfirmDelete(selected.FullName);
 
@@ -313,15 +311,15 @@ namespace BookCollector.ViewModels.Groupings
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
 
-        private void RemoveFromStaticList(AuthorModel selected)
+        private static void RemoveFromStaticList(AuthorModel selected)
         {
             if (AuthorsViewModel.fullAuthorList != null)
             {
-                AuthorsViewModel.RefreshView = this.RemoveAuthorFromStaticList(selected, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
+                AuthorsViewModel.RefreshView = RemoveAuthorFromStaticList(selected, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
             }
         }
 
-        private bool RemoveAuthorFromStaticList(AuthorModel selected, ObservableCollection<AuthorModel> authorList, ObservableCollection<AuthorModel>? filteredAuthorList)
+        private static bool RemoveAuthorFromStaticList(AuthorModel selected, ObservableCollection<AuthorModel> authorList, ObservableCollection<AuthorModel>? filteredAuthorList)
         {
             var refresh = false;
 
@@ -353,21 +351,24 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private async void RemoveBookFromGrouping(AuthorModel author)
+        private static async Task RemoveBookFromGrouping(AuthorModel author)
         {
             var bookAuthors = await FillLists.GetAllBookAuthorsForAuthor(author.AuthorGuid);
 
-            foreach (var bookAuthor in bookAuthors)
+            if (bookAuthors != null)
             {
-                await Database.DeleteBookAuthorAsync(bookAuthor.AuthorGuid, bookAuthor.BookGuid);
-
-                var book = AllBooksViewModel.fullBookList?.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
-
-                if (book != null)
+                foreach (var bookAuthor in bookAuthors)
                 {
-                    //book.AuthorListString = null;
-                    //Database.SaveBookAsync(book);
-                    BookBaseViewModel.AddToStaticList(book);
+                    await Database.DeleteBookAuthorAsync(bookAuthor.AuthorGuid, bookAuthor.BookGuid);
+
+                    var book = AllBooksViewModel.fullBookList?.FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+
+                    if (book != null)
+                    {
+                        //book.AuthorListString = null;
+                        //Database.SaveBookAsync(book);
+                        await BookBaseViewModel.AddToStaticList(book);
+                    }
                 }
             }
         }

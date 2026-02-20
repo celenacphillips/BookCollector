@@ -2,23 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Genre;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Genre;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class GenresViewModel : GenreBaseViewModel
     {
         [ObservableProperty]
@@ -33,6 +33,8 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        public static bool RefreshView { get; set; }
+
         private bool ShowHiddenGenres { get; set; }
 
         private bool GenreNameChecked { get; set; }
@@ -41,14 +43,9 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
-        public static bool RefreshView { get; set; }
-
         public static async Task SetList(bool showHiddenGenres)
         {
-            if (fullGenreList == null)
-            {
-                fullGenreList = await FillLists.GetAllGenresList();
-            }
+            fullGenreList ??= await FillLists.GetAllGenresList();
 
             if (!showHiddenGenres)
             {
@@ -72,10 +69,13 @@ namespace BookCollector.ViewModels.Groupings
                         .Where(x => x.BookGenreGuid == item.GenreGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    foreach (var book in books)
+                    if (books != null)
                     {
-                        book.HideBook = true;
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        foreach (var book in books)
+                        {
+                            book.HideBook = true;
+                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        }
                     }
                 }
             }
@@ -99,7 +99,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalGenresCount = this.FilteredGenreList1 != null ? this.FilteredGenreList1.Count : 0;
 
-                        this.SearchOnGenre(this.SearchString);
+                        await this.SearchOnGenre(this.SearchString);
 
                         await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -142,7 +142,7 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async void SearchOnGenre(string? input)
+        public async Task SearchOnGenre(string? input)
         {
             this.SearchString = input;
 
@@ -160,19 +160,19 @@ namespace BookCollector.ViewModels.Groupings
                 this.FilteredGenresCount = this.FilteredGenreList2 != null ? this.FilteredGenreList2.Count : 0;
 
                 this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
-            }
 
-            var sortList = SortLists.SortGenresList(
-                                this.FilteredGenreList2,
+                var sortList = SortLists.SortGenresList(
+                                this.FilteredGenreList2!,
                                 this.GenreNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredGenreList2 = sortList.Result;
+                this.FilteredGenreList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
@@ -246,8 +246,8 @@ namespace BookCollector.ViewModels.Groupings
                         this.SetIsBusyTrue();
 
                         await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
-                        this.RemoveFromStaticList(selected);
-                        this.RemoveBookFromGrouping(selected);
+                        RemoveFromStaticList(selected);
+                        await RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.GenreName);
 
@@ -316,15 +316,15 @@ namespace BookCollector.ViewModels.Groupings
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
 
-        private void RemoveFromStaticList(GenreModel selected)
+        private static void RemoveFromStaticList(GenreModel selected)
         {
             if (GenresViewModel.fullGenreList != null)
             {
-                GenresViewModel.RefreshView = this.RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
+                GenresViewModel.RefreshView = RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
             }
         }
 
-        private bool RemoveGenreFromStaticList(GenreModel selected, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
+        private static bool RemoveGenreFromStaticList(GenreModel selected, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
         {
             var refresh = false;
 
@@ -356,15 +356,18 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private void RemoveBookFromGrouping(GenreModel genre)
+        private static async Task RemoveBookFromGrouping(GenreModel genre)
         {
             var books = AllBooksViewModel.fullBookList?.Where(x => x.BookGenreGuid == genre.GenreGuid).ToList();
 
-            foreach (var book in books)
+            if (books != null)
             {
-                book.BookGenreGuid = null;
-                Database.SaveBookAsync(book);
-                BookBaseViewModel.AddToStaticList(book);
+                foreach (var book in books)
+                {
+                    book.BookGenreGuid = null;
+                    await Database.SaveBookAsync(book);
+                    await BookBaseViewModel.AddToStaticList(book);
+                }
             }
         }
     }

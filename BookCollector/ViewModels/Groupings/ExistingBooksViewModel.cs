@@ -2,22 +2,21 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Book;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class ExistingBooksViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -27,7 +26,7 @@ namespace BookCollector.ViewModels.Groupings
         public ObservableCollection<BookModel>? filteredBookList1;
 
         [ObservableProperty]
-        public ObservableCollection<BookModel>? filteredBookList2;
+        public new ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
         public ObservableCollection<string>? bookAuthorList;
@@ -37,8 +36,6 @@ namespace BookCollector.ViewModels.Groupings
 
         [ObservableProperty]
         public int filteredBooksCount;
-
-        public bool RefreshView { get; set; }
 
         public ExistingBooksViewModel(object selected, ContentPage view, object? previousViewModel)
         {
@@ -50,8 +47,12 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
-            RefreshView = true;
+            this.RefreshView = true;
         }
+
+        public string? BookAuthorOption { get; set; }
+
+        public bool RefreshView { get; set; }
 
         private object? SelectedObject { get; set; }
 
@@ -61,14 +62,9 @@ namespace BookCollector.ViewModels.Groupings
 
         private object? PreviousViewModel { get; set; }
 
-        public string? BookAuthorOption { get; set; }
-
         public async Task SetCollectionList(bool showHiddenBooks)
         {
-            if (this.FullBookList == null)
-            {
-                this.FullBookList = await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
-            }
+            this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
             if (!showHiddenBooks)
             {
@@ -82,10 +78,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetGenreList(bool showHiddenBooks)
         {
-            if (this.FullBookList == null)
-            {
-                this.FullBookList = await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
-            }
+            this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
             if (!showHiddenBooks)
             {
@@ -99,10 +92,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetSeriesList(bool showHiddenBooks)
         {
-            if (this.FullBookList == null)
-            {
-                this.FullBookList = await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
-            }
+            this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
             if (!showHiddenBooks)
             {
@@ -135,10 +125,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetLocationList(bool showHiddenBooks)
         {
-            if (this.FullBookList == null)
-            {
-                this.FullBookList = await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
-            }
+            this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
             if (!showHiddenBooks)
             {
@@ -152,7 +139,7 @@ namespace BookCollector.ViewModels.Groupings
 
         public async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (this.RefreshView)
             {
                 try
                 {
@@ -191,14 +178,14 @@ namespace BookCollector.ViewModels.Groupings
                         this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
                         this.FilteredBookList2 = this.FilteredBookList1;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.FilteredBookList1!.Select(x => x.SetAuthorListString()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1!);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1!);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1!);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1!);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.FilteredBookList1!,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -212,7 +199,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredBookList2 = filteredList.Result;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetReadingProgress()));
+                        await Task.WhenAll(this.FilteredBookList1!.Select(x => x.SetReadingProgress()));
                         await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetCoverDisplay()));
 
                         var sortList = SortLists.SortBookList(
@@ -248,7 +235,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
 
                     this.SetIsBusyFalse();
-                    RefreshView = false;
+                    this.RefreshView = false;
                 }
                 catch (Exception ex)
                 {
@@ -260,13 +247,13 @@ namespace BookCollector.ViewModels.Groupings
                     await DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    RefreshView = false;
+                    this.RefreshView = false;
                 }
             }
         }
 
         [RelayCommand]
-        public async void BookSearchOnTitle(string? input)
+        public async Task BookSearchOnTitle(string? input)
         {
             this.SearchString = input;
 
@@ -286,10 +273,9 @@ namespace BookCollector.ViewModels.Groupings
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-            }
 
-            var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList2,
+                var sortList = SortLists.SortBookList(
+                                    this.FilteredBookList2!,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
                                     this.BookReadPercentageChecked,
@@ -302,16 +288,17 @@ namespace BookCollector.ViewModels.Groupings
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredBookList2 = sortList.Result;
+                this.FilteredBookList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
         public async Task Refresh()
         {
             this.SetRefreshTrue();
-            RefreshView = true;
+            this.RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
@@ -373,7 +360,7 @@ namespace BookCollector.ViewModels.Groupings
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -414,7 +401,7 @@ namespace BookCollector.ViewModels.Groupings
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -497,7 +484,7 @@ namespace BookCollector.ViewModels.Groupings
                     await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
 
                     this.RemoveFromStaticList(this.SelectedBook);
-                    AddToStaticList(this.SelectedBook, this.PreviousViewModel);
+                    await AddToStaticList(this.SelectedBook, this.PreviousViewModel);
 
                     var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
                     await Shell.Current.Navigation.PushAsync(view);
@@ -585,7 +572,7 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        private void RemoveFromStaticList(BookModel book)
+        private new void RemoveFromStaticList(BookModel book)
         {
             if (this.FullBookList != null)
             {

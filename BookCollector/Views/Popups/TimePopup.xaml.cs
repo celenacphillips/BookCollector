@@ -1,15 +1,31 @@
-// <copyright file="PagesReadPopup.xaml.cs" company="Castle Software">
+// <copyright file="TimePopup.xaml.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using CommunityToolkit.Maui.Views;
-using DocumentFormat.OpenXml.Bibliography;
-
 namespace BookCollector.Views.Popups;
 
+using CommunityToolkit.Maui.Views;
+
+/// <summary>
+/// TimePopup class.
+/// </summary>
 public partial class TimePopup : Popup<TimeSpan>
 {
+    private bool hoursNotValidField;
+
+    private bool minutesNotValidField;
+
+    private bool saveEnabledField;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TimePopup"/> class.
+    /// </summary>
+    /// <param name="title">Title of the popup.</param>
+    /// <param name="popupWidth">Max width of the popup.</param>
+    /// <param name="hours">Input hours.</param>
+    /// <param name="minutes">Input minutes.</param>
+    /// <param name="maxHours">Max hours input cannot go over. Default is null.</param>
+    /// <param name="maxMinutes">Max minutes input cannot go over. Default is null.</param>
     public TimePopup(string title, double popupWidth, int hours, int minutes, int? maxHours = null, int? maxMinutes = null)
     {
         this.Title = title;
@@ -24,20 +40,39 @@ public partial class TimePopup : Popup<TimeSpan>
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Gets or sets the title of the popup.
+    /// </summary>
     public string Title { get; set; }
 
+    /// <summary>
+    /// Gets or sets the pop width.
+    /// </summary>
     public double PopupWidth { get; set; }
 
+    /// <summary>
+    /// Gets or sets the input hours.
+    /// </summary>
     public int Hours { get; set; }
 
+    /// <summary>
+    /// Gets or sets the input minutes.
+    /// </summary>
     public int Minutes { get; set; }
 
+    /// <summary>
+    /// Gets or sets the max hours.
+    /// </summary>
     public int? MaxHours { get; set; }
 
+    /// <summary>
+    /// Gets or sets the max minutes.
+    /// </summary>
     public int? MaxMinutes { get; set; }
 
-    private bool hoursNotValidField;
-
+    /// <summary>
+    /// Gets or sets a value indicating whether the input hours is valid.
+    /// </summary>
     public bool HoursNotValid
     {
         get => this.hoursNotValidField;
@@ -51,8 +86,9 @@ public partial class TimePopup : Popup<TimeSpan>
         }
     }
 
-    private bool minutesNotValidField;
-
+    /// <summary>
+    /// Gets or sets a value indicating whether the input minutes is valid.
+    /// </summary>
     public bool MinutesNotValid
     {
         get => this.minutesNotValidField;
@@ -66,8 +102,9 @@ public partial class TimePopup : Popup<TimeSpan>
         }
     }
 
-    private bool saveEnabledField;
-
+    /// <summary>
+    /// Gets or sets a value indicating whether the save button is enabled.
+    /// </summary>
     public bool SaveEnabled
     {
         get => this.saveEnabledField;
@@ -81,6 +118,11 @@ public partial class TimePopup : Popup<TimeSpan>
         }
     }
 
+    /// <summary>
+    /// Called once the close button is clicked. Closes the popup and returns the timespan value.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
     public async void OnClose(object? sender, EventArgs e)
     {
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -94,38 +136,43 @@ public partial class TimePopup : Popup<TimeSpan>
     {
         if (!string.IsNullOrEmpty(e.NewTextValue))
         {
-            int.TryParse(e.NewTextValue, out var hours);
-
-            if (hours == 0 && e.NewTextValue.Equals("0"))
+            if (int.TryParse(e.NewTextValue, out var hours))
             {
-                this.Hours = hours;
-                this.HoursNotValid = false;
-            }
-            else
-            if (hours != 0 && hours > 0)
-            {
-                if (this.MaxHours != null)
-                {
-                    var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
-                    var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
-
-                    if (timespan <= maxTimespan)
-                    {
-                        this.Hours = hours;
-                        this.HoursNotValid = false;
-                        this.MinutesNotValid = false;
-                    }
-                    else
-                    {
-                        this.HoursNotValid = true;
-                        this.MinutesNotValid = true;
-                    }
-                }
-                else
+                if (hours == 0 && e.NewTextValue.Equals("0"))
                 {
                     this.Hours = hours;
                     this.HoursNotValid = false;
                 }
+                else
+                    if (hours != 0 && hours > 0)
+                    {
+                        if (this.MaxHours != null)
+                        {
+                            var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
+                            var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
+
+                            if (timespan <= maxTimespan)
+                            {
+                                this.Hours = hours;
+                                this.HoursNotValid = false;
+                                this.MinutesNotValid = false;
+                            }
+                            else
+                            {
+                                this.HoursNotValid = true;
+                                this.MinutesNotValid = true;
+                            }
+                        }
+                        else
+                        {
+                            this.Hours = hours;
+                            this.HoursNotValid = false;
+                        }
+                    }
+                    else
+                    {
+                        this.HoursNotValid = true;
+                    }
             }
             else
             {
@@ -144,38 +191,43 @@ public partial class TimePopup : Popup<TimeSpan>
     {
         if (!string.IsNullOrEmpty(e.NewTextValue))
         {
-            int.TryParse(e.NewTextValue, out var minutes);
-
-            if (minutes == 0 && e.NewTextValue.Equals("0"))
+            if (int.TryParse(e.NewTextValue, out var minutes))
             {
-                this.Minutes = minutes;
-                this.MinutesNotValid = false;
-            }
-            else
-            if (minutes != 0 && (minutes > 0 && minutes < 60))
-            {
-                if (this.MaxHours != null)
-                {
-                    var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
-                    var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
-
-                    if (timespan <= maxTimespan)
-                    {
-                        this.Minutes = minutes;
-                        this.MinutesNotValid = false;
-                        this.HoursNotValid = false;
-                    }
-                    else
-                    {
-                        this.HoursNotValid = true;
-                        this.MinutesNotValid = true;
-                    }
-                }
-                else
+                if (minutes == 0 && e.NewTextValue.Equals("0"))
                 {
                     this.Minutes = minutes;
                     this.MinutesNotValid = false;
                 }
+                else
+                    if (minutes != 0 && (minutes > 0 && minutes < 60))
+                    {
+                        if (this.MaxHours != null)
+                        {
+                            var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
+                            var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
+
+                            if (timespan <= maxTimespan)
+                            {
+                                this.Minutes = minutes;
+                                this.MinutesNotValid = false;
+                                this.HoursNotValid = false;
+                            }
+                            else
+                            {
+                                this.HoursNotValid = true;
+                                this.MinutesNotValid = true;
+                            }
+                        }
+                        else
+                        {
+                            this.Minutes = minutes;
+                            this.MinutesNotValid = false;
+                        }
+                    }
+                    else
+                    {
+                        this.MinutesNotValid = true;
+                    }
             }
             else
             {

@@ -2,10 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-
 namespace BookCollector.Data
 {
+    using BookCollector.Resources.Localization;
+
     public class StringManipulation
     {
         public static string SetTotalBooksString(int filteredCount, int totalCount)

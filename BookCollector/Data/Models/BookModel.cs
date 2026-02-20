@@ -2,21 +2,39 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using System.Globalization;
-using BookCollector.Data.Database;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace BookCollector.Data.Models
 {
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using BookCollector.Data.Database;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+
     public partial class BookModel : BookDatabaseModel, ICloneable
     {
         [ObservableProperty]
         public ImageSource? bookCover;
+
+        [ObservableProperty]
+        public double? bookTotalTime;
+
+        [ObservableProperty]
+        public TimeSpan totalTimeSpan;
+
+        [ObservableProperty]
+        public string totalTimeString;
+
+        [ObservableProperty]
+        public TimeSpan listenTimeSpan;
+
+        [ObservableProperty]
+        public double? bookListenedTime;
+
+        [ObservableProperty]
+        public string listenTimeString;
 
         internal static BookCollectorDatabase Database;
 
@@ -123,24 +141,6 @@ namespace BookCollector.Data.Models
                 AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString().PadLeft(2, '0')).Replace("Blank2", this.BookMinutesTotal.ToString().PadLeft(2, '0'));
         }
 
-        [ObservableProperty]
-        public double? bookTotalTime;
-
-        [ObservableProperty]
-        public TimeSpan totalTimeSpan;
-
-        [ObservableProperty]
-        public string totalTimeString;
-
-        [ObservableProperty]
-        public TimeSpan listenTimeSpan;
-
-        [ObservableProperty]
-        public double? bookListenedTime;
-
-        [ObservableProperty]
-        public string listenTimeString;
-
         public static string? SetDate(string? input)
         {
             string? output = null;
@@ -167,14 +167,14 @@ namespace BookCollector.Data.Models
             else
             {
                 this.SetBookListenedTime();
-                this.SetBookTotalTime();
+                await this.SetBookTotalTime();
                 this.Progress = (double)((this.BookTotalTime != null && this.BookTotalTime != 0) ? this.BookListenedTime / (double)this.BookTotalTime : 0);
             }
 
             this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
-        public void SetBookCheckpoints(bool showCheckpoints)
+        public async Task SetBookCheckpoints(bool showCheckpoints)
         {
             if (showCheckpoints && (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook))))
             {
@@ -185,7 +185,7 @@ namespace BookCollector.Data.Models
 
             if (showCheckpoints && this.BookFormat != null && this.BookFormat!.Equals(AppStringResources.Audiobook))
             {
-                this.SetBookTotalTime();
+                await this.SetBookTotalTime();
                 this.HalfHours = (double)this.BookTotalTime / 2;
                 this.FourthHours = (double)this.BookTotalTime / 4;
                 this.ThreeFourthHours = this.HalfHours + this.FourthHours;
@@ -266,7 +266,7 @@ namespace BookCollector.Data.Models
 
         public async Task SetAuthorListString()
         {
-            Database = Database ?? new BookCollectorDatabase();
+            Database ??= new BookCollectorDatabase();
 
             ObservableCollection<AuthorModel>? authorList = [];
             ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
@@ -329,7 +329,7 @@ namespace BookCollector.Data.Models
                     }
                     else
                     {
-                        this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
+                        this.AuthorListString = this.AuthorListString[..(this.AuthorListString.LastIndexOf("; ") - 1)];
                     }
                 }
             }
@@ -339,7 +339,7 @@ namespace BookCollector.Data.Models
 
         public async Task SetBookChapters(ObservableCollection<ChapterModel>? chaptersList)
         {
-            Database = Database ?? new BookCollectorDatabase();
+            Database ??= new BookCollectorDatabase();
 
             if (chaptersList != null)
             {
@@ -357,7 +357,7 @@ namespace BookCollector.Data.Models
 
         public async Task RemoveBookChapters(List<ChapterModel>? chaptersList)
         {
-            Database = Database ?? new BookCollectorDatabase();
+            Database ??= new BookCollectorDatabase();
 
             if (chaptersList != null)
             {
@@ -395,7 +395,7 @@ namespace BookCollector.Data.Models
             this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
         }
 
-        public TimeSpan SetTime(int hour, int minute)
+        public static TimeSpan SetTime(int hour, int minute)
         {
             return new TimeSpan(hour, minute, 0);
         }

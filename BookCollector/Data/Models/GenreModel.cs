@@ -2,11 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.DatabaseModels;
-using System.Threading;
-
 namespace BookCollector.Data.Models
 {
+    using BookCollector.Data.DatabaseModels;
+
     public partial class GenreModel : GenreDatabaseModel, ICloneable
     {
         public GenreModel()

@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.Author;
 
+/// <summary>
+/// AuthorCollectionList class.
+/// </summary>
 public partial class AuthorCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthorCollectionList"/> class.
+    /// </summary>
     public AuthorCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

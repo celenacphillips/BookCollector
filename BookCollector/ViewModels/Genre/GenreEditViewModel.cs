@@ -2,19 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Genre;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Genre
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Genre;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class GenreEditViewModel : GenreBaseViewModel
     {
         [ObservableProperty]
@@ -70,7 +69,7 @@ namespace BookCollector.ViewModels.Genre
 #endif
 
                     this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
-                    AddToStaticList(this.EditedGenre);
+                    await AddToStaticList(this.EditedGenre);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -108,11 +107,6 @@ namespace BookCollector.ViewModels.Genre
             this.ValidateEntry();
         }
 
-        private void ValidateEntry()
-        {
-            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
-        }
-
         public static async Task AddToStaticList(GenreModel genre)
         {
             if (GenresViewModel.fullGenreList != null)
@@ -121,15 +115,20 @@ namespace BookCollector.ViewModels.Genre
             }
         }
 
+        private void ValidateEntry()
+        {
+            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
+        }
+
         private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
         {
             var refresh = false;
 
-            await Task.WhenAll(new Task[]
-            {
+            await Task.WhenAll(
+            [
                 genre.SetTotalBooks(true),
                 genre.SetTotalCostOfBooks(true),
-            });
+            ]);
 
             try
             {

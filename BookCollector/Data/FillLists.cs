@@ -2,17 +2,15 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using CommunityToolkit.Maui.Core.Extensions;
-using System.Collections.ObjectModel;
-using System.Linq;
-
 namespace BookCollector.Data
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.Models;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using CommunityToolkit.Maui.Core.Extensions;
+
     public partial class FillLists : BaseViewModel
     {
         public static async Task<ObservableCollection<BookModel>?> GetReadingBooksList()
@@ -247,7 +245,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.BookWhereToBuy) && !locationList.Any(x => x.Equals(book.BookWhereToBuy)))
                 {
-                    locationList.Add(char.ToUpper(book.BookWhereToBuy[0]) + book.BookWhereToBuy.Substring(1).ToLower());
+                    locationList.Add(char.ToUpper(book.BookWhereToBuy[0]) + book.BookWhereToBuy[1..].ToLower());
                 }
             }
 
@@ -278,7 +276,7 @@ namespace BookCollector.Data
 
             seriesList = seriesList.OrderBy(x => x.ParsedSeriesName).ToObservableCollection();
 
-            seriesListNames = seriesList.Select(x => x.SeriesName).ToObservableCollection();
+            seriesListNames = seriesList.Select(x => x.SeriesName!).ToObservableCollection();
 
             return seriesListNames;
         }
@@ -354,7 +352,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.BookLanguage) && !languageList.Any(x => x.Equals(book.BookLanguage)))
                 {
-                    languageList.Add(char.ToUpper(book.BookLanguage[0]) + book.BookLanguage.Substring(1).ToLower());
+                    languageList.Add(char.ToUpper(book.BookLanguage[0]) + book.BookLanguage[1..].ToLower());
                 }
             }
 

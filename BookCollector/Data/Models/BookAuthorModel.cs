@@ -2,10 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using SQLite;
-
 namespace BookCollector.Data.Models
 {
+    using SQLite;
+
     public class BookAuthorModel
     {
         [PrimaryKey]

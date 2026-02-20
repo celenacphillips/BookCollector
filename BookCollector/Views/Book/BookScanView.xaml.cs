@@ -2,15 +2,21 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Book;
+
 using BarcodeScanner.Mobile;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Book;
 using CommunityToolkit.Maui.Alerts;
 
-namespace BookCollector.Views.Book;
-
+/// <summary>
+/// BookScanView class.
+/// </summary>
 public partial class BookScanView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookScanView"/> class.
+    /// </summary>
     public BookScanView()
     {
         this.BindingContext = this;
@@ -18,10 +24,21 @@ public partial class BookScanView : ContentPage
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Gets or sets the view model to return the search result to.
+    /// </summary>
     public BookSearchViewModel? ReturnViewModel { get; set; }
 
+    /// <summary>
+    /// Gets or sets input string to search.
+    /// </summary>
     public string? Inputstring { get; set; }
 
+    /// <summary>
+    /// Determines the value of the barcode scanner.
+    /// </summary>
+    /// <param name="sender">The object sender.</param>
+    /// <param name="e">The event value.</param>
     public async void CameraView_OnDetected(object sender, OnDetectedEventArg e)
     {
         await Shell.Current.DisplaySnackbar(AppStringResources.BarcodeScanned);
@@ -42,6 +59,10 @@ public partial class BookScanView : ContentPage
         }
     }
 
+    /// <summary>
+    /// Returns the search result to the previous view model.
+    /// </summary>
+    /// <returns>A task.</returns>
     public async Task ScanSearch()
     {
         if (this.ReturnViewModel != null)

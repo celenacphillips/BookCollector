@@ -2,23 +2,25 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BarcodeScanner.Mobile;
-using BookCollector.CustomPermissions;
-using BookCollector.Data.BookAPI;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.WishListBook;
-using BookCollector.Views.Book;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Book
 {
+#if ANDROID
+    using BarcodeScanner.Mobile;
+#endif
+    using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data.BookAPI;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.WishListBook;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class BookSearchViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -109,11 +111,16 @@ namespace BookCollector.ViewModels.Book
             {
                 try
                 {
-                    List<Item>? items = new List<Item>();
+                    List<Item>? items = [];
                     int totalItems = 0;
 
                     var (combinedItems, totalCombinedItems) = await GoogleBooksAPI.CombinedSearch(this.IsbnInput, this.TitleInput, this.AuthorInput);
-                    items.AddRange(combinedItems);
+
+                    if (combinedItems != null)
+                    {
+                        items.AddRange(combinedItems);
+                    }
+
                     totalItems += totalCombinedItems;
 
                     this.SetIsBusyFalse();
@@ -165,7 +172,7 @@ namespace BookCollector.ViewModels.Book
 
             if (allowed)
             {
-                BookScanView view = new ()
+                BookScanView view = new()
                 {
                     ReturnViewModel = this,
                 };
@@ -176,6 +183,13 @@ namespace BookCollector.ViewModels.Book
             {
                 await DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}");
             }
+#else
+            BookScanView view = new ()
+            {
+                ReturnViewModel = this,
+            };
+
+            await Shell.Current.Navigation.PushModalAsync(view);
 #endif
         }
 
@@ -186,13 +200,14 @@ namespace BookCollector.ViewModels.Book
             {
                 this.SetData();
 
-                if (this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
+                if (this.PreviousViewModel != null && this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (WishListBookEditViewModel)this.PreviousViewModel;
                     previous.RefreshView = true;
                 }
 
-                if (this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
+                if (this.PreviousViewModel != null &&
+                    this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
                     !this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (BookEditViewModel)this.PreviousViewModel;
@@ -374,7 +389,7 @@ namespace BookCollector.ViewModels.Book
                     foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                     {
                         string firstName = author[..author.LastIndexOf(' ')];
-                        string lastName = author[(author.LastIndexOf(' ') + 1)..];
+                        string lastName = author[(author.LastIndexOf(' ') + 1) ..];
 
                         authorList.Add(
                             new AuthorModel()

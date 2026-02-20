@@ -4,6 +4,9 @@
 
 namespace BookCollector.Views.Controls;
 
+/// <summary>
+/// PinchandPanContainer class.
+/// </summary>
 public class PinchandPanContainer : ContentView
 {
     private double currentScale = 1;
@@ -14,6 +17,9 @@ public class PinchandPanContainer : ContentView
     private double panX;
     private double panY;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PinchandPanContainer"/> class.
+    /// </summary>
     public PinchandPanContainer()
     {
         var pinchGesture = new PinchGestureRecognizer();
@@ -25,6 +31,11 @@ public class PinchandPanContainer : ContentView
         this.GestureRecognizers.Add(panGesture);
     }
 
+    /// <summary>
+    /// Updates the image location and scale based on the pinch gesture.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
     public void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
         if (e.Status == GestureStatus.Started)
@@ -76,6 +87,11 @@ public class PinchandPanContainer : ContentView
         }
     }
 
+    /// <summary>
+    /// Updates the image location on the pan gesture.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
     public void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         switch (e.StatusType)

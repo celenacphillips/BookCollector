@@ -1,36 +1,4 @@
 ﻿[*.cs]
 
-# removed because .NET MAUI ObservableProperty objects cannot be uppercase
-# SA1307: Accessible fields must begin with upper-case letter
-dotnet_diagnostic.SA1307.severity = none
-
-# SA1300: Element must begin with upper-case letter
-dotnet_diagnostic.SA1300.severity = none
-
-# removed because .NET MAUI ObservableProperty objects must be public
-# SA1401: Fields must be private
-dotnet_diagnostic.SA1401.severity = none
-
-# removed because moving using directive can introduce breaking changes
-# also contradicts with IDE0065
-# SA1200: Using directives must be placed correctly
-dotnet_diagnostic.SA1200.severity = none
-
-# removed because this is being flagged on parsed API data, leaving all in one file for clarity
-# SA1402: File may only contain a single type
-dotnet_diagnostic.SA1402.severity = none
-
-# removed because this is contradicting SA1003: Operator spacing
-# SA1010: Opening square brackets must be spaced correctly
+# SA1010: Opening square brackets should be spaced correctly
 dotnet_diagnostic.SA1010.severity = none
-
-# removed because this is being flagged even with null checks around code
-# CS8629: Nullable value type may be null
-dotnet_diagnostic.CS8629.severity = none
-
-# removed because this is being flagged on parsed API data, and changing the casing breaks the retrieval of data
-# IDE1006: Naming rule violation: These words must begin with upper-case letters
-dotnet_diagnostic.IDE1006.severity = none
-
-dotnet_diagnostic.CA2200.severity = none
-dotnet_diagnostic.CS0168.severity = none

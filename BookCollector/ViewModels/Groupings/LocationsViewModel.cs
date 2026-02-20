@@ -2,23 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Location;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Location;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class LocationsViewModel : LocationBaseViewModel
     {
         [ObservableProperty]
@@ -33,6 +33,8 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        public static bool RefreshView { get; set; }
+
         private bool ShowHiddenLocations { get; set; }
 
         private bool LocationNameChecked { get; set; }
@@ -41,14 +43,9 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
-        public static bool RefreshView { get; set; }
-
         public static async Task SetList(bool showHiddenLocations)
         {
-            if (fullLocationList == null)
-            {
-                fullLocationList = await FillLists.GetAllLocationsList();
-            }
+            fullLocationList ??= await FillLists.GetAllLocationsList();
 
             if (!showHiddenLocations)
             {
@@ -72,10 +69,13 @@ namespace BookCollector.ViewModels.Groupings
                         .Where(x => x.BookLocationGuid == item.LocationGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    foreach (var book in books)
+                    if (books != null)
                     {
-                        book.HideBook = true;
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        foreach (var book in books)
+                        {
+                            book.HideBook = true;
+                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        }
                     }
                 }
             }
@@ -99,7 +99,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalLocationsCount = this.FilteredLocationList1 != null ? this.FilteredLocationList1.Count : 0;
 
-                        this.SearchOnLocation(this.SearchString);
+                        await this.SearchOnLocation(this.SearchString);
 
                         await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -142,7 +142,7 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async void SearchOnLocation(string? input)
+        public async Task SearchOnLocation(string? input)
         {
             this.SearchString = input;
 
@@ -160,19 +160,19 @@ namespace BookCollector.ViewModels.Groupings
                 this.FilteredLocationsCount = this.FilteredLocationList2 != null ? this.FilteredLocationList2.Count : 0;
 
                 this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
-            }
 
-            var sortList = SortLists.SortLocationsList(
-                                this.FilteredLocationList2,
+                var sortList = SortLists.SortLocationsList(
+                                this.FilteredLocationList2!,
                                 this.LocationNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredLocationList2 = sortList.Result;
+                this.FilteredLocationList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
@@ -246,8 +246,8 @@ namespace BookCollector.ViewModels.Groupings
                         this.SetIsBusyTrue();
 
                         await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
-                        this.RemoveFromStaticList(selected);
-                        this.RemoveBookFromGrouping(selected);
+                        RemoveFromStaticList(selected);
+                        await RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.LocationName);
 
@@ -316,15 +316,15 @@ namespace BookCollector.ViewModels.Groupings
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
 
-        private void RemoveFromStaticList(LocationModel selected)
+        private static void RemoveFromStaticList(LocationModel selected)
         {
             if (LocationsViewModel.fullLocationList != null)
             {
-                LocationsViewModel.RefreshView = this.RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
+                LocationsViewModel.RefreshView = RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
             }
         }
 
-        private bool RemoveLocationFromStaticList(LocationModel selected, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
+        private static bool RemoveLocationFromStaticList(LocationModel selected, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
         {
             var refresh = false;
 
@@ -356,15 +356,18 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private void RemoveBookFromGrouping(LocationModel location)
+        private static async Task RemoveBookFromGrouping(LocationModel location)
         {
             var books = AllBooksViewModel.fullBookList?.Where(x => x.BookLocationGuid == location.LocationGuid).ToList();
 
-            foreach (var book in books)
+            if (books != null)
             {
-                book.BookLocationGuid = null;
-                Database.SaveBookAsync(book);
-                BookBaseViewModel.AddToStaticList(book);
+                foreach (var book in books)
+                {
+                    book.BookLocationGuid = null;
+                    await Database.SaveBookAsync(book);
+                    await BookBaseViewModel.AddToStaticList(book);
+                }
             }
         }
     }

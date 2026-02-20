@@ -2,26 +2,33 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Database;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using BookCollector.Views.Controls;
-
 namespace BookCollector
 {
+    using BookCollector.Data.Database;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.Views.Controls;
+
     /// <summary>
     /// App class.
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class.
+        /// </summary>
         public App()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Creates the window for the application. This method is called when the
+        /// application starts and can be used to set up the main page or any other
+        /// initial UI elements.
+        /// </summary>
+        /// <param name="activationState">The value of what the window needs to be created.</param>
+        /// <returns>The created window.</returns>
         protected override Window CreateWindow(IActivationState? activationState)
         {
             Window window;

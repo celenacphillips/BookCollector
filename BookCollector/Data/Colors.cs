@@ -9,6 +9,10 @@ namespace BookCollector.Data
     /// </summary>
     public class Colors
     {
+        /// <summary>
+        /// Calculates and sets the colors for the application based on the hexcode provided.
+        /// </summary>
+        /// <param name="hexcode">The primary hexcode value.</param>
         public static void SetColors(string hexcode)
         {
             var color = Color.FromArgb(hexcode);

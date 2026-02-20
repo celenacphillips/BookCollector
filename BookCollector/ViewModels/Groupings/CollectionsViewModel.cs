@@ -2,23 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Collection;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Collection;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class CollectionsViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
@@ -34,6 +34,8 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        public static bool RefreshView { get; set; }
+
         private bool ShowHiddenCollections { get; set; }
 
         private bool CollectionNameChecked { get; set; }
@@ -42,14 +44,9 @@ namespace BookCollector.ViewModels.Groupings
 
         private bool TotalPriceChecked { get; set; }
 
-        public static bool RefreshView { get; set; }
-
         public static async Task SetList(bool showHiddenCollections)
         {
-            if (fullCollectionList == null)
-            {
-                fullCollectionList = await FillLists.GetAllCollectionsList();
-            }
+            fullCollectionList ??= await FillLists.GetAllCollectionsList();
 
             if (!showHiddenCollections)
             {
@@ -73,10 +70,13 @@ namespace BookCollector.ViewModels.Groupings
                         .Where(x => x.BookCollectionGuid == item.CollectionGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    foreach (var book in books)
+                    if (books != null)
                     {
-                        book.HideBook = true;
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        foreach (var book in books)
+                        {
+                            book.HideBook = true;
+                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                        }
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.TotalCollectionsCount = this.FilteredCollectionList1 != null ? this.FilteredCollectionList1.Count : 0;
 
-                        this.SearchOnCollection(this.SearchString);
+                        await this.SearchOnCollection(this.SearchString);
 
                         await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
                         await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
@@ -143,7 +143,7 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         [RelayCommand]
-        public async void SearchOnCollection(string? input)
+        public async Task SearchOnCollection(string? input)
         {
             this.SearchString = input;
 
@@ -163,19 +163,19 @@ namespace BookCollector.ViewModels.Groupings
                 this.FilteredCollectionsCount = this.FilteredCollectionList2 != null ? this.FilteredCollectionList2.Count : 0;
 
                 this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
-            }
 
-            var sortList = SortLists.SortCollectionsList(
-                                this.FilteredCollectionList2,
+                var sortList = SortLists.SortCollectionsList(
+                                this.FilteredCollectionList2!,
                                 this.CollectionNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredCollectionList2 = sortList.Result;
+                this.FilteredCollectionList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]
@@ -249,8 +249,8 @@ namespace BookCollector.ViewModels.Groupings
                         this.SetIsBusyTrue();
 
                         await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
-                        this.RemoveFromStaticList(selected);
-                        this.RemoveBookFromGrouping(selected);
+                        RemoveFromStaticList(selected);
+                        await RemoveBookFromGrouping(selected);
 
                         await ConfirmDelete(selected.CollectionName);
 
@@ -319,15 +319,15 @@ namespace BookCollector.ViewModels.Groupings
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
 
-        private void RemoveFromStaticList(CollectionModel selected)
+        private static void RemoveFromStaticList(CollectionModel selected)
         {
             if (CollectionsViewModel.fullCollectionList != null)
             {
-                CollectionsViewModel.RefreshView = this.RemoveCollectionFromStaticList(selected, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
+                CollectionsViewModel.RefreshView = RemoveCollectionFromStaticList(selected, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
             }
         }
 
-        private bool RemoveCollectionFromStaticList(CollectionModel selected, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
+        private static bool RemoveCollectionFromStaticList(CollectionModel selected, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
         {
             var refresh = false;
 
@@ -359,15 +359,18 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private void RemoveBookFromGrouping(CollectionModel collection)
+        private static async Task RemoveBookFromGrouping(CollectionModel collection)
         {
             var books = AllBooksViewModel.fullBookList?.Where(x => x.BookCollectionGuid == collection.CollectionGuid).ToList();
 
-            foreach(var book in books)
+            if (books != null)
             {
-                book.BookCollectionGuid = null;
-                Database.SaveBookAsync(book);
-                BookBaseViewModel.AddToStaticList(book);
+                foreach (var book in books)
+                {
+                    book.BookCollectionGuid = null;
+                    await Database.SaveBookAsync(book);
+                    await BookBaseViewModel.AddToStaticList(book);
+                }
             }
         }
     }

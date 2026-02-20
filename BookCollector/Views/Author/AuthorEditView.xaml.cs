@@ -2,13 +2,23 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Author;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Author;
 
-namespace BookCollector.Views.Author;
-
+/// <summary>
+/// AuthorEditView class.
+/// </summary>
 public partial class AuthorEditView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthorEditView"/> class.
+    /// </summary>
+    /// <param name="author">Author to add or edit.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
+    /// <param name="insertMainViewBefore">The value to determine if Main view should be inserted in
+    /// stack before this page or not. Default is false.</param>
     public AuthorEditView(AuthorModel author, string viewTitle, bool insertMainViewBefore = false)
     {
         this.ViewModel = new AuthorEditViewModel(author, this)
@@ -23,8 +33,9 @@ public partial class AuthorEditView : ContentPage
 
     private AuthorEditViewModel ViewModel { get; set; }
 
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         this.ViewModel.SetViewModelData();

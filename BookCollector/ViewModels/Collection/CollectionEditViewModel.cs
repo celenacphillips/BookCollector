@@ -2,20 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.Views.Collection;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Collection
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Collection;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class CollectionEditViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
@@ -71,18 +69,18 @@ namespace BookCollector.ViewModels.Collection
 #endif
 
                     this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
-                    AddToStaticList(this.EditedCollection);
+                    await AddToStaticList(this.EditedCollection);
 
                     if (this.InsertMainViewBefore)
                     {
-                        CollectionMainView view = new CollectionMainView(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                        CollectionMainView view = new(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
                         Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
 
                     await Shell.Current.Navigation.PopAsync();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 #if DEBUG
                 await DisplayMessage("Error!", ex.Message);
@@ -109,11 +107,6 @@ namespace BookCollector.ViewModels.Collection
             this.ValidateEntry();
         }
 
-        private void ValidateEntry()
-        {
-            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
-        }
-
         public static async Task AddToStaticList(CollectionModel collection)
         {
             if (CollectionsViewModel.fullCollectionList != null)
@@ -122,15 +115,20 @@ namespace BookCollector.ViewModels.Collection
             }
         }
 
+        private void ValidateEntry()
+        {
+            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
+        }
+
         private static async Task<bool> AddCollectionToStaticList(CollectionModel collection, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
         {
             var refresh = false;
 
-            await Task.WhenAll(new Task[]
-            {
+            await Task.WhenAll(
+            [
                 collection.SetTotalBooks(true),
                 collection.SetTotalCostOfBooks(true),
-            });
+            ]);
 
             try
             {

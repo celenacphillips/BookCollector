@@ -2,10 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.DatabaseModels;
-
 namespace BookCollector.Data.Models
 {
+    using BookCollector.Data.DatabaseModels;
+
     public partial class SeriesModel : SeriesDatabaseModel, ICloneable
     {
         public SeriesModel()

@@ -2,13 +2,19 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Groupings;
+
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Groupings;
 
-namespace BookCollector.Views.Groupings;
-
+/// <summary>
+/// CollectionsView class.
+/// </summary>
 public partial class CollectionsView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CollectionsView"/> class.
+    /// </summary>
     public CollectionsView()
     {
         this.ViewModel = new CollectionsViewModel(this);
@@ -19,7 +25,17 @@ public partial class CollectionsView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private CollectionsViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -42,14 +58,5 @@ public partial class CollectionsView : ContentPage
                 this.collectionCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private CollectionsViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        await this.ViewModel.SetViewModelData();
     }
 }

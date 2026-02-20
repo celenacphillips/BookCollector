@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.Genre;
 
+/// <summary>
+/// GenreCollectionList class.
+/// </summary>
 public partial class GenreCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenreCollectionList"/> class.
+    /// </summary>
     public GenreCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

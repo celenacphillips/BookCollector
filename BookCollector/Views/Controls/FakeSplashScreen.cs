@@ -1,14 +1,21 @@
-﻿using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Main;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="FakeSplashScreen.cs" company="Castle Software">
+// Copyright (c) Castle Software. All rights reserved.
+// </copyright>
 
 namespace BookCollector.Views.Controls
 {
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Main;
+
+    /// <summary>
+    /// FakeSplashScreen class.
+    /// </summary>
     public class FakeSplashScreen : ContentPage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FakeSplashScreen"/> class.
+        /// </summary>
         public FakeSplashScreen()
         {
             this.BackgroundColor = Color.FromArgb("#336699");
@@ -46,6 +53,9 @@ namespace BookCollector.Views.Controls
             this.Content = grid;
         }
 
+        /// <summary>
+        /// Called when the view becomes visible.
+        /// </summary>
         protected override async void OnAppearing()
         {
             base.OnAppearing();

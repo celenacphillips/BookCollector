@@ -2,19 +2,19 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Library
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class ToBeReadViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -24,7 +24,7 @@ namespace BookCollector.ViewModels.Library
         public static ObservableCollection<BookModel>? filteredBookList1;
 
         [ObservableProperty]
-        public static ObservableCollection<BookModel>? filteredBookList2;
+        public static new ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
         public ObservableCollection<string>? bookAuthorList;
@@ -35,8 +35,6 @@ namespace BookCollector.ViewModels.Library
         [ObservableProperty]
         public static int filteredBooksCount;
 
-        public static bool RefreshView { get; set; }
-
         public ToBeReadViewModel(ContentPage view)
         {
             this.View = view;
@@ -46,14 +44,13 @@ namespace BookCollector.ViewModels.Library
             RefreshView = true;
         }
 
+        public static bool RefreshView { get; set; }
+
         public string? BookAuthorOption { get; set; }
 
         public static async Task SetList(bool showHiddenBooks)
         {
-            if (fullBookList == null)
-            {
-                fullBookList = await FillLists.GetToBeReadBooksList();
-            }
+            fullBookList ??= await FillLists.GetToBeReadBooksList();
 
             if (!showHiddenBooks)
             {
@@ -81,14 +78,14 @@ namespace BookCollector.ViewModels.Library
                     {
                         this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.FilteredBookList1!.Select(x => x.SetAuthorListString()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1!);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1!);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1!);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1!);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.FilteredBookList1!,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -161,7 +158,7 @@ namespace BookCollector.ViewModels.Library
         }
 
         [RelayCommand]
-        public async void BookSearchOnTitle(string? input)
+        public async Task BookSearchOnTitle(string? input)
         {
             this.SearchString = input;
 
@@ -188,10 +185,9 @@ namespace BookCollector.ViewModels.Library
                 this.FilteredBooksCount = this.FilteredBookList2 != null ? this.FilteredBookList2.Count : 0;
 
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-            }
 
-            var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList2,
+                var sortList = SortLists.SortBookList(
+                                    this.FilteredBookList2!,
                                     this.BookTitleChecked,
                                     this.BookReadingDateChecked,
                                     this.BookReadPercentageChecked,
@@ -204,9 +200,10 @@ namespace BookCollector.ViewModels.Library
                                     this.AscendingChecked,
                                     this.DescendingChecked);
 
-            await Task.WhenAll(sortList);
+                await Task.WhenAll(sortList);
 
-            this.FilteredBookList2 = sortList.Result;
+                this.FilteredBookList2 = sortList.Result;
+            }
         }
 
         [RelayCommand]

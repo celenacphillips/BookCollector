@@ -2,14 +2,14 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Core.Extensions;
-
 namespace BookCollector.Data
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Maui.Core.Extensions;
+
     public partial class SortLists : BaseViewModel
     {
         public static async Task<ObservableCollection<BookModel>> SortBookList(
@@ -439,14 +439,12 @@ namespace BookCollector.Data
         public static async Task<ObservableCollection<WishlistBookModel>> SortWishlistBookList(
             ObservableCollection<WishlistBookModel> bookList,
             bool bookTitleChecked,
-            bool bookReadingDateChecked,
-            bool bookReadPercentageChecked,
             bool bookPublisherChecked,
             bool bookPublishYearChecked,
             bool authorLastNameChecked,
             bool bookFormatChecked,
             bool bookPriceChecked,
-            bool PageCountTimeChecked,
+            bool pageCountTimeChecked,
             bool ascendingChecked,
             bool descendingChecked)
         {
@@ -530,7 +528,7 @@ namespace BookCollector.Data
                 }
             }
 
-            if (PageCountTimeChecked)
+            if (pageCountTimeChecked)
             {
                 if (ascendingChecked)
                 {

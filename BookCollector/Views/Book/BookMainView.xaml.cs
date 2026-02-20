@@ -2,15 +2,24 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Book;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Book;
 
-namespace BookCollector.Views.Book;
-
+/// <summary>
+/// BookMainView class.
+/// </summary>
 public partial class BookMainView : ContentPage
 {
     private BookMainViewModel viewModel;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookMainView"/> class.
+    /// </summary>
+    /// <param name="book">Book to view.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
+    /// <param name="previousViewModel">The previous view model this method has been called from. Default is null.</param>
     public BookMainView(BookModel book, string viewTitle, object? previousViewModel = null)
     {
         this.viewModel = new BookMainViewModel(book, this, previousViewModel)
@@ -22,8 +31,9 @@ public partial class BookMainView : ContentPage
         this.InitializeComponent();
     }
 
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         await this.viewModel.SetViewModelData();

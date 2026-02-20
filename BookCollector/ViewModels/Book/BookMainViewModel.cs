@@ -2,19 +2,19 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using System.Collections.ObjectModel;
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Views.Book;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.ViewModels.Book
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.Views.Book;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
     public partial class BookMainViewModel : BookBaseViewModel
     {
         [ObservableProperty]
@@ -25,9 +25,6 @@ namespace BookCollector.ViewModels.Book
 
         [ObservableProperty]
         public bool showCheckpoints;
-
-        [ObservableProperty]
-        public bool showPages;
 
         public BookMainViewModel(BookModel book, ContentPage view, object? previousViewModel)
         {
@@ -62,7 +59,7 @@ namespace BookCollector.ViewModels.Book
                     this.SummarySectionValue = true;
                     this.CommentsSectionValue = true;
 
-                    if (!this.SelectedBook.BookFormat.Equals(AppStringResources.Audiobook))
+                    if (!this.SelectedBook.BookFormat!.Equals(AppStringResources.Audiobook))
                     {
                         this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
                         this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
@@ -121,8 +118,8 @@ namespace BookCollector.ViewModels.Book
                         Task.Run(() => this.SelectedBook.SetPartOfSeries()),
                         Task.Run(() => this.SelectedBook.SetPartOfCollection()),
                         Task.Run(() => this.SelectedBook.SetBookPrice()),
-                        Task.Run(() => this.SelectedBook.TotalTimeSpan = this.SelectedBook.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
-                        Task.Run(() => this.SelectedBook.ListenTimeSpan = this.SelectedBook.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
+                        Task.Run(() => this.SelectedBook.TotalTimeSpan = BookModel.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
+                        Task.Run(() => this.SelectedBook.ListenTimeSpan = BookModel.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
                     };
 
                     await Task.WhenAll(chapters, genre, location, authors);
@@ -190,7 +187,7 @@ namespace BookCollector.ViewModels.Book
                         this.SetIsBusyTrue();
 
                         await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
-                        this.RemoveFromStaticList(this.SelectedBook);
+                        await RemoveFromStaticList(this.SelectedBook);
 
                         await ConfirmDelete(this.SelectedBook.BookTitle);
 
@@ -225,7 +222,7 @@ namespace BookCollector.ViewModels.Book
                 var title = this.SelectedBook.BookTitle;
 
                 string? text;
-                if (this.SelectedAuthorList != null && this.SelectedAuthorList.Count() > 0)
+                if (this.SelectedAuthorList != null && this.SelectedAuthorList.Count > 0)
                 {
                     text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.SelectedAuthorList[0].FullName)}";
 

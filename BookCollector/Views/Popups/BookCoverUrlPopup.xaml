@@ -3,12 +3,14 @@
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               xmlns:model="clr-namespace:BookCollector.Data.Models"
                x:Class="BookCollector.Views.Popups.BookCoverUrlPopup"
                x:TypeArguments="x:String"
                CanBeDismissedByTappingOutsideOfPopup="True"
                WidthRequest="{Binding PopupWidth}"
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-               Margin="0">
+               Margin="0"
+               x:DataType="model:BookModel">
 
     <VerticalStackLayout>
 

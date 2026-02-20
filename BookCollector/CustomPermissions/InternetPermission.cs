@@ -1,26 +1,33 @@
-﻿// <copyright file="ReadMediaPermission.cs" company="Castle Software">
+﻿// <copyright file="InternetPermission.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-#if ANDROID
-using Android;
-using Android.Content.PM;
-using Android.Views;
-using AndroidX.Core.App;
-using AndroidX.Core.Content;
-using BookCollector;
-#endif
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-
 namespace BookCollector.CustomPermissions
 {
+#if ANDROID
+    using Android;
+    using Android.Content.PM;
+    using Android.Views;
+    using AndroidX.Core.App;
+    using AndroidX.Core.Content;
+    using BookCollector;
+#endif
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+
+    /// <summary>
+    /// InternetPermission class.
+    /// </summary>
     public class InternetPermission : Permissions.BasePermission
     {
 #if ANDROID
         private const string InternetPermissionName = Manifest.Permission.Internet;
 #endif
 
+        /// <summary>
+        /// Overrides the CheckStatusAsync method to check the status of the Internet permission.
+        /// </summary>
+        /// <returns>The permission status.</returns>
         public override async Task<PermissionStatus> CheckStatusAsync()
         {
             this.EnsureDeclared();
@@ -38,6 +45,10 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
+        /// <summary>
+        /// Overrides the EnsureDeclared method to ensure that the Internet permission is
+        /// declared in the AndroidManifest.xml file.
+        /// </summary>
         public override void EnsureDeclared()
         {
 #if ANDROID
@@ -51,6 +62,10 @@ namespace BookCollector.CustomPermissions
 #endif
         }
 
+        /// <summary>
+        /// Overrides the RequestAsync method to request the Internet permission from the user.
+        /// </summary>
+        /// <returns>The permission status.</returns>
         public override async Task<PermissionStatus> RequestAsync()
         {
             if (this.ShouldShowRationale())
@@ -104,6 +119,11 @@ namespace BookCollector.CustomPermissions
 
         }
 
+        /// <summary>
+        /// Overrides the ShouldShowRationale method to determine if the app should show a rationale
+        /// for requesting the Internet permission.
+        /// </summary>
+        /// <returns>True if the rationale should show, else false.</returns>
         public override bool ShouldShowRationale()
         {
 #if ANDROID

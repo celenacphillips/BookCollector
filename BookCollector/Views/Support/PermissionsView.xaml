@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:local="clr-namespace:BookCollector.Views.Support"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:dataModels="clr-namespace:BookCollector.Data"
              x:Class="BookCollector.Views.Support.PermissionsView"
-             Title="{x:Static localization:AppStringResources.Permissions}">
+             Title="{x:Static localization:AppStringResources.Permissions}"
+             x:DataType="local:PermissionsView">
     
     <CollectionView ItemsSource="{Binding Permissions}"
                     Margin="20">
