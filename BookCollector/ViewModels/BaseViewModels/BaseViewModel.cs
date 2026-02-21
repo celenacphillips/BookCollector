@@ -82,30 +82,28 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
         }
 
-        public static async Task<string?> PopupMenu(string title)
+        public async Task<string?> PopupMenu(string title)
         {
             var edit = $"{AppStringResources.Edit}";
             var delete = $"{AppStringResources.Delete}";
 
-            string cancel = $"{AppStringResources.Cancel}";
-            string? destruction = null;
-            string[] buttons = [edit, delete];
-            return await Shell.Current.DisplayActionSheetAsync(title, cancel, destruction, buttons);
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, title, string.Empty, edit, delete, "Options"));
+
+            return answer.Result;
         }
 
-        public static async Task<string?> PopupMenu_CoverPhoto()
+        public async Task<string?> PopupMenu_CoverPhoto()
         {
             var title = AppStringResources.AddOrReplaceCoverPhoto;
             var file = AppStringResources.UploadExistingFile;
             var url = AppStringResources.BookCoverUrl;
 
-            string cancel = AppStringResources.Cancel;
-            string? destruction = null;
-            string[] buttons = [file, url];
-            return await Shell.Current.DisplayActionSheetAsync(title, cancel, destruction, buttons);
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, title, string.Empty, file, url, "Options"));
+
+            return answer.Result;
         }
 
-        public static async Task<bool> DeleteCheck(string item)
+        public async Task<bool> DeleteCheck(string item)
         {
             var message = $"{AppStringResources.AreYouSureYouWantToDeleteItem_Question.Replace("item", item)}";
 
@@ -113,7 +111,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             return action;
         }
 
-        public static async Task<bool> DisplayMessage(string inputTitle, string? inputMessage = null, string? inputConfirm = null, string? inputDeny = null)
+        public async Task<bool> DisplayMessage(string inputTitle, string? inputMessage = null, string? inputConfirm = null, string? inputDeny = null)
         {
             inputConfirm ??= $"{AppStringResources.Yes}";
 
@@ -121,25 +119,33 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             inputMessage ??= $"{AppStringResources.AreYouSure_Question}";
 
-            var action = await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm, inputDeny);
-            return action;
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
+
+            if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public static async Task DisplayMessage(string inputTitle, string? inputMessage = null)
+        public async Task DisplayMessage(string inputTitle, string? inputMessage = null)
         {
             inputMessage ??= inputTitle;
 
             var inputConfirm = $"{AppStringResources.OK}";
 
-            await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm);
+            await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, null, "Commands"));
         }
 
-        public static async Task CanceledAction()
+        public async Task CanceledAction()
         {
             await DisplayMessage($"{AppStringResources.ActionCanceled}", null);
         }
 
-        public static async Task ConfirmDelete(string item)
+        public async Task ConfirmDelete(string item)
         {
             var title = $"{AppStringResources.ItemDeleted.Replace("Item", item)}.";
             var message = $"{AppStringResources.ItemWasDeleted.Replace("Item", item)}";

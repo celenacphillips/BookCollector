@@ -357,15 +357,15 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private void RemoveBookFromGrouping(SeriesModel series)
+        private async Task RemoveBookFromGrouping(SeriesModel series)
         {
             var books = AllBooksViewModel.fullBookList?.Where(x => x.BookSeriesGuid == series.SeriesGuid).ToList();
 
             foreach (var book in books)
             {
                 book.BookSeriesGuid = null;
-                Database.SaveBookAsync(book);
-                BookBaseViewModel.AddToStaticList(book);
+                await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                await BookBaseViewModel.AddToStaticList(book);
             }
         }
     }

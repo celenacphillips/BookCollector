@@ -1461,8 +1461,8 @@ Just tap to add a new book, then select the search icon. You can scan the bookâ€
     <value>You can create any of these options directly within the book and then select the one you want, or you can create them under the Groupings tab.
 From the Groupings tab, you can add new or existing books directly to the group.</value>
   </data>
-  <data name="CouldNotAutomaticallyUploadCoverPhoto" xml:space="preserve">
-    <value>Could not automatically upload the book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later.</value>
+  <data name="MissingBookCover" xml:space="preserve">
+    <value>Missing book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later.</value>
     <comment>Book should not be translated.</comment>
   </data>
   <data name="Warning_" xml:space="preserve">
@@ -1495,5 +1495,23 @@ From the Groupings tab, you can add new or existing books directly to the group.
   </data>
   <data name="ListSettings" xml:space="preserve">
     <value>List Settings</value>
+  </data>
+  <data name="IsThisCorrect_" xml:space="preserve">
+    <value>Is this correct?</value>
+  </data>
+  <data name="HasABookCover" xml:space="preserve">
+    <value>Has a Book Cover</value>
+  </data>
+  <data name="HasNoBookCover" xml:space="preserve">
+    <value>Has no Book Cover</value>
+  </data>
+  <data name="BookCover" xml:space="preserve">
+    <value>Book Cover</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="SkipAll" xml:space="preserve">
+    <value>Skip All</value>
   </data>
 </root>

@@ -1,9 +1,6 @@
 ﻿// <copyright file="MauiProgram.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
-#if ANDROID
-using BookCollector.CustomPicker;
-#endif
 using BarcodeScanner.Mobile;
 using BookCollector.Data.BookAPI;
 using BookCollector.Data.Database;
@@ -43,10 +40,6 @@ namespace BookCollector
 #endif
 
             builder.Services.AddSingleton<BookCollectorDatabase>();
-
-#if ANDROID
-            builder.Services.AddSingleton<IAndroidImagePicker, AndroidImagePicker>();
-#endif
 
             var a = Assembly.GetExecutingAssembly();
             using var stream = a.GetManifestResourceStream("BookCollector.appsettings.json");

@@ -50,6 +50,16 @@ public partial class ReadView : ContentPage
     // navigate back to the view.
     protected override async void OnAppearing()
     {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
         await this.ViewModel.SetViewModelData();
     }
 }

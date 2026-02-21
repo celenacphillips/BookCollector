@@ -84,6 +84,11 @@ public partial class FilterablePickerOverlay : ContentView
                 this.ViewModel.SeriesOption = current;
             }
 
+            if (this.Title.Equals(AppStringResources.BookCover))
+            {
+                this.ViewModel.BookCoverOption = current;
+            }
+
             this.OnOverlayTapped(null, null);
         }
     }

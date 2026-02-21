@@ -21,6 +21,7 @@ namespace BookCollector.Data
             string? ratingOption,
             string? publishYearOption,
             string? authorOption,
+            string? bookCoverOption,
             string? searchString)
         {
             var filteredList = bookList;
@@ -48,6 +49,11 @@ namespace BookCollector.Data
             if (!string.IsNullOrEmpty(authorOption))
             {
                 filteredList = FilterBookAuthor(filteredList, authorOption);
+            }
+
+            if (!string.IsNullOrEmpty(bookCoverOption))
+            {
+                filteredList = FilterBooksOnBookCovers(filteredList, bookCoverOption);
             }
 
             return filteredList;
@@ -113,14 +119,15 @@ namespace BookCollector.Data
         {
             var filterList = bookList;
 
-            filterList = favoritesOption switch
+            if (favoritesOption.Equals(AppStringResources.Favorites))
             {
-                "Favorites" => bookList.Where(x => x.IsFavorite)
-                                                         .ToObservableCollection(),
-                "Non-Favorites" => bookList.Where(x => !x.IsFavorite)
-                                                         .ToObservableCollection(),
-                _ => bookList,
-            };
+                filterList = bookList.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = bookList.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
 
             return filterList;
         }
@@ -370,5 +377,23 @@ namespace BookCollector.Data
 
             return filterList;
         }
+
+        private static ObservableCollection<BookModel> FilterBooksOnBookCovers(ObservableCollection<BookModel> bookList, string bookCoverOption)
+        {
+            var filterList = bookList;
+
+            if (bookCoverOption.Equals(AppStringResources.HasABookCover))
+            {
+                filterList = bookList.Where(x => x.HasBookCover).ToObservableCollection();
+            }
+
+            if (bookCoverOption.Equals(AppStringResources.HasNoBookCover))
+            {
+                filterList = bookList.Where(x => x.HasNoBookCover).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
     }
 }

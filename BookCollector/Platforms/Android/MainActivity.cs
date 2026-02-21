@@ -26,16 +26,5 @@ namespace BookCollector
 
             OnPermissionResult?.Invoke(requestCode, permissions, grantResults);
         }
-
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-
-            var picker = MauiApplication.Current.Services.GetService<IAndroidImagePicker>()
-                         as AndroidImagePicker;
-
-            picker?.OnActivityResult(requestCode, resultCode, data);
-        }
-
     }
 }

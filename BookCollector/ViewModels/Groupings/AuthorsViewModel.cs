@@ -365,9 +365,9 @@ namespace BookCollector.ViewModels.Groupings
 
                 if (book != null)
                 {
-                    //book.AuthorListString = null;
-                    //Database.SaveBookAsync(book);
-                    BookBaseViewModel.AddToStaticList(book);
+                    // Author string is already re-evaluated when loading the book lists,
+                    // so no need to update anything else here.
+                    await BookBaseViewModel.AddToStaticList(book);
                 }
             }
         }
