@@ -196,6 +196,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        internal static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Authors.
         /// </summary>
         internal static string AllAuthors {
@@ -660,6 +669,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookComments {
             get {
                 return ResourceManager.GetString("BookComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Cover.
+        /// </summary>
+        internal static string BookCover {
+            get {
+                return ResourceManager.GetString("BookCover", resourceCulture);
             }
         }
         
@@ -1300,15 +1318,6 @@ namespace BookCollector.Resources.Localization {
         internal static string CollectionView_InfoText {
             get {
                 return ResourceManager.GetString("CollectionView_InfoText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not automatically upload the book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later..
-        /// </summary>
-        internal static string CouldNotAutomaticallyUploadCoverPhoto {
-            get {
-                return ResourceManager.GetString("CouldNotAutomaticallyUploadCoverPhoto", resourceCulture);
             }
         }
         
@@ -2230,6 +2239,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has a Book Cover.
+        /// </summary>
+        internal static string HasABookCover {
+            get {
+                return ResourceManager.GetString("HasABookCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has no Book Cover.
+        /// </summary>
+        internal static string HasNoBookCover {
+            get {
+                return ResourceManager.GetString("HasNoBookCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide?.
         /// </summary>
         internal static string Hide_Question {
@@ -2388,6 +2415,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Internet_Description {
             get {
                 return ResourceManager.GetString("Internet_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is this correct?.
+        /// </summary>
+        internal static string IsThisCorrect_ {
+            get {
+                return ResourceManager.GetString("IsThisCorrect_", resourceCulture);
             }
         }
         
@@ -2586,6 +2622,15 @@ namespace BookCollector.Resources.Localization {
         internal static string MinutesListened {
             get {
                 return ResourceManager.GetString("MinutesListened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing book cover for Book. Would you like to manually pick the image now? If not, you can manually add it later..
+        /// </summary>
+        internal static string MissingBookCover {
+            get {
+                return ResourceManager.GetString("MissingBookCover", resourceCulture);
             }
         }
         
@@ -3470,6 +3515,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ShowRatings {
             get {
                 return ResourceManager.GetString("ShowRatings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip All.
+        /// </summary>
+        internal static string SkipAll {
+            get {
+                return ResourceManager.GetString("SkipAll", resourceCulture);
             }
         }
         

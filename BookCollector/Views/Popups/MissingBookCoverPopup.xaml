@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               x:Class="BookCollector.Views.Popups.MissingBookCoverPopup"
+               xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+               x:TypeArguments="x:String"
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0">
+
+    <VerticalStackLayout>
+
+        <Label Text="{x:Static localization:AppStringResources.Warning_}"
+               Style="{StaticResource Header}"
+               HorizontalOptions="Center"
+               Margin="0,0,0,10"/>
+
+        <Label Text="{Binding MissingMessage}"
+               HorizontalOptions="Center"
+               Margin="10,20"/>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Text="{x:Static localization:AppStringResources.SkipAll}"
+                    Grid.Row="0" Grid.Column="0"
+                    Clicked="OnSkipAllButton_Clicked"
+                    Margin="10"
+                    Style="{StaticResource PickerButton}"/>
+
+            <Button Text="{x:Static localization:AppStringResources.No}"
+                    Grid.Row="0" Grid.Column="1"
+                    Clicked="OnNoButton_Clicked"
+                    Margin="10"
+                    Style="{StaticResource PickerButton}"/>
+            
+            <Button Text="{x:Static localization:AppStringResources.Yes}"
+                    Grid.Row="0" Grid.Column="2"
+                    Clicked="OnYesButton_Clicked"
+                    Margin="10"
+                    Style="{StaticResource PickerButton}"/>
+        </Grid>
+    </VerticalStackLayout>
+</toolkit:Popup>

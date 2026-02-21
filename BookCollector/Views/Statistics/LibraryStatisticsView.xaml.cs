@@ -21,6 +21,16 @@ public partial class LibraryStatisticsView : ContentPage
 
     protected override async void OnAppearing()
     {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
         this.readingStatus.ClearValue(ChartView.ChartProperty);
         this.favorites.ClearValue(ChartView.ChartProperty);
         this.ratings.ClearValue(ChartView.ChartProperty);

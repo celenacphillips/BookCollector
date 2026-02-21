@@ -61,48 +61,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
-	  <ApplicationVersion>15</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
-	  <ApplicationVersion>15</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
-	  <ApplicationVersion>15</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
-	  <ApplicationVersion>15</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
 	  <AndroidKeyStore>True</AndroidKeyStore>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
 		<AndroidSigningKeyStore>X:\Storage\Celena_Files\Keystores\bookcollector.keystore</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>bookcollector_key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningKeyPass>
-		<ApplicationVersion>15</ApplicationVersion>
+		<ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.14</ApplicationDisplayVersion>
-	  <ApplicationVersion>15</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationVersion>18</ApplicationVersion>
 	</PropertyGroup>
 
 
@@ -200,6 +200,15 @@
 		</Compile>
 		<Compile Update="Views\Controls\WishListBook\WishListBookCollectionItem.xaml.cs">
 			<DependentUpon>WishListBookCollectionItem.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Popups\ChoiceDialogPopup.xaml.cs">
+		  <DependentUpon>ChoiceDialogPopup.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Popups\MissingBookCoverPopup.xaml.cs">
+		  <DependentUpon>MissingBookCoverPopup.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Popups\BookCoverMatchingPopup.xaml.cs">
+		  <DependentUpon>BookCoverMatchingPopup.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\Popups\FilterableListPopup.xaml.cs">
 		  <DependentUpon>FilterableListPopup.xaml</DependentUpon>
@@ -373,6 +382,15 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Main\ExportImportView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\ChoiceDialogPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\MissingBookCoverPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\BookCoverMatchingPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\FilterableListPopup.xaml">
 		  <Generator>MSBuild:Compile</Generator>
