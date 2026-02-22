@@ -97,7 +97,7 @@ namespace BookCollector.ViewModels.Groupings
                     {
                         this.FilteredLocationList2 = this.FilteredLocationList1;
 
-                        this.TotalLocationsCount = this.FilteredLocationList1 != null ? this.FilteredLocationList1.Count : 0;
+                        this.TotalLocationsCount = this.FilteredLocationList1.Count;
 
                         await this.SearchOnLocation(this.SearchString);
 
@@ -162,12 +162,12 @@ namespace BookCollector.ViewModels.Groupings
                 this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                 var sortList = SortLists.SortLocationsList(
-                                this.FilteredLocationList2!,
-                                this.LocationNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
+                                    this.FilteredLocationList2!,
+                                    this.LocationNameChecked,
+                                    this.TotalBooksChecked,
+                                    this.TotalPriceChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
 
                 await Task.WhenAll(sortList);
 
@@ -365,7 +365,7 @@ namespace BookCollector.ViewModels.Groupings
                 foreach (var book in books)
                 {
                     book.BookLocationGuid = null;
-                    await Database.SaveBookAsync(book);
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }

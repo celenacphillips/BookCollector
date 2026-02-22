@@ -4,9 +4,6 @@
 
 namespace BookCollector
 {
-#if ANDROID
-    using BookCollector.CustomPicker;
-#endif
     using System.Reflection;
     using BarcodeScanner.Mobile;
     using BookCollector.Data.BookAPI;
@@ -50,10 +47,6 @@ namespace BookCollector
 #endif
 
             builder.Services.AddSingleton<BookCollectorDatabase>();
-
-#if ANDROID
-            builder.Services.AddSingleton<IAndroidImagePicker, AndroidImagePicker>();
-#endif
 
             var a = Assembly.GetExecutingAssembly();
             using var stream = a.GetManifestResourceStream("BookCollector.appsettings.json");

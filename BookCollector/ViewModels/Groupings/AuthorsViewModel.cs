@@ -160,12 +160,12 @@ namespace BookCollector.ViewModels.Groupings
                 this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                 var sortList = SortLists.SortAuthorList(
-                                this.FilteredAuthorList2!,
-                                this.AuthorLastNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
+                                    this.FilteredAuthorList2!,
+                                    this.AuthorLastNameChecked,
+                                    this.TotalBooksChecked,
+                                    this.TotalPriceChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
 
                 await Task.WhenAll(sortList);
 
@@ -365,8 +365,8 @@ namespace BookCollector.ViewModels.Groupings
 
                     if (book != null)
                     {
-                        //book.AuthorListString = null;
-                        //Database.SaveBookAsync(book);
+                        // Author string is already re-evaluated when loading the book lists,
+                        // so no need to update anything else here.
                         await BookBaseViewModel.AddToStaticList(book);
                     }
                 }

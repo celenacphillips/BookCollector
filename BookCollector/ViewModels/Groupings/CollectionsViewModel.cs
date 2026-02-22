@@ -165,12 +165,12 @@ namespace BookCollector.ViewModels.Groupings
                 this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
                 var sortList = SortLists.SortCollectionsList(
-                                this.FilteredCollectionList2!,
-                                this.CollectionNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
+                                    this.FilteredCollectionList2!,
+                                    this.CollectionNameChecked,
+                                    this.TotalBooksChecked,
+                                    this.TotalPriceChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
 
                 await Task.WhenAll(sortList);
 
@@ -368,7 +368,7 @@ namespace BookCollector.ViewModels.Groupings
                 foreach (var book in books)
                 {
                     book.BookCollectionGuid = null;
-                    await Database.SaveBookAsync(book);
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }

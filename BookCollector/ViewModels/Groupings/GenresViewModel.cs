@@ -162,12 +162,12 @@ namespace BookCollector.ViewModels.Groupings
                 this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
 
                 var sortList = SortLists.SortGenresList(
-                                this.FilteredGenreList2!,
-                                this.GenreNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
+                                    this.FilteredGenreList2!,
+                                    this.GenreNameChecked,
+                                    this.TotalBooksChecked,
+                                    this.TotalPriceChecked,
+                                    this.AscendingChecked,
+                                    this.DescendingChecked);
 
                 await Task.WhenAll(sortList);
 
@@ -365,7 +365,7 @@ namespace BookCollector.ViewModels.Groupings
                 foreach (var book in books)
                 {
                     book.BookGenreGuid = null;
-                    await Database.SaveBookAsync(book);
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }

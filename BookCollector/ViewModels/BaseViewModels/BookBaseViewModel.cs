@@ -161,6 +161,8 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public string? BookRatingOption { get; set; }
 
+        public string? BookCoverOption { get; set; }
+
         public bool BookTitleChecked { get; set; }
 
         public bool BookReadingDateChecked { get; set; }

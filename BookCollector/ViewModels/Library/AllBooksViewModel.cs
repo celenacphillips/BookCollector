@@ -76,16 +76,17 @@ namespace BookCollector.ViewModels.Library
 
                     if (this.FilteredBookList1 != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1 != null ? this.FilteredBookList1.Count : 0;
+                        this.TotalBooksCount = this.FilteredBookList1.Count;
 
-                        await Task.WhenAll(this.FilteredBookList1!.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetCoverDisplay()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1!);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1!);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1!);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1!);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1!,
+                                this.FilteredBookList1,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -93,6 +94,7 @@ namespace BookCollector.ViewModels.Library
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
                                 this.BookAuthorOption,
+                                this.BookCoverOption,
                                 this.SearchString);
 
                         await Task.WhenAll(filteredList);
@@ -102,7 +104,6 @@ namespace BookCollector.ViewModels.Library
                         if (this.FilteredBookList2 != null)
                         {
                             await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetReadingProgress()));
-                            await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetCoverDisplay()));
                             await Task.WhenAll(this.FilteredBookList2.Select(x => x.SetBookTotalTime()));
 
                             var sortList = SortLists.SortBookList(
@@ -178,6 +179,7 @@ namespace BookCollector.ViewModels.Library
                                 this.BookRatingOption,
                                 this.BookPublishYearOption,
                                 this.BookAuthorOption,
+                                this.BookCoverOption,
                                 this.SearchString);
                 }
 
@@ -186,18 +188,18 @@ namespace BookCollector.ViewModels.Library
                 this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
 
                 var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList2!,
-                                    this.BookTitleChecked,
-                                    this.BookReadingDateChecked,
-                                    this.BookReadPercentageChecked,
-                                    this.BookPublisherChecked,
-                                    this.BookPublishYearChecked,
-                                    this.AuthorLastNameChecked,
-                                    this.BookFormatChecked,
-                                    this.BookPriceChecked,
-                                    this.PageCountBookTimeChecked,
-                                    this.AscendingChecked,
-                                    this.DescendingChecked);
+                                        this.FilteredBookList2!,
+                                        this.BookTitleChecked,
+                                        this.BookReadingDateChecked,
+                                        this.BookReadPercentageChecked,
+                                        this.BookPublisherChecked,
+                                        this.BookPublishYearChecked,
+                                        this.AuthorLastNameChecked,
+                                        this.BookFormatChecked,
+                                        this.BookPriceChecked,
+                                        this.PageCountBookTimeChecked,
+                                        this.AscendingChecked,
+                                        this.DescendingChecked);
 
                 await Task.WhenAll(sortList);
 
@@ -236,6 +238,8 @@ namespace BookCollector.ViewModels.Library
                     LanguageOption = this.BookLanguageOption,
                     RatingVisible = this.ShowBookRatings,
                     RatingOption = this.BookRatingOption,
+                    BookCoverVisible = true,
+                    BookCoverOption = this.BookCoverOption,
                 };
                 viewModel.SetAuthorPicker(this.BookAuthorList);
                 viewModel.SetFavoritePicker();
@@ -244,6 +248,7 @@ namespace BookCollector.ViewModels.Library
                 viewModel.SetPublishYearPicker(this.BookPublishYearList);
                 viewModel.SetLanguagePicker(this.BookLanguageList);
                 viewModel.SetRatingPicker();
+                viewModel.SetBookCoverPicker();
 
                 popup.BindingContext = viewModel;
 
@@ -310,6 +315,7 @@ namespace BookCollector.ViewModels.Library
             this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
             this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
             this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", AppStringResources.AllRatings /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
 
             this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", true /* Default */);
             this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", false /* Default */);

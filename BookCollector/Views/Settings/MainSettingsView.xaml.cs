@@ -168,6 +168,8 @@ public partial class MainSettingsView : ContentPage
 
     private async void OnDeleteButtonClicked(object sender, EventArgs e)
     {
+        var deviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
+
         var inputTitle = AppStringResources.DeleteAllData_Question;
 
         var inputConfirm = AppStringResources.Yes;
@@ -176,18 +178,18 @@ public partial class MainSettingsView : ContentPage
 
         var inputMessage = AppStringResources.WarningThisActionCannotBeUndone;
 
-        var action = await Shell.Current.DisplayAlertAsync(inputTitle, inputMessage, inputConfirm, inputDeny);
+        var answer = await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
 
-        if (action)
+        if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
         {
             await database.DropAllTables();
             BaseViewModel.ClearAllLists();
 
-            await Shell.Current.DisplayAlertAsync(AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, AppStringResources.OK);
+            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, inputConfirm, null, "Commands"));
         }
         else
         {
-            await Shell.Current.DisplayAlertAsync(AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, AppStringResources.OK);
+            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, inputConfirm, null, "Commands"));
         }
     }
 

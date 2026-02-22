@@ -53,7 +53,7 @@ namespace BookCollector.Data.Spreadsheet
             {
                 if (ex.Message.Equals($"Access to the path '{filepath}' is denied."))
                 {
-                    await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
+                    //await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
                 }
 
                 throw ex;

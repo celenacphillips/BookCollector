@@ -113,12 +113,24 @@ namespace BookCollector.ViewModels.Popups
 
         /********************************************************/
 
+        [ObservableProperty]
+        public bool bookCoverVisible;
+
+        [ObservableProperty]
+        public List<string>? bookCoverPicker;
+
+        [ObservableProperty]
+        public string? bookCoverOption;
+
+        /********************************************************/
+
         public FilterPopupViewModel(Popup popup, string viewTitle, ContentPage view)
         {
             this.Popup = popup;
             this.ViewTitle = viewTitle;
             this.View = view;
             this.PopupWidth = this.DeviceWidth - 30;
+            this.PopupHeight = this.DeviceHeight - 200;
 
             this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
@@ -126,6 +138,8 @@ namespace BookCollector.ViewModels.Popups
         public double PopupWidth { get; set; }
 
         public Grid OverlaySection { get; set; }
+
+        public double PopupHeight { get; set; }
 
         private Popup Popup { get; set; }
 
@@ -209,6 +223,16 @@ namespace BookCollector.ViewModels.Popups
             this.SeriesPicker = series != null ? [.. series] : null;
             this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
             this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
+        }
+
+        public void SetBookCoverPicker()
+        {
+            this.BookCoverPicker =
+            [
+                AppStringResources.Both,
+                AppStringResources.HasABookCover,
+                AppStringResources.HasNoBookCover,
+            ];
         }
 
         [RelayCommand]
@@ -337,6 +361,20 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        [RelayCommand]
+        public async Task BookCoverChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BookCover,
+                this.BookCoverPicker,
+                this.BookCoverOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
         private void SetPreferences()
         {
             if (this.FavoriteVisible)
@@ -382,6 +420,11 @@ namespace BookCollector.ViewModels.Popups
             if (this.SeriesVisible)
             {
                 Preferences.Set($"{this.ViewTitle}_SeriesSelection", this.SeriesOption);
+            }
+
+            if (this.BookCoverVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOption);
             }
         }
     }

@@ -6,10 +6,10 @@
 namespace BookCollector
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-    using Android.App;
-    using Android.Content;
-    using Android.Content.PM;
-    using BookCollector.CustomPicker;
+using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using BookCollector.CustomPicker;
 
     /// <summary>
     /// Main Activity class.
@@ -38,23 +38,6 @@ namespace BookCollector
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             OnPermissionResult?.Invoke(requestCode, permissions, grantResults);
-        }
-
-        /// <summary>
-        /// Called when an activity user launches is completed or canceled. The results are passed
-        /// to the AndroidImagePicker's OnActivityResult method.
-        /// </summary>
-        /// <param name="requestCode">The value given when starting the activity.</param>
-        /// <param name="resultCode">Indicate whether the activity was completed or canceled.</param>
-        /// <param name="data">The data from the activity.</param>
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-
-            var picker = IPlatformApplication.Current?.Services.GetService<IAndroidImagePicker>()
-                         as AndroidImagePicker;
-
-            picker?.OnActivityResult(requestCode, resultCode, data!);
         }
     }
 }

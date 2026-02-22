@@ -9,189 +9,221 @@
                x:Class="BookCollector.Views.Popups.FilterPopup"
                CanBeDismissedByTappingOutsideOfPopup="True"
                WidthRequest="{Binding PopupWidth}"
+               MaximumHeightRequest="{Binding PopupHeight}"
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                Margin="0">
 
     <Grid>
 
-        <VerticalStackLayout HorizontalOptions="Center">
-
-            <Grid Margin="0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Label Text="{x:Static localization:AppStringResources.FilterBy}"
-                       Style="{DynamicResource Header}"
-                       FontSize="Subtitle"
-                       HorizontalOptions="Center"
-                       VerticalOptions="End"
-                       Grid.Row="0" Grid.Column="0"/>
-
-                <ImageButton HorizontalOptions="End"
-                             Padding="10,5"
-                             Command="{Binding CloseCommand}"
-                             Grid.Row="0" Grid.Column="1">
-                    <ImageButton.Source>
-                        <FontImageSource FontFamily="MaterialDesignIcons"
-                                         Glyph="&#xF0193;"
-                                         Size="28"
-                                         Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-                    </ImageButton.Source>
-                </ImageButton>
-
-                <!-- Favorite -->
-                <Label Text="{x:Static localization:AppStringResources.Favorite}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding FavoriteVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="1" Grid.Column="0"/>
-
-                <Button Text="{Binding FavoriteOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding FavoriteChangedCommand}"
-                        IsVisible="{Binding FavoriteVisible}"
-                        Margin="0,10"
-                        Grid.Row="1" Grid.Column="1"/>
-                <!-- Favorite -->
-
-                <!-- Author -->
-                <Label Text="{x:Static localization:AppStringResources.Authors}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding AuthorVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="2" Grid.Column="0"/>
-
-                <Button Text="{Binding AuthorOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding AuthorChangedCommand}"
-                        IsVisible="{Binding AuthorVisible}"
-                        Margin="0,10"
-                        Grid.Row="2" Grid.Column="1"/>
-                <!-- Author -->
-
-                <!-- Publisher -->
-                <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding PublisherVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="3" Grid.Column="0"/>
-
-                <Button Text="{Binding PublisherOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding PublisherChangedCommand}"
-                        IsVisible="{Binding PublisherVisible}"
-                        Margin="0,10"
-                        Grid.Row="3" Grid.Column="1"/>
-                <!-- Publisher -->
-
-                <!-- Publish Year -->
-                <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding PublishYearVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="4" Grid.Column="0"/>
-
-                <Button Text="{Binding PublishYearOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding PublishYearChangedCommand}"
-                        IsVisible="{Binding PublishYearVisible}"
-                        Margin="0,10"
-                        Grid.Row="4" Grid.Column="1"/>
-                <!-- Publish Year -->
-
-                <!-- Format -->
-                <Label Text="{x:Static localization:AppStringResources.BookFormat}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding FormatVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="5" Grid.Column="0"/>
-
-                <Button Text="{Binding FormatOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding FormatChangedCommand}"
-                        IsVisible="{Binding FormatVisible}"
-                        Margin="0,10"
-                        Grid.Row="5" Grid.Column="1"/>
-                <!-- Format -->
-
-                <!-- Language -->
-                <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding LanguageVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="6" Grid.Column="0"/>
-
-                <Button Text="{Binding LanguageOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding LanguageChangedCommand}"
-                        IsVisible="{Binding LanguageVisible}"
-                        Margin="0,10"
-                        Grid.Row="6" Grid.Column="1"/>
-                <!-- Language -->
-
-                <!-- Rating -->
-                <Label Text="{x:Static localization:AppStringResources.BookRating}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding RatingVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="7" Grid.Column="0"/>
-
-                <Button Text="{Binding RatingOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding RatingChangedCommand}"
-                        IsVisible="{Binding RatingVisible}"
-                        Margin="0,10"
-                        Grid.Row="7" Grid.Column="1"/>
-                <!-- Rating -->
-
-                <!-- Location -->
-                <Label Text="{x:Static localization:AppStringResources.BookLocation}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding LocationVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="8" Grid.Column="0"/>
-
-                <Button Text="{Binding LocationOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding LocationChangedCommand}"
-                        IsVisible="{Binding LocationVisible}"
-                        Margin="0,10"
-                        Grid.Row="8" Grid.Column="1"/>
-                <!-- Location -->
-
-                <!-- Series -->
-                <Label Text="{x:Static localization:AppStringResources.BookSeries}"
-                       VerticalTextAlignment="Center"
-                       IsVisible="{Binding SeriesVisible}"
-                       Padding="0,0,10,0"
-                       Grid.Row="9" Grid.Column="0"/>
-
-                <Button Text="{Binding SeriesOption}"
-                        Style="{DynamicResource PickerButton}"
-                        Command="{Binding SeriesChangedCommand}"
-                        IsVisible="{Binding SeriesVisible}"
-                        Margin="0,10"
-                        Grid.Row="9" Grid.Column="1"/>
-                <!-- Series -->
-            </Grid>
+        <VerticalStackLayout>
             
+            <ScrollView>
+
+                <VerticalStackLayout HorizontalOptions="Center">
+                    <Grid Margin="0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Text="{x:Static localization:AppStringResources.FilterBy}"
+                               Style="{DynamicResource Header}"
+                               FontSize="Subtitle"
+                               HorizontalOptions="Center"
+                               VerticalOptions="End"
+                               Grid.Row="0" Grid.Column="0"/>
+
+                        <ImageButton HorizontalOptions="End"
+                                     Padding="10,5"
+                                     Command="{Binding CloseCommand}"
+                                     Grid.Row="0" Grid.Column="1">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="MaterialDesignIcons"
+                                                 Glyph="&#xF0193;"
+                                                 Size="28"
+                                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+
+                        <!-- Favorite -->
+                        <Label Text="{x:Static localization:AppStringResources.Favorite}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding FavoriteVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="1" Grid.Column="0"/>
+
+                        <Button Text="{Binding FavoriteOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding FavoriteChangedCommand}"
+                                IsVisible="{Binding FavoriteVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="1" Grid.Column="1"/>
+                        <!-- Favorite -->
+
+                        <!-- Author -->
+                        <Label Text="{x:Static localization:AppStringResources.Authors}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding AuthorVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="2" Grid.Column="0"/>
+
+                        <Button Text="{Binding AuthorOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding AuthorChangedCommand}"
+                                IsVisible="{Binding AuthorVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="2" Grid.Column="1"/>
+                        <!-- Author -->
+
+                        <!-- Publisher -->
+                        <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding PublisherVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="3" Grid.Column="0"/>
+
+                        <Button Text="{Binding PublisherOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding PublisherChangedCommand}"
+                                IsVisible="{Binding PublisherVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="3" Grid.Column="1"/>
+                        <!-- Publisher -->
+
+                        <!-- Publish Year -->
+                        <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding PublishYearVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="4" Grid.Column="0"/>
+
+                        <Button Text="{Binding PublishYearOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding PublishYearChangedCommand}"
+                                IsVisible="{Binding PublishYearVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="4" Grid.Column="1"/>
+                        <!-- Publish Year -->
+
+                        <!-- Format -->
+                        <Label Text="{x:Static localization:AppStringResources.BookFormat}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding FormatVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="5" Grid.Column="0"/>
+
+                        <Button Text="{Binding FormatOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding FormatChangedCommand}"
+                                IsVisible="{Binding FormatVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="5" Grid.Column="1"/>
+                        <!-- Format -->
+
+                        <!-- Language -->
+                        <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding LanguageVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="6" Grid.Column="0"/>
+
+                        <Button Text="{Binding LanguageOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding LanguageChangedCommand}"
+                                IsVisible="{Binding LanguageVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="6" Grid.Column="1"/>
+                        <!-- Language -->
+
+                        <!-- Rating -->
+                        <Label Text="{x:Static localization:AppStringResources.BookRating}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding RatingVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="7" Grid.Column="0"/>
+
+                        <Button Text="{Binding RatingOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding RatingChangedCommand}"
+                                IsVisible="{Binding RatingVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="7" Grid.Column="1"/>
+                        <!-- Rating -->
+
+                        <!-- Location -->
+                        <Label Text="{x:Static localization:AppStringResources.BookLocation}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding LocationVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="8" Grid.Column="0"/>
+
+                        <Button Text="{Binding LocationOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding LocationChangedCommand}"
+                                IsVisible="{Binding LocationVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="8" Grid.Column="1"/>
+                        <!-- Location -->
+
+                        <!-- Series -->
+                        <Label Text="{x:Static localization:AppStringResources.BookSeries}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding SeriesVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="9" Grid.Column="0"/>
+
+                        <Button Text="{Binding SeriesOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding SeriesChangedCommand}"
+                                IsVisible="{Binding SeriesVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="9" Grid.Column="1"/>
+                        <!-- Series -->
+
+                        <!-- Book Cover -->
+                        <Label Text="{x:Static localization:AppStringResources.BookCover}"
+                               VerticalTextAlignment="Center"
+                               IsVisible="{Binding BookCoverVisible}"
+                               Padding="0,0,10,0"
+                               Grid.Row="10" Grid.Column="0"/>
+
+                        <Button Text="{Binding BookCoverOption}"
+                                Style="{DynamicResource PickerButton}"
+                                Command="{Binding BookCoverChangedCommand}"
+                                IsVisible="{Binding BookCoverVisible}"
+                                LineBreakMode="TailTruncation"
+                                Margin="0,10"
+                                Grid.Row="10" Grid.Column="1"/>
+                        <!-- Book Cover -->
+                    </Grid>
+                </VerticalStackLayout>
+            </ScrollView>
         </VerticalStackLayout>
 
+        
         <Grid x:Name="overlaySection"/>
 
     </Grid>

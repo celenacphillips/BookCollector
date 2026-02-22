@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               x:Class="BookCollector.Views.Popups.ChoiceDialogPopup"
+               xmlns:controls="clr-namespace:BookCollector.Views.Controls"
+               x:TypeArguments="x:String"
+               WidthRequest="{Binding PopupWidth}"
+               CanBeDismissedByTappingOutsideOfPopup="True"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0">
+
+    <VerticalStackLayout>
+
+        <Label Text="{Binding Title}"
+               Style="{StaticResource Header}"
+               HorizontalOptions="Center"
+               Margin="0,0,0,10"/>
+
+        <Label Text="{Binding Message}"
+               HorizontalOptions="Center"
+               Margin="10,20"
+               IsVisible="{Binding CommandsVisible}"/>
+
+        <Button Text="{Binding Confirm}"
+                Grid.Row="0" Grid.Column="1"
+                Clicked="OnConfirmButton_Clicked"
+                Margin="10"
+                Style="{StaticResource PickerButton}"
+                IsVisible="{Binding OptionsVisible}"/>
+
+        <Button Text="{Binding Deny}"
+                Grid.Row="0" Grid.Column="0"
+                Clicked="OnDenyButton_Clicked"
+                Style="{StaticResource PickerButton}"
+                Margin="10"
+                IsVisible="{Binding OptionsVisible}"/>
+
+        <HorizontalStackLayout IsVisible="{Binding CommandsVisible}"
+                               HorizontalOptions="Center">
+
+            <Button Text="{Binding Deny}"
+                    Clicked="OnDenyButton_Clicked"
+                    Style="{StaticResource PickerButton}"
+                    Margin="10"
+                    Padding="40,0"
+                    IsVisible="{Binding DenyVisible}"
+                    MinimumWidthRequest="44"/>
+            
+            <Button Text="{Binding Confirm}"
+                    Clicked="OnConfirmButton_Clicked"
+                    Margin="10"
+                    Padding="40,0"
+                    Style="{StaticResource PickerButton}"
+                    MinimumWidthRequest="44"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</toolkit:Popup>
