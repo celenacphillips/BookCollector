@@ -20,21 +20,33 @@ namespace BookCollector.ViewModels.Groupings
     public partial class ExistingBooksViewModel : BookBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? fullBookList;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? filteredBookList1;
 
         [ObservableProperty]
-        public ObservableCollection<BookModel>? filteredBookList2;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public new ObservableCollection<BookModel>? filteredBookList2;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookAuthorList;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int totalBooksCount;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int filteredBooksCount;
 
         public ExistingBooksViewModel(object selected, ContentPage view, object? previousViewModel)
@@ -241,11 +253,11 @@ namespace BookCollector.ViewModels.Groupings
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.RefreshView = false;
@@ -311,7 +323,7 @@ namespace BookCollector.ViewModels.Groupings
             if (this.SelectedBook != null)
             {
                 var title = $"{AppStringResources.AddBookToGrouping_Question.Replace("grouping", this.ViewTitle)}";
-                var answer = await DisplayMessage(title, title, null, null);
+                var answer = await this.DisplayMessage(title, title, null, null);
 
                 if (answer)
                 {
@@ -320,7 +332,7 @@ namespace BookCollector.ViewModels.Groupings
                 }
                 else
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                     this.SelectedBook = null;
                 }
             }
@@ -495,7 +507,7 @@ namespace BookCollector.ViewModels.Groupings
                     var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
                     await Shell.Current.Navigation.PushAsync(view);
 
-                    await DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
+                    await this.DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
                 }
 
                 this.SetIsBusyFalse();
@@ -503,11 +515,11 @@ namespace BookCollector.ViewModels.Groupings
             catch (Exception ex)
             {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }

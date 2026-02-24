@@ -21,27 +21,43 @@ namespace BookCollector.ViewModels.WishListBook
     public partial class WishListBookEditViewModel : BookBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public WishlistBookModel editedWishlistBook;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookTitleNotValid;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookFormatNotValid;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1SectionValue;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1Open;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1NotOpen;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedBookFormat;
 
         public WishListBookEditViewModel(WishlistBookModel book, ContentPage view)
@@ -169,7 +185,7 @@ namespace BookCollector.ViewModels.WishListBook
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.RefreshView = false;
@@ -209,12 +225,12 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     if (this.BookTitleNotValid)
                     {
-                        await DisplayMessage(AppStringResources.BookTitleNotValid, null);
+                        await this.DisplayMessage(AppStringResources.BookTitleNotValid, null);
                     }
 
                     if (this.BookFormatNotValid)
                     {
-                        await DisplayMessage(AppStringResources.BookFormatNotValid, null);
+                        await this.DisplayMessage(AppStringResources.BookFormatNotValid, null);
                     }
 
                     this.SetIsBusyFalse();
@@ -263,7 +279,7 @@ namespace BookCollector.ViewModels.WishListBook
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }
@@ -279,7 +295,7 @@ namespace BookCollector.ViewModels.WishListBook
         [RelayCommand]
         public async Task AddUploadCoverPhoto()
         {
-            var action = await PopupMenu_CoverPhoto();
+            var action = await this.PopupMenu_CoverPhoto();
 
             if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.UploadExistingFile))
             {
@@ -290,7 +306,7 @@ namespace BookCollector.ViewModels.WishListBook
 
                 if (storageReadStatus == PermissionStatus.Granted)
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -320,24 +336,24 @@ namespace BookCollector.ViewModels.WishListBook
                     catch (Exception ex)
                     {
                         this.SetIsBusyFalse();
-                        await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
+                        await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
 #if DEBUG
                         await DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     }
 
                     if (this.EditedWishlistBook.HasNoBookCover)
                     {
-                        await DisplayMessage(AppStringResources.PickingCoverCanceled, null);
+                        await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
                     }
                 }
                 else
                 {
-                    await DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
+                    await this.DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
                 }
 
                 this.SetIsBusyFalse();
@@ -384,13 +400,13 @@ namespace BookCollector.ViewModels.WishListBook
                             this.EditedWishlistBook.HasBookCover = false;
                             this.EditedWishlistBook.HasNoBookCover = true;
                             this.EditedWishlistBook.BookCoverUrl = null;
-                            await DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
+                            await this.DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
 #if DEBUG
-                            await DisplayMessage("Error!", ex.Message);
+                            await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                            await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                            await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                         }
                     }
@@ -497,12 +513,6 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
-        private void ValidateEntry()
-        {
-            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
-            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
-        }
-
         private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)
         {
             var refresh = false;
@@ -547,6 +557,12 @@ namespace BookCollector.ViewModels.WishListBook
             }
 
             return refresh;
+        }
+
+        private void ValidateEntry()
+        {
+            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
+            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
         }
     }
 }

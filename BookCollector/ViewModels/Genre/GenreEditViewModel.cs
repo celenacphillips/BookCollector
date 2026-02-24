@@ -17,9 +17,13 @@ namespace BookCollector.ViewModels.Genre
     public partial class GenreEditViewModel : GenreBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public GenreModel editedGenre;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool genreNameNotValid;
 
         public GenreEditViewModel(GenreModel genre, ContentPage view)
@@ -56,7 +60,7 @@ namespace BookCollector.ViewModels.Genre
 
                 if (this.GenreNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.GenreNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.GenreNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -83,11 +87,11 @@ namespace BookCollector.ViewModels.Genre
             catch (Exception ex)
             {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }
@@ -113,11 +117,6 @@ namespace BookCollector.ViewModels.Genre
             {
                 GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
             }
-        }
-
-        private void ValidateEntry()
-        {
-            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
         }
 
         private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
@@ -170,6 +169,11 @@ namespace BookCollector.ViewModels.Genre
             }
 
             return refresh;
+        }
+
+        private void ValidateEntry()
+        {
+            this.GenreNameNotValid = string.IsNullOrEmpty(this.EditedGenre.GenreName);
         }
     }
 }

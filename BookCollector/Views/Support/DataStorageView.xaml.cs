@@ -8,10 +8,10 @@ namespace BookCollector.Views.Support;
 /// DataStorageView class.
 /// </summary>
 public partial class DataStorageView : ContentPage
-/// <summary>
-/// Initializes a new instance of the <see cref="DataStorageView"/> class.
-/// </summary>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataStorageView"/> class.
+    /// </summary>
     public DataStorageView()
     {
         this.InitializeComponent();

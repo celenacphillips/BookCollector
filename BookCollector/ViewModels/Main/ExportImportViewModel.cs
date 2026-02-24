@@ -173,7 +173,7 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async Task Export()
         {
-            var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
+            var action = await this.DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
 
             if (action)
             {
@@ -192,7 +192,7 @@ namespace BookCollector.ViewModels.Main
                         }
                         else
                         {
-                            await CanceledAction();
+                            await this.CanceledAction();
 
                             this.SetIsBusyFalse();
                             this.ImportEnabled = true;
@@ -210,7 +210,7 @@ namespace BookCollector.ViewModels.Main
                             Directory.CreateDirectory(this.imageLocation);
                         }
 
-                        await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
+                        await this.DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
                     }
 
                     await Task.Delay(1);
@@ -246,21 +246,21 @@ namespace BookCollector.ViewModels.Main
 
                     this.FinalOutput = AppStringResources.ExportResultsFinish;
 
-                    await DisplayMessage(AppStringResources.ExportComplete, null);
+                    await this.DisplayMessage(AppStringResources.ExportComplete, null);
 
                     this.SetIsBusyFalse();
                     this.RefreshEnabled = true;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                     Preferences.Set("ExportLocation", AppStringResources.DefaultExportLocation);
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
+                    await this.DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = true;
@@ -271,13 +271,13 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = true;
@@ -288,14 +288,14 @@ namespace BookCollector.ViewModels.Main
             }
             else
             {
-                await CanceledAction();
+                await this.CanceledAction();
             }
         }
 
         [RelayCommand]
         public async Task Import()
         {
-            var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImport_Question, null, null);
+            var action = await this.DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImport_Question, null, null);
 
             if (action)
             {
@@ -377,11 +377,11 @@ namespace BookCollector.ViewModels.Main
 
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
-                        await DisplayMessage(AppStringResources.ImportComplete, null);
+                        await this.DisplayMessage(AppStringResources.ImportComplete, null);
 
                         if (errors > 0)
                         {
-                            await DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
+                            await this.DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
                         }
 
                         this.SetIsBusyFalse();
@@ -390,13 +390,13 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
 #if DEBUG
                     await DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = true;
@@ -407,7 +407,7 @@ namespace BookCollector.ViewModels.Main
             }
             else
             {
-                await CanceledAction();
+                await this.CanceledAction();
             }
         }
 
@@ -498,200 +498,6 @@ namespace BookCollector.ViewModels.Main
             SeriesViewModel.RefreshView = true;
             AuthorsViewModel.RefreshView = true;
             LocationsViewModel.RefreshView = true;
-        }
-
-        private async Task ManuallySetBookCover(BookModel book, bool imagesChecked)
-        {
-            if (imagesChecked && ManuallyUploadLibraryCovers)
-            {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
-
-                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
-                {
-                    ManuallyUploadLibraryCovers = false;
-                }
-
-                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
-                {
-                    MediaPickerOptions pickerOptions = new();
-
-                    try
-                    {
-                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
-
-                        if (photos?.Count > 0)
-                        {
-                            var firstPhoto = photos.First();
-                            var bookCoverImageSource = ImageSource.FromFile(firstPhoto.FullPath);
-
-                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle));
-
-                            if (!result.Result)
-                            {
-                                await this.ManuallySetBookCover(book, imagesChecked);
-                            }
-
-                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
-                            book.HasBookCover = true;
-                            book.HasNoBookCover = false;
-
-                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                            if (!Directory.Exists(directory))
-                            {
-                                Directory.CreateDirectory(directory);
-                            }
-
-                            var fi = new FileInfo(firstPhoto.FullPath);
-                            var filePath = $"{directory}/{fi.Name}";
-                            File.Copy(firstPhoto.FullPath, filePath, true);
-
-                            book.BookCoverFileName = fi.Name;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-                }
-            }
-        }
-
-        private async Task ManuallySetBookCover(WishlistBookModel book, bool imagesChecked)
-        {
-            if (imagesChecked && ManuallyUploadWishlistCovers)
-            {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
-
-                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
-                {
-                    ManuallyUploadWishlistCovers = false;
-                }
-
-                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
-                {
-                    MediaPickerOptions pickerOptions = new();
-
-                    try
-                    {
-                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
-
-                        if (photos?.Count > 0)
-                        {
-                            var firstPhoto = photos.First();
-                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
-                            book.HasBookCover = true;
-                            book.HasNoBookCover = false;
-
-                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                            if (!Directory.Exists(directory))
-                            {
-                                Directory.CreateDirectory(directory);
-                            }
-
-                            var fi = new FileInfo(firstPhoto.FullPath);
-                            var filePath = $"{directory}/{fi.Name}";
-                            File.Copy(firstPhoto.FullPath, filePath, true);
-
-                            book.BookCoverFileName = fi.Name;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-                }
-            }
-        }
-
-        private void ResetOutput()
-        {
-            this.BooksOutput = string.Empty;
-            this.WishListOutput = string.Empty;
-            this.CollectionsOutput = string.Empty;
-            this.GenresOutput = string.Empty;
-            this.SeriesOutput = string.Empty;
-            this.AuthorsOutput = string.Empty;
-            this.LocationsOutput = string.Empty;
-            this.ChaptersOutput = string.Empty;
-            this.BookAuthorsOutput = string.Empty;
-            this.FinalOutput = string.Empty;
-            this.StartOutput = string.Empty;
-        }
-
-        private void ResetColorOutput()
-        {
-            var booksOutputLabel = (Label)this.View.FindByName("booksOutput");
-            booksOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var chaptersOutputLabel = (Label)this.View.FindByName("chaptersOutput");
-            chaptersOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var bookAuthorsOutputLabel = (Label)this.View.FindByName("bookAuthorsOutput");
-            bookAuthorsOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var wishListOutputLabel = (Label)this.View.FindByName("wishListOutput");
-            wishListOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var collectionsOutputLabel = (Label)this.View.FindByName("collectionsOutput");
-            collectionsOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var genresOutputLabel = (Label)this.View.FindByName("genresOutput");
-            genresOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var seriesOutputLabel = (Label)this.View.FindByName("seriesOutput");
-            seriesOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var authorsOutputLabel = (Label)this.View.FindByName("authorsOutput");
-            authorsOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var locationsOutputLabel = (Label)this.View.FindByName("locationsOutput");
-            locationsOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-
-            var finalOutputLabel = (Label)this.View.FindByName("finalOutput");
-            finalOutputLabel.TextColor =
-                Application.Current?.UserAppTheme == AppTheme.Dark ?
-                (Color?)Application.Current?.Resources["TextDark"] :
-                (Color?)Application.Current?.Resources["TextLight"];
-        }
-
-        private void SetOutputWaiting()
-        {
-            this.BooksOutput = AppStringResources.Table_Waiting.Replace("Table", "Books");
-            this.WishListOutput = AppStringResources.Table_Waiting.Replace("Table", "WishListBooks");
-            this.CollectionsOutput = AppStringResources.Table_Waiting.Replace("Table", "Collections");
-            this.GenresOutput = AppStringResources.Table_Waiting.Replace("Table", "Genres");
-            this.SeriesOutput = AppStringResources.Table_Waiting.Replace("Table", "Series");
-            this.AuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "Authors");
-            this.LocationsOutput = AppStringResources.Table_Waiting.Replace("Table", "Locations");
-            this.ChaptersOutput = AppStringResources.Table_Waiting.Replace("Table", "Chapters");
-            this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
         }
 
         private static List<string?> SetBookColumns()
@@ -832,6 +638,200 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.LocationName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
             ];
+        }
+
+        private async Task ManuallySetBookCover(BookModel book, bool imagesChecked)
+        {
+            if (imagesChecked && ManuallyUploadLibraryCovers)
+            {
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+
+                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
+                {
+                    ManuallyUploadLibraryCovers = false;
+                }
+
+                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
+                {
+                    MediaPickerOptions pickerOptions = new ();
+
+                    try
+                    {
+                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
+
+                        if (photos?.Count > 0)
+                        {
+                            var firstPhoto = photos.First();
+                            var bookCoverImageSource = ImageSource.FromFile(firstPhoto.FullPath);
+
+                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle));
+
+                            if (!result.Result)
+                            {
+                                await this.ManuallySetBookCover(book, imagesChecked);
+                            }
+
+                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
+                            book.HasBookCover = true;
+                            book.HasNoBookCover = false;
+
+                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(directory))
+                            {
+                                Directory.CreateDirectory(directory);
+                            }
+
+                            var fi = new FileInfo(firstPhoto.FullPath);
+                            var filePath = $"{directory}/{fi.Name}";
+                            File.Copy(firstPhoto.FullPath, filePath, true);
+
+                            book.BookCoverFileName = fi.Name;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+        }
+
+        private async Task ManuallySetBookCover(WishlistBookModel book, bool imagesChecked)
+        {
+            if (imagesChecked && ManuallyUploadWishlistCovers)
+            {
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+
+                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
+                {
+                    ManuallyUploadWishlistCovers = false;
+                }
+
+                if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
+                {
+                    MediaPickerOptions pickerOptions = new ();
+
+                    try
+                    {
+                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
+
+                        if (photos?.Count > 0)
+                        {
+                            var firstPhoto = photos.First();
+                            book.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
+                            book.HasBookCover = true;
+                            book.HasNoBookCover = false;
+
+                            var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                            if (!Directory.Exists(directory))
+                            {
+                                Directory.CreateDirectory(directory);
+                            }
+
+                            var fi = new FileInfo(firstPhoto.FullPath);
+                            var filePath = $"{directory}/{fi.Name}";
+                            File.Copy(firstPhoto.FullPath, filePath, true);
+
+                            book.BookCoverFileName = fi.Name;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+        }
+
+        private void ResetOutput()
+        {
+            this.BooksOutput = string.Empty;
+            this.WishListOutput = string.Empty;
+            this.CollectionsOutput = string.Empty;
+            this.GenresOutput = string.Empty;
+            this.SeriesOutput = string.Empty;
+            this.AuthorsOutput = string.Empty;
+            this.LocationsOutput = string.Empty;
+            this.ChaptersOutput = string.Empty;
+            this.BookAuthorsOutput = string.Empty;
+            this.FinalOutput = string.Empty;
+            this.StartOutput = string.Empty;
+        }
+
+        private void ResetColorOutput()
+        {
+            var booksOutputLabel = (Label)this.View.FindByName("booksOutput");
+            booksOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var chaptersOutputLabel = (Label)this.View.FindByName("chaptersOutput");
+            chaptersOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var bookAuthorsOutputLabel = (Label)this.View.FindByName("bookAuthorsOutput");
+            bookAuthorsOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var wishListOutputLabel = (Label)this.View.FindByName("wishListOutput");
+            wishListOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var collectionsOutputLabel = (Label)this.View.FindByName("collectionsOutput");
+            collectionsOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var genresOutputLabel = (Label)this.View.FindByName("genresOutput");
+            genresOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var seriesOutputLabel = (Label)this.View.FindByName("seriesOutput");
+            seriesOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var authorsOutputLabel = (Label)this.View.FindByName("authorsOutput");
+            authorsOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var locationsOutputLabel = (Label)this.View.FindByName("locationsOutput");
+            locationsOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+
+            var finalOutputLabel = (Label)this.View.FindByName("finalOutput");
+            finalOutputLabel.TextColor =
+                Application.Current?.UserAppTheme == AppTheme.Dark ?
+                (Color?)Application.Current?.Resources["TextDark"] :
+                (Color?)Application.Current?.Resources["TextLight"];
+        }
+
+        private void SetOutputWaiting()
+        {
+            this.BooksOutput = AppStringResources.Table_Waiting.Replace("Table", "Books");
+            this.WishListOutput = AppStringResources.Table_Waiting.Replace("Table", "WishListBooks");
+            this.CollectionsOutput = AppStringResources.Table_Waiting.Replace("Table", "Collections");
+            this.GenresOutput = AppStringResources.Table_Waiting.Replace("Table", "Genres");
+            this.SeriesOutput = AppStringResources.Table_Waiting.Replace("Table", "Series");
+            this.AuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "Authors");
+            this.LocationsOutput = AppStringResources.Table_Waiting.Replace("Table", "Locations");
+            this.ChaptersOutput = AppStringResources.Table_Waiting.Replace("Table", "Chapters");
+            this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
         }
 
         private static string BookCoverFileName(string bookTitle, string format, string extension)
@@ -1088,7 +1088,7 @@ namespace BookCollector.ViewModels.Main
 
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileName))
                             {
-                                await ManuallySetBookCover(book, this.ImagesChecked);
+                                await this.ManuallySetBookCover(book, this.ImagesChecked);
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 
@@ -1120,6 +1120,7 @@ namespace BookCollector.ViewModels.Main
 
             return 0;
         }
+
         /*********************** Book Methods ***********************/
 
         /*********************** WishListBook Methods ***********************/
@@ -1340,7 +1341,7 @@ namespace BookCollector.ViewModels.Main
 
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileName))
                             {
-                                await ManuallySetBookCover(book, this.ImagesChecked);
+                                await this.ManuallySetBookCover(book, this.ImagesChecked);
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 

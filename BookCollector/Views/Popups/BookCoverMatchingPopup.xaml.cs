@@ -2,37 +2,38 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using CommunityToolkit.Maui.Views;
-
-namespace BookCollector.Views.Popups;
-
-public partial class BookCoverMatchingPopup : Popup<bool>
+namespace BookCollector.Views.Popups
 {
-    public BookCoverMatchingPopup(ImageSource bookCover, string bookTitle)
+    using CommunityToolkit.Maui.Views;
+
+    public partial class BookCoverMatchingPopup : Popup<bool>
     {
-        this.BookCover = bookCover;
-        this.BookTitle = bookTitle;
+        public BookCoverMatchingPopup(ImageSource bookCover, string bookTitle)
+        {
+            this.BookCover = bookCover;
+            this.BookTitle = bookTitle;
 
-        this.BindingContext = this;
+            this.BindingContext = this;
 
-        this.InitializeComponent();
-    }
+            this.InitializeComponent();
+        }
 
-    public ImageSource BookCover { get; set; }
+        public ImageSource BookCover { get; set; }
 
-    public string BookTitle { get; set; }
+        public string BookTitle { get; set; }
 
-    private async void OnNoButton_Clicked(object sender, EventArgs e)
-    {
-        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        private async void OnNoButton_Clicked(object sender, EventArgs e)
+        {
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await this.CloseAsync(false, token: cts.Token);
-    }
+            await this.CloseAsync(false, token: cts.Token);
+        }
 
-    private async void OnYesButton_Clicked(object sender, EventArgs e)
-    {
-        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        private async void OnYesButton_Clicked(object sender, EventArgs e)
+        {
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await this.CloseAsync(true, token: cts.Token);
+            await this.CloseAsync(true, token: cts.Token);
+        }
     }
 }

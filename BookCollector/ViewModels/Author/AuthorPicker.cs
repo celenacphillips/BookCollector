@@ -11,6 +11,8 @@ namespace BookCollector.ViewModels.Author
     public partial class AuthorPicker : ObservableObject
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedAuthorString;
 
         public ObservableCollection<AuthorModel>? AuthorList { get; set; }

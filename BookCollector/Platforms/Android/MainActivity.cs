@@ -6,14 +6,14 @@
 namespace BookCollector
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using BookCollector.CustomPicker;
+    using Android.App;
+    using Android.Content;
+    using Android.Content.PM;
+    using BookCollector.CustomPicker;
 
-    /// <summary>
-    /// Main Activity class.
-    /// </summary>
+        /// <summary>
+        /// Main Activity class.
+        /// </summary>
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
     {
@@ -22,9 +22,9 @@ using BookCollector.CustomPicker;
         /// Disabled the SA1401 warning, since the field is called outside the class
         /// and is not intended to be private.
         /// </summary>
-#pragma warning disable SA1401 // Fields should be private
+        #pragma warning disable SA1401 // Fields should be private
         internal static Action<int, string[], Permission[]>? OnPermissionResult;
-#pragma warning restore SA1401 // Fields should be private
+        #pragma warning restore SA1401 // Fields should be private
 
         /// <summary>
         /// Called after user responds to a permission request. The results are passed to the

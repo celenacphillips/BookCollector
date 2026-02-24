@@ -394,6 +394,5 @@ namespace BookCollector.Data
 
             return filterList;
         }
-
     }
 }

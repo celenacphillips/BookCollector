@@ -21,9 +21,13 @@ namespace BookCollector.ViewModels.WishListBook
     public partial class WishListBookMainViewModel : BookBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public WishlistBookModel? selectedWishlistBook;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
         public WishListBookMainViewModel(WishlistBookModel book, ContentPage view)
@@ -113,11 +117,11 @@ namespace BookCollector.ViewModels.WishListBook
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                 }
@@ -152,7 +156,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             if (this.SelectedWishlistBook != null && !string.IsNullOrEmpty(this.SelectedWishlistBook.BookTitle))
             {
-                var answer = await DeleteCheck(this.SelectedWishlistBook.BookTitle);
+                var answer = await this.DeleteCheck(this.SelectedWishlistBook.BookTitle);
 
                 if (answer)
                 {
@@ -163,7 +167,7 @@ namespace BookCollector.ViewModels.WishListBook
                         await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook));
                         this.RemoveFromStaticList();
 
-                        await ConfirmDelete(this.SelectedWishlistBook.BookTitle);
+                        await this.ConfirmDelete(this.SelectedWishlistBook.BookTitle);
 
                         await Shell.Current.Navigation.PopAsync();
 
@@ -172,18 +176,18 @@ namespace BookCollector.ViewModels.WishListBook
                     catch (Exception ex)
                     {
 #if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
+                        await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
-                        await CanceledAction();
+                        await this.CanceledAction();
                     }
                 }
                 else
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                 }
             }
         }
@@ -193,7 +197,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             if (this.SelectedWishlistBook != null)
             {
-                var answer = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureYouWantToMoveBookToYourLibrary_Question.Replace("book", this.SelectedWishlistBook.BookTitle), null, null);
+                var answer = await this.DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureYouWantToMoveBookToYourLibrary_Question.Replace("book", this.SelectedWishlistBook.BookTitle), null, null);
 
                 if (answer)
                 {
@@ -256,7 +260,7 @@ namespace BookCollector.ViewModels.WishListBook
 
                         WishListViewModel.RefreshView = true;
 
-                        await DisplayMessage(AppStringResources.AddToLibrary, AppStringResources.BookWasAddedToLibrary);
+                        await this.DisplayMessage(AppStringResources.AddToLibrary, AppStringResources.BookWasAddedToLibrary);
 
                         await Shell.Current.Navigation.PopAsync();
 
@@ -265,18 +269,18 @@ namespace BookCollector.ViewModels.WishListBook
                     catch (Exception ex)
                     {
 #if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
+                        await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                         this.SetIsBusyFalse();
                     }
                 }
                 else
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                 }
             }
         }

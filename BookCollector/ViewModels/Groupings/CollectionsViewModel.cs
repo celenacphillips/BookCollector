@@ -22,6 +22,8 @@ namespace BookCollector.ViewModels.Groupings
     public partial class CollectionsViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalCollectionsstring;
 
         public CollectionsViewModel(ContentPage view)
@@ -130,11 +132,11 @@ namespace BookCollector.ViewModels.Groupings
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     RefreshView = false;
@@ -187,7 +189,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 if (selected != null && !string.IsNullOrEmpty(selected.CollectionName))
                 {
-                    var action = await PopupMenu(selected.CollectionName);
+                    var action = await this.PopupMenu(selected.CollectionName);
 
                     if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
                     {
@@ -240,7 +242,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (!string.IsNullOrEmpty(selected.CollectionName))
             {
-                var answer = await DeleteCheck(selected.CollectionName);
+                var answer = await this.DeleteCheck(selected.CollectionName);
 
                 if (answer)
                 {
@@ -252,7 +254,7 @@ namespace BookCollector.ViewModels.Groupings
                         RemoveFromStaticList(selected);
                         await RemoveBookFromGrouping(selected);
 
-                        await ConfirmDelete(selected.CollectionName);
+                        await this.ConfirmDelete(selected.CollectionName);
 
                         await this.SetViewModelData();
 
@@ -261,18 +263,18 @@ namespace BookCollector.ViewModels.Groupings
                     catch (Exception ex)
                     {
 #if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
+                        await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
-                        await CanceledAction();
+                        await this.CanceledAction();
                     }
                 }
                 else
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                 }
             }
         }
@@ -304,19 +306,6 @@ namespace BookCollector.ViewModels.Groupings
                     await this.SetViewModelData();
                 }
             }
-        }
-
-        private void GetPreferences()
-        {
-            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
 
         private static void RemoveFromStaticList(CollectionModel selected)
@@ -372,6 +361,19 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
+        }
+
+        private void GetPreferences()
+        {
+            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

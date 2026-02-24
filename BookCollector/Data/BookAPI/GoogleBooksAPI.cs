@@ -117,7 +117,7 @@ namespace BookCollector.Data.BookAPI
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
-            ISBNLookup? isbnResponse = new();
+            ISBNLookup? isbnResponse = new ();
 
             if (response.IsSuccessStatusCode)
             {
@@ -213,7 +213,7 @@ namespace BookCollector.Data.BookAPI
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
             }
             else

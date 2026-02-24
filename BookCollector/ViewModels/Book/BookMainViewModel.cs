@@ -18,12 +18,18 @@ namespace BookCollector.ViewModels.Book
     public partial class BookMainViewModel : BookBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? selectedAuthorList;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCheckpoints;
 
         public BookMainViewModel(BookModel book, ContentPage view, object? previousViewModel)
@@ -139,11 +145,11 @@ namespace BookCollector.ViewModels.Book
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                 }
@@ -178,7 +184,7 @@ namespace BookCollector.ViewModels.Book
         {
             if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
             {
-                var answer = await DeleteCheck(this.SelectedBook.BookTitle);
+                var answer = await this.DeleteCheck(this.SelectedBook.BookTitle);
 
                 if (answer)
                 {
@@ -189,7 +195,7 @@ namespace BookCollector.ViewModels.Book
                         await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
                         await RemoveFromStaticList(this.SelectedBook);
 
-                        await ConfirmDelete(this.SelectedBook.BookTitle);
+                        await this.ConfirmDelete(this.SelectedBook.BookTitle);
 
                         await Shell.Current.Navigation.PopAsync();
 
@@ -198,18 +204,18 @@ namespace BookCollector.ViewModels.Book
                     catch (Exception ex)
                     {
 #if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
+                        await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
-                        await CanceledAction();
+                        await this.CanceledAction();
                     }
                 }
                 else
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                 }
             }
         }

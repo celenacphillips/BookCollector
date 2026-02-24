@@ -110,7 +110,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -142,7 +142,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -175,7 +175,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -201,7 +201,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -224,7 +224,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -247,7 +247,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -270,7 +270,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -293,7 +293,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -317,15 +317,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /// <summary>
-        /// 
+        /// Get all author guids for a book based on the provided book guid.
         /// </summary>
-        /// <param name="bookGuid"></param>
-        /// <returns></returns>
+        /// <param name="bookGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of author guids for the book.</returns>
         public async Task<List<Guid>> GetAllAuthorGuidsForBookAsync(Guid bookGuid)
         {
             try
@@ -342,15 +342,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /// <summary>
-        /// 
+        /// Get authors objects based on a list of guids provided.
         /// </summary>
-        /// <param name="authorGuids"></param>
-        /// <returns></returns>
+        /// <param name="authorGuids">The guids to retrieve authors for.</param>
+        /// <returns>A list of authors for the book.</returns>
         public async Task<List<AuthorModel>> GetAllAuthorsForBookAsync(List<Guid> authorGuids)
         {
             try
@@ -375,15 +375,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /// <summary>
-        /// 
+        /// Add or update a book in the database.
         /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
+        /// <param name="book">Book to save.</param>
+        /// <returns>Book that has been saved.</returns>
         public async Task<BookDatabaseModel> SaveBookAsync(BookDatabaseModel book)
         {
             try
@@ -415,15 +415,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /// <summary>
-        /// 
+        /// Remove book from the database.
         /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
+        /// <param name="book">Book to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteBookAsync(BookDatabaseModel book)
         {
             try
@@ -433,9 +433,10 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
+
         /*********************** Book Methods ***********************/
 
         /*********************** Wishlist Book Methods ***********************/
@@ -462,7 +463,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -502,7 +503,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -520,9 +521,10 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
+
         /*********************** Wishlist Book Methods ***********************/
 
         /*********************** Chapter Methods ***********************/
@@ -551,7 +553,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -578,7 +580,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -616,7 +618,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -634,9 +636,10 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
+
         /*********************** Chapter Methods ***********************/
 
         /*********************** Book Author Methods ***********************/
@@ -659,7 +662,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -697,7 +700,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -724,7 +727,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -762,7 +765,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -790,7 +793,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -839,7 +842,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -873,7 +876,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -900,7 +903,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -940,7 +943,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -958,7 +961,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -980,7 +983,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1003,7 +1006,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1047,7 +1050,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1085,7 +1088,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1118,7 +1121,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1144,7 +1147,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1184,7 +1187,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1202,7 +1205,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1240,7 +1243,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1273,7 +1276,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1299,7 +1302,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1339,7 +1342,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1357,7 +1360,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1395,7 +1398,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1428,7 +1431,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1454,7 +1457,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1494,7 +1497,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1512,7 +1515,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1535,7 +1538,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1573,7 +1576,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1606,7 +1609,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1632,7 +1635,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1672,7 +1675,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -1690,7 +1693,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 

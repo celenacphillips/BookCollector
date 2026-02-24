@@ -24,32 +24,50 @@ namespace BookCollector.ViewModels.BaseViewModels
     public partial class BaseViewModel : ObservableObject
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool isRefreshing;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool isBusy;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool isVisible;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool isEnabled;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? viewTitle;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string infoText;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? searchString;
 
         internal static BookCollectorDatabase Database;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         internal static bool showCollectionViewFooter;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         internal SelectionMode collectionViewSelectionMode;
 
         public BaseViewModel()
@@ -107,7 +125,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var message = $"{AppStringResources.AreYouSureYouWantToDeleteItem_Question.Replace("item", item)}";
 
-            var action = await DisplayMessage($"{AppStringResources.AreYouSure_Question}", message, null, null);
+            var action = await this.DisplayMessage($"{AppStringResources.AreYouSure_Question}", message, null, null);
             return action;
         }
 
@@ -142,7 +160,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         public async Task CanceledAction()
         {
-            await DisplayMessage($"{AppStringResources.ActionCanceled}", null);
+            await this.DisplayMessage($"{AppStringResources.ActionCanceled}", null);
         }
 
         public async Task ConfirmDelete(string item)
@@ -150,7 +168,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var title = $"{AppStringResources.ItemDeleted.Replace("Item", item)}.";
             var message = $"{AppStringResources.ItemWasDeleted.Replace("Item", item)}";
 
-            await DisplayMessage(title, message);
+            await this.DisplayMessage(title, message);
         }
 
         public static byte[] DownloadImage(string imageURL)
@@ -197,7 +215,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     string[] name = authorName.Split(",");
 
-                    AuthorModel author1 = new()
+                    AuthorModel author1 = new ()
                     {
                         FirstName = name[1].Trim(),
                         LastName = name[0].Trim(),

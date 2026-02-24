@@ -17,9 +17,13 @@ namespace BookCollector.ViewModels.Collection
     public partial class CollectionEditViewModel : CollectionBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public CollectionModel editedCollection;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool collectionNameNotValid;
 
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
@@ -56,7 +60,7 @@ namespace BookCollector.ViewModels.Collection
 
                 if (this.CollectionNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.CollectionNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -73,7 +77,7 @@ namespace BookCollector.ViewModels.Collection
 
                     if (this.InsertMainViewBefore)
                     {
-                        CollectionMainView view = new(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                        CollectionMainView view = new (this.EditedCollection, $"{this.EditedCollection.CollectionName}");
                         Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
 
@@ -87,7 +91,7 @@ namespace BookCollector.ViewModels.Collection
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }
@@ -113,11 +117,6 @@ namespace BookCollector.ViewModels.Collection
             {
                 CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
             }
-        }
-
-        private void ValidateEntry()
-        {
-            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
         }
 
         private static async Task<bool> AddCollectionToStaticList(CollectionModel collection, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
@@ -170,6 +169,11 @@ namespace BookCollector.ViewModels.Collection
             }
 
             return refresh;
+        }
+
+        private void ValidateEntry()
+        {
+            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
         }
     }
 }

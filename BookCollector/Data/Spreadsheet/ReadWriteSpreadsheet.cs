@@ -28,7 +28,7 @@ namespace BookCollector.Data.Spreadsheet
                 var coreFilePropPart = spreadsheetDocument.AddCoreFilePropertiesPart();
 
                 // With DocumentFormat.OpenXml 2.14.0, AddCoreFilePropertiesPart includes an empty core.xml without a root which leads to an error when the generated file is opened in Excel
-                using (XmlTextWriter writer = new(coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
+                using (XmlTextWriter writer = new (coreFilePropPart.GetStream(FileMode.Create), System.Text.Encoding.UTF8))
                 {
                     writer.WriteRaw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<cp:coreProperties xmlns:cp=\"https://schemas.openxmlformats.org/package/2006/metadata/core-properties\"></cp:coreProperties>");
                     writer.Flush();
@@ -56,11 +56,11 @@ namespace BookCollector.Data.Spreadsheet
                     //await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
                 }
 
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -99,7 +99,7 @@ namespace BookCollector.Data.Spreadsheet
 
                     // Add the cell to the cell table
                     Cell? refCell = null;
-                    Cell newCell = new() { CellReference = $"{columnValue}{rowValue}" };
+                    Cell newCell = new () { CellReference = $"{columnValue}{rowValue}" };
                     row.InsertBefore(newCell, refCell);
 
                     // Set the cell value
@@ -300,7 +300,7 @@ namespace BookCollector.Data.Spreadsheet
             }
 
             // Append the new worksheet and associate it with the workbook.
-            Sheet sheet = new() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+            Sheet sheet = new () { Id = relationshipId, SheetId = sheetId, Name = sheetName };
             sheets.Append(sheet);
             workbookPart.Workbook.Save();
 

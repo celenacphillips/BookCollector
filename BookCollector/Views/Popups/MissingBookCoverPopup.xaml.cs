@@ -2,10 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Popups;
+
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Views;
-
-namespace BookCollector.Views.Popups;
 
 public partial class MissingBookCoverPopup : Popup<string>
 {

@@ -1,11 +1,10 @@
-// <copyright file="MissingBookCoverPopup.xaml.cs" company="Castle Software">
+// <copyright file="ChoiceDialogPopup.xaml.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using CommunityToolkit.Maui.Views;
-
 namespace BookCollector.Views.Popups;
+
+using CommunityToolkit.Maui.Views;
 
 public partial class ChoiceDialogPopup : Popup<string>
 {
@@ -18,8 +17,8 @@ public partial class ChoiceDialogPopup : Popup<string>
         this.Deny = deny;
         this.DenyVisible = !string.IsNullOrEmpty(deny);
 
-        this.OptionsVisible = (type.Equals("Options"));
-        this.CommandsVisible = (type.Equals("Commands"));
+        this.OptionsVisible = type.Equals("Options");
+        this.CommandsVisible = type.Equals("Commands");
 
         this.BindingContext = this;
 

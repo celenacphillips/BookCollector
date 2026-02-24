@@ -17,12 +17,18 @@ namespace BookCollector.ViewModels.Author
     public partial class AuthorEditViewModel : AuthorBaseViewModel
     {
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public AuthorModel editedAuthor;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorFirstNameNotValid;
 
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorLastNameNotValid;
 
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
@@ -63,7 +69,7 @@ namespace BookCollector.ViewModels.Author
 
                 if (this.AuthorFirstNameNotValid || this.AuthorLastNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.AuthorNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -90,11 +96,11 @@ namespace BookCollector.ViewModels.Author
             catch (Exception ex)
             {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                 this.SetIsBusyFalse();
             }
