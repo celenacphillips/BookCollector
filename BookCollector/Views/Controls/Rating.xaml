@@ -3,14 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookCollector.Views.Controls.Rating"
              x:Name="this">
-    
-    <HorizontalStackLayout BindingContext="{x:Reference this}">
-        <Button Text=""
-                Clicked="Stars_Clicked"
-                BackgroundColor="Transparent"
-                Style="{DynamicResource RatingButton}"/>
-        <HorizontalStackLayout x:Name="starLayout">
 
-        </HorizontalStackLayout>
+    <HorizontalStackLayout BindingContext="{x:Reference this}">
+        <Grid x:Name="starLayout">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
     </HorizontalStackLayout>
 </ContentView>

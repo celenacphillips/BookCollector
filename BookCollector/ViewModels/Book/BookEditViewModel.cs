@@ -916,7 +916,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.ShowPages = false;
                     this.ShowTime = true;
-                    this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
+                    this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0 && this.EditedBook.BookTotalTime != null;
                 }
 
                 await this.UpdateProgress();

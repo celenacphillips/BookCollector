@@ -11,159 +11,166 @@
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                Margin="0">
 
-    <VerticalStackLayout HorizontalOptions="Center">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Label Text="{x:Static localization:AppStringResources.SortBy}"
-                   Style="{DynamicResource Header}"
-                   FontSize="Subtitle"
-                   HorizontalOptions="Center"
-                   VerticalOptions="End"
-                   Grid.Row="0" Grid.Column="0"/>
-
-            <ImageButton HorizontalOptions="End"
-                         Margin="10,10,10,0"
-                         Padding="10,5"
-                         Command="{Binding CloseCommand}"
-                         Grid.Row="0" Grid.Column="1">
-                <ImageButton.Source>
-                    <FontImageSource FontFamily="MaterialDesignIcons"
-                                     Glyph="&#xF0193;"
-                                     Size="28"
-                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-                </ImageButton.Source>
-            </ImageButton>
-        </Grid>
-
+    <Grid>
+        
         <VerticalStackLayout>
+            
+            <ScrollView>
+                
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     Margin="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-            <Grid IsVisible="True"
-                  Margin="0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                <VerticalStackLayout Grid.Row="0" Grid.Column="0"
-                                     Margin="20,0,0,0">
+                        <Label Text="{x:Static localization:AppStringResources.SortBy}"
+                               Style="{DynamicResource Header}"
+                               FontSize="Subtitle"
+                               HorizontalOptions="Center"
+                               VerticalOptions="End"
+                               Grid.Row="0" Grid.Column="0"/>
 
-                    <!-- Book Title -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookTitle}"
-                                 IsVisible="{Binding BookTitleVisible}"
-                                 IsChecked="{Binding BookTitleChecked}"/>
-                    <!-- Book Title -->
+                        <ImageButton HorizontalOptions="End"
+                                     Padding="10,5"
+                                     Command="{Binding CloseCommand}"
+                                     Grid.Row="0" Grid.Column="1">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="MaterialDesignIcons"
+                                                 Glyph="&#xF0193;"
+                                                 Size="28"
+                                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                            </ImageButton.Source>
+                        </ImageButton>
 
-                    <!-- Collection Name -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.CollectionName}"
-                                 IsVisible="{Binding CollectionNameVisible}"
-                                 IsChecked="{Binding CollectionNameChecked}"/>
-                    <!-- Collection Name -->
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0"
+                     Margin="20,0,0,0">
 
-                    <!-- Genre Name -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.GenreName}"
-                                 IsVisible="{Binding GenreNameVisible}"
-                                 IsChecked="{Binding GenreNameChecked}"/>
-                    <!-- Genre Name -->
+                            <!-- Book Title -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookTitle}"
+                 IsVisible="{Binding BookTitleVisible}"
+                 IsChecked="{Binding BookTitleChecked}"/>
+                            <!-- Book Title -->
 
-                    <!-- Series Name -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.SeriesName}"
-                                 IsVisible="{Binding SeriesNameVisible}"
-                                 IsChecked="{Binding SeriesNameChecked}"/>
-                    <!-- Series Name -->
+                            <!-- Collection Name -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.CollectionName}"
+                 IsVisible="{Binding CollectionNameVisible}"
+                 IsChecked="{Binding CollectionNameChecked}"/>
+                            <!-- Collection Name -->
 
-                    <!-- Author Last Name -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.AuthorLastName}"
-                                 IsVisible="{Binding AuthorLastNameVisible}"
-                                 IsChecked="{Binding AuthorLastNameChecked}"/>
-                    <!-- Author Last Name -->
+                            <!-- Genre Name -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.GenreName}"
+                 IsVisible="{Binding GenreNameVisible}"
+                 IsChecked="{Binding GenreNameChecked}"/>
+                            <!-- Genre Name -->
 
-                    <!-- Location Name -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.LocationName}"
-                                 IsVisible="{Binding LocationNameVisible}"
-                                 IsChecked="{Binding LocationNameChecked}"/>
-                    <!-- Location Name -->
+                            <!-- Series Name -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.SeriesName}"
+                 IsVisible="{Binding SeriesNameVisible}"
+                 IsChecked="{Binding SeriesNameChecked}"/>
+                            <!-- Series Name -->
 
-                    <!-- Series Order -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.SeriesOrder}"
-                                 IsVisible="{Binding SeriesOrderVisible}"
-                                 IsChecked="{Binding SeriesOrderChecked}"/>
-                    <!-- Series Order -->
+                            <!-- Author Last Name -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.AuthorLastName}"
+                 IsVisible="{Binding AuthorLastNameVisible}"
+                 IsChecked="{Binding AuthorLastNameChecked}"/>
+                            <!-- Author Last Name -->
 
-                    <!-- Book Reading Date -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookReadingDate}"
-                                 IsVisible="{Binding BookReadingDateVisible}"
-                                 IsChecked="{Binding BookReadingDateChecked}"/>
-                    <!-- Book Reading Date -->
+                            <!-- Location Name -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.LocationName}"
+                 IsVisible="{Binding LocationNameVisible}"
+                 IsChecked="{Binding LocationNameChecked}"/>
+                            <!-- Location Name -->
 
-                    <!-- Total Books -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.TotalBooksOwned}"
-                                 IsVisible="{Binding TotalBooksVisible}"
-                                 IsChecked="{Binding TotalBooksChecked}"/>
-                    <!-- Total Books -->
+                            <!-- Series Order -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.SeriesOrder}"
+                 IsVisible="{Binding SeriesOrderVisible}"
+                 IsChecked="{Binding SeriesOrderChecked}"/>
+                            <!-- Series Order -->
 
-                    <!-- Book Read Percentage -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookReadPercentage}"
-                                 IsVisible="{Binding BookReadPercentageVisible}"
-                                 IsChecked="{Binding BookReadPercentageChecked}"/>
-                    <!-- Book Read Percentage -->
+                            <!-- Book Reading Date -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookReadingDate}"
+                 IsVisible="{Binding BookReadingDateVisible}"
+                 IsChecked="{Binding BookReadingDateChecked}"/>
+                            <!-- Book Reading Date -->
 
-                    <!-- Book Publisher -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookPublisher}"
-                                 IsVisible="{Binding BookPublisherVisible}"
-                                 IsChecked="{Binding BookPublisherChecked}"/>
-                    <!-- Book Publisher -->
+                            <!-- Total Books -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.TotalBooksOwned}"
+                 IsVisible="{Binding TotalBooksVisible}"
+                 IsChecked="{Binding TotalBooksChecked}"/>
+                            <!-- Total Books -->
 
-                    <!-- Book Publish Year -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookPublishYear}"
-                                 IsVisible="{Binding BookPublishYearVisible}"
-                                 IsChecked="{Binding BookPublishYearChecked}"/>
-                    <!-- Book Publish Year -->
+                            <!-- Book Read Percentage -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookReadPercentage}"
+                 IsVisible="{Binding BookReadPercentageVisible}"
+                 IsChecked="{Binding BookReadPercentageChecked}"/>
+                            <!-- Book Read Percentage -->
 
-                    <!-- Book Format -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookFormat}"
-                                 IsVisible="{Binding BookFormatVisible}"
-                                 IsChecked="{Binding BookFormatChecked}"/>
-                    <!-- Book Format -->
+                            <!-- Book Publisher -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookPublisher}"
+                 IsVisible="{Binding BookPublisherVisible}"
+                 IsChecked="{Binding BookPublisherChecked}"/>
+                            <!-- Book Publisher -->
 
-                    <!-- Page Count / Book Time -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.PageCountBookTime}"
-                                 IsVisible="{Binding PageCountTimeVisible}"
-                                 IsChecked="{Binding PageCountTimeChecked}"/>
-                    <!-- Page Count / Book Time -->
+                            <!-- Book Publish Year -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookPublishYear}"
+                 IsVisible="{Binding BookPublishYearVisible}"
+                 IsChecked="{Binding BookPublishYearChecked}"/>
+                            <!-- Book Publish Year -->
 
-                    <!-- Total Price -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.TotalPriceOfBooksOwned}"
-                                 IsVisible="{Binding TotalPriceVisible}"
-                                 IsChecked="{Binding TotalPriceChecked}"/>
-                    <!-- Total Price -->
+                            <!-- Book Format -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookFormat}"
+                 IsVisible="{Binding BookFormatVisible}"
+                 IsChecked="{Binding BookFormatChecked}"/>
+                            <!-- Book Format -->
 
-                    <!-- Book Price -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.BookPrice}"
-                                 IsVisible="{Binding BookPriceVisible}"
-                                 IsChecked="{Binding BookPriceChecked}"/>
-                    <!-- Book Price -->
+                            <!-- Page Count / Book Time -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.PageCountBookTime}"
+                 IsVisible="{Binding PageCountTimeVisible}"
+                 IsChecked="{Binding PageCountTimeChecked}"/>
+                            <!-- Page Count / Book Time -->
+
+                            <!-- Total Price -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.TotalPriceOfBooksOwned}"
+                 IsVisible="{Binding TotalPriceVisible}"
+                 IsChecked="{Binding TotalPriceChecked}"/>
+                            <!-- Total Price -->
+
+                            <!-- Book Price -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.BookPrice}"
+                 IsVisible="{Binding BookPriceVisible}"
+                 IsChecked="{Binding BookPriceChecked}"/>
+                            <!-- Book Price -->
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+     Margin="0,0,20,0">
+                            <!-- Ascending -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.Ascending}"
+                 IsVisible="True"
+                 IsChecked="{Binding AscendingChecked}"/>
+                            <!-- Ascending -->
+
+                            <!-- Descending -->
+                            <RadioButton Content="{x:Static localization:AppStringResources.Descending}"
+                 IsVisible="True"
+                 IsChecked="{Binding DescendingChecked}"/>
+                            <!-- Descending -->
+                        </VerticalStackLayout>
+
+                    </Grid>
+
                 </VerticalStackLayout>
-
-                <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                                     Margin="0,0,20,0">
-                    <!-- Ascending -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.Ascending}"
-                                 IsVisible="True"
-                                 IsChecked="{Binding AscendingChecked}"/>
-                    <!-- Ascending -->
-
-                    <!-- Descending -->
-                    <RadioButton Content="{x:Static localization:AppStringResources.Descending}"
-                                 IsVisible="True"
-                                 IsChecked="{Binding DescendingChecked}"/>
-                    <!-- Descending -->
-                </VerticalStackLayout>
-
-            </Grid>
+                
+            </ScrollView>
+            
         </VerticalStackLayout>
-    </VerticalStackLayout>
+    </Grid>
+
 </toolkit:Popup>

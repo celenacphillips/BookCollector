@@ -225,7 +225,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = true;
                     this.CheckboxesVisible = false;
 
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!);
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -1003,7 +1003,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetBookColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1012,7 +1012,13 @@ namespace BookCollector.ViewModels.Main
                     this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1137,6 +1143,7 @@ namespace BookCollector.ViewModels.Main
                 await Task.Delay(1);
 
                 var bookList = await FillLists.GetBookWishList();
+
                 var count = bookList != null ? bookList.Count : 0;
 
                 this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{count}");
@@ -1272,7 +1279,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetWishlistBookColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1281,7 +1288,13 @@ namespace BookCollector.ViewModels.Main
                     this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1449,7 +1462,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetChapterColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1458,7 +1471,13 @@ namespace BookCollector.ViewModels.Main
                     this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1581,7 +1600,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetCollectionColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1590,7 +1609,13 @@ namespace BookCollector.ViewModels.Main
                     this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1712,7 +1737,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetGenreColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1721,7 +1746,13 @@ namespace BookCollector.ViewModels.Main
                     this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1844,7 +1875,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetSeriesColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1853,7 +1884,13 @@ namespace BookCollector.ViewModels.Main
                     this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -1976,7 +2013,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetBookAuthorColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -1985,7 +2022,13 @@ namespace BookCollector.ViewModels.Main
                     this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -2107,7 +2150,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetAuthorColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -2116,7 +2159,13 @@ namespace BookCollector.ViewModels.Main
                     this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
@@ -2239,7 +2288,7 @@ namespace BookCollector.ViewModels.Main
 
                 var columnNames = SetLocationColumns();
 
-                List<List<string>> valuesList = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
                 var importCount = 0;
 
@@ -2248,7 +2297,13 @@ namespace BookCollector.ViewModels.Main
                     this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-                    return 1;
+
+                    if (message.StartsWith("There is no spreadsheet named") ||
+                        message.StartsWith("The column count is not right for") ||
+                        message.StartsWith("The columns are not in the right order for"))
+                    {
+                        return 1;
+                    }
                 }
 
                 this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");

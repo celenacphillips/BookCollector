@@ -18,16 +18,19 @@
         <Label Text="{Binding Title}"
                Style="{StaticResource Header}"
                HorizontalOptions="Center"
-               Margin="0,0,0,10"/>
+               MaxLines="1"
+               LineBreakMode="TailTruncation"
+               Margin="10,20,10,0"/>
 
         <Label Text="{Binding Message}"
                HorizontalOptions="Center"
-               Margin="10,20"
+               Margin="20"
                IsVisible="{Binding CommandsVisible}"/>
 
         <Button Text="{Binding Confirm}"
                 Grid.Row="0" Grid.Column="1"
                 Clicked="OnConfirmButton_Clicked"
+                HorizontalOptions="Center"
                 Margin="10"
                 Style="{StaticResource PickerButton}"
                 IsVisible="{Binding OptionsVisible}"/>
@@ -35,8 +38,9 @@
         <Button Text="{Binding Deny}"
                 Grid.Row="0" Grid.Column="0"
                 Clicked="OnDenyButton_Clicked"
+                HorizontalOptions="Center"
                 Style="{StaticResource PickerButton}"
-                Margin="10"
+                Margin="10,10,10,20"
                 IsVisible="{Binding OptionsVisible}"/>
 
         <HorizontalStackLayout IsVisible="{Binding CommandsVisible}"

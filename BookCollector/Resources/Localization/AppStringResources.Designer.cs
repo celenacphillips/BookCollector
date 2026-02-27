@@ -646,6 +646,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Authors (Last, First; Last, First).
+        /// </summary>
+        internal static string BookAuthors_Spreadsheet {
+            get {
+                return ResourceManager.GetString("BookAuthors_Spreadsheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Collection.
         /// </summary>
         internal static string BookCollection {
@@ -1957,7 +1966,9 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet?
+        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet specifically formatted for this app?
+        ///If you don&apos;t have an existing spreadsheet, you can export to generate an acceptable spreadsheet for importing into this app.
+        ///
         ///Make sure to check/uncheck checkboxes before importing or exporting..
         /// </summary>
         internal static string Export_Import_Question {
@@ -2050,6 +2061,17 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At this time, the Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
+        ///
+        ///Currently, the Import feature only works with a spreadsheet workbook specifically formatted for this app. Assuming you have all checkboxes checked, your workbook needs to have 9 spreadsheets in it: WishlistBooks, Books, Chapters, Collections, Genres, Series, Locations, BookAuthor [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string FAQ_Answer3 {
+            get {
+                return ResourceManager.GetString("FAQ_Answer3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can I add books with an ISBN?.
         /// </summary>
         internal static string FAQ_Question1 {
@@ -2064,6 +2086,15 @@ namespace BookCollector.Resources.Localization {
         internal static string FAQ_Question2 {
             get {
                 return ResourceManager.GetString("FAQ_Question2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How does the Export/Import feature work?.
+        /// </summary>
+        internal static string FAQ_Question3 {
+            get {
+                return ResourceManager.GetString("FAQ_Question3", resourceCulture);
             }
         }
         
@@ -2365,7 +2396,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Some spreadsheets were not imported because they either did not exist in the workbook, the spreadsheet did not have any values, or the columns were not in the right order for import..
+        ///   Looks up a localized string similar to Some spreadsheets were not imported because they either did not exist in the workbook or the columns were not in the right order for import. Please make sure the workbook is in the correct format for this app..
         /// </summary>
         internal static string ImportErrors {
             get {

@@ -14,9 +14,8 @@ namespace BookCollector.Data.Spreadsheet
 
     public class ReadWriteSpreadsheet : BaseViewModel
     {
-        public static async Task<string> CreateSpreadsheet(string folderPath)
+        public static async Task<string> CreateSpreadsheet(string folderPath, string filename)
         {
-            var filename = $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx";
             var filepath = $"{folderPath}/{filename}";
 
             try
@@ -112,7 +111,7 @@ namespace BookCollector.Data.Spreadsheet
             worksheetPart.Worksheet.Save();
         }
 
-        public static List<List<string>> ReadSpreadSheet(string fileName, string sheetName, List<string?> columnNames)
+        public static (List<List<string>>, string) ReadSpreadSheet(string fileName, string sheetName, List<string?> columnNames)
         {
             List<List<string>> spreadsheetValues = [];
 
@@ -129,7 +128,7 @@ namespace BookCollector.Data.Spreadsheet
                 // Throw an exception if there is no sheet.
                 if (theSheet is null || theSheet.Id is null)
                 {
-                    return spreadsheetValues;
+                    return (spreadsheetValues, $"There is no spreadsheet named {sheetName}.");
                 }
 
                 // Retrieve a reference to the worksheet part.
@@ -159,7 +158,7 @@ namespace BookCollector.Data.Spreadsheet
                                     // return the empty list of spreadsheet values.
                                     if (columnNames.Count != columnCount)
                                     {
-                                        return spreadsheetValues;
+                                        return (spreadsheetValues, $"The column count is not right for {sheetName}.");
                                     }
 
                                     foreach (Cell theCell in theCells)
@@ -195,7 +194,7 @@ namespace BookCollector.Data.Spreadsheet
                                             // return the empty list of spreadsheet values.
                                             if (!cellValue.Equals(columnName))
                                             {
-                                                return spreadsheetValues;
+                                                return (spreadsheetValues, $"The columns are not in the right order for {sheetName}.");
                                             }
                                         }
 
@@ -270,7 +269,7 @@ namespace BookCollector.Data.Spreadsheet
                 }
             }
 
-            return spreadsheetValues;
+            return (spreadsheetValues, $"Import successful for {sheetName}.");
         }
 
         // Given a WorkbookPart, inserts a new worksheet.
@@ -351,15 +350,6 @@ namespace BookCollector.Data.Spreadsheet
             }
 
             return value;
-        }
-
-        private static string GetDate()
-        {
-            var year = DateTime.Now.Year;
-            var month = DateTime.Now.Month;
-            var day = DateTime.Now.Day;
-
-            return $"{year}{month.ToString().PadLeft(2, '0')}{day.ToString().PadLeft(2, '0')}";
         }
 
         private static string SetNextColumn(string? input)
