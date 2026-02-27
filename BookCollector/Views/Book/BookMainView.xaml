@@ -144,7 +144,10 @@
                         <!-- Book Series -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasSeries}">
-                            <Label>
+                            <Label MaxLines="1"
+                                   LineBreakMode="MiddleTruncation"
+                                   MaximumWidthRequest="{Binding MaxViewWidth}"
+                                   HorizontalOptions="Center">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding SelectedBook.PartOfSeries}">
@@ -162,7 +165,10 @@
                         <!-- Book Collection -->
                         <HorizontalStackLayout HorizontalOptions="Center"
                                                IsVisible="{Binding SelectedBook.HasCollection}">
-                            <Label>
+                            <Label MaxLines="1"
+                                   LineBreakMode="MiddleTruncation"
+                                   MaximumWidthRequest="{Binding MaxViewWidth}"
+                                   HorizontalOptions="Center">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding SelectedBook.PartOfCollection}">

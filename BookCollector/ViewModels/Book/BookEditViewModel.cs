@@ -17,11 +17,13 @@ using BookCollector.Views.Genre;
 using BookCollector.Views.Location;
 using BookCollector.Views.Popups;
 using BookCollector.Views.Series;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace BookCollector.ViewModels.Book
 {
@@ -873,7 +875,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.ShowPages = false;
                     this.ShowTime = true;
-                    this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
+                    this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0 && this.EditedBook.BookTotalTime != null;
                 }
 
                 this.UpdateProgress();

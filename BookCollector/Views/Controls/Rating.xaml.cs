@@ -3,6 +3,7 @@
 // </copyright>
 
 using BookCollector.Data.Enums;
+using DocumentFormat.OpenXml.Drawing;
 using Colors = Microsoft.Maui.Graphics.Colors;
 
 namespace BookCollector.Views.Controls;
@@ -91,27 +92,51 @@ public partial class Rating : ContentView
 
         var intValue = (int)ClampValue(this.CurrentValue);
 
-        for (int i = 1; i <= MAXVALUE; i++)
+        for (int i = 0; i <= MAXVALUE; i++)
         {
-            if (intValue >= i)
+            if (i == 0)
             {
-                starLayout.Add(this.CreateButton(StarState.Full, i));
+                starLayout.Add(this.CreateButton(i), i, 0);
             }
             else
             {
-                starLayout.Add(this.CreateButton(StarState.Empty, i));
+                if (intValue >= i)
+                {
+                    starLayout.Add(this.CreateButton(StarState.Full, i), i, 0);
+                }
+                else
+                {
+                    starLayout.Add(this.CreateButton(StarState.Empty, i), i, 0);
+                }
             }
         }
     }
 
+    private Button CreateButton(int index)
+    {
+        var button = new Button
+        {
+            Text = string.Empty,
+            Command = this.StarsClicked(index),
+            Background = Colors.Transparent,
+            MaximumWidthRequest = 35,
+        };
+
+        return button;
+    }
+
     private ImageButton CreateButton(StarState state, int index)
     {
-        return new ImageButton()
+        var button = new ImageButton()
         {
             Source = CreateStarLabel(state),
             Command = this.StarsClicked(index),
             Background = Colors.Transparent,
         };
+
+        button.SetDynamicResource(Button.StyleProperty, "RatingButton");
+
+        return button;
     }
 
     private Command StarsClicked(int index)

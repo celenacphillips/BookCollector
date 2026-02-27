@@ -32,5 +32,11 @@ public partial class FAQView : ContentPage
             Question = AppStringResources.FAQ_Question2,
             Answer = AppStringResources.FAQ_Answer2,
         });
+
+        this.Questions.Add(new FAQModel()
+        {
+            Question = AppStringResources.FAQ_Question3,
+            Answer = AppStringResources.FAQ_Answer3,
+        });
     }
 }

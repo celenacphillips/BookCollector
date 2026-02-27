@@ -49,6 +49,15 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Button" x:Key="DatePicker_SelectedDayButton">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextDark}" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="DatePicker_ToolButtons">
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+    </Style>
+
     <Style TargetType="CheckBox">
         <Setter Property="Color" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
@@ -425,7 +434,7 @@
 
     <Style x:Key="RatingButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="WidthRequest" Value="30" />
+        <Setter Property="Padding" Value="0,2" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -497,6 +506,7 @@
         <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="MinimumWidthRequest" Value="300" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
