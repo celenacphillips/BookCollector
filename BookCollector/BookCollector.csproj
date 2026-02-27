@@ -61,48 +61,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
-	  <ApplicationVersion>18</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+	  <ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
-	  <ApplicationVersion>18</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+	  <ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
-	  <ApplicationVersion>18</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+	  <ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
-	  <ApplicationVersion>18</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+	  <ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
 	  <AndroidKeyStore>True</AndroidKeyStore>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
 		<AndroidSigningKeyStore>X:\Storage\Celena_Files\Keystores\bookcollector.keystore</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>bookcollector_key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningKeyPass>
-		<ApplicationVersion>18</ApplicationVersion>
+		<ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200</NoWarn>
-	  <ApplicationDisplayVersion>1.0.17</ApplicationDisplayVersion>
-	  <ApplicationVersion>18</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+	  <ApplicationVersion>22</ApplicationVersion>
 	</PropertyGroup>
 
 
@@ -158,20 +158,19 @@
 
 	<ItemGroup>
 		<PackageReference Include="BarcodeScanner.Mobile.Maui" Version="9.0.1" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="14.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microcharts.Maui" Version="1.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.41" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Open-XML-SDK" Version="2.9.1" />
-		<PackageReference Include="Sebarslan.Maui.NullableDateTimePicker" Version="3.1.2" />
-		<PackageReference Include="SkiaSharp" Version="3.119.1" />
-		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
+		<PackageReference Include="SkiaSharp" Version="3.119.2" />
+		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.2" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="2.88.9" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
@@ -179,6 +178,12 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Maui.NullableDateTimePicker">
+	    <HintPath>..\..\Maui.NullableDateTimePicker\Maui.NullableDateTimePicker\bin\Debug\net10.0\Maui.NullableDateTimePicker.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -485,12 +490,6 @@
 		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core">
 			<Version>2.8.4</Version>
 		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android36.0'">
-	  <PackageReference Include="Xamarin.AndroidX.DocumentFile">
-	    <Version>1.1.0.2</Version>
-	  </PackageReference>
 	</ItemGroup>
 
 </Project>

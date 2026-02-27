@@ -932,7 +932,9 @@
     <value>Import</value>
   </data>
   <data name="Export_Import_Question" xml:space="preserve">
-    <value>Would you like to import your data from or export your data to a spreadsheet?
+    <value>Would you like to import your data from or export your data to a spreadsheet specifically formatted for this app?
+If you don't have an existing spreadsheet, you can export to generate an acceptable spreadsheet for importing into this app.
+
 Make sure to check/uncheck checkboxes before importing or exporting.</value>
   </data>
   <data name="ExportImportView_InfoText" xml:space="preserve">
@@ -997,8 +999,8 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
     <value>Table: x/z imported...</value>
     <comment>Table, x, and z should not be translated.</comment>
   </data>
-  <data name="BookAuthors" xml:space="preserve">
-    <value>Book Authors</value>
+  <data name="BookAuthors_Spreadsheet" xml:space="preserve">
+    <value>Book Authors (Last, First; Last, First)</value>
   </data>
   <data name="Chapters" xml:space="preserve">
     <value>Chapters</value>
@@ -1422,7 +1424,7 @@ Special thanks to the team and their open-source icons!
 Visit them at </value>
   </data>
   <data name="ImportErrors" xml:space="preserve">
-    <value>Some spreadsheets were not imported because they either did not exist in the workbook, the spreadsheet did not have any values, or the columns were not in the right order for import.</value>
+    <value>Some spreadsheets were not imported because they either did not exist in the workbook or the columns were not in the right order for import. Please make sure the workbook is in the correct format for this app.</value>
   </data>
   <data name="ImportErrorsTitle" xml:space="preserve">
     <value>Import Errors!</value>
@@ -1513,5 +1515,18 @@ From the Groupings tab, you can add new or existing books directly to the group.
   </data>
   <data name="SkipAll" xml:space="preserve">
     <value>Skip All</value>
+  </data>
+  <data name="BookAuthors" xml:space="preserve">
+    <value>Book Authors</value>
+  </data>
+  <data name="FAQ_Question3" xml:space="preserve">
+    <value>How does the Export/Import feature work?</value>
+  </data>
+  <data name="FAQ_Answer3" xml:space="preserve">
+    <value>At this time, the Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
+
+Currently, the Import feature only works with a spreadsheet workbook specifically formatted for this app. Assuming you have all checkboxes checked, your workbook needs to have 9 spreadsheets in it: WishlistBooks, Books, Chapters, Collections, Genres, Series, Locations, BookAuthors, and Authors. Each of those spreadsheets needs to have the correct columns, in the correct order, for the import to work.
+
+Importing from and exporting to other sources is a feature that will be implemented at a later time.</value>
   </data>
 </root>

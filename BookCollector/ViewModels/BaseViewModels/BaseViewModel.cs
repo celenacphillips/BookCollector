@@ -14,6 +14,7 @@ using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Main;
 using BookCollector.Views.Popups;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,11 +59,14 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             this.InfoText = string.Empty;
             this.View = new ContentPage();
+            this.MaxViewWidth = this.DeviceWidth - 20;
         }
 
         public double DeviceHeight { get; set; }
 
         public double DeviceWidth { get; set; }
+
+        public double MaxViewWidth { get; set; }
 
         public double CollectionViewHeight { get; set; }
 
@@ -371,6 +375,15 @@ namespace BookCollector.ViewModels.BaseViewModels
             WishListViewModel.filteredWishlistBookList1?.Clear();
             WishListViewModel.filteredWishlistBookList2?.Clear();
             WishListViewModel.RefreshView = true;
+        }
+
+        internal static string GetDate()
+        {
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            var day = DateTime.Now.Day;
+
+            return $"{year}{month.ToString().PadLeft(2, '0')}{day.ToString().PadLeft(2, '0')}";
         }
 
         public static double SetCollectionViewHeight(double viewHeight, double headerHeight, double searchHeight)

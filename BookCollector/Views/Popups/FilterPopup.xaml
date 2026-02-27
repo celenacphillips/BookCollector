@@ -19,8 +19,9 @@
             
             <ScrollView>
 
-                <VerticalStackLayout HorizontalOptions="Center">
-                    <Grid Margin="0,10">
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     Margin="20">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -70,7 +71,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding FavoriteChangedCommand}"
                                 IsVisible="{Binding FavoriteVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="1" Grid.Column="1"/>
                         <!-- Favorite -->
@@ -86,7 +86,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding AuthorChangedCommand}"
                                 IsVisible="{Binding AuthorVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="2" Grid.Column="1"/>
                         <!-- Author -->
@@ -102,7 +101,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding PublisherChangedCommand}"
                                 IsVisible="{Binding PublisherVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="3" Grid.Column="1"/>
                         <!-- Publisher -->
@@ -118,7 +116,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding PublishYearChangedCommand}"
                                 IsVisible="{Binding PublishYearVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="4" Grid.Column="1"/>
                         <!-- Publish Year -->
@@ -134,7 +131,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding FormatChangedCommand}"
                                 IsVisible="{Binding FormatVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="5" Grid.Column="1"/>
                         <!-- Format -->
@@ -150,7 +146,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding LanguageChangedCommand}"
                                 IsVisible="{Binding LanguageVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="6" Grid.Column="1"/>
                         <!-- Language -->
@@ -166,7 +161,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding RatingChangedCommand}"
                                 IsVisible="{Binding RatingVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="7" Grid.Column="1"/>
                         <!-- Rating -->
@@ -182,7 +176,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding LocationChangedCommand}"
                                 IsVisible="{Binding LocationVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="8" Grid.Column="1"/>
                         <!-- Location -->
@@ -198,7 +191,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding SeriesChangedCommand}"
                                 IsVisible="{Binding SeriesVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="9" Grid.Column="1"/>
                         <!-- Series -->
@@ -214,7 +206,6 @@
                                 Style="{DynamicResource PickerButton}"
                                 Command="{Binding BookCoverChangedCommand}"
                                 IsVisible="{Binding BookCoverVisible}"
-                                LineBreakMode="TailTruncation"
                                 Margin="0,10"
                                 Grid.Row="10" Grid.Column="1"/>
                         <!-- Book Cover -->

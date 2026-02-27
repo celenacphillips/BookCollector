@@ -59,9 +59,9 @@
                     <VerticalStackLayout Padding="10">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
 
                             <!-- Rating -->
@@ -418,10 +418,20 @@
                                         <Label Text="{x:Static localization:AppStringResources.ReadingStartDate}"
                                                Style="{DynamicResource Header}"/>
                                         <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookStartDate}"
+                                                                     Placeholder="{x:Static localization:AppStringResources.EnterStartDate}"
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
-                                                                     TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.EnterStartDate}">
+                                                                     TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                     HorizontalTextAlignment="Center"
+                                                                     HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                     CloseOnOutsideClick="True"
+                                                                     ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                     SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                     ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                     YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                     YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                     SelectedYearMonthBackgroundColor="{DynamicResource Primary}">
+
                                             <ndtp:NullableDateTimePicker.Icon>
                                                 <FontImageSource FontFamily="MaterialDesignIcons"
                                                                  Glyph="&#xF00EE;"
@@ -439,10 +449,19 @@
                                         <Label Text="{x:Static localization:AppStringResources.ReadingEndDate}"
                                                Style="{DynamicResource Header}"/>
                                         <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookEndDate}"
+                                                                     Placeholder="{x:Static localization:AppStringResources.EnterEndDate}"
                                                                      Mode="Date"
                                                                      BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
-                                                                     TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.EnterEndDate}">
+                                                                     TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                     HorizontalTextAlignment="Center"
+                                                                     HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                     CloseOnOutsideClick="True"
+                                                                     ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                     SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                     ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                     YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                     YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                     SelectedYearMonthBackgroundColor="{DynamicResource Primary}">
                                             <ndtp:NullableDateTimePicker.Icon>
                                                 <FontImageSource FontFamily="MaterialDesignIcons"
                                                                  Glyph="&#xF00EE;"
@@ -1089,19 +1108,28 @@
                                     <VerticalStackLayout Margin="10"
                                                      Grid.Row="0" Grid.Column="1">
                                         <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
-                                           Style="{DynamicResource Header}"/>
-                                        <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookLoanedOutOn}"
-                                                                     Mode="Date"
-                                                                     BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
-                                                                     TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                                                                     Placeholder="{x:Static localization:AppStringResources.EnterDate}">
-                                            <ndtp:NullableDateTimePicker.Icon>
-                                                <FontImageSource FontFamily="MaterialDesignIcons"
-                                                                 Glyph="&#xF00EE;"
-                                                                 Size="34"
-                                                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-                                            </ndtp:NullableDateTimePicker.Icon>
-                                        </ndtp:NullableDateTimePicker>
+                                               Style="{DynamicResource Header}"/>
+                                            <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookLoanedOutOn}"
+                                                                         Placeholder="{x:Static localization:AppStringResources.EnterDate}"
+                                                                         Mode="Date"
+                                                                         BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                         TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                         HorizontalTextAlignment="Center"
+                                                                         HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                         CloseOnOutsideClick="True"
+                                                                         ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                         SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                         ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                         YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                         YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                         SelectedYearMonthBackgroundColor="{DynamicResource Primary}">
+                                                <ndtp:NullableDateTimePicker.Icon>
+                                                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                                                     Glyph="&#xF00EE;"
+                                                                     Size="34"
+                                                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                                                </ndtp:NullableDateTimePicker.Icon>
+                                            </ndtp:NullableDateTimePicker>
                                     </VerticalStackLayout>
                                     <!-- Book Loaned Out On -->
                                 </Grid>
