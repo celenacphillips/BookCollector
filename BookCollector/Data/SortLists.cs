@@ -10,8 +10,28 @@ namespace BookCollector.Data
     using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
 
+    /// <summary>
+    /// SortLists class.
+    /// </summary>
     public partial class SortLists : BaseViewModel
     {
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="bookList">List to sort.</param>
+        /// <param name="bookTitleChecked">Book title checked option.</param>
+        /// <param name="bookReadingDateChecked">Book reading date checked option.</param>
+        /// <param name="bookReadPercentageChecked">Book reading percent checked option.</param>
+        /// <param name="bookPublisherChecked">Book publisher checked option.</param>
+        /// <param name="bookPublishYearChecked">Book publish year checked option.</param>
+        /// <param name="authorLastNameChecked">Author last name checked option.</param>
+        /// <param name="bookFormatChecked">Book format checked option.</param>
+        /// <param name="bookPriceChecked">Book price checked option.</param>
+        /// <param name="pageCountBookTimeChecked">Page count/book time checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <param name="seriesOrderChecked">Series order checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<BookModel>> SortBookList(
             ObservableCollection<BookModel> bookList,
             bool bookTitleChecked,
@@ -176,6 +196,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="collectionList">List to sort.</param>
+        /// <param name="collectionNameChecked">Name checked option.</param>
+        /// <param name="totalBooksChecked">Total books checked option.</param>
+        /// <param name="totalPriceChecked">Total price checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(
             ObservableCollection<CollectionModel> collectionList,
             bool collectionNameChecked,
@@ -228,6 +258,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="genreList">List to sort.</param>
+        /// <param name="genreNameChecked">Name checked option.</param>
+        /// <param name="totalBooksChecked">Total books checked option.</param>
+        /// <param name="totalPriceChecked">Total price checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<GenreModel>> SortGenresList(
             ObservableCollection<GenreModel> genreList,
             bool genreNameChecked,
@@ -280,6 +320,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="seriesList">List to sort.</param>
+        /// <param name="seriesNameChecked">Name checked option.</param>
+        /// <param name="totalBooksChecked">Total books checked option.</param>
+        /// <param name="totalPriceChecked">Total price checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<SeriesModel>> SortSeriesList(
             ObservableCollection<SeriesModel> seriesList,
             bool seriesNameChecked,
@@ -332,6 +382,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="locationList">List to sort.</param>
+        /// <param name="locationNameChecked">Name checked option.</param>
+        /// <param name="totalBooksChecked">Total books checked option.</param>
+        /// <param name="totalPriceChecked">Total price checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<LocationModel>> SortLocationsList(
             ObservableCollection<LocationModel> locationList,
             bool locationNameChecked,
@@ -384,6 +444,16 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="authorList">List to sort.</param>
+        /// <param name="authorLastNameChecked">Name checked option.</param>
+        /// <param name="totalBooksChecked">Total books checked option.</param>
+        /// <param name="totalPriceChecked">Total price checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<AuthorModel>> SortAuthorList(
             ObservableCollection<AuthorModel> authorList,
             bool authorLastNameChecked,
@@ -436,6 +506,20 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
+        /// <param name="bookList">List to sort.</param>
+        /// <param name="bookTitleChecked">Book title checked option.</param>
+        /// <param name="bookPublisherChecked">Book publisher checked option.</param>
+        /// <param name="bookPublishYearChecked">Book publish year checked option.</param>
+        /// <param name="authorLastNameChecked">Author last name checked option.</param>
+        /// <param name="bookFormatChecked">Book format checked option.</param>
+        /// <param name="bookPriceChecked">Book price checked option.</param>
+        /// <param name="pageCountTimeChecked">Page count/book time checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<WishlistBookModel>> SortWishlistBookList(
             ObservableCollection<WishlistBookModel> bookList,
             bool bookTitleChecked,

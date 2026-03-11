@@ -18,18 +18,32 @@ namespace BookCollector.ViewModels.WishListBook
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// WishListBookMainViewModel class.
+    /// </summary>
     public partial class WishListBookMainViewModel : BookBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the selected book.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public WishlistBookModel? selectedWishlistBook;
 
+        /// <summary>
+        /// Gets or sets the author list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WishListBookMainViewModel"/> class.
+        /// </summary>
+        /// <param name="book">Book to view.</param>
+        /// <param name="view">View related to view model.</param>
         public WishListBookMainViewModel(WishlistBookModel book, ContentPage view)
         {
             this.View = view;
@@ -39,6 +53,10 @@ namespace BookCollector.ViewModels.WishListBook
             this.AuthorList = [];
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (this.SelectedWishlistBook != null)
@@ -128,6 +146,10 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -136,6 +158,10 @@ namespace BookCollector.ViewModels.WishListBook
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Show edit wishlist book view with selected book.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditBook()
         {
@@ -151,6 +177,10 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
+        /// <summary>
+        /// Delete selected book.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteBook()
         {
@@ -192,6 +222,10 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
+        /// <summary>
+        /// Move selected book to library and remove from wishlist.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddToLibrary()
         {
@@ -285,6 +319,10 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
+        /// <summary>
+        /// Share book information.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task ShareList()
         {

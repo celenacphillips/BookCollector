@@ -24,118 +24,193 @@ namespace BookCollector.ViewModels.Book
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// BookEditViewModel class.
+    /// </summary>
     public partial class BookEditViewModel : BookBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the book to edit.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public BookModel editedBook;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book title is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookTitleNotValid;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book format is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookFormatNotValid;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the first section in book info is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1SectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the first section in book info is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1Open;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the first section in book info is not open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfo1NotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether pages read stepper is enabled or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool pagesReadStepperEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the time listened stepper is enabled or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool timeListenedStepperEnabled;
 
+        /// <summary>
+        /// Gets or sets the series list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<SeriesModel>? seriesList;
 
+        /// <summary>
+        /// Gets or sets the book selected series.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public SeriesModel? selectedSeries;
 
+        /// <summary>
+        /// Gets or sets the collection list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<CollectionModel>? collectionList;
 
+        /// <summary>
+        /// Gets or sets the book selected collection.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public CollectionModel? selectedCollection;
 
+        /// <summary>
+        /// Gets or sets the genre list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<GenreModel>? genreList;
 
+        /// <summary>
+        /// Gets or sets the location list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<LocationModel>? locationList;
 
+        /// <summary>
+        /// Gets or sets the author list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
+        /// <summary>
+        /// Gets or sets the author pickers list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorPicker>? authorPickers;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show checkpoints or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCheckpoints;
 
+        /// <summary>
+        /// Gets or sets the selected book format.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedBookFormat;
 
+        /// <summary>
+        /// Gets or sets the selected series string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedSeriesString;
 
+        /// <summary>
+        /// Gets or sets the selected collection string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedCollectionString;
 
+        /// <summary>
+        /// Gets or sets the selected genre string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedGenreString;
 
+        /// <summary>
+        /// Gets or sets the selected location string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedLocationString;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookEditViewModel"/> class.
+        /// </summary>
+        /// <param name="book">Book to edit.</param>
+        /// <param name="view">View related to view model.</param>
+        /// <param name="previousViewModel">Previous view model to return to.</param>
         public BookEditViewModel(BookModel book, ContentPage view, object? previousViewModel)
         {
             this.View = view;
@@ -150,28 +225,65 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to remove the main view before.
+        /// </summary>
         public bool RemoveMainViewBefore { get; set; }
 
+        /// <summary>
+        /// Gets or sets the main view before, to return to after closing the popup.
+        /// </summary>
         public BookMainView? MainViewBefore { get; set; }
 
+        /// <summary>
+        /// Gets or sets the popup width.
+        /// </summary>
         public double PopupWidth { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden collections or not.
+        /// </summary>
         private bool HiddenCollectionsOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden genres or not.
+        /// </summary>
         private bool HiddenGenresOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden series or not.
+        /// </summary>
         private bool HiddenSeriesOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden locations or not.
+        /// </summary>
         private bool HiddenLocationsOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of chapters to delete from the database.
+        /// </summary>
         private List<ChapterModel>? ChaptersToDelete { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of authors to delete from the database.
+        /// </summary>
         private List<AuthorModel>? AuthorsToDelete { get; set; }
 
+        /// <summary>
+        /// Gets or sets previous view model to return to after closing the popup or saving the book.
+        /// </summary>
         private object? PreviousViewModel { get; set; }
 
+        /// <summary>
+        /// Show view to add a new series.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddSeries()
         {
@@ -180,6 +292,10 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Show view to add a new collection.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddCollection()
         {
@@ -188,6 +304,10 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Show view to add a new genre.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddGenre()
         {
@@ -196,6 +316,10 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Show view to add a new location.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddLocation()
         {
@@ -204,6 +328,10 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Show view to add a new author.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddNewAuthor()
         {
@@ -212,6 +340,10 @@ namespace BookCollector.ViewModels.Book
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (this.RefreshView)
@@ -420,6 +552,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -429,6 +565,10 @@ namespace BookCollector.ViewModels.Book
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Show book search view to search for a book and fill the book info from the search result.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookSearch()
         {
@@ -440,6 +580,10 @@ namespace BookCollector.ViewModels.Book
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Save the book to the database and return to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveBook()
         {
@@ -489,7 +633,7 @@ namespace BookCollector.ViewModels.Book
                     {
                         foreach (var author in this.AuthorsToDelete)
                         {
-                            await Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid, (Guid)this.EditedBook.BookGuid);
+                            await Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid!, (Guid)this.EditedBook.BookGuid!);
                         }
                     }
 
@@ -553,13 +697,22 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void BookInfo1Changed()
+        public async Task BookInfo1Changed()
         {
             this.BookInfo1Open = this.BookInfo1SectionValue;
             this.BookInfo1NotOpen = !this.BookInfo1SectionValue;
         }
 
+        /// <summary>
+        /// Show popup to choose between adding a cover photo by picking an existing file
+        /// or by entering an image url, and set the book cover accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddUploadCoverPhoto()
         {
@@ -673,8 +826,13 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Remove the book cover and delete the related file if exists, and set the
+        /// related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveCoverPhoto()
+        public async Task RemoveCoverPhoto()
         {
             this.EditedBook.HasBookCover = false;
             this.EditedBook.HasNoBookCover = true;
@@ -683,34 +841,55 @@ namespace BookCollector.ViewModels.Book
             this.EditedBook.BookCoverFileName = null;
         }
 
+        /// <summary>
+        /// Remove the selected series and set the related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveSeries()
+        public async Task RemoveSeries()
         {
             this.SelectedSeries = null;
             this.SelectedSeriesString = this.SelectedSeries?.SeriesName ?? AppStringResources.SelectASeries;
         }
 
+        /// <summary>
+        /// Remove the selected collection and set the related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveCollection()
+        public async Task RemoveCollection()
         {
             this.SelectedCollection = null;
             this.SelectedCollectionString = this.SelectedCollection?.CollectionName ?? AppStringResources.SelectACollection;
         }
 
+        /// <summary>
+        /// Remove the selected genre and set the related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveGenre()
+        public async Task RemoveGenre()
         {
             this.SelectedGenre = null;
             this.SelectedGenreString = this.SelectedGenre?.GenreName ?? AppStringResources.SelectAGenre;
         }
 
+        /// <summary>
+        /// Remove the selected location and set the related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveLocation()
+        public async Task RemoveLocation()
         {
             this.SelectedLocation = null;
             this.SelectedLocationString = this.SelectedLocation?.LocationName ?? AppStringResources.SelectALocation;
         }
 
+        /// <summary>
+        /// Update the reading progress values and related properties based on the edited book
+        /// values, and set the book checkpoints visibility.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task UpdateProgress()
         {
@@ -728,6 +907,10 @@ namespace BookCollector.ViewModels.Book
             await this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints);
         }
 
+        /// <summary>
+        /// Show popup with a slider to set the pages read, and update the reading progress values.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PagesReadPopup()
         {
@@ -743,6 +926,11 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show popup with time entries to set the total time, and update the reading progress
+        /// values and checkpoints visibility.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task TotalTimePopup()
         {
@@ -775,6 +963,11 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show popup with time entries to set the listen time, and update the reading progress
+        /// values and checkpoints visibility.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task ListenTimePopup()
         {
@@ -800,6 +993,11 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Set the pages read value from the stepper.
+        /// </summary>
+        /// <param name="value">Value to update to.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task ReadStepperValueChange(double value)
         {
@@ -808,16 +1006,25 @@ namespace BookCollector.ViewModels.Book
             this.BookIsRead = this.EditedBook.BookPageRead == this.EditedBook.BookPageTotal;
         }
 
+        /// <summary>
+        /// Add a new chapter to the chapter list.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void AddChapter()
+        public async Task AddChapter()
         {
             this.ChapterList ??= [];
 
             this.ChapterList.Add(new ChapterModel());
         }
 
+        /// <summary>
+        /// Remove chapter from the chapter list, and add it to the chapters to delete list.
+        /// </summary>
+        /// <param name="chapter">Chapter to remove.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveChapter(ChapterModel chapter)
+        public async Task RemoveChapter(ChapterModel chapter)
         {
             this.ChapterList?.Remove(chapter);
 
@@ -825,8 +1032,13 @@ namespace BookCollector.ViewModels.Book
             this.ChaptersToDelete?.Add(chapter);
         }
 
+        /// <summary>
+        /// Add a new author picker to the author pickers list to be
+        /// displayed in the view, and set.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void AddAuthor()
+        public async Task AddAuthor()
         {
             this.AuthorPickers?.Add(new AuthorPicker
             {
@@ -836,8 +1048,13 @@ namespace BookCollector.ViewModels.Book
             });
         }
 
+        /// <summary>
+        /// Remove author from the author list, and add it to the authors to delete list.
+        /// </summary>
+        /// <param name="authorPicker">Author to remove.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void RemoveAuthor(AuthorPicker authorPicker)
+        public async Task RemoveAuthor(AuthorPicker authorPicker)
         {
             this.AuthorPickers?.Remove(authorPicker);
 
@@ -848,6 +1065,11 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Update when read toggle is updated.
+        /// </summary>
+        /// <param name="value">Value to update.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task ReadToggle(bool value)
         {
@@ -868,24 +1090,41 @@ namespace BookCollector.ViewModels.Book
             await this.EditedBook.SetReadingProgress();
         }
 
+        /// <summary>
+        /// Update when up next toggle is updated.
+        /// </summary>
+        /// <param name="value">Value to update.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void UpNextToggle(bool value)
+        public async Task UpNextToggle(bool value)
         {
             this.EditedBook.UpNext = value;
         }
 
+        /// <summary>
+        /// Validate book format.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateBookFormat()
+        public async Task ValidateBookFormat()
         {
             this.ValidateEntry();
         }
 
+        /// <summary>
+        /// Validate book title.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateBookTitle()
+        public async Task ValidateBookTitle()
         {
             this.ValidateEntry();
         }
 
+        /// <summary>
+        /// Show filter list popup for book formats.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookFormatChanged()
         {
@@ -902,7 +1141,7 @@ namespace BookCollector.ViewModels.Book
                 {
                     this.EditedBook.BookFormat = result.Result;
                     this.SelectedBookFormat = this.EditedBook.BookFormat ?? AppStringResources.SelectABookFormat;
-                    this.ValidateBookFormat();
+                    await this.ValidateBookFormat();
                 }
 
                 if (!this.SelectedBookFormat.Equals(AppStringResources.Audiobook))
@@ -926,6 +1165,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show filter list popup for series.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SeriesChanged()
         {
@@ -950,6 +1193,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show filter list popup for collections.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task CollectionChanged()
         {
@@ -974,6 +1221,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show filter list popup for genres.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task GenreChanged()
         {
@@ -998,6 +1249,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show filter list popup for locations.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task LocationChanged()
         {
@@ -1022,6 +1277,11 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Show filter list popup for authors.
+        /// </summary>
+        /// <param name="selectedAuthorPicker">Selected author to default to.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AuthorChanged(AuthorPicker? selectedAuthorPicker)
         {

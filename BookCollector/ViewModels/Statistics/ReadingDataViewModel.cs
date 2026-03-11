@@ -12,18 +12,31 @@ namespace BookCollector.ViewModels.Statistics
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// ReadingDataViewModel class.
+    /// </summary>
     public partial class ReadingDataViewModel : StatisticsBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the reading data list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<ReadingData> readingDataList;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the year count input is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool yearCountNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadingDataViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public ReadingDataViewModel(ContentPage view)
         {
             this.View = view;
@@ -31,8 +44,15 @@ namespace BookCollector.ViewModels.Statistics
             this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount);
         }
 
+        /// <summary>
+        /// Gets or sets the year count.
+        /// </summary>
         public string YearCount { get; set; }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             try
@@ -83,6 +103,10 @@ namespace BookCollector.ViewModels.Statistics
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -91,6 +115,10 @@ namespace BookCollector.ViewModels.Statistics
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Update the max number of years of data to show.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task UpdateMaxNumber()
         {

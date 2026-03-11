@@ -15,38 +15,68 @@ namespace BookCollector.ViewModels.Library
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// AllBooksViewModel class.
+    /// </summary>
     public partial class AllBooksViewModel : BookBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full book list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static ObservableCollection<BookModel>? fullBookList;
 
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static ObservableCollection<BookModel>? filteredBookList1;
 
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static new ObservableCollection<BookModel>? filteredBookList2;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static int totalBooksCount;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static int filteredBooksCount;
 
+        /// <summary>
+        /// Gets or sets the book author list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookAuthorList;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AllBooksViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public AllBooksViewModel(ContentPage view)
         {
             this.View = view;
@@ -56,10 +86,21 @@ namespace BookCollector.ViewModels.Library
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets the saved book author filter option.
+        /// </summary>
         public string? BookAuthorOption { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full book list and the show hidden books preference.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenBooks)
         {
             fullBookList ??= await FillLists.GetAllBooksList();
@@ -74,6 +115,10 @@ namespace BookCollector.ViewModels.Library
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -169,6 +214,11 @@ namespace BookCollector.ViewModels.Library
             }
         }
 
+        /// <summary>
+        /// Search the list based on the book title.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookSearchOnTitle(string? input)
         {
@@ -219,6 +269,10 @@ namespace BookCollector.ViewModels.Library
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -228,6 +282,10 @@ namespace BookCollector.ViewModels.Library
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Show filter popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task FilterPopup()
         {
@@ -273,6 +331,10 @@ namespace BookCollector.ViewModels.Library
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

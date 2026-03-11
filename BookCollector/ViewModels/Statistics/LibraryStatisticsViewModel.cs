@@ -14,49 +14,81 @@ namespace BookCollector.ViewModels.Statistics
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// LibraryStatisticsViewModel class.
+    /// </summary>
     public partial class LibraryStatisticsViewModel : StatisticsBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the reading status chart or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showReadingStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the favorites chart or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showFavoritesStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the ratings chart or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showRatingStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the collections chart or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCollections;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the genres chart or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showGenres;
 
+        /// <summary>
+        /// Gets or sets the string for the top X collections, where X is a number defined by the max limit or the max number of collections.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? topXCollections;
 
+        /// <summary>
+        /// Gets or sets the string for the top X genres, where X is a number defined by the max limit or the max number of genres.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? topXGenres;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LibraryStatisticsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public LibraryStatisticsViewModel(ContentPage view)
         {
             this.View = view;
             this.MaxListNumber = 5;
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             try
@@ -165,7 +197,7 @@ namespace BookCollector.ViewModels.Statistics
                 var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenBooks, this.MaxListNumber);
                 var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenBooks, this.MaxListNumber);
                 var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenBooks, this.MaxListNumber);
                 var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenBooks, this.MaxListNumber);
 
                 this.GetColors();
@@ -229,6 +261,10 @@ namespace BookCollector.ViewModels.Statistics
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {

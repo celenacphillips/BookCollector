@@ -245,7 +245,6 @@ public partial class MainSettingsView : ContentPage
                 Data.Colors.SetColors(hexCode);
 
                 // https://developer.android.com/about/versions/15/behavior-changes-15#custom-background-protection
-
                 Preferences.Set("AppColor", hexCode);
             }
         }

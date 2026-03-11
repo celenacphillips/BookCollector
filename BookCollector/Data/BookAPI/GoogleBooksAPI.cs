@@ -206,7 +206,7 @@ namespace BookCollector.Data.BookAPI
                 {
                     if (ex.InnerException!.InnerException!.Message.Contains("Cleartext HTTP traffic"))
                     {
-                        //await DisplayMessage(AppStringResources.ErrorParsingDataFromBook, null);
+                        // await DisplayMessage(AppStringResources.ErrorParsingDataFromBook, null);
                     }
 
                     return (items, totalItemCount);

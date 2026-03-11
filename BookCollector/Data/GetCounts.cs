@@ -13,8 +13,16 @@ namespace BookCollector.Data
     using BookCollector.ViewModels.Main;
     using CommunityToolkit.Maui.Core.Extensions;
 
+    /// <summary>
+    /// GetCounts class.
+    /// </summary>
     public partial class GetCounts : BaseViewModel
     {
+        /// <summary>
+        /// Get the count of books in the list based on the favorite value.
+        /// </summary>
+        /// <param name="favoriteValue">Favorite value.</param>
+        /// <returns>The count of books based on the filter.</returns>
         public static async Task<int> GetBooksListCountByFavorite(bool favoriteValue)
         {
             ObservableCollection<BookModel>? filteredList;
@@ -28,6 +36,11 @@ namespace BookCollector.Data
             return count;
         }
 
+        /// <summary>
+        /// Get the count of books in the list based on the star rating value.
+        /// </summary>
+        /// <param name="starRating">Star rating value.</param>
+        /// <returns>The count of books based on the filter.</returns>
         public static async Task<int> GetBooksListCountByRating(int starRating)
         {
             ObservableCollection<BookModel>? filteredList;
@@ -41,106 +54,145 @@ namespace BookCollector.Data
             return count;
         }
 
+        /// <summary>
+        /// Get the total price of books in the selected collection.
+        /// </summary>
+        /// <param name="inputGuid">Collection guid.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>Total price of books in selected collection.</returns>
         public static async Task<double> GetAllBookPricesInCollectionList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (inputGuid != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
-                    .Where(x => x.BookCollectionGuid == inputGuid)
-                    .ToObservableCollection();
-            }
-            else
-            {
-                var list = await Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
-            }
+                if (AllBooksViewModel.filteredBookList1 != null)
+                {
+                    filteredList = AllBooksViewModel.filteredBookList1
+                        .Where(x => x.BookCollectionGuid == inputGuid)
+                        .ToObservableCollection();
+                }
+                else
+                {
+                    var list = await Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
+                    filteredList = list.ToObservableCollection();
+                }
 
-            if (filteredList != null)
-            {
-                price = filteredList.Sum(x => x.BookPriceValue);
+                if (filteredList != null)
+                {
+                    price = filteredList.Sum(x => x.BookPriceValue);
+                }
             }
 
             return price;
         }
 
+        /// <summary>
+        /// Get the total price of books in the selected genre.
+        /// </summary>
+        /// <param name="inputGuid">Genre guid.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>Total price of books in selected genre.</returns>
         public static async Task<double> GetAllBookPricesInGenreList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (inputGuid != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
-                    .Where(x => x.BookGenreGuid == inputGuid)
-                    .ToObservableCollection();
-            }
-            else
-            {
-                var list = await Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
-            }
+                if (AllBooksViewModel.filteredBookList1 != null)
+                {
+                    filteredList = AllBooksViewModel.filteredBookList1
+                        .Where(x => x.BookGenreGuid == inputGuid)
+                        .ToObservableCollection();
+                }
+                else
+                {
+                    var list = await Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
+                    filteredList = list.ToObservableCollection();
+                }
 
-            if (filteredList != null)
-            {
-                price = filteredList.Sum(x => x.BookPriceValue);
+                if (filteredList != null)
+                {
+                    price = filteredList.Sum(x => x.BookPriceValue);
+                }
             }
 
             return price;
         }
 
+        /// <summary>
+        /// Get the total price of books in the selected series.
+        /// </summary>
+        /// <param name="inputGuid">Series guid.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>Total price of books in selected series.</returns>
         public static async Task<double> GetAllBookPricesInSeriesList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (inputGuid != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
-                    .Where(x => x.BookSeriesGuid == inputGuid)
-                    .ToObservableCollection();
-            }
-            else
-            {
-                var list = await Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
-            }
+                if (AllBooksViewModel.filteredBookList1 != null)
+                {
+                    filteredList = AllBooksViewModel.filteredBookList1
+                        .Where(x => x.BookSeriesGuid == inputGuid)
+                        .ToObservableCollection();
+                }
+                else
+                {
+                    var list = await Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
+                    filteredList = list.ToObservableCollection();
+                }
 
-            if (filteredList != null)
-            {
-                price = filteredList.Sum(x => x.BookPriceValue);
+                if (filteredList != null)
+                {
+                    price = filteredList.Sum(x => x.BookPriceValue);
+                }
             }
 
             return price;
         }
 
+        /// <summary>
+        /// Get the total price of books in the selected location.
+        /// </summary>
+        /// <param name="inputGuid">Location guid.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>Total price of books in selected location.</returns>
         public static async Task<double> GetAllBookPricesInLocationList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
+            if (inputGuid != null)
+            {
+                if (AllBooksViewModel.filteredBookList1 != null)
+                {
+                    filteredList = AllBooksViewModel.filteredBookList1
+                        .Where(x => x.BookLocationGuid == inputGuid)
+                        .ToObservableCollection();
+                }
+                else
+                {
+                    var list = await Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
+                    filteredList = list.ToObservableCollection();
+                }
 
-            if (AllBooksViewModel.filteredBookList1 != null)
-            {
-                filteredList = AllBooksViewModel.filteredBookList1
-                    .Where(x => x.BookLocationGuid == inputGuid)
-                    .ToObservableCollection();
-            }
-            else
-            {
-                var list = await Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
-                filteredList = list.ToObservableCollection();
-            }
-
-            if (filteredList != null)
-            {
-                price = filteredList.Sum(x => x.BookPriceValue);
+                if (filteredList != null)
+                {
+                    price = filteredList.Sum(x => x.BookPriceValue);
+                }
             }
 
             return price;
         }
 
+        /// <summary>
+        /// Get the count of books in the list based on the book format value.
+        /// </summary>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllBooksAndBookFormatsList()
         {
             ObservableCollection<BookModel>? bookList = null;
@@ -172,6 +224,10 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get the total price of books in the list based on the book format value.
+        /// </summary>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetPriceOfBooksAndBookFormatsList()
         {
             ObservableCollection<BookModel>? bookList = null;
@@ -203,6 +259,10 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get the count of books in the wishlist based on the book format value.
+        /// </summary>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllWishListBooksAndBookFormatsList()
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
@@ -234,6 +294,10 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get the total price of books in the wishlist based on the book format value.
+        /// </summary>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetPriceOfWishListBooksAndBookFormatsList()
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
@@ -266,6 +330,11 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get the count of books read in the year based on the book end date value.
+        /// </summary>
+        /// <param name="year">Year to search on.</param>
+        /// <returns>The count of books.</returns>
         public static async Task<int> GetBookCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList;
@@ -279,6 +348,11 @@ namespace BookCollector.Data
             return count;
         }
 
+        /// <summary>
+        /// Get the total page count of books read in the year based on the book end date value.
+        /// </summary>
+        /// <param name="year">Year to search on.</param>
+        /// <returns>The count of pages.</returns>
         public static async Task<int> GetBookPageCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -296,6 +370,11 @@ namespace BookCollector.Data
             return count;
         }
 
+        /// <summary>
+        /// Get the total time count of books read in the year based on the book end date value.
+        /// </summary>
+        /// <param name="year">Year to search on.</param>
+        /// <returns>The count of hours.</returns>
         public static async Task<double> GetBookTimeCountReadInYear(int year)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -310,12 +389,16 @@ namespace BookCollector.Data
             {
                 await Task.WhenAll(filteredList.ToList().Select(x => x.SetBookTotalTime()));
 
-                count = filteredList.Sum(x => (double)x.BookTotalTime);
+                count = filteredList.Sum(x => x.BookTotalTime ?? 0);
             }
 
             return count;
         }
 
+        /// <summary>
+        /// Get the total price of all books in the list.
+        /// </summary>
+        /// <returns>The total price, formatted with currency symbol.</returns>
         public static async Task<string> GetPriceOfAllBooks()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -336,6 +419,10 @@ namespace BookCollector.Data
             return string.Format(cultureInfo, "{0:C}", price);
         }
 
+        /// <summary>
+        /// Get the total price of all books in the wishlist.
+        /// </summary>
+        /// <returns>The total price, formatted with currency symbol.</returns>
         public static async Task<string> GetPriceOfAllWishListBooks()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -356,6 +443,12 @@ namespace BookCollector.Data
             return string.Format(cultureInfo, "{0:C}", price);
         }
 
+        /// <summary>
+        /// Get the total price of books in the selected author.
+        /// </summary>
+        /// <param name="inputGuid">Author guid.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>Total price for books for selected author.</returns>
         public static async Task<double> GetAllBookPricesInAuthorList(Guid? inputGuid, bool showHiddenBooks)
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -364,18 +457,28 @@ namespace BookCollector.Data
             var filteredList = new ObservableCollection<BookModel>();
             var price = 0.0;
 
-            var list = await Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
-            filteredList = list.ToObservableCollection();
-
-            if (filteredList != null)
+            if (inputGuid != null)
             {
-                price = filteredList.Sum(x => x.BookPriceValue);
+                var list = await Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+
+                if (filteredList != null)
+                {
+                    price = filteredList.Sum(x => x.BookPriceValue);
+                }
             }
 
             return price;
         }
 
-        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenAuthors, bool showHiddenBooks, int maxLimit)
+        /// <summary>
+        /// Get all books in all authors list with the count of books for each author, ordered by the count of books,
+        /// then by author name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
+        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<AuthorModel>? filteredList = null;
 
@@ -409,6 +512,13 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all books in all collections list with the count of books for each collection, ordered by the count of books,
+        /// then by collection name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<CollectionModel>? filteredList = null;
@@ -443,6 +553,13 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all books in all collections list with the count of books for each collection, ordered by the count of books,
+        /// then by collection name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<GenreModel>? filteredList = null;
@@ -477,6 +594,13 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all books in all series list with the count of books for each series, ordered by the count of books,
+        /// then by series name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<SeriesModel>? filteredList = null;
@@ -511,6 +635,13 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all books in all locations list with the count of books for each location, ordered by the count of books,
+        /// then by location name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenBooks, int maxLimit)
         {
             ObservableCollection<LocationModel>? filteredList = null;
@@ -545,6 +676,12 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all wishlist books in all locations list with the count of books for each location, ordered by the count of books,
+        /// then by location name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllWishListBooksAndLocationList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
@@ -590,6 +727,12 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all wishlist books in all series list with the count of books for each series, ordered by the count of books,
+        /// then by series name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllWishListBooksAndSeriesList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
@@ -635,6 +778,12 @@ namespace BookCollector.Data
             return counts;
         }
 
+        /// <summary>
+        /// Get all wishlist books in all authors list with the count of books for each author, ordered by the count of books,
+        /// then by author name, and limited to the max limit value.
+        /// </summary>
+        /// <param name="maxLimit">Max number to limit to.</param>
+        /// <returns>A list formatted with label and value.</returns>
         public static async Task<List<CountModel>> GetAllWishListBooksAndAuthorList(int maxLimit)
         {
             ObservableCollection<WishlistBookModel>? filteredList1 = null;

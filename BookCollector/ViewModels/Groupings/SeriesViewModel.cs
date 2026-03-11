@@ -19,13 +19,23 @@ namespace BookCollector.ViewModels.Groupings
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// SeriesViewModel class.
+    /// </summary>
     public partial class SeriesViewModel : SeriesBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the total series string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalSeriesstring;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeriesViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public SeriesViewModel(ContentPage view)
         {
             this.View = view;
@@ -35,16 +45,36 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden series or not.
+        /// </summary>
         private bool ShowHiddenSeries { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether series name is checked or not.
+        /// </summary>
         private bool SeriesNameChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not.
+        /// </summary>
         private bool TotalBooksChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not.
+        /// </summary>
         private bool TotalPriceChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full series list and the show hidden series preference.
+        /// </summary>
+        /// <param name="showHiddenSeries">Show hidden series.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenSeries)
         {
             fullSeriesList ??= await FillLists.GetAllSeriesList();
@@ -59,6 +89,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the series.
+        /// </summary>
+        /// <param name="showHiddenSeries">Show hidden series.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenSeries)
         {
             if (!showHiddenSeries)
@@ -83,6 +118,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -143,6 +182,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Search the list based on the series name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SearchOnSeries(string? input)
         {
@@ -177,6 +221,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected series object.
+        /// </summary>
+        /// <param name="input">Series guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuSeries(Guid? input)
         {
@@ -201,6 +250,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -210,6 +263,10 @@ namespace BookCollector.ViewModels.Groupings
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new series and navigate to the series edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddSeries()
         {
@@ -222,6 +279,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Navigate to series edit view for selected series.
+        /// </summary>
+        /// <param name="selected">Selected series.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditSeries(SeriesModel selected)
         {
@@ -234,6 +296,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Delete selected series.
+        /// </summary>
+        /// <param name="selected">Selected series.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteSeries(SeriesModel selected)
         {
@@ -276,6 +343,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

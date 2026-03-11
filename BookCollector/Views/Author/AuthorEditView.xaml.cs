@@ -48,6 +48,6 @@ public partial class AuthorEditView : ContentPage
             }
         });
 
-        this.ViewModel.SetViewModelData();
+        await this.ViewModel.SetViewModelData();
     }
 }

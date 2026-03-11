@@ -70,7 +70,7 @@ namespace BookCollector.CustomPermissions
         {
             if (this.ShouldShowRationale())
             {
-                //await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
+                // await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToFindBookCover}", null);
             }
 
 #if ANDROID

@@ -17,38 +17,64 @@ namespace BookCollector.ViewModels.Series
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// SeriesMainViewModel class.
+    /// </summary>
     public partial class SeriesMainViewModel : SeriesBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full book list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? fullBookList;
 
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? filteredBookList1;
 
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public new ObservableCollection<BookModel>? filteredBookList2;
 
+        /// <summary>
+        /// Gets or sets the book author list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookAuthorList;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int totalBooksCount;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int filteredBooksCount;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeriesMainViewModel"/> class.
+        /// </summary>
+        /// <param name="series">Series to view.</param>
+        /// <param name="view">View related to view model.</param>
         public SeriesMainViewModel(SeriesModel series, ContentPage view)
         {
             this.View = view;
@@ -58,12 +84,26 @@ namespace BookCollector.ViewModels.Series
             this.RefreshView = true;
         }
 
-        public bool RefreshView { get; set; }
-
+        /// <summary>
+        /// Gets or sets the book author option.
+        /// </summary>
         public string? BookAuthorOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public bool RefreshView { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series or is checked or not.
+        /// </summary>
         private bool SeriesOrderChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full book list and the show hidden books preference.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A task.</returns>
         public async Task SetList(bool showHiddenBooks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksInSeriesList(this.SelectedSeries?.SeriesGuid, ShowHiddenBook);
@@ -78,6 +118,10 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (this.RefreshView && this.SelectedSeries != null)
@@ -174,6 +218,11 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Search the list based on the book title.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookSearchOnTitle(string? input)
         {
@@ -224,6 +273,10 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -233,6 +286,10 @@ namespace BookCollector.ViewModels.Series
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new book and navigate to the book edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddNewBook()
         {
@@ -253,6 +310,10 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Show the existing books view to add an existing book to the series.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddExistingBook()
         {
@@ -264,6 +325,10 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Show filter popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task FilterPopup()
         {
@@ -309,6 +374,10 @@ namespace BookCollector.ViewModels.Series
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

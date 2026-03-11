@@ -21,7 +21,6 @@ public partial class ReadingView : ContentPage
         var savedColor = Preferences.Get("AppColor", "#336699" /* Default */);
 
         // https://developer.android.com/about/versions/15/behavior-changes-15#custom-background-protection
-
         this.ViewModel = new ReadingViewModel(this);
         this.BindingContext = this.ViewModel;
 

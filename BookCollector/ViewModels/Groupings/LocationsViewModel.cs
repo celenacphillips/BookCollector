@@ -19,13 +19,23 @@ namespace BookCollector.ViewModels.Groupings
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// LocationsViewModel class.
+    /// </summary>
     public partial class LocationsViewModel : LocationBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the total locations string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalLocationsstring;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocationsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public LocationsViewModel(ContentPage view)
         {
             this.View = view;
@@ -35,16 +45,36 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden locations or not.
+        /// </summary>
         private bool ShowHiddenLocations { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether location name is checked or not.
+        /// </summary>
         private bool LocationNameChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not.
+        /// </summary>
         private bool TotalBooksChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not.
+        /// </summary>
         private bool TotalPriceChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full location list and the show hidden locations preference.
+        /// </summary>
+        /// <param name="showHiddenLocations">Show hidden locations.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenLocations)
         {
             fullLocationList ??= await FillLists.GetAllLocationsList();
@@ -59,6 +89,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the location.
+        /// </summary>
+        /// <param name="showHiddenLocations">Show hidden locations.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenLocations)
         {
             if (!showHiddenLocations)
@@ -83,6 +118,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -143,6 +182,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Search the list based on the location name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SearchOnLocation(string? input)
         {
@@ -177,6 +221,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected location object.
+        /// </summary>
+        /// <param name="input">Location guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
@@ -201,6 +250,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -210,6 +263,10 @@ namespace BookCollector.ViewModels.Groupings
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new location and navigate to the location edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddLocation()
         {
@@ -222,6 +279,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Navigate to location edit view for selected location.
+        /// </summary>
+        /// <param name="selected">Selected location.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditLocation(LocationModel selected)
         {
@@ -234,6 +296,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Delete selected location.
+        /// </summary>
+        /// <param name="selected">Selected location.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteLocation(LocationModel selected)
         {
@@ -276,6 +343,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

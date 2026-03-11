@@ -10,8 +10,25 @@ namespace BookCollector.Data
     using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
 
+    /// <summary>
+    /// FilterLists class.
+    /// </summary>
     public partial class FilterLists : BookBaseViewModel
     {
+        /// <summary>
+        /// Apply filters to book list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="bookList">Book list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
+        /// <param name="formatOption">Format option to find.</param>
+        /// <param name="publisherOption">Publisher option to find.</param>
+        /// <param name="languageOption">Language option to find.</param>
+        /// <param name="ratingOption">Rating option to find.</param>
+        /// <param name="publishYearOption">Publish year option to find.</param>
+        /// <param name="authorOption">Author option to find.</param>
+        /// <param name="bookCoverOption">Book cover option to find.</param>
+        /// <param name="searchString">Book title search string to find.</param>
+        /// <returns>A filtered book list.</returns>
         public static async Task<ObservableCollection<BookModel>> FilterBookList(
             ObservableCollection<BookModel> bookList,
             string? favoritesOption,
@@ -59,6 +76,19 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Apply filters to wishlist book list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="bookList">Book list to filter.</param>
+        /// <param name="formatOption">Format option to find.</param>
+        /// <param name="publisherOption">Publisher option to find.</param>
+        /// <param name="languageOption">Language option to find.</param>
+        /// <param name="publishYearOption">Publish year option to find.</param>
+        /// <param name="authorOption">Author option to find.</param>
+        /// <param name="locationOption">Location option to find.</param>
+        /// <param name="seriesOption">Series option to find.</param>
+        /// <param name="searchString">Book title search string to find.</param>
+        /// <returns>A filtered book list.</returns>
         public static async Task<ObservableCollection<WishlistBookModel>> FilterWishlistBookList(
             ObservableCollection<WishlistBookModel> bookList,
             string? formatOption,
@@ -91,6 +121,12 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Apply search string filter to book list based on the given search string.
+        /// </summary>
+        /// <param name="bookList">Book list to filter.</param>
+        /// <param name="searchString">Book title search string to find.</param>
+        /// <returns>A filtered book list.</returns>
         public static ObservableCollection<BookModel> FilterOnSearchString(ObservableCollection<BookModel> bookList, string? searchString)
         {
             if (!string.IsNullOrEmpty(searchString))
@@ -103,6 +139,12 @@ namespace BookCollector.Data
             }
         }
 
+        /// <summary>
+        /// Apply search string filter to book list based on the given search string.
+        /// </summary>
+        /// <param name="bookList">Book list to filter.</param>
+        /// <param name="searchString">Book title search string to find.</param>
+        /// <returns>A filtered book list.</returns>
         public static ObservableCollection<WishlistBookModel> FilterOnSearchString(ObservableCollection<WishlistBookModel> bookList, string? searchString)
         {
             var filterList = bookList;

@@ -14,23 +14,40 @@ namespace BookCollector.ViewModels.Author
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// AuthorEditViewModel class.
+    /// </summary>
     public partial class AuthorEditViewModel : AuthorBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the author to edit.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public AuthorModel editedAuthor;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author first name is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorFirstNameNotValid;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author last name is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorLastNameNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorEditViewModel"/> class.
+        /// </summary>
+        /// <param name="author">Author to edit.</param>
+        /// <param name="view">View related to view model.</param>
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
         {
             this.View = view;
@@ -38,16 +55,36 @@ namespace BookCollector.ViewModels.Author
             this.EditedAuthor = (AuthorModel)author.Clone();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to insert the main view before or not.
+        /// </summary>
         public bool InsertMainViewBefore { get; set; }
 
-        public void SetViewModelData()
+        /// <summary>
+        /// Add author to the static list in the list view model.
+        /// </summary>
+        /// <param name="author">Author to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(AuthorModel author)
+        {
+            if (AuthorsViewModel.fullAuthorList != null)
+            {
+                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
+            }
+        }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async Task SetViewModelData()
         {
             try
             {
                 this.SetIsBusyTrue();
 
-                this.ValidateFirstName();
-                this.ValidateLastName();
+                await this.ValidateFirstName();
+                await this.ValidateLastName();
 
                 this.SetIsBusyFalse();
             }
@@ -57,6 +94,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Save author to the database and returns to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveAuthor()
         {
@@ -64,8 +105,8 @@ namespace BookCollector.ViewModels.Author
             {
                 this.SetIsBusyTrue();
 
-                this.ValidateFirstName();
-                this.ValidateLastName();
+                await this.ValidateFirstName();
+                await this.ValidateLastName();
 
                 if (this.AuthorFirstNameNotValid || this.AuthorLastNameNotValid)
                 {
@@ -106,44 +147,47 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void Refresh()
+        public async Task Refresh()
         {
             this.SetRefreshTrue();
-            this.SetViewModelData();
+            await this.SetViewModelData();
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Check if the author first name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateFirstName()
+        public async Task ValidateFirstName()
         {
             this.AuthorFirstNameNotValid = string.IsNullOrEmpty(this.EditedAuthor.FirstName);
         }
 
+        /// <summary>
+        /// Check if the author last name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateLastName()
+        public async Task ValidateLastName()
         {
             this.AuthorLastNameNotValid = string.IsNullOrEmpty(this.EditedAuthor.LastName);
-        }
-
-        public static async Task AddToStaticList(AuthorModel author)
-        {
-            if (AuthorsViewModel.fullAuthorList != null)
-            {
-                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
-            }
         }
 
         private static async Task<bool> AddAuthorToStaticList(AuthorModel author, ObservableCollection<AuthorModel> authorList, ObservableCollection<AuthorModel>? filteredAuthorList)
         {
             var refresh = false;
 
-            //await Task.WhenAll(new Task[]
-            //{
+            // await Task.WhenAll(new Task[]
+            // {
             //    author.SetTotalBooks(Hi),
             //    author.SetTotalCostOfBooks(true),
-            //});
-
+            // });
             try
             {
                 var oldAuthor = authorList.FirstOrDefault(x => x.AuthorGuid == author.AuthorGuid);

@@ -27,7 +27,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Initializes the database and creates the necessary tables if they do not exist.
+        /// Initialize the database and creates the necessary tables if they do not exist.
         /// </summary>
         /// <returns>A task.</returns>
         public async Task Init()
@@ -57,7 +57,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Drops all the tables in the database.
+        /// Drop all the tables in the database.
         /// </summary>
         /// <returns>A task.</returns>
         public async Task DropAllTables()
@@ -80,7 +80,7 @@ namespace BookCollector.Data.Database
         /*********************** Book Methods ***********************/
 
         /// <summary>
-        /// Gets a list of all books that are currently being read. A book is considered
+        /// Get a list of all books that are currently being read. A book is considered
         /// to be currently being read if the number of pages read is not equal to the total
         /// number of pages and the number of pages read is not equal to 0, or if the book
         /// is marked as up next, or if the number of hours listened is not equal to the
@@ -115,7 +115,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets a list of all books that are yet to be read. A book is considered to be yet
+        /// Get a list of all books that are yet to be read. A book is considered to be yet
         /// to be read if the number of pages read is equal to 0 and the number of hours
         /// listened is equal to 0 and the number of minutes listened is equal to 0 and the
         /// book is not marked as up next.
@@ -147,7 +147,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets a list of all books that have been read. A book is considered to be read if
+        /// Get a list of all books that have been read. A book is considered to be read if
         /// the number of pages read is equal to the total number of pages and the number of
         /// pages read is not equal to 0, or if the number of hours listened is equal to the
         /// total number of hours and the number of minutes listened is equal to the total
@@ -180,7 +180,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets a list of all books in the database, regardless of their reading status.
+        /// Get a list of all books in the database, regardless of their reading status.
         /// </summary>
         /// <returns>A list of all books.</returns>
         public async Task<List<BookModel>> GetAllBooksAsync()
@@ -206,7 +206,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets the genre for a book based on the provided genre guid.
+        /// Get the genre for a book based on the provided genre guid.
         /// </summary>
         /// <param name="inputGuid">The guid of the genre to retrieve.</param>
         /// <returns>Selected genre.</returns>
@@ -229,7 +229,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets the location for a book based on the provided location guid.
+        /// Get the location for a book based on the provided location guid.
         /// </summary>
         /// <param name="inputGuid">The guid of the location to retrieve.</param>
         /// <returns>Selected location.</returns>
@@ -252,7 +252,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets the series for a book based on the provided series guid.
+        /// Get the series for a book based on the provided series guid.
         /// </summary>
         /// <param name="inputGuid">The guid of the series to retrieve.</param>
         /// <returns>Selected series.</returns>
@@ -275,7 +275,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Gets the collection for a book based on the provided collection guid.
+        /// Get the collection for a book based on the provided collection guid.
         /// </summary>
         /// <param name="inputGuid">The guid of the collection to retrieve.</param>
         /// <returns>Selected collection.</returns>
@@ -442,9 +442,9 @@ namespace BookCollector.Data.Database
         /*********************** Wishlist Book Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all wishlist books in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of wishlist books.</returns>
         public async Task<List<WishlistBookModel>> GetAllWishlistBooksAsync()
         {
             try
@@ -468,10 +468,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a wishlist book in the database.
         /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
+        /// <param name="book">Wishlist book to save.</param>
+        /// <returns>Wishlist book that has been saved.</returns>
         public async Task<WishlistBookModel> SaveWishlistBookAsync(WishlistBookDatabaseModel book)
         {
             try
@@ -508,10 +508,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove wishlist book from the database.
         /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
+        /// <param name="book">Wishlist book to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteWishlistBookAsync(WishlistBookDatabaseModel book)
         {
             try
@@ -530,10 +530,10 @@ namespace BookCollector.Data.Database
         /*********************** Chapter Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all chapters in a book based on the provided book guid.
         /// </summary>
-        /// <param name="bookGuid"></param>
-        /// <returns></returns>
+        /// <param name="bookGuid">Book guid to get chapters for.</param>
+        /// <returns>A list of chapters in the given book.</returns>
         public async Task<List<ChapterModel>> GetChaptersInBookAsync(Guid bookGuid)
         {
             try
@@ -558,9 +558,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all chapters in the database, regardless of the book they belong to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of all chapters added for every book.</returns>
         public async Task<List<ChapterModel>> GetAllChaptersAsync()
         {
             try
@@ -585,10 +585,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a chapter in the database.
         /// </summary>
-        /// <param name="chapter"></param>
-        /// <returns></returns>
+        /// <param name="chapter">Chapter to save.</param>
+        /// <returns>A task.</returns>
         public async Task SaveChapterAsync(ChapterDatabaseModel chapter)
         {
             try
@@ -623,10 +623,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove chapter from the database.
         /// </summary>
-        /// <param name="chapter"></param>
-        /// <returns></returns>
+        /// <param name="chapter">Chapter to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteChapterAsync(ChapterDatabaseModel chapter)
         {
             try
@@ -645,9 +645,9 @@ namespace BookCollector.Data.Database
         /*********************** Book Author Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all book authors in the database, regardless of the book they belong to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of all book authors added for every book.</returns>
         public async Task<List<BookAuthorModel>> GetAllBookAuthorsAsync()
         {
             try
@@ -667,10 +667,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a book author in the database.
         /// </summary>
-        /// <param name="bookAuthor"></param>
-        /// <returns></returns>
+        /// <param name="bookAuthor">Book author to save.</param>
+        /// <returns>A task.</returns>
         public async Task SaveBookAuthorAsync(BookAuthorModel bookAuthor)
         {
             try
@@ -705,11 +705,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove book author from the database.
         /// </summary>
-        /// <param name="authorGuid"></param>
-        /// <param name="bookGuid"></param>
-        /// <returns></returns>
+        /// <param name="authorGuid">Author guid to match.</param>
+        /// <param name="bookGuid">Book guid to match.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteBookAuthorAsync(Guid authorGuid, Guid bookGuid)
         {
             try
@@ -732,11 +732,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update an author to a book in the database.
         /// </summary>
-        /// <param name="authorGuid"></param>
-        /// <param name="bookGuid"></param>
-        /// <returns></returns>
+        /// <param name="authorGuid">Author guid to add.</param>
+        /// <param name="bookGuid">Book guid to add to.</param>
+        /// <returns>A task.</returns>
         public async Task AddAuthorToBookAsync(Guid? authorGuid, Guid? bookGuid)
         {
             try
@@ -774,10 +774,10 @@ namespace BookCollector.Data.Database
         /*********************** Author Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all book authors for an author based on the provided author guid.
         /// </summary>
-        /// <param name="authorGuid"></param>
-        /// <returns></returns>
+        /// <param name="authorGuid">Author guid to get book authors for.</param>
+        /// <returns>A list of book authors.</returns>
         public async Task<List<BookAuthorModel>> GetAllBookAuthorsForAuthorAsync(Guid authorGuid)
         {
             try
@@ -798,11 +798,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all the books for an author based on the provided author guid. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="authorGuid"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="authorGuid">Author guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books for the provided author.</returns>
         public async Task<List<BookModel>> GetAllBooksForAuthorAsync(Guid authorGuid, bool showHiddenBooks)
         {
             try
@@ -847,11 +847,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get books that do not have the provided author as an author. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="reverseAuthorName"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="reverseAuthorName">Author name to search for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books that aren't assigned to the provided author.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutAuthorAsync(string reverseAuthorName, bool showHiddenBooks)
         {
             try
@@ -881,9 +881,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all authors in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of authors.</returns>
         public async Task<List<AuthorModel>> GetAllAuthorsAsync()
         {
             try
@@ -908,10 +908,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update an author in the database.
         /// </summary>
-        /// <param name="author"></param>
-        /// <returns></returns>
+        /// <param name="author">Author to save.</param>
+        /// <returns>Author that has been saved.</returns>
         public async Task<AuthorModel> SaveAuthorAsync(AuthorDatabaseModel author)
         {
             try
@@ -948,10 +948,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove author from the database.
         /// </summary>
-        /// <param name="author"></param>
-        /// <returns></returns>
+        /// <param name="author">Author to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteAuthorAsync(AuthorDatabaseModel author)
         {
             try
@@ -966,11 +966,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add author to database and to book if book guid is provided.
         /// </summary>
-        /// <param name="author"></param>
-        /// <param name="bookGuid"></param>
-        /// <returns></returns>
+        /// <param name="author">Author to add.</param>
+        /// <param name="bookGuid">Book guid to add author to.</param>
+        /// <returns>Author added.</returns>
         public async Task<AuthorModel> InsertAuthorAsync(AuthorDatabaseModel author, Guid? bookGuid)
         {
             try
@@ -988,10 +988,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get author by author guid.
         /// </summary>
-        /// <param name="authorGuid"></param>
-        /// <returns></returns>
+        /// <param name="authorGuid">Author guid to find.</param>
+        /// <returns>The found author, or null.</returns>
         public async Task<AuthorDatabaseModel?> GetAuthorByGuidAsync(Guid authorGuid)
         {
             try
@@ -1011,11 +1011,11 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get author by first and last name.
         /// </summary>
-        /// <param name="authorFirstName"></param>
-        /// <param name="authorLastName"></param>
-        /// <returns></returns>
+        /// <param name="authorFirstName">Author first name to find.</param>
+        /// <param name="authorLastName">Author last name to find.</param>
+        /// <returns>The found author, or null.</returns>
         public async Task<AuthorModel?> GetAuthorByNameAsync(string authorFirstName, string authorLastName)
         {
             try
@@ -1059,11 +1059,11 @@ namespace BookCollector.Data.Database
         /*********************** Collection Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all books in a collection based on the provided collection guid. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="collectionGuid"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="collectionGuid">Collection guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the collection.</returns>
         public async Task<List<BookModel>> GetAllBooksInCollectionAsync(Guid collectionGuid, bool showHiddenBooks)
         {
             try
@@ -1093,10 +1093,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all books without a collection assigned.
         /// </summary>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a collection assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutACollectionAsync(bool showHiddenBooks)
         {
             try
@@ -1126,9 +1126,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all collections in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of collections.</returns>
         public async Task<List<CollectionModel>> GetAllCollectionsAsync()
         {
             try
@@ -1152,10 +1152,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a collection in the database.
         /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
+        /// <param name="collection">Collection to save.</param>
+        /// <returns>Collection that has been saved.</returns>
         public async Task<CollectionModel> SaveCollectionAsync(CollectionDatabaseModel collection)
         {
             try
@@ -1192,10 +1192,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove collection from the database.
         /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
+        /// <param name="collection">Collection to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteCollectionAsync(CollectionDatabaseModel collection)
         {
             try
@@ -1214,11 +1214,11 @@ namespace BookCollector.Data.Database
         /*********************** Genre Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all books in a genre based on the provided genre guid. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="genreGuid"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="genreGuid">Genre guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the genre.</returns>
         public async Task<List<BookModel>> GetAllBooksInGenreAsync(Guid genreGuid, bool showHiddenBooks)
         {
             try
@@ -1248,10 +1248,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all books without a genre assigned.
         /// </summary>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a genre assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutAGenreAsync(bool showHiddenBooks)
         {
             try
@@ -1281,9 +1281,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all genres in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of genres.</returns>
         public async Task<List<GenreModel>> GetAllGenresAsync()
         {
             try
@@ -1307,10 +1307,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a genre in the database.
         /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
+        /// <param name="genre">Genre to save.</param>
+        /// <returns>Genre that has been saved.</returns>
         public async Task<GenreModel> SaveGenreAsync(GenreDatabaseModel genre)
         {
             try
@@ -1347,10 +1347,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove genre from the database.
         /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
+        /// <param name="genre">Genre to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteGenreAsync(GenreDatabaseModel genre)
         {
             try
@@ -1369,11 +1369,11 @@ namespace BookCollector.Data.Database
         /*********************** Series Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all books in a series based on the provided series guid. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="seriesGuid"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="seriesGuid">Series guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the series.</returns>
         public async Task<List<BookModel>> GetAllBooksInSeriesAsync(Guid seriesGuid, bool showHiddenBooks)
         {
             try
@@ -1403,10 +1403,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all books without a series assigned.
         /// </summary>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a series assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutASeriesAsync(bool showHiddenBooks)
         {
             try
@@ -1436,9 +1436,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all series in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of series.</returns>
         public async Task<List<SeriesModel>> GetAllSeriesAsync()
         {
             try
@@ -1462,10 +1462,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a series in the database.
         /// </summary>
-        /// <param name="series"></param>
-        /// <returns></returns>
+        /// <param name="series">Series to save.</param>
+        /// <returns>Series that has been saved.</returns>
         public async Task<SeriesModel> SaveSeriesAsync(SeriesDatabaseModel series)
         {
             try
@@ -1502,10 +1502,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove series from the database.
         /// </summary>
-        /// <param name="series"></param>
-        /// <returns></returns>
+        /// <param name="series">Series to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteSeriesAsync(SeriesDatabaseModel series)
         {
             try
@@ -1520,10 +1520,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get a series based on the provided series name.
         /// </summary>
-        /// <param name="seriesName"></param>
-        /// <returns></returns>
+        /// <param name="seriesName">Series name to find.</param>
+        /// <returns>The found series, or null.</returns>
         public async Task<SeriesModel?> GetSeriesByNameAsync(string? seriesName)
         {
             try
@@ -1547,11 +1547,11 @@ namespace BookCollector.Data.Database
         /*********************** Location Methods ***********************/
 
         /// <summary>
-        /// 
+        /// Get all books in a location based on the provided location guid. If showHiddenBooks is false, then hidden books will be filtered out.
         /// </summary>
-        /// <param name="locationGuid"></param>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="locationGuid">Location guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the location.</returns>
         public async Task<List<BookModel>> GetAllBooksInLocationAsync(Guid locationGuid, bool showHiddenBooks)
         {
             try
@@ -1581,10 +1581,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all books without a location assigned.
         /// </summary>
-        /// <param name="showHiddenBooks"></param>
-        /// <returns></returns>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a location assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutALocationAsync(bool showHiddenBooks)
         {
             try
@@ -1614,9 +1614,9 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Get all locations in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of locations.</returns>
         public async Task<List<LocationModel>> GetAllLocationsAsync()
         {
             try
@@ -1640,10 +1640,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Add or update a location in the database.
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
+        /// <param name="location">Location to save.</param>
+        /// <returns>Location that has been saved.</returns>
         public async Task<LocationModel> SaveLocationAsync(LocationDatabaseModel location)
         {
             try
@@ -1680,10 +1680,10 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// 
+        /// Remove location from the database.
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
+        /// <param name="location">Location to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteLocationAsync(LocationDatabaseModel location)
         {
             try

@@ -149,7 +149,7 @@ public partial class TimePopup : Popup<TimeSpan>
                         if (this.MaxHours != null)
                         {
                             var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
-                            var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
+                            var maxTimespan = new TimeSpan((int)this.MaxHours, this.MaxMinutes ?? 0, 0);
 
                             if (timespan <= maxTimespan)
                             {
@@ -204,7 +204,7 @@ public partial class TimePopup : Popup<TimeSpan>
                         if (this.MaxHours != null)
                         {
                             var timespan = new TimeSpan(this.Hours, this.Minutes, 0);
-                            var maxTimespan = new TimeSpan((int)this.MaxHours, (int)this.MaxMinutes, 0);
+                            var maxTimespan = new TimeSpan((int)this.MaxHours, this.MaxMinutes ?? 0, 0);
 
                             if (timespan <= maxTimespan)
                             {

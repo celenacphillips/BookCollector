@@ -19,13 +19,23 @@ namespace BookCollector.ViewModels.Groupings
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// GenresViewModel class.
+    /// </summary>
     public partial class GenresViewModel : GenreBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the total genres string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalGenresstring;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenresViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public GenresViewModel(ContentPage view)
         {
             this.View = view;
@@ -35,16 +45,36 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden genres or not.
+        /// </summary>
         private bool ShowHiddenGenres { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether genre named is checked or not.
+        /// </summary>
         private bool GenreNameChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not.
+        /// </summary>
         private bool TotalBooksChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not.
+        /// </summary>
         private bool TotalPriceChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full genre list and the show hidden genres preference.
+        /// </summary>
+        /// <param name="showHiddenGenres">Show hidden genres.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenGenres)
         {
             fullGenreList ??= await FillLists.GetAllGenresList();
@@ -59,6 +89,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the genre.
+        /// </summary>
+        /// <param name="showHiddenGenres">Show hidden genres.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenGenres)
         {
             if (!showHiddenGenres)
@@ -83,6 +118,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -143,6 +182,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Search the list based on the genre name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SearchOnGenre(string? input)
         {
@@ -177,6 +221,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected genre object.
+        /// </summary>
+        /// <param name="input">Genre guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuGenre(Guid? input)
         {
@@ -201,6 +250,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -210,6 +263,10 @@ namespace BookCollector.ViewModels.Groupings
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new genre and navigate to the genre edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddGenre()
         {
@@ -222,6 +279,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Navigate to genre edit view for selected genre.
+        /// </summary>
+        /// <param name="selected">Selected genre.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditGenre(GenreModel selected)
         {
@@ -234,6 +296,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Delete selected genre.
+        /// </summary>
+        /// <param name="selected">Selected genre.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteGenre(GenreModel selected)
         {
@@ -276,6 +343,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

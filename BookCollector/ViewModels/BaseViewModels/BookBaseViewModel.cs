@@ -20,193 +20,312 @@ namespace BookCollector.ViewModels.BaseViewModels
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// BookBaseViewModel class.
+    /// </summary>
     public partial class BookBaseViewModel : BaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static ObservableCollection<BookModel>? filteredBookList2;
 
+        /// <summary>
+        /// Gets or sets the book format list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static ObservableCollection<string>? bookFormats;
 
+        /// <summary>
+        /// Gets or sets the total books string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalBooksString;
 
+        /// <summary>
+        /// Gets or sets the selected book.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public BookModel? selectedBook;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a book is read or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookIsRead;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show book is up next.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showUpNext;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the reading section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool readingDataSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the reading section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool readingDataOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the reading section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool readingDataNotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the chapter section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool chapterListSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the chapter section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool chapterListOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the chapter section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool chapterListNotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorListSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorListOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorListNotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show comments or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showComments;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show chapters or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showChapters;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show favorites or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showFavorites;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show ratings or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showRatings;
 
+        /// <summary>
+        /// Gets or sets the chapter list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<ChapterModel>? chapterList;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book info section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfoSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book info section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfoOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book info section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookInfoNotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the summary section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool summarySectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the summary section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool summaryOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the summary section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool summaryNotOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the comments section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool commentsSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the comments section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool commentsOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the comments section expander is open or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool commentsNotOpen;
 
+        /// <summary>
+        /// Gets or sets the selected genre of the book.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public GenreModel? selectedGenre;
 
+        /// <summary>
+        /// Gets or sets the selected location of the book.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public LocationModel? selectedLocation;
 
+        /// <summary>
+        /// Gets or sets the book cover image source.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ImageSource? bookCover;
 
+        /// <summary>
+        /// Gets or sets the book publisher list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookPublisherList;
 
+        /// <summary>
+        /// Gets or sets the book publish year range list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookPublishYearList;
 
+        /// <summary>
+        /// Gets or sets the book language list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookLanguageList;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show pages or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showPages;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show time or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showTime;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookBaseViewModel"/> class.
+        /// </summary>
         public BookBaseViewModel()
         {
             this.ShowComments = Preferences.Get("CommentsOn", true /* Default */);
@@ -215,47 +334,112 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden books or not.
+        /// </summary>
         public static bool ShowHiddenBook { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden authors or not.
+        /// </summary>
         public bool HiddenAuthorsOn { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show favorite books or not.
+        /// </summary>
         public bool ShowFavoriteBooks { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show book ratings or not.
+        /// </summary>
         public bool ShowBookRatings { get; set; }
 
+        /// <summary>
+        /// Gets or sets the favorite books option.
+        /// </summary>
         public string? FavoriteBooksOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book format option.
+        /// </summary>
         public string? BookFormatOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book publisher option.
+        /// </summary>
         public string? BookPublisherOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book publisher year range option.
+        /// </summary>
         public string? BookPublishYearOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book language option.
+        /// </summary>
         public string? BookLanguageOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book rating option.
+        /// </summary>
         public string? BookRatingOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the book cover option.
+        /// </summary>
         public string? BookCoverOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book title option is checked or not.
+        /// </summary>
         public bool BookTitleChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book reading date option is checked or not.
+        /// </summary>
         public bool BookReadingDateChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book read percentage option is checked or not.
+        /// </summary>
         public bool BookReadPercentageChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book publisher option is checked or not.
+        /// </summary>
         public bool BookPublisherChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book publish year option is checked or not.
+        /// </summary>
         public bool BookPublishYearChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author last name option is checked or not.
+        /// </summary>
         public bool AuthorLastNameChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book format option is checked or not.
+        /// </summary>
         public bool BookFormatChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the page count/book time option is checked or not.
+        /// </summary>
         public bool PageCountBookTimeChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the book price option is checked or not.
+        /// </summary>
         public bool BookPriceChecked { get; set; }
 
-        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string? inputstring, bool showHiddenAuthors = true)
+        /// <summary>
+        /// Parse out authors from string.
+        /// </summary>
+        /// <param name="inputstring">Input string to parse.</param>
+        /// <returns>A list of authors parsed out.</returns>
+        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string? inputstring)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
@@ -288,77 +472,12 @@ namespace BookCollector.ViewModels.BaseViewModels
             return authorList;
         }
 
-        [RelayCommand]
-        public async Task BookSelectionChanged()
-        {
-            if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
-            {
-                var view = new BookMainView(this.SelectedBook, this.SelectedBook.BookTitle, this);
-                await Shell.Current.Navigation.PushAsync(view);
-                this.SelectedBook = null;
-            }
-        }
-
-        [RelayCommand]
-        public async Task AddBook()
-        {
-            this.SetIsBusyTrue();
-
-            var view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
-
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
-        }
-
-        [RelayCommand]
-        public void ReadingDataChanged()
-        {
-            this.ReadingDataOpen = this.ReadingDataSectionValue;
-            this.ReadingDataNotOpen = !this.ReadingDataSectionValue;
-        }
-
-        [RelayCommand]
-        public void ChapterListChanged()
-        {
-            this.ChapterListOpen = this.ChapterListSectionValue;
-            this.ChapterListNotOpen = !this.ChapterListSectionValue;
-        }
-
-        [RelayCommand]
-        public void AuthorListChanged()
-        {
-            this.AuthorListOpen = this.AuthorListSectionValue;
-            this.AuthorListNotOpen = !this.AuthorListSectionValue;
-        }
-
-        [RelayCommand]
-        public void BookInfoChanged()
-        {
-            this.BookInfoOpen = this.BookInfoSectionValue;
-            this.BookInfoNotOpen = !this.BookInfoSectionValue;
-        }
-
-        [RelayCommand]
-        public void SummaryChanged()
-        {
-            this.SummaryOpen = this.SummarySectionValue;
-            this.SummaryNotOpen = !this.SummarySectionValue;
-        }
-
-        [RelayCommand]
-        public void CommentsChanged()
-        {
-            this.CommentsOpen = this.CommentsSectionValue;
-            this.CommentsNotOpen = !this.CommentsSectionValue;
-        }
-
-        [RelayCommand]
-        public async Task BookCoverPopup()
-        {
-            this.View.ShowPopup(new BookCoverPopup(this.BookCover!));
-        }
-
+        /// <summary>
+        /// Add book to static lists.
+        /// </summary>
+        /// <param name="book">Book to add.</param>
+        /// <param name="previousViewModel">Previous model to return to.</param>
+        /// <returns>A task.</returns>
         public static async Task AddToStaticList(BookModel book, object? previousViewModel = null)
         {
             if (AllBooksViewModel.fullBookList != null)
@@ -637,6 +756,11 @@ namespace BookCollector.ViewModels.BaseViewModels
             LocationsViewModel.RefreshView = true;
         }
 
+        /// <summary>
+        /// Remove book from static lists.
+        /// </summary>
+        /// <param name="book">Book to remove.</param>
+        /// <returns>A task.</returns>
         public static async Task RemoveFromStaticList(BookModel book)
         {
             if (AllBooksViewModel.fullBookList != null)
@@ -758,6 +882,13 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
         }
 
+        /// <summary>
+        /// Remove book from lists.
+        /// </summary>
+        /// <param name="book">Book to remove.</param>
+        /// <param name="bookList">Main book list to remove book from.</param>
+        /// <param name="filteredBookList">Filtered book list to remove book from.</param>
+        /// <returns>Refresh view value.</returns>
         public static bool RemoveBookFromStaticList(BookModel book, ObservableCollection<BookModel>? bookList, ObservableCollection<BookModel>? filteredBookList)
         {
             var refresh = false;
@@ -793,6 +924,113 @@ namespace BookCollector.ViewModels.BaseViewModels
             return refresh;
         }
 
+        /// <summary>
+        /// Navigate to the book main view when book is selected.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookSelectionChanged()
+        {
+            if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
+            {
+                var view = new BookMainView(this.SelectedBook, this.SelectedBook.BookTitle, this);
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedBook = null;
+            }
+        }
+
+        /// <summary>
+        /// Create a new book and navigate to the book edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task AddBook()
+        {
+            this.SetIsBusyTrue();
+
+            var view = new BookEditView(new BookModel(), $"{AppStringResources.AddNewBook}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ReadingDataChanged()
+        {
+            this.ReadingDataOpen = this.ReadingDataSectionValue;
+            this.ReadingDataNotOpen = !this.ReadingDataSectionValue;
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ChapterListChanged()
+        {
+            this.ChapterListOpen = this.ChapterListSectionValue;
+            this.ChapterListNotOpen = !this.ChapterListSectionValue;
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task AuthorListChanged()
+        {
+            this.AuthorListOpen = this.AuthorListSectionValue;
+            this.AuthorListNotOpen = !this.AuthorListSectionValue;
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookInfoChanged()
+        {
+            this.BookInfoOpen = this.BookInfoSectionValue;
+            this.BookInfoNotOpen = !this.BookInfoSectionValue;
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task SummaryChanged()
+        {
+            this.SummaryOpen = this.SummarySectionValue;
+            this.SummaryNotOpen = !this.SummarySectionValue;
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task CommentsChanged()
+        {
+            this.CommentsOpen = this.CommentsSectionValue;
+            this.CommentsNotOpen = !this.CommentsSectionValue;
+        }
+
+        /// <summary>
+        /// Show book cover popup.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookCoverPopup()
+        {
+            this.View.ShowPopup(new BookCoverPopup(this.BookCover!));
+        }
+
         private static async Task<bool> AddBookToStaticList(BookModel book, ObservableCollection<BookModel> bookList, ObservableCollection<BookModel>? filteredBookList)
         {
             var refresh = false;
@@ -800,7 +1038,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             await Task.WhenAll(
             [
                 book.SetReadingProgress(),
-                //book.SetAuthorListString(),
+
+                // book.SetAuthorListString(),
                 book.SetCoverDisplay(),
             ]);
 

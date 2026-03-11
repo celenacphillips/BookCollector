@@ -14,18 +14,32 @@ namespace BookCollector.ViewModels.Genre
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// GenreEditViewModel class.
+    /// </summary>
     public partial class GenreEditViewModel : GenreBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the genre to edit.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public GenreModel editedGenre;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the genre name is valid or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool genreNameNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenreEditViewModel"/> class.
+        /// </summary>
+        /// <param name="genre">Genre to edit.</param>
+        /// <param name="view">View related to view model.</param>
         public GenreEditViewModel(GenreModel genre, ContentPage view)
         {
             this.View = view;
@@ -33,8 +47,28 @@ namespace BookCollector.ViewModels.Genre
             this.EditedGenre = (GenreModel)genre.Clone();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to insert the main view before or not.
+        /// </summary>
         public bool InsertMainViewBefore { get; set; }
 
+        /// <summary>
+        /// Add genre to the static list in the list view model.
+        /// </summary>
+        /// <param name="genre">Genre to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(GenreModel genre)
+        {
+            if (GenresViewModel.fullGenreList != null)
+            {
+                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
+            }
+        }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             try
@@ -51,6 +85,10 @@ namespace BookCollector.ViewModels.Genre
             }
         }
 
+        /// <summary>
+        /// Save genre to the database and returns to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveGenre()
         {
@@ -97,6 +135,10 @@ namespace BookCollector.ViewModels.Genre
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -105,18 +147,14 @@ namespace BookCollector.ViewModels.Genre
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Check if the genre name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateGenreName()
+        public async Task ValidateGenreName()
         {
             this.ValidateEntry();
-        }
-
-        public static async Task AddToStaticList(GenreModel genre)
-        {
-            if (GenresViewModel.fullGenreList != null)
-            {
-                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
-            }
         }
 
         private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)

@@ -13,50 +13,81 @@ namespace BookCollector.Data.Models
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
 
+    /// <summary>
+    /// BookModel class.
+    /// </summary>
     public partial class BookModel : BookDatabaseModel, ICloneable
     {
+        /// <summary>
+        /// Gets or sets the book cover image source.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ImageSource? bookCover;
 
+        /// <summary>
+        /// Gets or sets the book total time.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public double? bookTotalTime;
 
+        /// <summary>
+        /// Gets or sets the book time span.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public TimeSpan totalTimeSpan;
 
+        /// <summary>
+        /// Gets or sets the total time string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string totalTimeString;
 
+        /// <summary>
+        /// Gets or sets the listen time span.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public TimeSpan listenTimeSpan;
 
+        /// <summary>
+        /// Gets or sets the listen time.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public double? bookListenedTime;
 
+        /// <summary>
+        /// Gets or sets the listen time string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string listenTimeString;
 
-        internal static BookCollectorDatabase Database;
+        private static BookCollectorDatabase database;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookModel"/> class.
+        /// </summary>
         public BookModel()
         {
-            Database = new BookCollectorDatabase();
+            database = new BookCollectorDatabase();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookModel"/> class.
+        /// </summary>
+        /// <param name="dbModel">Database model to convert from.</param>
         public BookModel(BookDatabaseModel dbModel)
         {
             this.BookGuid = dbModel.BookGuid;
@@ -111,13 +142,22 @@ namespace BookCollector.Data.Models
             this.BookIdentifier = dbModel.BookIdentifier;
         }
 
+        /// <summary>
+        /// Gets or sets the list of selected authors.
+        /// </summary>
         public List<AuthorModel?>? SelectedAuthors { get; set; }
 
+        /// <summary>
+        /// Gets publisher publish date string.
+        /// </summary>
         public string PublisherPublishDatestring
         {
             get => $"{(!string.IsNullOrEmpty(this.BookPublisher) ? this.BookPublisher : AppStringResources.NoPublisher)}, {(!string.IsNullOrEmpty(this.BookPublishYear) ? this.BookPublishYear : AppStringResources.NoDate)}";
         }
 
+        /// <summary>
+        /// Gets the parsed book title.
+        /// </summary>
         public string? ParsedTitle
         {
             get => (!string.IsNullOrEmpty(this.BookTitle) &&
@@ -128,26 +168,41 @@ namespace BookCollector.Data.Models
                         : this.BookTitle;
         }
 
+        /// <summary>
+        /// Gets the book price as a double.
+        /// </summary>
         public double BookPriceValue
         {
             get => !string.IsNullOrEmpty(this.BookPrice) ? (this.BookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol) ? double.Parse(this.BookPrice[1..]) : double.Parse(this.BookPrice)) : 0;
         }
 
+        /// <summary>
+        /// Gets the book start date value.
+        /// </summary>
         public DateTime? StartDateValue
         {
             get => !string.IsNullOrEmpty(this.BookStartDate) ? DateTime.Parse(this.BookStartDate) : null;
         }
 
+        /// <summary>
+        /// Gets the book end date value.
+        /// </summary>
         public DateTime? EndDateValue
         {
             get => !string.IsNullOrEmpty(this.BookEndDate) ? DateTime.Parse(this.BookEndDate) : null;
         }
 
+        /// <summary>
+        /// Gets the loaned out date value.
+        /// </summary>
         public DateTime? LoanedOutOnValue
         {
             get => !string.IsNullOrEmpty(this.BookLoanedOutOn) ? DateTime.Parse(this.BookLoanedOutOn) : null;
         }
 
+        /// <summary>
+        /// Gets the book duration total string.
+        /// </summary>
         public string? BookDurationTotal
         {
             get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
@@ -155,6 +210,11 @@ namespace BookCollector.Data.Models
                 AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString().PadLeft(2, '0')).Replace("Blank2", this.BookMinutesTotal.ToString().PadLeft(2, '0'));
         }
 
+        /// <summary>
+        /// Formats the input date string to "MM/dd/yyyy" format if it's not null or empty.
+        /// </summary>
+        /// <param name="input">Date to format.</param>
+        /// <returns>Formatted date as string.</returns>
         public static string? SetDate(string? input)
         {
             string? output = null;
@@ -167,11 +227,30 @@ namespace BookCollector.Data.Models
             return output;
         }
 
+        /// <summary>
+        /// Sets the time span for the book based on the book format and updates the total time span property accordingly.
+        /// </summary>
+        /// <param name="hour">Hour to set.</param>
+        /// <param name="minute">Minute to set.</param>
+        /// <returns>New time span created.</returns>
+        public static TimeSpan SetTime(int hour, int minute)
+        {
+            return new TimeSpan(hour, minute, 0);
+        }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new object that is a copy of this instance.</returns>
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
+        /// <summary>
+        /// Sets the reading progress of the book based on the format and updates the page read percentage string.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetReadingProgress()
         {
             if (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook)))
@@ -182,12 +261,17 @@ namespace BookCollector.Data.Models
             {
                 this.SetBookListenedTime();
                 await this.SetBookTotalTime();
-                this.Progress = (double)((this.BookTotalTime != null && this.BookTotalTime != 0) ? this.BookListenedTime / (double)this.BookTotalTime : 0);
+                this.Progress = ((this.BookTotalTime != null && this.BookTotalTime != 0) ? this.BookListenedTime / (double)this.BookTotalTime : 0) ?? 0;
             }
 
             this.PageReadPercent = $"{System.Math.Round(this.Progress * 100, 2)}%";
         }
 
+        /// <summary>
+        /// Sets the book checkpoints (half, fourth, three fourth) based on the total pages or total time depending on the book format.
+        /// </summary>
+        /// <param name="showCheckpoints">Show checkpoints.</param>
+        /// <returns>A task.</returns>
         public async Task SetBookCheckpoints(bool showCheckpoints)
         {
             if (showCheckpoints && (this.BookFormat == null || (this.BookFormat != null && !this.BookFormat.Equals(AppStringResources.Audiobook))))
@@ -200,12 +284,16 @@ namespace BookCollector.Data.Models
             if (showCheckpoints && this.BookFormat != null && this.BookFormat!.Equals(AppStringResources.Audiobook))
             {
                 await this.SetBookTotalTime();
-                this.HalfHours = (double)this.BookTotalTime / 2;
-                this.FourthHours = (double)this.BookTotalTime / 4;
+                this.HalfHours = (this.BookTotalTime ?? 0) / 2;
+                this.FourthHours = (this.BookTotalTime ?? 0) / 4;
                 this.ThreeFourthHours = this.HalfHours + this.FourthHours;
             }
         }
 
+        /// <summary>
+        /// Sets the part of series string based on the book's series information, including the series name and book number in the series if available.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetPartOfSeries()
         {
             this.HasSeries = this.BookSeriesGuid != null || !string.IsNullOrEmpty(this.BookSeries);
@@ -252,6 +340,10 @@ namespace BookCollector.Data.Models
             this.PartOfSeries = output;
         }
 
+        /// <summary>
+        /// Sets the part of collection string based on the book's collection information.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetPartOfCollection()
         {
             this.HasCollection = this.BookCollectionGuid != null;
@@ -270,6 +362,10 @@ namespace BookCollector.Data.Models
             this.PartOfCollection = output;
         }
 
+        /// <summary>
+        /// Set the book cover display.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetCoverDisplay()
         {
             this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileName) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
@@ -278,16 +374,20 @@ namespace BookCollector.Data.Models
             BaseViewModel.SetBookCover(this);
         }
 
+        /// <summary>
+        /// Set the author list string for the book.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetAuthorListString()
         {
-            Database ??= new BookCollectorDatabase();
+            database ??= new BookCollectorDatabase();
 
             ObservableCollection<AuthorModel>? authorList = [];
             ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
 
             if (authorGuidList != null && authorGuidList.Count > 0)
             {
-                var list = await Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
+                var list = await database.GetAllAuthorsForBookAsync([.. authorGuidList]);
                 authorList = list.ToObservableCollection();
             }
 
@@ -312,6 +412,12 @@ namespace BookCollector.Data.Models
             }
         }
 
+        /// <summary>
+        /// Sets the author list string for the book and optionally adds the authors to the book's author list.
+        /// </summary>
+        /// <param name="authorList">Author list to parse.</param>
+        /// <param name="addToBookAuthorlist">Add to book author list value.</param>
+        /// <returns>A list of book authors.</returns>
         public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
         {
             var bookAuthorList = new ObservableCollection<BookAuthorModel>();
@@ -330,7 +436,7 @@ namespace BookCollector.Data.Models
                             bookAuthorList.Add(new BookAuthorModel()
                             {
                                 BookGuid = this.BookGuid.Value,
-                                AuthorGuid = authorList[i].AuthorGuid.Value,
+                                AuthorGuid = authorList[i].AuthorGuid!.Value,
                             });
                         }
 
@@ -343,7 +449,7 @@ namespace BookCollector.Data.Models
                     }
                     else
                     {
-                        this.AuthorListString = this.AuthorListString[..(this.AuthorListString.LastIndexOf("; ") - 1)];
+                        this.AuthorListString = this.AuthorListString[.. (this.AuthorListString.LastIndexOf("; ") - 1)];
                     }
                 }
             }
@@ -351,27 +457,39 @@ namespace BookCollector.Data.Models
             return bookAuthorList;
         }
 
+        /// <summary>
+        /// Sets the book chapters for the book by saving each chapter in the provided list to the
+        /// database with the associated book GUID.
+        /// </summary>
+        /// <param name="chaptersList">Chapter list to parse.</param>
+        /// <returns>A task.</returns>
         public async Task SetBookChapters(ObservableCollection<ChapterModel>? chaptersList)
         {
-            Database ??= new BookCollectorDatabase();
+           database ??= new BookCollectorDatabase();
 
-            if (chaptersList != null)
-            {
+           if (chaptersList != null)
+           {
                 foreach (var chapter in chaptersList)
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
                         chapter.BookGuid = (Guid)this.BookGuid;
 
-                        await Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
+                        await database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
-            }
+           }
         }
 
+        /// <summary>
+        /// Removes the book chapters for the book by deleting each chapter in the provided list from
+        /// the database based on the associated book GUID and chapter name.
+        /// </summary>
+        /// <param name="chaptersList">Chapter list to remove.</param>
+        /// <returns>A task.</returns>
         public async Task RemoveBookChapters(List<ChapterModel>? chaptersList)
         {
-            Database ??= new BookCollectorDatabase();
+            database ??= new BookCollectorDatabase();
 
             if (chaptersList != null)
             {
@@ -379,12 +497,15 @@ namespace BookCollector.Data.Models
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
-                        await Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
+                        await database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Set book price, formatted with currency symbol.
+        /// </summary>
         public void SetBookPrice()
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
@@ -399,19 +520,21 @@ namespace BookCollector.Data.Models
             }
         }
 
+        /// <summary>
+        /// Sets the book listened time based on the book format and updates the book listened time property accordingly.
+        /// </summary>
         public void SetBookListenedTime()
         {
             this.BookListenedTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHourListened + ((double)this.BookMinuteListened / 60) : null;
         }
 
+        /// <summary>
+        /// Sets the book total time based on the book format and updates the book total time property accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetBookTotalTime()
         {
             this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
-        }
-
-        public static TimeSpan SetTime(int hour, int minute)
-        {
-            return new TimeSpan(hour, minute, 0);
         }
     }
 }

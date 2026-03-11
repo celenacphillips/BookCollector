@@ -19,13 +19,23 @@ namespace BookCollector.ViewModels.Groupings
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// CollectionsViewModel class.
+    /// </summary>
     public partial class CollectionsViewModel : CollectionBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the total collections string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalCollectionsstring;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectionsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public CollectionsViewModel(ContentPage view)
         {
             this.View = view;
@@ -36,16 +46,36 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden collections or not.
+        /// </summary>
         private bool ShowHiddenCollections { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collection name is checked or not.
+        /// </summary>
         private bool CollectionNameChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not.
+        /// </summary>
         private bool TotalBooksChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not.
+        /// </summary>
         private bool TotalPriceChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full collection list and the show hidden collections preference.
+        /// </summary>
+        /// <param name="showHiddenCollections">Show hidden collection.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenCollections)
         {
             fullCollectionList ??= await FillLists.GetAllCollectionsList();
@@ -60,6 +90,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the collection.
+        /// </summary>
+        /// <param name="showHiddenCollections">Show hidden collection.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenCollections)
         {
             if (!showHiddenCollections)
@@ -84,6 +119,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -144,6 +183,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Search the list based on the collection name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SearchOnCollection(string? input)
         {
@@ -180,6 +224,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected collection object.
+        /// </summary>
+        /// <param name="input">Collection guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuCollection(Guid? input)
         {
@@ -204,6 +253,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -213,6 +266,10 @@ namespace BookCollector.ViewModels.Groupings
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new collection and navigate to the collection edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddCollection()
         {
@@ -225,6 +282,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Navigate to collection edit view for selected collection.
+        /// </summary>
+        /// <param name="selected">Selected collection.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditCollection(CollectionModel selected)
         {
@@ -237,6 +299,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Delete selected collection.
+        /// </summary>
+        /// <param name="selected">Selected collection.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteCollection(CollectionModel selected)
         {
@@ -279,6 +346,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

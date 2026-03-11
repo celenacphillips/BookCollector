@@ -17,33 +17,56 @@ namespace BookCollector.ViewModels.Author
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// AuthorMainViewModel class.
+    /// </summary>
     public partial class AuthorMainViewModel : AuthorBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full book list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? fullBookList;
 
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? filteredBookList1;
 
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public new ObservableCollection<BookModel>? filteredBookList2;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the first filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int totalBooksCount;
 
+        /// <summary>
+        /// Gets or sets the total count of books, based on the second filtered list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int filteredBooksCount;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorMainViewModel"/> class.
+        /// </summary>
+        /// <param name="author">Author to view.</param>
+        /// <param name="view">View related to view model.</param>
         public AuthorMainViewModel(AuthorModel author, ContentPage view)
         {
             this.View = view;
@@ -53,8 +76,16 @@ namespace BookCollector.ViewModels.Author
             this.RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full book list and the show hidden books preference.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A task.</returns>
         public async Task SetList(bool showHiddenBooks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksInAuthorList(this.SelectedAuthor!.AuthorGuid, ShowHiddenBook);
@@ -69,6 +100,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (this.RefreshView && this.SelectedAuthor != null)
@@ -162,6 +197,11 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Search the list based on the book title.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookSearchOnTitle(string? input)
         {
@@ -212,6 +252,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -221,6 +265,10 @@ namespace BookCollector.ViewModels.Author
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new book and navigate to the book edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddNewBook()
         {
@@ -242,6 +290,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Show the existing books view to add an existing book to the author.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddExistingBook()
         {
@@ -253,6 +305,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Show filter popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task FilterPopup()
         {
@@ -295,6 +351,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

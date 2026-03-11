@@ -15,23 +15,41 @@ namespace BookCollector.ViewModels.Book
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// BookMainViewModel class.
+    /// </summary>
     public partial class BookMainViewModel : BookBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the author list.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
+        /// <summary>
+        /// Gets or sets the selected author.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? selectedAuthorList;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show checkpoints or not.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCheckpoints;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookMainViewModel"/> class.
+        /// </summary>
+        /// <param name="book">Book to view.</param>
+        /// <param name="view">View related to view model.</param>
+        /// <param name="previousViewModel">Previous view model to return to.</param>
         public BookMainViewModel(BookModel book, ContentPage view, object? previousViewModel)
         {
             this.View = view;
@@ -41,8 +59,15 @@ namespace BookCollector.ViewModels.Book
             this.PreviousViewModel = previousViewModel;
         }
 
+        /// <summary>
+        /// Gets or sets previous view model to return to after closing the popup or saving the book.
+        /// </summary>
         private object? PreviousViewModel { get; set; }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (this.SelectedBook != null)
@@ -56,7 +81,7 @@ namespace BookCollector.ViewModels.Book
                     var chapters = FillLists.GetAllChaptersInBook(this.SelectedBook.BookGuid);
                     var genre = GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid);
                     var location = GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid);
-                    var authors = FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid, this.HiddenAuthorsOn);
+                    var authors = FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid);
 
                     this.ReadingDataSectionValue = true;
                     this.ChapterListSectionValue = true;
@@ -156,6 +181,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -164,6 +193,10 @@ namespace BookCollector.ViewModels.Book
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Show edit book view with selected book.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditBook()
         {
@@ -179,6 +212,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Delete selected book.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteBook()
         {
@@ -220,6 +257,10 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
+        /// <summary>
+        /// Share book information.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task ShareList()
         {

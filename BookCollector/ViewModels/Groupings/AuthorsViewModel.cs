@@ -19,13 +19,23 @@ namespace BookCollector.ViewModels.Groupings
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// AuthorsViewModel class.
+    /// </summary>
     public partial class AuthorsViewModel : AuthorBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the total authors string.
+        /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalAuthorsstring;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public AuthorsViewModel(ContentPage view)
         {
             this.View = view;
@@ -35,14 +45,31 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden authors or not.
+        /// </summary>
         private bool ShowHiddenAuthors { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not.
+        /// </summary>
         private bool TotalBooksChecked { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not.
+        /// </summary>
         private bool TotalPriceChecked { get; set; }
 
+        /// <summary>
+        /// Set the first filtered list based on the full author list and the show hidden authors preference.
+        /// </summary>
+        /// <param name="showHiddenAuthors">Show hidden authors.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenAuthors)
         {
             fullAuthorList ??= await FillLists.GetAllAuthorsList();
@@ -57,6 +84,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the author.
+        /// </summary>
+        /// <param name="showHiddenAuthors">Show hidden authors.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenAuthors)
         {
             if (!showHiddenAuthors)
@@ -81,6 +113,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -141,6 +177,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Search the list based on the author name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SearchOnAuthor(string? input)
         {
@@ -175,6 +216,11 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected author object.
+        /// </summary>
+        /// <param name="input">Author guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuAuthor(Guid? input)
         {
@@ -199,6 +245,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -208,6 +258,10 @@ namespace BookCollector.ViewModels.Groupings
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Create a new author and navigate to the author edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddAuthor()
         {
@@ -220,6 +274,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Navigate to author edit view for selected author.
+        /// </summary>
+        /// <param name="selected">Selected author.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task EditAuthor(AuthorModel selected)
         {
@@ -232,6 +291,11 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /// <summary>
+        /// Delete selected author.
+        /// </summary>
+        /// <param name="selected">Selected author.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task DeleteAuthor(AuthorModel selected)
         {
@@ -271,6 +335,10 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SortPopup()
         {

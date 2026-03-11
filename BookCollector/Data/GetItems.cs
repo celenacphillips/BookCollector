@@ -7,8 +7,16 @@ namespace BookCollector.Data
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.BaseViewModels;
 
+    /// <summary>
+    /// GetItems class.
+    /// </summary>
     public partial class GetItems : BaseViewModel
     {
+        /// <summary>
+        /// Get genre for book.
+        /// </summary>
+        /// <param name="inputGuid">Genre guid.</param>
+        /// <returns>Selected genre.</returns>
         public static async Task<GenreModel?> GetGenreForBook(Guid? inputGuid)
         {
             GenreModel? genre = null;
@@ -21,6 +29,11 @@ namespace BookCollector.Data
             return genre;
         }
 
+        /// <summary>
+        /// Get location for book.
+        /// </summary>
+        /// <param name="inputGuid">Location guid.</param>
+        /// <returns>Selected location.</returns>
         public static async Task<LocationModel?> GetLocationForBook(Guid? inputGuid)
         {
             LocationModel? location = null;
@@ -33,6 +46,11 @@ namespace BookCollector.Data
             return location;
         }
 
+        /// <summary>
+        /// Get series for book.
+        /// </summary>
+        /// <param name="inputGuid">Series guid.</param>
+        /// <returns>Selected series.</returns>
         public static async Task<SeriesModel?> GetSeriesForBook(Guid? inputGuid)
         {
             SeriesModel? series = null;
@@ -45,6 +63,11 @@ namespace BookCollector.Data
             return series;
         }
 
+        /// <summary>
+        /// Get collection for book.
+        /// </summary>
+        /// <param name="inputGuid">Collection guid.</param>
+        /// <returns>Selected collection.</returns>
         public static async Task<CollectionModel?> GetCollectionForBook(Guid? inputGuid)
         {
             CollectionModel? collection = null;

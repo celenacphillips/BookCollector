@@ -11,14 +11,25 @@ namespace BookCollector.ViewModels.Statistics
     using BookCollector.ViewModels.Main;
     using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// WishListStatisticsViewModel class.
+    /// </summary>
     public partial class WishListStatisticsViewModel : StatisticsBaseViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WishListStatisticsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public WishListStatisticsViewModel(ContentPage view)
         {
             this.View = view;
             this.MaxListNumber = 5;
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             try
@@ -85,6 +96,10 @@ namespace BookCollector.ViewModels.Statistics
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {

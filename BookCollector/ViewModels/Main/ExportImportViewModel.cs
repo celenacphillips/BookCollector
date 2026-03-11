@@ -27,90 +27,223 @@ namespace BookCollector.ViewModels.Main
     using CommunityToolkit.Mvvm.Input;
     using Color = Microsoft.Maui.Graphics.Color;
 
+    /// <summary>
+    /// ExportImportViewModel class.
+    /// </summary>
     public partial class ExportImportViewModel : BaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the start output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? startOutput;
 
+        /// <summary>
+        /// Gets or sets the books output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? booksOutput;
 
+        /// <summary>
+        /// Gets or sets the wishlist output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? wishListOutput;
 
+        /// <summary>
+        /// Gets or sets the collections output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? collectionsOutput;
 
+        /// <summary>
+        /// Gets or sets the genres output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? genresOutput;
 
+        /// <summary>
+        /// Gets or sets the series output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? seriesOutput;
 
+        /// <summary>
+        /// Gets or sets the authors output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? authorsOutput;
 
+        /// <summary>
+        /// Gets or sets the locations output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? locationsOutput;
 
+        /// <summary>
+        /// Gets or sets the chapters output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? chaptersOutput;
 
+        /// <summary>
+        /// Gets or sets the book authors output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? bookAuthorsOutput;
 
+        /// <summary>
+        /// Gets or sets the final output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? finalOutput;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether books is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool booksChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether wishlist is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool wishListChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collections is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool collectionsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether genres is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool genresChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether series is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool seriesChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether authors is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether locations is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool locationsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether chapters is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool chaptersChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether book authors is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookAuthorsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether images is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool imagesChecked;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether checkboxes are visible or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool checkboxesVisible;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether output is visible or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool outputVisible;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether export is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool exportEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether import is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool importEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether refresh is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool refreshEnabled;
 
         private readonly Color? busyColor = Application.Current?.UserAppTheme == AppTheme.Dark ?
@@ -121,6 +254,10 @@ namespace BookCollector.ViewModels.Main
 
         private string imageLocation = string.Empty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportImportViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public ExportImportViewModel(ContentPage view)
         {
             this.View = view;
@@ -128,12 +265,25 @@ namespace BookCollector.ViewModels.Main
             RefreshView = true;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to manually upload book covers or not.
+        /// </summary>
         public static bool ManuallyUploadLibraryCovers { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to manually upload book covers or not.
+        /// </summary>
         public static bool ManuallyUploadWishlistCovers { get; set; }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetViewModelData()
         {
             if (RefreshView)
@@ -161,6 +311,10 @@ namespace BookCollector.ViewModels.Main
             }
         }
 
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Refresh()
         {
@@ -170,6 +324,10 @@ namespace BookCollector.ViewModels.Main
             this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Export data from the device and store it in a spreadsheet workbook.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Export()
         {
@@ -225,7 +383,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = true;
                     this.CheckboxesVisible = false;
 
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -292,6 +450,10 @@ namespace BookCollector.ViewModels.Main
             }
         }
 
+        /// <summary>
+        /// Import data into the device from a spreadsheet workbook.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Import()
         {
@@ -321,25 +483,23 @@ namespace BookCollector.ViewModels.Main
                         {
                             ManuallyUploadLibraryCovers = true;
                             ManuallyUploadWishlistCovers = true;
+
                             // To fix later.
                             // Create a popup for each book that allows the user to select the image. - Done
                             // Display the image title and the book cover for the user to confirm or reselect. - To Do
 #if ANDROID
-                            //var version = (int)Build.VERSION.SdkInt;
-
-                            //if (version >= 33)
-                            //{
+                            // var version = (int)Build.VERSION.SdkInt;
+                            // if (version >= 33)
+                            // {
                             //    await DisplayMessage(AppStringResources.PleaseSelectTheImages, null);
-
                             //    var picker = ServiceHelper.GetService<IAndroidImagePicker>();
                             //    var uris = await picker.PickImagesAsync();
-
                             //    foreach (var uri in uris)
                             //    {
                             //        var info = this.GetImageInfo(uri);
                             //        this.selectedFiles.Add(info);
                             //    }
-                            //}
+                            // }
 #endif
                         }
 
@@ -640,11 +800,27 @@ namespace BookCollector.ViewModels.Main
             ];
         }
 
+        private static string BookCoverFileName(string bookTitle, string format, string extension)
+        {
+            string output = bookTitle.Replace(" ", "_")
+                                     .Replace("<", "_")
+                                     .Replace(">", "_")
+                                     .Replace(":", "_")
+                                     .Replace("\"", "_")
+                                     .Replace("|", "_")
+                                     .Replace("\\", "_")
+                                     .Replace("?", "_")
+                                     .Replace("*", "_")
+                                     .Replace("/", "_");
+
+            return $"{output}-{format}{extension}";
+        }
+
         private async Task ManuallySetBookCover(BookModel book, bool imagesChecked)
         {
             if (imagesChecked && ManuallyUploadLibraryCovers)
             {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle!));
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
                 {
@@ -664,7 +840,7 @@ namespace BookCollector.ViewModels.Main
                             var firstPhoto = photos.First();
                             var bookCoverImageSource = ImageSource.FromFile(firstPhoto.FullPath);
 
-                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle));
+                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle!));
 
                             if (!result.Result)
                             {
@@ -700,7 +876,7 @@ namespace BookCollector.ViewModels.Main
         {
             if (imagesChecked && ManuallyUploadWishlistCovers)
             {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle!));
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
                 {
@@ -832,22 +1008,6 @@ namespace BookCollector.ViewModels.Main
             this.LocationsOutput = AppStringResources.Table_Waiting.Replace("Table", "Locations");
             this.ChaptersOutput = AppStringResources.Table_Waiting.Replace("Table", "Chapters");
             this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
-        }
-
-        private static string BookCoverFileName(string bookTitle, string format, string extension)
-        {
-            string output = bookTitle.Replace(" ", "_")
-                                     .Replace("<", "_")
-                                     .Replace(">", "_")
-                                     .Replace(":", "_")
-                                     .Replace("\"", "_")
-                                     .Replace("|", "_")
-                                     .Replace("\\", "_")
-                                     .Replace("?", "_")
-                                     .Replace("*", "_")
-                                     .Replace("/", "_");
-
-            return $"{output}-{format}{extension}";
         }
 
         /*********************** Table Methods ***********************/
@@ -1021,7 +1181,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1033,7 +1193,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]).Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 BookSeriesGuid = ParseGuid(values[2]),
                                 BookNumberInSeries = values[3],
@@ -1297,7 +1457,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1309,7 +1469,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new WishlistBookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]).Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 AuthorListString = values[2],
                                 BookSeries = values[3],
@@ -1359,7 +1519,7 @@ namespace BookCollector.ViewModels.Main
                             }
 
                             await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
-                            WishListBookEditViewModel.AddToStaticList(book);
+                            await WishListBookEditViewModel.AddToStaticList(book);
 
                             importCount++;
                             this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1480,7 +1640,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1496,7 +1656,7 @@ namespace BookCollector.ViewModels.Main
                                 ChapterName = values[1],
                                 PageRange = values[2],
                                 ChapterOrder = ParseInt(values[3]),
-                                BookGuid = ParseGuid(values[4]).Value,
+                                BookGuid = ParseGuid(values[4]) !.Value,
                             };
 
                             await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
@@ -1618,7 +1778,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1755,7 +1915,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1893,7 +2053,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2031,7 +2191,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2044,8 +2204,8 @@ namespace BookCollector.ViewModels.Main
                             var bookAuthor = new BookAuthorModel()
                             {
                                 BookAuthorGuid = ParseGuid(values[0]),
-                                AuthorGuid = ParseGuid(values[1]).Value,
-                                BookGuid = ParseGuid(values[2]).Value,
+                                AuthorGuid = ParseGuid(values[1]) !.Value,
+                                BookGuid = ParseGuid(values[2]) !.Value,
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);
@@ -2168,7 +2328,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2306,7 +2466,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
