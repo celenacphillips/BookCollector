@@ -22,15 +22,66 @@ namespace BookCollector.ViewModels.Groupings
     /// <summary>
     /// AuthorsViewModel class.
     /// </summary>
-    public partial class AuthorsViewModel : AuthorBaseViewModel
+    public partial class AuthorsViewModel : GroupingBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full author list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<AuthorModel>? fullAuthorList;
+
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<AuthorModel>? hiddenFilteredAuthorList;
+
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<AuthorModel>? filteredAuthorList2;
+
         /// <summary>
         /// Gets or sets the total authors string.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string? totalAuthorsstring;
+        public string? totalAuthorsString;
+
+        /// <summary>
+        /// Gets or sets the total count of authors, based on the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int totalAuthorsCount;
+
+        /// <summary>
+        /// Gets or sets the total count of authors, based on the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int filteredAuthorsCount;
+
+        /// <summary>
+        /// Gets or sets the selected author.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public AuthorModel? selectedAuthor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorsViewModel"/> class.
@@ -46,24 +97,9 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static bool RefreshView { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show hidden authors or not.
         /// </summary>
         private bool ShowHiddenAuthors { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether total books is checked or not.
-        /// </summary>
-        private bool TotalBooksChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether total price is checked or not.
-        /// </summary>
-        private bool TotalPriceChecked { get; set; }
 
         /// <summary>
         /// Set the first filtered list based on the full author list and the show hidden authors preference.
@@ -74,14 +110,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullAuthorList ??= await FillLists.GetAllAuthorsList();
 
-            if (!showHiddenAuthors)
-            {
-                filteredAuthorList1 = new ObservableCollection<AuthorModel>(fullAuthorList!.Where(x => !x.HideAuthor));
-            }
-            else
-            {
-                filteredAuthorList1 = new ObservableCollection<AuthorModel>(fullAuthorList!);
-            }
+            hiddenFilteredAuthorList = BaseViewModel.SetList<AuthorModel>(fullAuthorList!, showHiddenAuthors).ToObservableCollection();
         }
 
         /// <summary>
@@ -101,14 +130,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     books = books?.Where(x => !x.HideBook).ToObservableCollection();
 
-                    if (books != null)
-                    {
-                        foreach (var book in books)
-                        {
-                            book.HideBook = true;
-                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                        }
-                    }
+                    await BaseViewModel.UpdateBooksToHide(books);
                 }
             }
         }
@@ -117,7 +139,7 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -129,11 +151,11 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenAuthors);
 
-                    if (this.FilteredAuthorList1 != null)
+                    if (this.HiddenFilteredAuthorList != null)
                     {
-                        this.FilteredAuthorList2 = this.FilteredAuthorList1;
+                        this.FilteredAuthorList2 = this.HiddenFilteredAuthorList;
 
-                        this.TotalAuthorsCount = this.FilteredAuthorList1 != null ? this.FilteredAuthorList1.Count : 0;
+                        this.TotalAuthorsCount = this.HiddenFilteredAuthorList != null ? this.HiddenFilteredAuthorList.Count : 0;
 
                         await this.SearchOnAuthor(this.SearchString);
 
@@ -150,7 +172,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredAuthorsCount = this.FilteredAuthorList2.Count;
 
-                        this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+                        this.TotalAuthorsString = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
 
@@ -187,20 +209,20 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredAuthorList2 != null && this.FilteredAuthorList1 != null)
+            if (this.FilteredAuthorList2 != null && this.HiddenFilteredAuthorList != null)
             {
                 if (!string.IsNullOrEmpty(this.SearchString))
                 {
-                    this.FilteredAuthorList2 = this.FilteredAuthorList1.Where(x => x.FullName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredAuthorList2 = this.HiddenFilteredAuthorList.Where(x => x.FullName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredAuthorList2 = this.FilteredAuthorList1;
+                    this.FilteredAuthorList2 = this.HiddenFilteredAuthorList;
                 }
 
                 this.FilteredAuthorsCount = this.FilteredAuthorList2 != null ? this.FilteredAuthorList2.Count : 0;
 
-                this.TotalAuthorsstring = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
+                this.TotalAuthorsString = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
 
                 var sortList = SortLists.SortAuthorList(
                                     this.FilteredAuthorList2!,
@@ -246,16 +268,19 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set refreshing values and reset the view model data.
+        /// Changes the view based on the selected author.
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
+        public async Task AuthorSelectionChanged()
         {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
+            if (this.SelectedAuthor != null)
+            {
+                var view = new AuthorMainView(this.SelectedAuthor, this.SelectedAuthor.FullName);
+
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedAuthor = null;
+            }
         }
 
         /// <summary>

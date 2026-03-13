@@ -12,6 +12,7 @@ namespace BookCollector
     using Maui.NullableDateTimePicker;
     using Microcharts.Maui;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// MauiProgram class.

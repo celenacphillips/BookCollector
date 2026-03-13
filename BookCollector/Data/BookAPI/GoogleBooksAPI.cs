@@ -221,5 +221,13 @@ namespace BookCollector.Data.BookAPI
                 return (items, totalItemCount);
             }
         }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
     }
 }

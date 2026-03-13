@@ -9,10 +9,12 @@ namespace BookCollector.ViewModels.Series
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
     using BookCollector.Views.Groupings;
     using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -20,7 +22,7 @@ namespace BookCollector.ViewModels.Series
     /// <summary>
     /// SeriesMainViewModel class.
     /// </summary>
-    public partial class SeriesMainViewModel : SeriesBaseViewModel
+    public partial class SeriesMainViewModel : SeriesViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.
@@ -36,7 +38,7 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<BookModel>? filteredBookList1;
+        public ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -76,23 +78,19 @@ namespace BookCollector.ViewModels.Series
         /// <param name="series">Series to view.</param>
         /// <param name="view">View related to view model.</param>
         public SeriesMainViewModel(SeriesModel series, ContentPage view)
+            : base(view)
         {
             this.View = view;
             this.SelectedSeries = series;
             this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
         /// Gets or sets the book author option.
         /// </summary>
         public string? BookAuthorOption { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the series or is checked or not.
@@ -104,27 +102,20 @@ namespace BookCollector.ViewModels.Series
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
         /// <returns>A task.</returns>
-        public async Task SetList(bool showHiddenBooks)
+        public async new Task SetList(bool showHiddenBooks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksInSeriesList(this.SelectedSeries?.SeriesGuid, ShowHiddenBook);
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
-            if (this.RefreshView && this.SelectedSeries != null)
+            if (RefreshView && this.SelectedSeries != null)
             {
                 try
                 {
@@ -134,19 +125,19 @@ namespace BookCollector.ViewModels.Series
 
                     await this.SetList(ShowHiddenBook);
 
-                    if (this.FilteredBookList1 != null)
+                    if (this.HiddenFilteredBookList != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1.Count;
+                        this.TotalBooksCount = this.HiddenFilteredBookList.Count;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetCoverDisplay()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetCoverDisplay()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.HiddenFilteredBookList);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.HiddenFilteredBookList);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.HiddenFilteredBookList);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.HiddenFilteredBookList);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -201,7 +192,7 @@ namespace BookCollector.ViewModels.Series
                     }
 
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
                 catch (Exception ex)
                 {
@@ -213,7 +204,7 @@ namespace BookCollector.ViewModels.Series
                     await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
             }
         }
@@ -228,16 +219,16 @@ namespace BookCollector.ViewModels.Series
         {
             this.SearchString = input;
 
-            if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
+            if (this.FilteredBookList2 != null && this.HiddenFilteredBookList != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.FilteredBookList1, input);
+                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.HiddenFilteredBookList, input);
                 }
                 else
                 {
                     this.FilteredBookList2 = await FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -271,19 +262,6 @@ namespace BookCollector.ViewModels.Series
 
                 this.FilteredBookList2 = sortList.Result;
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            this.RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>
@@ -368,7 +346,7 @@ namespace BookCollector.ViewModels.Series
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    this.RefreshView = true;
+                    RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -378,8 +356,7 @@ namespace BookCollector.ViewModels.Series
         /// Show sort popup.
         /// </summary>
         /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task SortPopup()
+        public async new Task SortPopup()
         {
             if (!string.IsNullOrEmpty(this.ViewTitle))
             {
@@ -415,7 +392,7 @@ namespace BookCollector.ViewModels.Series
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    this.RefreshView = true;
+                    RefreshView = true;
                     await this.SetViewModelData();
                 }
             }

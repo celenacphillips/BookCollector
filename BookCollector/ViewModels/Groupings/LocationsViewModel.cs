@@ -22,15 +22,58 @@ namespace BookCollector.ViewModels.Groupings
     /// <summary>
     /// LocationsViewModel class.
     /// </summary>
-    public partial class LocationsViewModel : LocationBaseViewModel
+    public partial class LocationsViewModel : GroupingBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full location list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<LocationModel>? fullLocationList;
+
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<LocationModel>? hiddenFilteredLocationList;
+
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<LocationModel>? filteredLocationList2;
+
         /// <summary>
         /// Gets or sets the total locations string.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string? totalLocationsstring;
+        public string? totalLocationsString;
+
+        /// <summary>
+        /// Gets or sets the total count of locations, based on the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int totalLocationsCount;
+
+        /// <summary>
+        /// Gets or sets the total count of locations, based on the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int filteredLocationsCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationsViewModel"/> class.
@@ -48,7 +91,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static bool RefreshView { get; set; }
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden locations or not.
@@ -61,16 +104,6 @@ namespace BookCollector.ViewModels.Groupings
         private bool LocationNameChecked { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether total books is checked or not.
-        /// </summary>
-        private bool TotalBooksChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether total price is checked or not.
-        /// </summary>
-        private bool TotalPriceChecked { get; set; }
-
-        /// <summary>
         /// Set the first filtered list based on the full location list and the show hidden locations preference.
         /// </summary>
         /// <param name="showHiddenLocations">Show hidden locations.</param>
@@ -79,14 +112,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullLocationList ??= await FillLists.GetAllLocationsList();
 
-            if (!showHiddenLocations)
-            {
-                filteredLocationList1 = new ObservableCollection<LocationModel>(fullLocationList!.Where(x => !x.HideLocation));
-            }
-            else
-            {
-                filteredLocationList1 = new ObservableCollection<LocationModel>(fullLocationList!);
-            }
+            hiddenFilteredLocationList = BaseViewModel.SetList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
         }
 
         /// <summary>
@@ -102,18 +128,11 @@ namespace BookCollector.ViewModels.Groupings
 
                 foreach (var item in hideList)
                 {
-                    var books = AllBooksViewModel.filteredBookList1?
+                    var books = AllBooksViewModel.hiddenFilteredBookList?
                         .Where(x => x.BookLocationGuid == item.LocationGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    if (books != null)
-                    {
-                        foreach (var book in books)
-                        {
-                            book.HideBook = true;
-                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                        }
-                    }
+                    await BaseViewModel.UpdateBooksToHide(books);
                 }
             }
         }
@@ -122,7 +141,7 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -134,11 +153,11 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenLocations);
 
-                    if (this.FilteredLocationList1 != null)
+                    if (this.HiddenFilteredLocationList != null)
                     {
-                        this.FilteredLocationList2 = this.FilteredLocationList1;
+                        this.FilteredLocationList2 = this.HiddenFilteredLocationList;
 
-                        this.TotalLocationsCount = this.FilteredLocationList1.Count;
+                        this.TotalLocationsCount = this.HiddenFilteredLocationList.Count;
 
                         await this.SearchOnLocation(this.SearchString);
 
@@ -155,7 +174,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredLocationsCount = this.FilteredLocationList2.Count;
 
-                        this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
+                        this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
 
@@ -192,20 +211,20 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredLocationList2 != null && this.FilteredLocationList1 != null)
+            if (this.FilteredLocationList2 != null && this.HiddenFilteredLocationList != null)
             {
                 if (!string.IsNullOrEmpty(this.SearchString))
                 {
-                    this.FilteredLocationList2 = this.FilteredLocationList1.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredLocationList2 = this.HiddenFilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredLocationList2 = this.FilteredLocationList1;
+                    this.FilteredLocationList2 = this.HiddenFilteredLocationList;
                 }
 
                 this.FilteredLocationsCount = this.FilteredLocationList2 != null ? this.FilteredLocationList2.Count : 0;
 
-                this.TotalLocationsstring = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
+                this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                 var sortList = SortLists.SortLocationsList(
                                     this.FilteredLocationList2!,
@@ -251,16 +270,19 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set refreshing values and reset the view model data.
+        /// Changes the view based on the selected location.
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
+        public async Task LocationSelectionChanged()
         {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
+            if (this.SelectedLocation != null && !string.IsNullOrEmpty(this.SelectedLocation.LocationName))
+            {
+                var view = new LocationMainView(this.SelectedLocation, this.SelectedLocation.LocationName);
+
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedLocation = null;
+            }
         }
 
         /// <summary>

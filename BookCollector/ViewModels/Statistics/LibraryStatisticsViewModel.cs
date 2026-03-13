@@ -89,7 +89,7 @@ namespace BookCollector.ViewModels.Statistics
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -107,47 +107,47 @@ namespace BookCollector.ViewModels.Statistics
                 List<Task> taskList = [];
                 List<Task<int>> dataTasks = [];
 
-                if (ToBeReadViewModel.filteredBookList1 == null || ToBeReadViewModel.RefreshView)
+                if (ToBeReadViewModel.hiddenFilteredBookList == null || ToBeReadViewModel.RefreshView)
                 {
                     taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadViewModel.filteredBookList1 == null || ReadViewModel.RefreshView)
+                if (ReadViewModel.hiddenFilteredBookList == null || ReadViewModel.RefreshView)
                 {
                     taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadingViewModel.filteredBookList1 == null || ReadingViewModel.RefreshView)
+                if (ReadingViewModel.hiddenFilteredBookList == null || ReadingViewModel.RefreshView)
                 {
                     taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (CollectionsViewModel.filteredCollectionList1 == null || CollectionsViewModel.RefreshView)
+                if (CollectionsViewModel.hiddenFilteredCollectionList == null || CollectionsViewModel.RefreshView)
                 {
                     taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
                 }
 
-                if (GenresViewModel.filteredGenreList1 == null || GenresViewModel.RefreshView)
+                if (GenresViewModel.hiddenFilteredGenreList == null || GenresViewModel.RefreshView)
                 {
                     taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
                 }
 
-                if (SeriesViewModel.filteredSeriesList1 == null || SeriesViewModel.RefreshView)
+                if (SeriesViewModel.hiddenFilteredSeriesList == null || SeriesViewModel.RefreshView)
                 {
                     taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
                 }
 
-                if (AuthorsViewModel.filteredAuthorList1 == null || AuthorsViewModel.RefreshView)
+                if (AuthorsViewModel.hiddenFilteredAuthorList == null || AuthorsViewModel.RefreshView)
                 {
                     taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
                 }
 
-                if (LocationsViewModel.filteredLocationList1 == null || LocationsViewModel.RefreshView)
+                if (LocationsViewModel.hiddenFilteredLocationList == null || LocationsViewModel.RefreshView)
                 {
                     taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
                 }
 
-                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
+                if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }
@@ -215,10 +215,10 @@ namespace BookCollector.ViewModels.Statistics
                 await Task.WhenAll(dataTasks);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = AllBooksViewModel.filteredBookList1!.Count;
-                var toBeRead = ToBeReadViewModel.filteredBookList1!.Count;
-                var reading = ReadingViewModel.filteredBookList1!.Count;
-                var read = ReadViewModel.filteredBookList1!.Count;
+                this.TotalBooks = AllBooksViewModel.hiddenFilteredBookList!.Count;
+                var toBeRead = ToBeReadViewModel.hiddenFilteredBookList!.Count;
+                var reading = ReadingViewModel.hiddenFilteredBookList!.Count;
+                var read = ReadViewModel.hiddenFilteredBookList!.Count;
                 var favorite = favoriteCount != null ? favoriteCount.Result : 0;
                 var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
                 var zero = zeroCount != null ? zeroCount.Result : 0;
@@ -259,18 +259,6 @@ namespace BookCollector.ViewModels.Statistics
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /*********************** Reading Status Methods ***********************/

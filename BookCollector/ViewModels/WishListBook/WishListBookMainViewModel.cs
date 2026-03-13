@@ -57,7 +57,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (this.SelectedWishlistBook != null)
             {
@@ -144,18 +144,6 @@ namespace BookCollector.ViewModels.WishListBook
                     this.SetIsBusyFalse();
                 }
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

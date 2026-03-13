@@ -13,6 +13,7 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -36,7 +37,7 @@ namespace BookCollector.ViewModels.Groupings
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<BookModel>? filteredBookList1;
+        public ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -86,18 +87,13 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = this.DeviceHeight;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
         /// Gets or sets the book author option.
         /// </summary>
         public string? BookAuthorOption { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets the selected grouping object.
@@ -128,14 +124,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
@@ -147,14 +136,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
@@ -166,14 +148,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
@@ -190,14 +165,7 @@ namespace BookCollector.ViewModels.Groupings
                 this.FullBookList = await FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, ShowHiddenBook);
             }
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
@@ -209,23 +177,16 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
-            if (!showHiddenBooks)
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                this.FilteredBookList1 = new ObservableCollection<BookModel>(this.FullBookList!);
-            }
+            this.HiddenFilteredBookList = BaseViewModel.SetList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
-            if (this.RefreshView)
+            if (RefreshView)
             {
                 try
                 {
@@ -259,20 +220,20 @@ namespace BookCollector.ViewModels.Groupings
                             break;
                     }
 
-                    if (this.FilteredBookList1 != null)
+                    if (this.HiddenFilteredBookList != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1.Count;
-                        this.FilteredBookList2 = this.FilteredBookList1;
+                        this.TotalBooksCount = this.HiddenFilteredBookList.Count;
+                        this.FilteredBookList2 = this.HiddenFilteredBookList;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetCoverDisplay()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetCoverDisplay()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.HiddenFilteredBookList);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.HiddenFilteredBookList);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.HiddenFilteredBookList);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.HiddenFilteredBookList);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -287,7 +248,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredBookList2 = filteredList.Result;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetReadingProgress()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetReadingProgress()));
 
                         var sortList = SortLists.SortBookList(
                                     this.FilteredBookList2,
@@ -322,7 +283,7 @@ namespace BookCollector.ViewModels.Groupings
                     }
 
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
                 catch (Exception ex)
                 {
@@ -334,7 +295,7 @@ namespace BookCollector.ViewModels.Groupings
                     await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
             }
         }
@@ -349,10 +310,10 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
+            if (this.FilteredBookList2 != null && this.HiddenFilteredBookList != null)
             {
                 this.FilteredBookList2 = await FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -385,19 +346,6 @@ namespace BookCollector.ViewModels.Groupings
 
                 this.FilteredBookList2 = sortList.Result;
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            this.RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>
@@ -468,7 +416,7 @@ namespace BookCollector.ViewModels.Groupings
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    this.RefreshView = true;
+                    RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -513,7 +461,7 @@ namespace BookCollector.ViewModels.Groupings
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    this.RefreshView = true;
+                    RefreshView = true;
                     await this.SetViewModelData();
                 }
             }
@@ -689,7 +637,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (this.FullBookList != null)
             {
-                this.RefreshView = RemoveBookFromStaticList(book, this.FullBookList, this.FilteredBookList2);
+                RefreshView = RemoveBookFromStaticList(book, this.FullBookList, this.FilteredBookList2);
             }
         }
     }

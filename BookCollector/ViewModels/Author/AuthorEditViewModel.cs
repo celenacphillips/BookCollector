@@ -17,7 +17,7 @@ namespace BookCollector.ViewModels.Author
     /// <summary>
     /// AuthorEditViewModel class.
     /// </summary>
-    public partial class AuthorEditViewModel : AuthorBaseViewModel
+    public partial class AuthorEditViewModel : AuthorsViewModel
     {
         /// <summary>
         /// Gets or sets the author to edit.
@@ -49,6 +49,7 @@ namespace BookCollector.ViewModels.Author
         /// <param name="author">Author to edit.</param>
         /// <param name="view">View related to view model.</param>
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
@@ -77,7 +78,7 @@ namespace BookCollector.ViewModels.Author
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -145,18 +146,6 @@ namespace BookCollector.ViewModels.Author
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

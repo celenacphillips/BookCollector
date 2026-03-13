@@ -8,8 +8,11 @@ namespace BookCollector.ViewModels.BaseViewModels
     using Android.OS;
     using AndroidX.Core.View;
 #endif
+    using System.Collections;
+    using System.Collections.ObjectModel;
     using BookCollector.CustomPermissions;
     using BookCollector.Data.Database;
+    using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Groupings;
@@ -24,7 +27,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     /// <summary>
     /// BaseViewModel class.
     /// </summary>
-    public partial class BaseViewModel : ObservableObject
+    public abstract partial class BaseViewModel : ObservableObject
     {
         /// <summary>
         /// Gets or sets a value indicating whether the view is refreshing or not.
@@ -117,6 +120,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static bool RefreshView { get; set; }
+
+        /// <summary>
         /// Gets or sets the device height.
         /// </summary>
         public double DeviceHeight { get; set; }
@@ -192,6 +200,80 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             return destination;
+        }
+
+        /// <summary>
+        /// Set the hidden items list based on the full list and the show hidden preference.
+        /// </summary>
+        /// <param name="source">Full list to filter.</param>
+        /// <param name="showHidden">Show hidden.</param>
+        /// <typeparam name="T">Object to convert to.</typeparam>
+        /// <returns>A list filtered based on the hidden parameter.</returns>
+        public static List<T> SetList<T>(object source, bool showHidden)
+            where T : new()
+        {
+            var destination = new List<T>();
+            if (source != null)
+            {
+                var listType = source.GetType();
+                var elementType = listType.GetGenericArguments()[0];
+
+                var sourceProps = elementType.GetProperties();
+                var destProps = typeof(T).GetProperties();
+
+                var hideProp = elementType
+                        .GetProperties()
+                        .FirstOrDefault(p => p.Name.StartsWith("Hide", StringComparison.OrdinalIgnoreCase)
+                                             && p.PropertyType == typeof(bool));
+
+                foreach (var item in (IEnumerable)source)
+                {
+                    if (!showHidden && hideProp != null)
+                    {
+                        var isHidden = (bool)(hideProp.GetValue(item) ?? false);
+                        if (isHidden)
+                        {
+                            continue; // skip hidden items
+                        }
+                    }
+
+                    var dest = new T();
+
+                    foreach (var sourceProp in sourceProps)
+                    {
+                        var destProp = destProps.FirstOrDefault(p =>
+                            p.Name == sourceProp.Name &&
+                            p.PropertyType == sourceProp.PropertyType);
+
+                        if (destProp != null && destProp.SetMethod != null)
+                        {
+                            var value = sourceProp.GetValue(item);
+                            destProp.SetValue(dest, value);
+                        }
+                    }
+
+                    destination.Add(dest);
+                }
+            }
+
+            return destination;
+        }
+
+        /// <summary>
+        /// Update books in list to hide.
+        /// </summary>
+        /// <param name="books">Books to hide.</param>
+        /// <returns>A task.</returns>
+        public static async Task UpdateBooksToHide(ObservableCollection<BookModel>? books)
+        {
+            if (books != null)
+            {
+                foreach (var book in books)
+                {
+                    book.HideBook = true;
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                }
+            }
         }
 
         /// <summary>
@@ -331,47 +413,47 @@ namespace BookCollector.ViewModels.BaseViewModels
         public static void ClearAllLists()
         {
             ReadingViewModel.fullBookList?.Clear();
-            ReadingViewModel.filteredBookList1?.Clear();
+            ReadingViewModel.hiddenFilteredBookList?.Clear();
             ReadingViewModel.filteredBookList2?.Clear();
             ReadingViewModel.RefreshView = true;
 
             ToBeReadViewModel.fullBookList?.Clear();
-            ToBeReadViewModel.filteredBookList1?.Clear();
+            ToBeReadViewModel.hiddenFilteredBookList?.Clear();
             ToBeReadViewModel.filteredBookList2?.Clear();
             ToBeReadViewModel.RefreshView = true;
 
             ReadViewModel.fullBookList?.Clear();
-            ReadViewModel.filteredBookList1?.Clear();
+            ReadViewModel.hiddenFilteredBookList?.Clear();
             ReadViewModel.filteredBookList2?.Clear();
             ReadViewModel.RefreshView = true;
 
             AllBooksViewModel.fullBookList?.Clear();
-            AllBooksViewModel.filteredBookList1?.Clear();
+            AllBooksViewModel.hiddenFilteredBookList?.Clear();
             AllBooksViewModel.filteredBookList2?.Clear();
             AllBooksViewModel.RefreshView = true;
 
             CollectionsViewModel.fullCollectionList?.Clear();
-            CollectionsViewModel.filteredCollectionList1?.Clear();
+            CollectionsViewModel.hiddenFilteredCollectionList?.Clear();
             CollectionsViewModel.filteredCollectionList2?.Clear();
             CollectionsViewModel.RefreshView = true;
 
             GenresViewModel.fullGenreList?.Clear();
-            GenresViewModel.filteredGenreList1?.Clear();
+            GenresViewModel.hiddenFilteredGenreList?.Clear();
             GenresViewModel.filteredGenreList2?.Clear();
             GenresViewModel.RefreshView = true;
 
             SeriesViewModel.fullSeriesList?.Clear();
-            SeriesViewModel.filteredSeriesList1?.Clear();
+            SeriesViewModel.hiddenFilteredSeriesList?.Clear();
             SeriesViewModel.filteredSeriesList2?.Clear();
             SeriesViewModel.RefreshView = true;
 
             AuthorsViewModel.fullAuthorList?.Clear();
-            AuthorsViewModel.filteredAuthorList1?.Clear();
+            AuthorsViewModel.hiddenFilteredAuthorList?.Clear();
             AuthorsViewModel.filteredAuthorList2?.Clear();
             AuthorsViewModel.RefreshView = true;
 
             LocationsViewModel.fullLocationList?.Clear();
-            LocationsViewModel.filteredLocationList1?.Clear();
+            LocationsViewModel.hiddenFilteredLocationList?.Clear();
             LocationsViewModel.filteredLocationList2?.Clear();
             LocationsViewModel.RefreshView = true;
 
@@ -439,6 +521,25 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             return usableHeight;
         }
+
+        /// <summary>
+        /// Set refreshing values and reset the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            this.SetRefreshTrue();
+            RefreshView = true;
+            await this.SetViewModelData();
+            this.SetRefreshFalse();
+        }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetViewModelData();
 
         /// <summary>
         /// Show popup to edit or delete object.

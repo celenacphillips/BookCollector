@@ -17,7 +17,7 @@ namespace BookCollector.ViewModels.Location
     /// <summary>
     /// LocationEditViewModel class.
     /// </summary>
-    public partial class LocationEditViewModel : LocationBaseViewModel
+    public partial class LocationEditViewModel : LocationsViewModel
     {
         /// <summary>
         /// Gets or sets the location to edit.
@@ -41,6 +41,7 @@ namespace BookCollector.ViewModels.Location
         /// <param name="location">Location to edit.</param>
         /// <param name="view">View related to view model.</param>
         public LocationEditViewModel(LocationModel location, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
@@ -69,7 +70,7 @@ namespace BookCollector.ViewModels.Location
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -133,18 +134,6 @@ namespace BookCollector.ViewModels.Location
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

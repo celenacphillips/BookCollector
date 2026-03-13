@@ -17,7 +17,7 @@ namespace BookCollector.ViewModels.Genre
     /// <summary>
     /// GenreEditViewModel class.
     /// </summary>
-    public partial class GenreEditViewModel : GenreBaseViewModel
+    public partial class GenreEditViewModel : GenresViewModel
     {
         /// <summary>
         /// Gets or sets the genre to edit.
@@ -41,6 +41,7 @@ namespace BookCollector.ViewModels.Genre
         /// <param name="genre">Genre to edit.</param>
         /// <param name="view">View related to view model.</param>
         public GenreEditViewModel(GenreModel genre, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
@@ -69,7 +70,7 @@ namespace BookCollector.ViewModels.Genre
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -133,18 +134,6 @@ namespace BookCollector.ViewModels.Genre
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

@@ -172,6 +172,14 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
+        /// <summary>
         /// Creates the entries for the charts and sets up the pie chart with the given values and section name.
         /// </summary>
         /// <param name="chartValues">Chart values to display.</param>

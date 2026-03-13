@@ -17,7 +17,7 @@ namespace BookCollector.ViewModels.Collection
     /// <summary>
     /// CollectionEditViewModel class.
     /// </summary>
-    public partial class CollectionEditViewModel : CollectionBaseViewModel
+    public partial class CollectionEditViewModel : CollectionsViewModel
     {
         /// <summary>
         /// Gets or sets the collection to edit.
@@ -41,6 +41,7 @@ namespace BookCollector.ViewModels.Collection
         /// <param name="collection">Collection to edit.</param>
         /// <param name="view">View related to view model.</param>
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
@@ -69,7 +70,7 @@ namespace BookCollector.ViewModels.Collection
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -125,7 +126,7 @@ namespace BookCollector.ViewModels.Collection
             catch (Exception ex)
             {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
@@ -133,18 +134,6 @@ namespace BookCollector.ViewModels.Collection
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

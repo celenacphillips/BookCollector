@@ -293,6 +293,14 @@ namespace BookCollector.Data.Spreadsheet
             return (spreadsheetValues, $"Import successful for {sheetName}.");
         }
 
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
         // Given a WorkbookPart, inserts a new worksheet.
         private static WorksheetPart InsertWorksheet(WorkbookPart workbookPart, string sheetName)
         {

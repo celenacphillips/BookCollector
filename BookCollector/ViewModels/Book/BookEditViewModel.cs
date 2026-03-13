@@ -222,7 +222,7 @@ namespace BookCollector.ViewModels.Book
             this.PreviousViewModel = previousViewModel;
             this.SelectedBookFormat = this.EditedBook.BookFormat ?? AppStringResources.SelectABookFormat;
             this.PopupWidth = this.DeviceWidth - 50;
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -239,11 +239,6 @@ namespace BookCollector.ViewModels.Book
         /// Gets or sets the popup width.
         /// </summary>
         public double PopupWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden collections or not.
@@ -285,11 +280,11 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task AddSeries()
+        public static async Task AddSeries()
         {
             var view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
             await Shell.Current.Navigation.PushAsync(view);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -297,11 +292,11 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task AddCollection()
+        public static async Task AddCollection()
         {
             var view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
             await Shell.Current.Navigation.PushAsync(view);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -309,11 +304,11 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task AddGenre()
+        public static async Task AddGenre()
         {
             var view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
             await Shell.Current.Navigation.PushAsync(view);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -321,11 +316,11 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task AddLocation()
+        public static async Task AddLocation()
         {
             var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
             await Shell.Current.Navigation.PushAsync(view);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -333,20 +328,20 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task AddNewAuthor()
+        public static async Task AddNewAuthor()
         {
             var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
             await Shell.Current.Navigation.PushAsync(view);
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
-            if (this.RefreshView)
+            if (RefreshView)
             {
                 try
                 {
@@ -444,11 +439,11 @@ namespace BookCollector.ViewModels.Book
                     await Task.WhenAll(chapters, series, collections, genres, locations, authors, bookAuthorList);
 
                     this.ChapterList = chapters.Result;
-                    this.SeriesList = SeriesViewModel.filteredSeriesList1;
-                    this.CollectionList = CollectionsViewModel.filteredCollectionList1;
-                    this.GenreList = GenresViewModel.filteredGenreList1;
-                    this.LocationList = LocationsViewModel.filteredLocationList1;
-                    this.AuthorList = AuthorsViewModel.filteredAuthorList1;
+                    this.SeriesList = SeriesViewModel.hiddenFilteredSeriesList;
+                    this.CollectionList = CollectionsViewModel.hiddenFilteredCollectionList;
+                    this.GenreList = GenresViewModel.hiddenFilteredGenreList;
+                    this.LocationList = LocationsViewModel.hiddenFilteredLocationList;
+                    this.AuthorList = AuthorsViewModel.hiddenFilteredAuthorList;
                     var bookAuthors = bookAuthorList.Result;
 
                     this.AuthorPickers ??= [];
@@ -535,34 +530,21 @@ namespace BookCollector.ViewModels.Book
                     this.EditedBook.ListenTimeString = $"{this.EditedBook.BookHourListened:0}:{this.EditedBook.BookMinuteListened:00}";
 
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
                     await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            this.RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

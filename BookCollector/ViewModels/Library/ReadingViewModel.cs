@@ -11,6 +11,7 @@ namespace BookCollector.ViewModels.Library
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -36,7 +37,7 @@ namespace BookCollector.ViewModels.Library
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static ObservableCollection<BookModel>? filteredBookList1;
+        public static ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -89,7 +90,7 @@ namespace BookCollector.ViewModels.Library
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static bool RefreshView { get; set; }
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets the saved book author filter option.
@@ -105,21 +106,14 @@ namespace BookCollector.ViewModels.Library
         {
             fullBookList ??= await FillLists.GetReadingBooksList();
 
-            if (!showHiddenBooks)
-            {
-                filteredBookList1 = new ObservableCollection<BookModel>(fullBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                filteredBookList1 = new ObservableCollection<BookModel>(fullBookList!);
-            }
+            hiddenFilteredBookList = BaseViewModel.SetList<BookModel>(fullBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -131,19 +125,19 @@ namespace BookCollector.ViewModels.Library
 
                     await SetList(ShowHiddenBook);
 
-                    if (this.FilteredBookList1 != null)
+                    if (this.HiddenFilteredBookList != null)
                     {
-                        this.TotalBooksCount = this.FilteredBookList1.Count;
+                        this.TotalBooksCount = this.HiddenFilteredBookList.Count;
 
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetAuthorListString()));
-                        await Task.WhenAll(this.FilteredBookList1.Select(x => x.SetCoverDisplay()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetAuthorListString()));
+                        await Task.WhenAll(this.HiddenFilteredBookList.Select(x => x.SetCoverDisplay()));
 
-                        var authors = FillLists.GetAllAuthorsInBookList(this.FilteredBookList1);
-                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.FilteredBookList1);
-                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.FilteredBookList1);
-                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.FilteredBookList1);
+                        var authors = FillLists.GetAllAuthorsInBookList(this.HiddenFilteredBookList);
+                        var bookPublishers = FillLists.GetAllPublishersInBookList(this.HiddenFilteredBookList);
+                        var bookLanguages = FillLists.GetAllLanguagesInBookList(this.HiddenFilteredBookList);
+                        var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.HiddenFilteredBookList);
                         var filteredList = FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -224,16 +218,16 @@ namespace BookCollector.ViewModels.Library
         {
             this.SearchString = input;
 
-            if (this.FilteredBookList2 != null && this.FilteredBookList1 != null)
+            if (this.FilteredBookList2 != null && this.HiddenFilteredBookList != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.FilteredBookList1, input);
+                    this.FilteredBookList2 = FilterLists.FilterOnSearchString(this.HiddenFilteredBookList, input);
                 }
                 else
                 {
                     this.FilteredBookList2 = await FilterLists.FilterBookList(
-                                this.FilteredBookList1,
+                                this.HiddenFilteredBookList,
                                 this.FavoriteBooksOption,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -267,19 +261,6 @@ namespace BookCollector.ViewModels.Library
 
                 this.FilteredBookList2 = sortList.Result;
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

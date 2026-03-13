@@ -79,5 +79,13 @@ namespace BookCollector.Data
 
             return collection;
         }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
     }
 }

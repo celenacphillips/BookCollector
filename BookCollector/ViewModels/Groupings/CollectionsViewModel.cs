@@ -22,15 +22,66 @@ namespace BookCollector.ViewModels.Groupings
     /// <summary>
     /// CollectionsViewModel class.
     /// </summary>
-    public partial class CollectionsViewModel : CollectionBaseViewModel
+    public partial class CollectionsViewModel : GroupingBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full collection list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<CollectionModel>? fullCollectionList;
+
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<CollectionModel>? hiddenFilteredCollectionList;
+
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<CollectionModel>? filteredCollectionList2;
+
         /// <summary>
         /// Gets or sets the total collections string.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string? totalCollectionsstring;
+        public string? totalCollectionsString;
+
+        /// <summary>
+        /// Gets or sets the total count of collections, based on the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int totalCollectionsCount;
+
+        /// <summary>
+        /// Gets or sets the total count of collections, based on the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int filteredCollectionsCount;
+
+        /// <summary>
+        /// Gets or sets the selected collection.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public CollectionModel? selectedCollection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionsViewModel"/> class.
@@ -49,7 +100,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static bool RefreshView { get; set; }
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden collections or not.
@@ -62,16 +113,6 @@ namespace BookCollector.ViewModels.Groupings
         private bool CollectionNameChecked { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether total books is checked or not.
-        /// </summary>
-        private bool TotalBooksChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether total price is checked or not.
-        /// </summary>
-        private bool TotalPriceChecked { get; set; }
-
-        /// <summary>
         /// Set the first filtered list based on the full collection list and the show hidden collections preference.
         /// </summary>
         /// <param name="showHiddenCollections">Show hidden collection.</param>
@@ -80,14 +121,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullCollectionList ??= await FillLists.GetAllCollectionsList();
 
-            if (!showHiddenCollections)
-            {
-                filteredCollectionList1 = new ObservableCollection<CollectionModel>(fullCollectionList!.Where(x => !x.HideCollection));
-            }
-            else
-            {
-                filteredCollectionList1 = new ObservableCollection<CollectionModel>(fullCollectionList!);
-            }
+            hiddenFilteredCollectionList = BaseViewModel.SetList<CollectionModel>(fullCollectionList!, showHiddenCollections).ToObservableCollection();
         }
 
         /// <summary>
@@ -103,18 +137,11 @@ namespace BookCollector.ViewModels.Groupings
 
                 foreach (var item in hideList)
                 {
-                    var books = AllBooksViewModel.filteredBookList1?
+                    var books = AllBooksViewModel.hiddenFilteredBookList?
                         .Where(x => x.BookCollectionGuid == item.CollectionGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    if (books != null)
-                    {
-                        foreach (var book in books)
-                        {
-                            book.HideBook = true;
-                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                        }
-                    }
+                    await BaseViewModel.UpdateBooksToHide(books);
                 }
             }
         }
@@ -123,7 +150,7 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -135,11 +162,11 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenCollections);
 
-                    if (this.FilteredCollectionList1 != null)
+                    if (this.HiddenFilteredCollectionList != null)
                     {
-                        this.FilteredCollectionList2 = this.FilteredCollectionList1;
+                        this.FilteredCollectionList2 = this.HiddenFilteredCollectionList;
 
-                        this.TotalCollectionsCount = this.FilteredCollectionList1 != null ? this.FilteredCollectionList1.Count : 0;
+                        this.TotalCollectionsCount = this.HiddenFilteredCollectionList != null ? this.HiddenFilteredCollectionList.Count : 0;
 
                         await this.SearchOnCollection(this.SearchString);
 
@@ -156,7 +183,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredCollectionsCount = this.FilteredCollectionList2.Count;
 
-                        this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+                        this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
                         this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
 
@@ -193,22 +220,22 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredCollectionList2 != null && this.FilteredCollectionList1 != null)
+            if (this.FilteredCollectionList2 != null && this.HiddenFilteredCollectionList != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredCollectionList2 = this.FilteredCollectionList1
+                    this.FilteredCollectionList2 = this.HiddenFilteredCollectionList
                         .Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(input.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase))
                         .ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredCollectionList2 = this.FilteredCollectionList1;
+                    this.FilteredCollectionList2 = this.HiddenFilteredCollectionList;
                 }
 
                 this.FilteredCollectionsCount = this.FilteredCollectionList2 != null ? this.FilteredCollectionList2.Count : 0;
 
-                this.TotalCollectionsstring = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+                this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
                 var sortList = SortLists.SortCollectionsList(
                                     this.FilteredCollectionList2!,
@@ -254,16 +281,19 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set refreshing values and reset the view model data.
+        /// Changes the view based on the selected collection.
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
+        public async Task CollectionSelectionChanged()
         {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
+            if (this.SelectedCollection != null && !string.IsNullOrEmpty(this.SelectedCollection.CollectionName))
+            {
+                var view = new CollectionMainView(this.SelectedCollection, this.SelectedCollection.CollectionName);
+
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedCollection = null;
+            }
         }
 
         /// <summary>

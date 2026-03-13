@@ -149,18 +149,6 @@ namespace BookCollector.ViewModels.Book
         public object? PreviousViewModel { get; set; }
 
         /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.Search();
-            this.SetRefreshFalse();
-        }
-
-        /// <summary>
         /// Sets the expander arrow boolean values on change.
         /// </summary>
         /// <returns>A task.</returns>
@@ -296,7 +284,7 @@ namespace BookCollector.ViewModels.Book
                 if (this.PreviousViewModel != null && this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (WishListBookEditViewModel)this.PreviousViewModel;
-                    previous.RefreshView = true;
+                    WishListBookEditViewModel.RefreshView = true;
                 }
 
                 if (this.PreviousViewModel != null &&
@@ -304,7 +292,7 @@ namespace BookCollector.ViewModels.Book
                     !this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (BookEditViewModel)this.PreviousViewModel;
-                    previous.RefreshView = true;
+                    BookEditViewModel.RefreshView = true;
                 }
 
                 await Shell.Current.Navigation.PopModalAsync();

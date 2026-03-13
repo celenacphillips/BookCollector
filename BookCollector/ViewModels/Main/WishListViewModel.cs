@@ -12,6 +12,7 @@ namespace BookCollector.ViewModels.Main
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Popups;
     using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -114,7 +115,7 @@ namespace BookCollector.ViewModels.Main
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static bool RefreshView { get; set; }
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets the saved book author filter option.
@@ -145,21 +146,14 @@ namespace BookCollector.ViewModels.Main
         {
             fullWishlistBookList ??= await FillLists.GetBookWishList();
 
-            if (!showHiddenBooks)
-            {
-                filteredWishlistBookList1 = new ObservableCollection<WishlistBookModel>(fullWishlistBookList!.Where(x => !x.HideBook));
-            }
-            else
-            {
-                filteredWishlistBookList1 = new ObservableCollection<WishlistBookModel>(fullWishlistBookList!);
-            }
+            filteredWishlistBookList1 = BaseViewModel.SetList<WishlistBookModel>(fullWishlistBookList!, showHiddenBooks).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -302,19 +296,6 @@ namespace BookCollector.ViewModels.Main
 
                 this.FilteredWishlistBookList2 = sortList.Result;
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

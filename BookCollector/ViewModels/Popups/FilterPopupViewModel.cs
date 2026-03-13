@@ -315,6 +315,14 @@ namespace BookCollector.ViewModels.Popups
         private Popup Popup { get; set; }
 
         /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
+        /// <summary>
         /// Set the selected values as preferences and close popup.
         /// </summary>
         /// <returns>A task.</returns>

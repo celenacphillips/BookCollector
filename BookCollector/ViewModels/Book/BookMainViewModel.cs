@@ -68,7 +68,7 @@ namespace BookCollector.ViewModels.Book
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (this.SelectedBook != null)
             {
@@ -179,18 +179,6 @@ namespace BookCollector.ViewModels.Book
                     this.SetIsBusyFalse();
                 }
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>

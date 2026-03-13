@@ -22,15 +22,66 @@ namespace BookCollector.ViewModels.Groupings
     /// <summary>
     /// SeriesViewModel class.
     /// </summary>
-    public partial class SeriesViewModel : SeriesBaseViewModel
+    public partial class SeriesViewModel : GroupingBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the full series list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<SeriesModel>? fullSeriesList;
+
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<SeriesModel>? hiddenFilteredSeriesList;
+
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<SeriesModel>? filteredSeriesList2;
+
         /// <summary>
         /// Gets or sets the total series string.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string? totalSeriesstring;
+        public string? totalSeriesString;
+
+        /// <summary>
+        /// Gets or sets the total count of series, based on the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int totalSeriesCount;
+
+        /// <summary>
+        /// Gets or sets the total count of series, based on the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int filteredSeriesCount;
+
+        /// <summary>
+        /// Gets or sets the selected series.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public SeriesModel? selectedSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeriesViewModel"/> class.
@@ -48,7 +99,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static bool RefreshView { get; set; }
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden series or not.
@@ -61,16 +112,6 @@ namespace BookCollector.ViewModels.Groupings
         private bool SeriesNameChecked { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether total books is checked or not.
-        /// </summary>
-        private bool TotalBooksChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether total price is checked or not.
-        /// </summary>
-        private bool TotalPriceChecked { get; set; }
-
-        /// <summary>
         /// Set the first filtered list based on the full series list and the show hidden series preference.
         /// </summary>
         /// <param name="showHiddenSeries">Show hidden series.</param>
@@ -79,14 +120,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullSeriesList ??= await FillLists.GetAllSeriesList();
 
-            if (!showHiddenSeries)
-            {
-                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!.Where(x => !x.HideSeries));
-            }
-            else
-            {
-                filteredSeriesList1 = new ObservableCollection<SeriesModel>(fullSeriesList!);
-            }
+            hiddenFilteredSeriesList = BaseViewModel.SetList<SeriesModel>(fullSeriesList!, showHiddenSeries).ToObservableCollection();
         }
 
         /// <summary>
@@ -102,18 +136,11 @@ namespace BookCollector.ViewModels.Groupings
 
                 foreach (var item in hideList)
                 {
-                    var books = AllBooksViewModel.filteredBookList1?
+                    var books = AllBooksViewModel.hiddenFilteredBookList?
                         .Where(x => x.BookSeriesGuid == item.SeriesGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    if (books != null)
-                    {
-                        foreach (var book in books)
-                        {
-                            book.HideBook = true;
-                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                        }
-                    }
+                    await BaseViewModel.UpdateBooksToHide(books);
                 }
             }
         }
@@ -122,7 +149,7 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -134,11 +161,11 @@ namespace BookCollector.ViewModels.Groupings
 
                     await SetList(this.ShowHiddenSeries);
 
-                    if (this.FilteredSeriesList1 != null)
+                    if (this.HiddenFilteredSeriesList != null)
                     {
-                        this.FilteredSeriesList2 = this.FilteredSeriesList1;
+                        this.FilteredSeriesList2 = this.HiddenFilteredSeriesList;
 
-                        this.TotalSeriesCount = this.FilteredSeriesList1.Count;
+                        this.TotalSeriesCount = this.HiddenFilteredSeriesList.Count;
 
                         await this.SearchOnSeries(this.SearchString);
 
@@ -155,7 +182,7 @@ namespace BookCollector.ViewModels.Groupings
 
                         this.FilteredSeriesCount = this.FilteredSeriesList2.Count;
 
-                        this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
+                        this.TotalSeriesString = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
                         this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
 
@@ -192,20 +219,20 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredSeriesList2 != null && this.FilteredSeriesList1 != null)
+            if (this.FilteredSeriesList2 != null && this.HiddenFilteredSeriesList != null)
             {
                 if (!string.IsNullOrEmpty(this.SearchString))
                 {
-                    this.FilteredSeriesList2 = this.FilteredSeriesList1.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredSeriesList2 = this.HiddenFilteredSeriesList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredSeriesList2 = this.FilteredSeriesList1;
+                    this.FilteredSeriesList2 = this.HiddenFilteredSeriesList;
                 }
 
                 this.FilteredSeriesCount = this.FilteredSeriesList2 != null ? this.FilteredSeriesList2.Count : 0;
 
-                this.TotalSeriesstring = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
+                this.TotalSeriesString = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
 
                 var sortList = SortLists.SortSeriesList(
                                     this.FilteredSeriesList2!,
@@ -251,16 +278,19 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set refreshing values and reset the view model data.
+        /// Changes the view based on the selected series.
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
+        public async Task SeriesSelectionChanged()
         {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
+            if (this.SelectedSeries != null && !string.IsNullOrEmpty(this.SelectedSeries.SeriesName))
+            {
+                var view = new SeriesMainView(this.SelectedSeries, this.SelectedSeries.SeriesName);
+
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedSeries = null;
+            }
         }
 
         /// <summary>

@@ -27,6 +27,14 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
+        /// <summary>
         /// Initialize the database and creates the necessary tables if they do not exist.
         /// </summary>
         /// <returns>A task.</returns>
@@ -1024,9 +1032,9 @@ namespace BookCollector.Data.Database
 
                 var filteredList = new ObservableCollection<AuthorModel>();
 
-                if (AuthorsViewModel.filteredAuthorList1 != null)
+                if (AuthorsViewModel.hiddenFilteredAuthorList != null)
                 {
-                    filteredList = AuthorsViewModel.filteredAuthorList1;
+                    filteredList = AuthorsViewModel.hiddenFilteredAuthorList;
                 }
                 else
                 {

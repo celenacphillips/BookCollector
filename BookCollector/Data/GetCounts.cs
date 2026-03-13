@@ -27,7 +27,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => x.IsFavorite == favoriteValue)
                 .ToObservableCollection();
 
@@ -45,7 +45,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => x.Rating == starRating)
                 .ToObservableCollection();
 
@@ -67,9 +67,9 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.hiddenFilteredBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.hiddenFilteredBookList
                         .Where(x => x.BookCollectionGuid == inputGuid)
                         .ToObservableCollection();
                 }
@@ -101,9 +101,9 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.hiddenFilteredBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.hiddenFilteredBookList
                         .Where(x => x.BookGenreGuid == inputGuid)
                         .ToObservableCollection();
                 }
@@ -135,9 +135,9 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.hiddenFilteredBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.hiddenFilteredBookList
                         .Where(x => x.BookSeriesGuid == inputGuid)
                         .ToObservableCollection();
                 }
@@ -168,9 +168,9 @@ namespace BookCollector.Data
             var price = 0.0;
             if (inputGuid != null)
             {
-                if (AllBooksViewModel.filteredBookList1 != null)
+                if (AllBooksViewModel.hiddenFilteredBookList != null)
                 {
-                    filteredList = AllBooksViewModel.filteredBookList1
+                    filteredList = AllBooksViewModel.hiddenFilteredBookList
                         .Where(x => x.BookLocationGuid == inputGuid)
                         .ToObservableCollection();
                 }
@@ -197,7 +197,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? bookList = null;
 
-            bookList = AllBooksViewModel.filteredBookList1?
+            bookList = AllBooksViewModel.hiddenFilteredBookList?
                 .ToObservableCollection();
 
             var counts = new List<CountModel>();
@@ -232,7 +232,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? bookList = null;
 
-            bookList = AllBooksViewModel.filteredBookList1?
+            bookList = AllBooksViewModel.hiddenFilteredBookList?
                 .ToObservableCollection();
 
             var counts = new List<CountModel>();
@@ -339,7 +339,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
                 .ToObservableCollection();
 
@@ -358,7 +358,7 @@ namespace BookCollector.Data
             ObservableCollection<BookModel>? filteredList = null;
             var count = 0;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
                 .ToObservableCollection();
 
@@ -380,7 +380,7 @@ namespace BookCollector.Data
             ObservableCollection<BookModel>? filteredList = null;
             var count = 0.0;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year &&
                             x.BookHoursTotal != 0 && x.BookMinutesTotal != 0)
                 .ToObservableCollection();
@@ -407,7 +407,7 @@ namespace BookCollector.Data
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
 
-            filteredList = AllBooksViewModel.filteredBookList1?
+            filteredList = AllBooksViewModel.hiddenFilteredBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookPrice))
                 .ToObservableCollection();
 
@@ -482,9 +482,9 @@ namespace BookCollector.Data
         {
             ObservableCollection<AuthorModel>? filteredList = null;
 
-            await Task.WhenAll(AuthorsViewModel.filteredAuthorList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(AuthorsViewModel.hiddenFilteredAuthorList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
-            filteredList = AuthorsViewModel.filteredAuthorList1?.OrderByDescending(x => x.FirstName)?.OrderByDescending(x => x.LastName).ToObservableCollection();
+            filteredList = AuthorsViewModel.hiddenFilteredAuthorList?.OrderByDescending(x => x.FirstName)?.OrderByDescending(x => x.LastName).ToObservableCollection();
 
             var counts = new List<CountModel>();
 
@@ -523,9 +523,9 @@ namespace BookCollector.Data
         {
             ObservableCollection<CollectionModel>? filteredList = null;
 
-            await Task.WhenAll(CollectionsViewModel.filteredCollectionList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(CollectionsViewModel.hiddenFilteredCollectionList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
-            filteredList = CollectionsViewModel.filteredCollectionList1?.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
+            filteredList = CollectionsViewModel.hiddenFilteredCollectionList?.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
 
             var counts = new List<CountModel>();
 
@@ -564,9 +564,9 @@ namespace BookCollector.Data
         {
             ObservableCollection<GenreModel>? filteredList = null;
 
-            await Task.WhenAll(GenresViewModel.filteredGenreList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(GenresViewModel.hiddenFilteredGenreList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
-            filteredList = GenresViewModel.filteredGenreList1?.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
+            filteredList = GenresViewModel.hiddenFilteredGenreList?.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
 
             var counts = new List<CountModel>();
 
@@ -605,9 +605,9 @@ namespace BookCollector.Data
         {
             ObservableCollection<SeriesModel>? filteredList = null;
 
-            await Task.WhenAll(SeriesBaseViewModel.filteredSeriesList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(SeriesViewModel.hiddenFilteredSeriesList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
-            filteredList = SeriesViewModel.filteredSeriesList1?.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
+            filteredList = SeriesViewModel.hiddenFilteredSeriesList?.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
 
             var counts = new List<CountModel>();
 
@@ -646,9 +646,9 @@ namespace BookCollector.Data
         {
             ObservableCollection<LocationModel>? filteredList = null;
 
-            await Task.WhenAll(LocationsViewModel.filteredLocationList1!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(LocationsViewModel.hiddenFilteredLocationList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
 
-            filteredList = LocationsViewModel.filteredLocationList1?.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
+            filteredList = LocationsViewModel.hiddenFilteredLocationList?.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
 
             var counts = new List<CountModel>();
 
@@ -841,6 +841,14 @@ namespace BookCollector.Data
             }
 
             return counts;
+        }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
         }
     }
 }

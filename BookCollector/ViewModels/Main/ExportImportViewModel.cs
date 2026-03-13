@@ -266,11 +266,6 @@ namespace BookCollector.ViewModels.Main
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static bool RefreshView { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to manually upload book covers or not.
         /// </summary>
         public static bool ManuallyUploadLibraryCovers { get; set; }
@@ -284,7 +279,7 @@ namespace BookCollector.ViewModels.Main
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -309,19 +304,6 @@ namespace BookCollector.ViewModels.Main
                 this.SetIsBusyFalse();
                 RefreshView = false;
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>
@@ -414,7 +396,7 @@ namespace BookCollector.ViewModels.Main
                     await this.CanceledAction();
                     Preferences.Set("ExportLocation", AppStringResources.DefaultExportLocation);
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
@@ -431,7 +413,7 @@ namespace BookCollector.ViewModels.Main
                 {
                     await this.CanceledAction();
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
@@ -552,7 +534,7 @@ namespace BookCollector.ViewModels.Main
                 {
                     await this.CanceledAction();
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE

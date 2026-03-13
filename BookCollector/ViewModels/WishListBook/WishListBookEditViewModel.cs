@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{this.EditedWishlistBook.BookTitle}")}";
             this.SelectedBookFormat = this.EditedWishlistBook.BookFormat ?? AppStringResources.SelectABookFormat;
             this.PopupWidth = this.DeviceWidth - 50;
-            this.RefreshView = true;
+            RefreshView = true;
         }
 
         /// <summary>
@@ -119,11 +119,6 @@ namespace BookCollector.ViewModels.WishListBook
         public double PopupWidth { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public bool RefreshView { get; set; }
-
-        /// <summary>
         /// Add book to static list.
         /// </summary>
         /// <param name="book">Book to add.</param>
@@ -140,9 +135,9 @@ namespace BookCollector.ViewModels.WishListBook
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
-            if (this.RefreshView)
+            if (RefreshView)
             {
                 try
                 {
@@ -237,34 +232,21 @@ namespace BookCollector.ViewModels.WishListBook
                     await Task.WhenAll(loadDataTasks);
 
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
                 catch (Exception ex)
                 {
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
                     await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
-                    this.RefreshView = false;
+                    RefreshView = false;
                 }
             }
-        }
-
-        /// <summary>
-        /// Set refreshing values and reset the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            this.RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /// <summary>
@@ -348,7 +330,7 @@ namespace BookCollector.ViewModels.WishListBook
             catch (Exception ex)
             {
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
@@ -420,7 +402,7 @@ namespace BookCollector.ViewModels.WishListBook
                         this.SetIsBusyFalse();
                         await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
 #if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
+                        await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
