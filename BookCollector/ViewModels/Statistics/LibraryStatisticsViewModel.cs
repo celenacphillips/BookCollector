@@ -89,7 +89,7 @@ namespace BookCollector.ViewModels.Statistics
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {

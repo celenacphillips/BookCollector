@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.WishListBook"
              x:DataType="viewModel:WishListViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredWishlistBookList2}"
+    <CollectionView ItemsSource="{Binding FilteredWishlistBookList}"
                     SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedWishlistBook}"
                     SelectionChangedCommand="{Binding WishListBookSelectionChangedCommand}"

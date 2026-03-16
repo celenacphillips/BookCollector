@@ -49,7 +49,7 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static ObservableCollection<CollectionModel>? filteredCollectionList2;
+        public static ObservableCollection<CollectionModel>? filteredCollectionList;
 
         /// <summary>
         /// Gets or sets the total collections string.
@@ -91,16 +91,11 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.View = view;
 
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.CollectionView_InfoText}";
             this.ViewTitle = AppStringResources.Collections;
             RefreshView = true;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden collections or not.
@@ -117,11 +112,11 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         /// <param name="showHiddenCollections">Show hidden collection.</param>
         /// <returns>A task.</returns>
-        public static async Task SetList(bool showHiddenCollections)
+        public static async new Task SetList(bool showHiddenCollections)
         {
             fullCollectionList ??= await FillLists.GetAllCollectionsList();
 
-            hiddenFilteredCollectionList = BaseViewModel.SetList<CollectionModel>(fullCollectionList!, showHiddenCollections).ToObservableCollection();
+            hiddenFilteredCollectionList = SetList<CollectionModel>(fullCollectionList!, showHiddenCollections).ToObservableCollection();
         }
 
         /// <summary>
@@ -147,67 +142,85 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set the view model data.
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
+        {
+            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+
+            return this.ShowHiddenCollections;
+        }
+
+        /// <summary>
+        /// Check if the list is null.
+        /// </summary>
+        /// <returns>If the list is null.</returns>
+        public override bool ListNullCheck()
+        {
+            return this.HiddenFilteredCollectionList != null;
+        }
+
+        /// <summary>
+        /// Iterate through the list and set necessary data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async override Task SetListData()
         {
-            if (RefreshView)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
+            this.FilteredCollectionList = this.HiddenFilteredCollectionList;
 
-                    this.GetPreferences();
+            await Task.WhenAll(this.FilteredCollectionList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
+            await Task.WhenAll(this.FilteredCollectionList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+        }
 
-                    await SetList(this.ShowHiddenCollections);
+        /// <summary>
+        /// Find filters for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetFilters()
+        {
+            await this.SearchOnCollection(this.SearchString);
+        }
 
-                    if (this.HiddenFilteredCollectionList != null)
-                    {
-                        this.FilteredCollectionList2 = this.HiddenFilteredCollectionList;
-
-                        this.TotalCollectionsCount = this.HiddenFilteredCollectionList != null ? this.HiddenFilteredCollectionList.Count : 0;
-
-                        await this.SearchOnCollection(this.SearchString);
-
-                        await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
-                        await Task.WhenAll(this.FilteredCollectionList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
-
-                        var sortList = SortLists.SortCollectionsList(
-                                this.FilteredCollectionList2,
+        /// <summary>
+        /// Find sort values for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetSorts()
+        {
+            var sortList = SortLists.SortCollectionsList(
+                                this.FilteredCollectionList!,
                                 this.CollectionNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredCollectionsCount = this.FilteredCollectionList2.Count;
+            await Task.WhenAll(sortList);
 
-                        this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
+            this.FilteredCollectionList = sortList.Result;
+        }
 
-                        this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
+        /// <summary>
+        /// Set data for view.
+        /// </summary>
+        public async override void SetViewStrings()
+        {
+            this.TotalCollectionsCount = this.HiddenFilteredCollectionList?.Count ?? 0;
 
-                        await Task.WhenAll(sortList);
+            this.FilteredCollectionsCount = this.FilteredCollectionList?.Count ?? 0;
 
-                        this.FilteredCollectionList2 = sortList.Result;
-                    }
+            this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-            }
+            this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
         }
 
         /// <summary>
@@ -220,25 +233,25 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredCollectionList2 != null && this.HiddenFilteredCollectionList != null)
+            if (this.FilteredCollectionList != null && this.HiddenFilteredCollectionList != null)
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredCollectionList2 = this.HiddenFilteredCollectionList
+                    this.FilteredCollectionList = this.HiddenFilteredCollectionList
                         .Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(input.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase))
                         .ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredCollectionList2 = this.HiddenFilteredCollectionList;
+                    this.FilteredCollectionList = this.HiddenFilteredCollectionList;
                 }
 
-                this.FilteredCollectionsCount = this.FilteredCollectionList2 != null ? this.FilteredCollectionList2.Count : 0;
+                this.FilteredCollectionsCount = this.FilteredCollectionList != null ? this.FilteredCollectionList.Count : 0;
 
                 this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
 
                 var sortList = SortLists.SortCollectionsList(
-                                    this.FilteredCollectionList2!,
+                                    this.FilteredCollectionList!,
                                     this.CollectionNameChecked,
                                     this.TotalBooksChecked,
                                     this.TotalPriceChecked,
@@ -247,7 +260,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 await Task.WhenAll(sortList);
 
-                this.FilteredCollectionList2 = sortList.Result;
+                this.FilteredCollectionList = sortList.Result;
             }
         }
 
@@ -259,9 +272,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuCollection(Guid? input)
         {
-            if (this.FilteredCollectionList2 != null)
+            if (this.FilteredCollectionList != null)
             {
-                var selected = this.FilteredCollectionList2.FirstOrDefault(x => x.CollectionGuid == input);
+                var selected = this.FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.CollectionName))
                 {
@@ -413,7 +426,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (CollectionsViewModel.fullCollectionList != null)
             {
-                CollectionsViewModel.RefreshView = RemoveCollectionFromStaticList(selected, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
+                CollectionsViewModel.RefreshView = RemoveCollectionFromStaticList(selected, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
             }
         }
 
@@ -462,19 +475,6 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
-        }
-
-        private void GetPreferences()
-        {
-            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

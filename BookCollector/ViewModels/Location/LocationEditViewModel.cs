@@ -62,7 +62,7 @@ namespace BookCollector.ViewModels.Location
         {
             if (LocationsViewModel.fullLocationList != null)
             {
-                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
+                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
             }
         }
 
@@ -70,7 +70,7 @@ namespace BookCollector.ViewModels.Location
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {

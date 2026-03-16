@@ -172,10 +172,51 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Set the view model data.
+        /// Set the view model list.
+        /// </summary>
+        /// <param name="showHidden">The show hidden list preference.</param>
+        /// <returns>A task.</returns>
+        public async override Task SetList(bool showHidden)
+        {
+        }
+
+        /// <summary>
+        /// Check if the list is null.
+        /// </summary>
+        /// <returns>If the list is null.</returns>
+        public override bool ListNullCheck()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Iterate through the list and set necessary data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async override Task SetListData()
+        {
+        }
+
+        /// <summary>
+        /// Find filters for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetFilters()
+        {
+        }
+
+        /// <summary>
+        /// Find sort values for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetSorts()
+        {
+        }
+
+        /// <summary>
+        /// Set data for view.
+        /// </summary>
+        public async override void SetViewStrings()
         {
         }
 
@@ -272,9 +313,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Get the user preferences from device settings.
+        /// Set the view model preferences.
         /// </summary>
-        public void GetPreferences()
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
             this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
             this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
@@ -285,6 +327,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+
+            return true;
         }
 
         /*********************** Series Methods ***********************/

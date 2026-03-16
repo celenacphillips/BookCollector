@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Collection"
              x:DataType="viewModel:CollectionBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredCollectionList2}"
+    <CollectionView ItemsSource="{Binding FilteredCollectionList}"
                     SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedCollection}"
                     SelectionChangedCommand="{Binding CollectionSelectionChangedCommand}"

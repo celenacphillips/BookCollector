@@ -6,11 +6,12 @@ namespace BookCollector.Data
 {
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Mvvm.ComponentModel;
 
     /// <summary>
     /// GetItems class.
     /// </summary>
-    public partial class GetItems : BaseViewModel
+    public partial class GetItems : ObservableObject
     {
         /// <summary>
         /// Get genre for book.
@@ -23,7 +24,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                genre = await Database.GetGenreForBookAsync((Guid)inputGuid);
+                genre = await BaseViewModel.Database.GetGenreForBookAsync((Guid)inputGuid);
             }
 
             return genre;
@@ -40,7 +41,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                location = await Database.GetLocationForBookAsync((Guid)inputGuid);
+                location = await BaseViewModel.Database.GetLocationForBookAsync((Guid)inputGuid);
             }
 
             return location;
@@ -57,7 +58,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                series = await Database.GetSeriesForBookAsync((Guid)inputGuid);
+                series = await BaseViewModel.Database.GetSeriesForBookAsync((Guid)inputGuid);
             }
 
             return series;
@@ -74,18 +75,10 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                collection = await Database.GetCollectionForBookAsync((Guid)inputGuid);
+                collection = await BaseViewModel.Database.GetCollectionForBookAsync((Guid)inputGuid);
             }
 
             return collection;
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// <copyright file="BaseViewModel.cs" company="Castle Software">
+﻿// <copyright file="GroupingBaseViewModel.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 

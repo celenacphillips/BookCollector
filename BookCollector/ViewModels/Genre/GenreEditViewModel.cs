@@ -62,7 +62,7 @@ namespace BookCollector.ViewModels.Genre
         {
             if (GenresViewModel.fullGenreList != null)
             {
-                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
+                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
             }
         }
 
@@ -70,7 +70,7 @@ namespace BookCollector.ViewModels.Genre
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -111,7 +111,7 @@ namespace BookCollector.ViewModels.Genre
                     }
 #endif
 
-                    this.EditedGenre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
+                    this.EditedGenre = await BaseViewModel.Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(this.EditedGenre));
                     await AddToStaticList(this.EditedGenre);
 
                     if (this.InsertMainViewBefore)

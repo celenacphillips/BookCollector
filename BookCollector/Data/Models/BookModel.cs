@@ -387,7 +387,7 @@ namespace BookCollector.Data.Models
 
             if (authorGuidList != null && authorGuidList.Count > 0)
             {
-                var list = await database.GetAllAuthorsForBookAsync([.. authorGuidList]);
+                var list = await BaseViewModel.Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
                 authorList = list.ToObservableCollection();
             }
 
@@ -465,20 +465,20 @@ namespace BookCollector.Data.Models
         /// <returns>A task.</returns>
         public async Task SetBookChapters(ObservableCollection<ChapterModel>? chaptersList)
         {
-           database ??= new BookCollectorDatabase();
+            database ??= new BookCollectorDatabase();
 
-           if (chaptersList != null)
-           {
+            if (chaptersList != null)
+            {
                 foreach (var chapter in chaptersList)
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
                         chapter.BookGuid = (Guid)this.BookGuid;
 
-                        await database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
+                        await BaseViewModel.Database.SaveChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
-           }
+            }
         }
 
         /// <summary>
@@ -497,7 +497,7 @@ namespace BookCollector.Data.Models
                 {
                     if (!string.IsNullOrEmpty(chapter.ChapterName) && this.BookGuid != null)
                     {
-                        await database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
+                        await BaseViewModel.Database.DeleteChapterAsync(BaseViewModel.ConvertTo<ChapterDatabaseModel>(chapter));
                     }
                 }
             }

@@ -136,7 +136,7 @@ namespace BookCollector.ViewModels.Book
             this.TitleInput = inputTitle;
             this.AuthorInput = inputAuthorName;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = DeviceHeight;
             this.ShowCollectionViewFooter = false;
 
             this.SearchFormSectionValue = false;

@@ -68,7 +68,7 @@ namespace BookCollector.ViewModels.Book
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             if (this.SelectedBook != null)
             {
@@ -217,7 +217,7 @@ namespace BookCollector.ViewModels.Book
                     {
                         this.SetIsBusyTrue();
 
-                        await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+                        await BaseViewModel.Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
                         await RemoveFromStaticList(this.SelectedBook);
 
                         await this.ConfirmDelete(this.SelectedBook.BookTitle);
@@ -284,9 +284,15 @@ namespace BookCollector.ViewModels.Book
             }
         }
 
-        private void GetPreferences()
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
             this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+
+            return this.HiddenAuthorsOn;
         }
     }
 }

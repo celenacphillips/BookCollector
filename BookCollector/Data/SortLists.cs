@@ -9,11 +9,12 @@ namespace BookCollector.Data
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
 
     /// <summary>
     /// SortLists class.
     /// </summary>
-    public partial class SortLists : BaseViewModel
+    public partial class SortLists : ObservableObject
     {
         /// <summary>
         /// Sort list based on the input parameters.
@@ -626,14 +627,6 @@ namespace BookCollector.Data
             }
 
             return filteredList;
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
         }
     }
 }

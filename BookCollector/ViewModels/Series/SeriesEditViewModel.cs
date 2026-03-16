@@ -62,7 +62,7 @@ namespace BookCollector.ViewModels.Series
         {
             if (SeriesViewModel.fullSeriesList != null)
             {
-                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList2);
+                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
             }
         }
 
@@ -70,7 +70,7 @@ namespace BookCollector.ViewModels.Series
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -111,7 +111,7 @@ namespace BookCollector.ViewModels.Series
                     }
 #endif
 
-                    this.EditedSeries = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
+                    this.EditedSeries = await BaseViewModel.Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(this.EditedSeries));
                     await AddToStaticList(this.EditedSeries);
 
                     if (this.InsertMainViewBefore)

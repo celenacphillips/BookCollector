@@ -30,7 +30,7 @@ namespace BookCollector.ViewModels.Statistics
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                if (WishListViewModel.filteredWishlistBookList1 == null || WishListViewModel.RefreshView)
+                if (WishListViewModel.hiddenFilteredWishlistBookList == null || WishListViewModel.RefreshView)
                 {
                     await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
                 }
@@ -68,7 +68,7 @@ namespace BookCollector.ViewModels.Statistics
                     formatPrices);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = WishListViewModel.filteredWishlistBookList1!.Count;
+                this.TotalBooks = WishListViewModel.hiddenFilteredWishlistBookList!.Count;
                 var seriesCounts = series.Result;
                 var authorsCounts = authors.Result;
                 var locationsCounts = locations.Result;

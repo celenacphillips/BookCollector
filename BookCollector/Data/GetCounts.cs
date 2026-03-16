@@ -12,11 +12,12 @@ namespace BookCollector.Data
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Main;
     using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
 
     /// <summary>
     /// GetCounts class.
     /// </summary>
-    public partial class GetCounts : BaseViewModel
+    public partial class GetCounts : ObservableObject
     {
         /// <summary>
         /// Get the count of books in the list based on the favorite value.
@@ -75,7 +76,7 @@ namespace BookCollector.Data
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
 
@@ -109,7 +110,7 @@ namespace BookCollector.Data
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
 
@@ -143,7 +144,7 @@ namespace BookCollector.Data
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
 
@@ -176,7 +177,7 @@ namespace BookCollector.Data
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
 
@@ -267,7 +268,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
-            bookList = WishListViewModel.filteredWishlistBookList1?
+            bookList = WishListViewModel.hiddenFilteredWishlistBookList?
                 .ToObservableCollection();
 
             var counts = new List<CountModel>();
@@ -302,7 +303,7 @@ namespace BookCollector.Data
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
-            bookList = WishListViewModel.filteredWishlistBookList1?
+            bookList = WishListViewModel.hiddenFilteredWishlistBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookPrice))
                 .ToObservableCollection();
 
@@ -431,7 +432,7 @@ namespace BookCollector.Data
             ObservableCollection<WishlistBookModel>? filteredList = null;
             var price = 0.0;
 
-            filteredList = WishListViewModel.filteredWishlistBookList1?
+            filteredList = WishListViewModel.hiddenFilteredWishlistBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookPrice))
                 .ToObservableCollection();
 
@@ -459,7 +460,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                var list = await Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
+                var list = await BaseViewModel.Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
                 filteredList = list.ToObservableCollection();
 
                 if (filteredList != null)
@@ -687,7 +688,7 @@ namespace BookCollector.Data
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
             List<string?>? list = null;
 
-            filteredList1 = WishListViewModel.filteredWishlistBookList1?
+            filteredList1 = WishListViewModel.hiddenFilteredWishlistBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy))
                 .ToObservableCollection();
 
@@ -738,7 +739,7 @@ namespace BookCollector.Data
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
             List<string?>? list = null;
 
-            filteredList1 = WishListViewModel.filteredWishlistBookList1?
+            filteredList1 = WishListViewModel.hiddenFilteredWishlistBookList?
                 .Where(x => !string.IsNullOrEmpty(x.BookSeries))
                 .ToObservableCollection();
 
@@ -789,7 +790,7 @@ namespace BookCollector.Data
             ObservableCollection<WishlistBookModel>? filteredList1 = null;
             List<string?>? authorStringList = null;
 
-            filteredList1 = WishListViewModel.filteredWishlistBookList1?
+            filteredList1 = WishListViewModel.hiddenFilteredWishlistBookList?
                 .Where(x => !string.IsNullOrEmpty(x.AuthorListString))
                 .ToObservableCollection();
 
@@ -807,7 +808,7 @@ namespace BookCollector.Data
                 {
                     if (!string.IsNullOrEmpty(authorString))
                     {
-                        list.AddRange(SplitStringIntoAuthorList(authorString));
+                        list.AddRange(BaseViewModel.SplitStringIntoAuthorList(authorString));
                     }
                 }
 
@@ -841,14 +842,6 @@ namespace BookCollector.Data
             }
 
             return counts;
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
         }
     }
 }

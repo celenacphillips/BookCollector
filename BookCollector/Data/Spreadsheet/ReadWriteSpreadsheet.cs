@@ -6,6 +6,7 @@ namespace BookCollector.Data.Spreadsheet
 {
     using System.Xml;
     using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Mvvm.ComponentModel;
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
@@ -14,7 +15,7 @@ namespace BookCollector.Data.Spreadsheet
     /// <summary>
     /// ReadWriteSpreadsheet class.
     /// </summary>
-    public class ReadWriteSpreadsheet : BaseViewModel
+    public class ReadWriteSpreadsheet : ObservableObject
     {
         /// <summary>
         /// Create a spreadsheet workbook with a given filename in a given folder path.
@@ -291,14 +292,6 @@ namespace BookCollector.Data.Spreadsheet
             }
 
             return (spreadsheetValues, $"Import successful for {sheetName}.");
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
         }
 
         // Given a WorkbookPart, inserts a new worksheet.

@@ -62,7 +62,7 @@ namespace BookCollector.ViewModels.Collection
         {
             if (CollectionsViewModel.fullCollectionList != null)
             {
-                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
+                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
             }
         }
 
@@ -70,7 +70,7 @@ namespace BookCollector.ViewModels.Collection
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {

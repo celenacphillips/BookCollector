@@ -9,11 +9,12 @@ namespace BookCollector.Data
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
 
     /// <summary>
     /// FilterLists class.
     /// </summary>
-    public partial class FilterLists : BookBaseViewModel
+    public partial class FilterLists : ObservableObject
     {
         /// <summary>
         /// Apply filters to book list based on the given filter options and search string.
@@ -87,6 +88,7 @@ namespace BookCollector.Data
         /// <param name="authorOption">Author option to find.</param>
         /// <param name="locationOption">Location option to find.</param>
         /// <param name="seriesOption">Series option to find.</param>
+        /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
         public static async Task<ObservableCollection<WishlistBookModel>> FilterWishlistBookList(
@@ -98,6 +100,7 @@ namespace BookCollector.Data
             string? authorOption,
             string? locationOption,
             string? seriesOption,
+            string? bookCoverOption,
             string? searchString)
         {
             var filteredList = bookList;
@@ -118,8 +121,15 @@ namespace BookCollector.Data
 
             filteredList = FilterBookSeries(filteredList, seriesOption);
 
+            if (!string.IsNullOrEmpty(bookCoverOption))
+            {
+                filteredList = FilterBooksOnBookCovers_Wishlist(filteredList, bookCoverOption);
+            }
+
             return filteredList;
         }
+
+        /********************************************************/
 
         /// <summary>
         /// Apply search string filter to book list based on the given search string.
@@ -156,6 +166,8 @@ namespace BookCollector.Data
 
             return filterList;
         }
+
+        /********************************************************/
 
         private static ObservableCollection<BookModel> FilterFavoriteBooks(ObservableCollection<BookModel> bookList, string favoritesOption)
         {
@@ -421,6 +433,23 @@ namespace BookCollector.Data
         }
 
         private static ObservableCollection<BookModel> FilterBooksOnBookCovers(ObservableCollection<BookModel> bookList, string bookCoverOption)
+        {
+            var filterList = bookList;
+
+            if (bookCoverOption.Equals(AppStringResources.HasABookCover))
+            {
+                filterList = bookList.Where(x => x.HasBookCover).ToObservableCollection();
+            }
+
+            if (bookCoverOption.Equals(AppStringResources.HasNoBookCover))
+            {
+                filterList = bookList.Where(x => x.HasNoBookCover).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<WishlistBookModel> FilterBooksOnBookCovers_Wishlist(ObservableCollection<WishlistBookModel> bookList, string bookCoverOption)
         {
             var filterList = bookList;
 

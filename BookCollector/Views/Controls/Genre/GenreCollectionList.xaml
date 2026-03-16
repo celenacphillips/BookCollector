@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Genre"
              x:DataType="viewModel:GenreBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredGenreList2}"
+    <CollectionView ItemsSource="{Binding FilteredGenreList}"
                     SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedGenre}"
                     SelectionChangedCommand="{Binding GenreSelectionChangedCommand}"

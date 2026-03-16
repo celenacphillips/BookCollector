@@ -99,7 +99,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.EditedWishlistBook = (WishlistBookModel)book.Clone();
             this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{this.EditedWishlistBook.BookTitle}")}";
             this.SelectedBookFormat = this.EditedWishlistBook.BookFormat ?? AppStringResources.SelectABookFormat;
-            this.PopupWidth = this.DeviceWidth - 50;
+            this.PopupWidth = DeviceWidth - 50;
             RefreshView = true;
         }
 
@@ -127,7 +127,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             if (WishListViewModel.fullWishlistBookList != null)
             {
-                WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList2);
+                WishListViewModel.RefreshView = AddWishListBookToStaticList(book, WishListViewModel.fullWishlistBookList, WishListViewModel.filteredWishlistBookList);
             }
         }
 
@@ -135,7 +135,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             if (RefreshView)
             {

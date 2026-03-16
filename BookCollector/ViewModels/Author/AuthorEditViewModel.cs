@@ -70,7 +70,7 @@ namespace BookCollector.ViewModels.Author
         {
             if (AuthorsViewModel.fullAuthorList != null)
             {
-                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
+                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
             }
         }
 
@@ -78,7 +78,7 @@ namespace BookCollector.ViewModels.Author
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -123,7 +123,7 @@ namespace BookCollector.ViewModels.Author
                     }
 #endif
 
-                    this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
+                    this.EditedAuthor = await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
                     await AddToStaticList(this.EditedAuthor);
 
                     if (this.InsertMainViewBefore)

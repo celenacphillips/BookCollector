@@ -225,10 +225,10 @@ public partial class ToggleSettingsView : ContentPage
         AuthorsViewModel.RefreshView = true;
         LocationsViewModel.RefreshView = true;
 
-        ReadingViewModel.filteredBookList2 = null;
-        ToBeReadViewModel.filteredBookList2 = null;
-        ReadViewModel.filteredBookList2 = null;
-        AllBooksViewModel.filteredBookList2 = null;
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
 
         if (e.Value)
         {
@@ -270,7 +270,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         CollectionsViewModel.RefreshView = true;
 
-        CollectionsViewModel.filteredCollectionList2 = null;
+        CollectionsViewModel.filteredCollectionList = null;
 
         var variable = CollectionsViewModel.HideBooks(e.Value);
 
@@ -291,7 +291,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         GenresViewModel.RefreshView = true;
 
-        GenresViewModel.filteredGenreList2 = null;
+        GenresViewModel.filteredGenreList = null;
 
         var variable = GenresViewModel.HideBooks(e.Value);
 
@@ -312,7 +312,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         SeriesViewModel.RefreshView = true;
 
-        SeriesViewModel.filteredSeriesList2 = null;
+        SeriesViewModel.filteredSeriesList = null;
 
         var variable = SeriesViewModel.HideBooks(e.Value);
 
@@ -333,7 +333,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         AuthorsViewModel.RefreshView = true;
 
-        AuthorsViewModel.filteredAuthorList2 = null;
+        AuthorsViewModel.filteredAuthorList = null;
 
         var variable = AuthorsViewModel.HideBooks(e.Value);
 
@@ -354,7 +354,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         LocationsViewModel.RefreshView = true;
 
-        LocationsViewModel.filteredLocationList2 = null;
+        LocationsViewModel.filteredLocationList = null;
 
         var variable = LocationsViewModel.HideBooks(e.Value);
 
@@ -375,7 +375,7 @@ public partial class ToggleSettingsView : ContentPage
     {
         WishListViewModel.RefreshView = true;
 
-        WishListViewModel.filteredWishlistBookList2 = null;
+        WishListViewModel.filteredWishlistBookList = null;
 
         Preferences.Set("HiddenWishlistBooksOn", e.Value);
     }

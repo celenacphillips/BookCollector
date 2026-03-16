@@ -10,12 +10,13 @@ namespace BookCollector.Data.Database
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
     using SQLite;
 
     /// <summary>
     /// BookCollectorDatabase class.
     /// </summary>
-    public partial class BookCollectorDatabase : BaseViewModel
+    public partial class BookCollectorDatabase : ObservableObject
     {
         private SQLiteAsyncConnection database;
 
@@ -23,14 +24,6 @@ namespace BookCollector.Data.Database
         /// Initializes a new instance of the <see cref="BookCollectorDatabase"/> class.
         /// </summary>
         public BookCollectorDatabase()
-        {
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
         {
         }
 
@@ -65,7 +58,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Drop all the tables in the database.
+        /// Drop all the tables in the this.database.
         /// </summary>
         /// <returns>A task.</returns>
         public async Task DropAllTables()
@@ -228,7 +221,7 @@ namespace BookCollector.Data.Database
                     .Where(x => x.GenreGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<GenreModel>(genre);
+                return BaseViewModel.ConvertTo<GenreModel>(genre);
             }
             catch (Exception ex)
             {
@@ -251,7 +244,7 @@ namespace BookCollector.Data.Database
                     .Where(x => x.LocationGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<LocationModel>(location);
+                return BaseViewModel.ConvertTo<LocationModel>(location);
             }
             catch (Exception ex)
             {
@@ -274,7 +267,7 @@ namespace BookCollector.Data.Database
                     .Where(x => x.SeriesGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
@@ -297,7 +290,7 @@ namespace BookCollector.Data.Database
                     .Where(x => x.CollectionGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<CollectionModel>(collection);
+                return BaseViewModel.ConvertTo<CollectionModel>(collection);
             }
             catch (Exception ex)
             {
@@ -375,7 +368,7 @@ namespace BookCollector.Data.Database
 
                     if (author != null)
                     {
-                        authors.Add(ConvertTo<AuthorModel>(author));
+                        authors.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
                     }
                 }
 
@@ -388,7 +381,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a book in the database.
+        /// Add or update a book in the this.database.
         /// </summary>
         /// <param name="book">Book to save.</param>
         /// <returns>Book that has been saved.</returns>
@@ -428,7 +421,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove book from the database.
+        /// Remove book from the this.database.
         /// </summary>
         /// <param name="book">Book to remove.</param>
         /// <returns>A task.</returns>
@@ -450,7 +443,7 @@ namespace BookCollector.Data.Database
         /*********************** Wishlist Book Methods ***********************/
 
         /// <summary>
-        /// Get all wishlist books in the database.
+        /// Get all wishlist books in the this.database.
         /// </summary>
         /// <returns>A list of wishlist books.</returns>
         public async Task<List<WishlistBookModel>> GetAllWishlistBooksAsync()
@@ -476,7 +469,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a wishlist book in the database.
+        /// Add or update a wishlist book in the this.database.
         /// </summary>
         /// <param name="book">Wishlist book to save.</param>
         /// <returns>Wishlist book that has been saved.</returns>
@@ -507,7 +500,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(book);
                 }
 
-                return ConvertTo<WishlistBookModel>(book);
+                return BaseViewModel.ConvertTo<WishlistBookModel>(book);
             }
             catch (Exception ex)
             {
@@ -516,7 +509,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove wishlist book from the database.
+        /// Remove wishlist book from the this.database.
         /// </summary>
         /// <param name="book">Wishlist book to remove.</param>
         /// <returns>A task.</returns>
@@ -593,7 +586,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a chapter in the database.
+        /// Add or update a chapter in the this.database.
         /// </summary>
         /// <param name="chapter">Chapter to save.</param>
         /// <returns>A task.</returns>
@@ -631,7 +624,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove chapter from the database.
+        /// Remove chapter from the this.database.
         /// </summary>
         /// <param name="chapter">Chapter to remove.</param>
         /// <returns>A task.</returns>
@@ -675,7 +668,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a book author in the database.
+        /// Add or update a book author in the this.database.
         /// </summary>
         /// <param name="bookAuthor">Book author to save.</param>
         /// <returns>A task.</returns>
@@ -713,7 +706,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove book author from the database.
+        /// Remove book author from the this.database.
         /// </summary>
         /// <param name="authorGuid">Author guid to match.</param>
         /// <param name="bookGuid">Book guid to match.</param>
@@ -740,7 +733,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update an author to a book in the database.
+        /// Add or update an author to a book in the this.database.
         /// </summary>
         /// <param name="authorGuid">Author guid to add.</param>
         /// <param name="bookGuid">Book guid to add to.</param>
@@ -889,7 +882,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Get all authors in the database.
+        /// Get all authors in the this.database.
         /// </summary>
         /// <returns>A list of authors.</returns>
         public async Task<List<AuthorModel>> GetAllAuthorsAsync()
@@ -916,7 +909,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update an author in the database.
+        /// Add or update an author in the this.database.
         /// </summary>
         /// <param name="author">Author to save.</param>
         /// <returns>Author that has been saved.</returns>
@@ -947,7 +940,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(author);
                 }
 
-                return ConvertTo<AuthorModel>(author);
+                return BaseViewModel.ConvertTo<AuthorModel>(author);
             }
             catch (Exception ex)
             {
@@ -956,7 +949,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove author from the database.
+        /// Remove author from the this.database.
         /// </summary>
         /// <param name="author">Author to remove.</param>
         /// <returns>A task.</returns>
@@ -1134,7 +1127,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Get all collections in the database.
+        /// Get all collections in the this.database.
         /// </summary>
         /// <returns>A list of collections.</returns>
         public async Task<List<CollectionModel>> GetAllCollectionsAsync()
@@ -1160,7 +1153,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a collection in the database.
+        /// Add or update a collection in the this.database.
         /// </summary>
         /// <param name="collection">Collection to save.</param>
         /// <returns>Collection that has been saved.</returns>
@@ -1191,7 +1184,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(collection);
                 }
 
-                return ConvertTo<CollectionModel>(collection);
+                return BaseViewModel.ConvertTo<CollectionModel>(collection);
             }
             catch (Exception ex)
             {
@@ -1200,7 +1193,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove collection from the database.
+        /// Remove collection from the this.database.
         /// </summary>
         /// <param name="collection">Collection to remove.</param>
         /// <returns>A task.</returns>
@@ -1289,7 +1282,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Get all genres in the database.
+        /// Get all genres in the this.database.
         /// </summary>
         /// <returns>A list of genres.</returns>
         public async Task<List<GenreModel>> GetAllGenresAsync()
@@ -1315,7 +1308,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a genre in the database.
+        /// Add or update a genre in the this.database.
         /// </summary>
         /// <param name="genre">Genre to save.</param>
         /// <returns>Genre that has been saved.</returns>
@@ -1346,7 +1339,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(genre);
                 }
 
-                return ConvertTo<GenreModel>(genre);
+                return BaseViewModel.ConvertTo<GenreModel>(genre);
             }
             catch (Exception ex)
             {
@@ -1355,7 +1348,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove genre from the database.
+        /// Remove genre from the this.database.
         /// </summary>
         /// <param name="genre">Genre to remove.</param>
         /// <returns>A task.</returns>
@@ -1444,7 +1437,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Get all series in the database.
+        /// Get all series in the this.database.
         /// </summary>
         /// <returns>A list of series.</returns>
         public async Task<List<SeriesModel>> GetAllSeriesAsync()
@@ -1470,7 +1463,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a series in the database.
+        /// Add or update a series in the this.database.
         /// </summary>
         /// <param name="series">Series to save.</param>
         /// <returns>Series that has been saved.</returns>
@@ -1501,7 +1494,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(series);
                 }
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
@@ -1510,7 +1503,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove series from the database.
+        /// Remove series from the this.database.
         /// </summary>
         /// <param name="series">Series to remove.</param>
         /// <returns>A task.</returns>
@@ -1542,7 +1535,7 @@ namespace BookCollector.Data.Database
                     .Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(seriesName))
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
@@ -1622,7 +1615,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Get all locations in the database.
+        /// Get all locations in the this.database.
         /// </summary>
         /// <returns>A list of locations.</returns>
         public async Task<List<LocationModel>> GetAllLocationsAsync()
@@ -1648,7 +1641,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Add or update a location in the database.
+        /// Add or update a location in the this.database.
         /// </summary>
         /// <param name="location">Location to save.</param>
         /// <returns>Location that has been saved.</returns>
@@ -1679,7 +1672,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(location);
                 }
 
-                return ConvertTo<LocationModel>(location);
+                return BaseViewModel.ConvertTo<LocationModel>(location);
             }
             catch (Exception ex)
             {
@@ -1688,7 +1681,7 @@ namespace BookCollector.Data.Database
         }
 
         /// <summary>
-        /// Remove location from the database.
+        /// Remove location from the this.database.
         /// </summary>
         /// <param name="location">Location to remove.</param>
         /// <returns>A task.</returns>

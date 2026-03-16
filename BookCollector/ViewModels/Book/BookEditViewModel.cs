@@ -221,7 +221,7 @@ namespace BookCollector.ViewModels.Book
             this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{infoTextTitle}")}";
             this.PreviousViewModel = previousViewModel;
             this.SelectedBookFormat = this.EditedBook.BookFormat ?? AppStringResources.SelectABookFormat;
-            this.PopupWidth = this.DeviceWidth - 50;
+            this.PopupWidth = DeviceWidth - 50;
             RefreshView = true;
         }
 
@@ -261,12 +261,12 @@ namespace BookCollector.ViewModels.Book
         private bool HiddenLocationsOn { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of chapters to delete from the database.
+        /// Gets or sets a list of chapters to delete from the BaseViewModel.Database.
         /// </summary>
         private List<ChapterModel>? ChaptersToDelete { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of authors to delete from the database.
+        /// Gets or sets a list of authors to delete from the BaseViewModel.Database.
         /// </summary>
         private List<AuthorModel>? AuthorsToDelete { get; set; }
 
@@ -336,10 +336,24 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
+        {
+            this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
+            this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
+            this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
+
+            return true;
+        }
+
+        /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async new Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -483,7 +497,7 @@ namespace BookCollector.ViewModels.Book
 
                                 if (author == null)
                                 {
-                                    author = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(selectedAuthor));
+                                    author = await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(selectedAuthor));
                                     await AuthorEditViewModel.AddToStaticList(author);
                                     this.AuthorList.Add(author);
                                 }
@@ -615,7 +629,7 @@ namespace BookCollector.ViewModels.Book
                     {
                         foreach (var author in this.AuthorsToDelete)
                         {
-                            await Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid!, (Guid)this.EditedBook.BookGuid!);
+                            await BaseViewModel.Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid!, (Guid)this.EditedBook.BookGuid!);
                         }
                     }
 
@@ -643,12 +657,12 @@ namespace BookCollector.ViewModels.Book
                     }
 #endif
 
-                    this.EditedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.EditedBook)));
+                    this.EditedBook = ConvertTo<BookModel>(await BaseViewModel.Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.EditedBook)));
 
                     foreach (var author in authorList)
                     {
-                        var author1 = await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(author), this.EditedBook.BookGuid);
-                        await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author1));
+                        var author1 = await BaseViewModel.Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(author), this.EditedBook.BookGuid);
+                        await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author1));
                     }
 
                     await AddToStaticList(this.EditedBook, this.PreviousViewModel);
@@ -1296,15 +1310,6 @@ namespace BookCollector.ViewModels.Book
         {
             this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedBook.BookTitle);
             this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedBook.BookFormat);
-        }
-
-        private void GetPreferences()
-        {
-            this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
-            this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
         }
     }
 }

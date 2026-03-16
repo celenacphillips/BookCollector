@@ -49,7 +49,7 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static ObservableCollection<LocationModel>? filteredLocationList2;
+        public static ObservableCollection<LocationModel>? filteredLocationList;
 
         /// <summary>
         /// Gets or sets the total locations string.
@@ -82,16 +82,11 @@ namespace BookCollector.ViewModels.Groupings
         public LocationsViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.LocationView_InfoText}";
             this.ViewTitle = AppStringResources.Locations;
             RefreshView = true;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden locations or not.
@@ -108,11 +103,11 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         /// <param name="showHiddenLocations">Show hidden locations.</param>
         /// <returns>A task.</returns>
-        public static async Task SetList(bool showHiddenLocations)
+        public static async new Task SetList(bool showHiddenLocations)
         {
             fullLocationList ??= await FillLists.GetAllLocationsList();
 
-            hiddenFilteredLocationList = BaseViewModel.SetList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
+            hiddenFilteredLocationList = SetList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
         }
 
         /// <summary>
@@ -138,67 +133,85 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Set the view model data.
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
+        {
+            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+
+            return this.ShowHiddenLocations;
+        }
+
+        /// <summary>
+        /// Check if the list is null.
+        /// </summary>
+        /// <returns>If the list is null.</returns>
+        public override bool ListNullCheck()
+        {
+            return this.HiddenFilteredLocationList != null;
+        }
+
+        /// <summary>
+        /// Iterate through the list and set necessary data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        public async override Task SetListData()
         {
-            if (RefreshView)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
+            this.FilteredLocationList = this.HiddenFilteredLocationList;
 
-                    this.GetPreferences();
+            await Task.WhenAll(this.FilteredLocationList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
+            await Task.WhenAll(this.FilteredLocationList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+        }
 
-                    await SetList(this.ShowHiddenLocations);
+        /// <summary>
+        /// Find filters for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetFilters()
+        {
+            await this.SearchOnLocation(this.SearchString);
+        }
 
-                    if (this.HiddenFilteredLocationList != null)
-                    {
-                        this.FilteredLocationList2 = this.HiddenFilteredLocationList;
-
-                        this.TotalLocationsCount = this.HiddenFilteredLocationList.Count;
-
-                        await this.SearchOnLocation(this.SearchString);
-
-                        await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
-                        await Task.WhenAll(this.FilteredLocationList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
-
-                        var sortList = SortLists.SortLocationsList(
-                                this.FilteredLocationList2,
+        /// <summary>
+        /// Find sort values for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetSorts()
+        {
+            var sortList = SortLists.SortLocationsList(
+                                this.FilteredLocationList!,
                                 this.LocationNameChecked,
                                 this.TotalBooksChecked,
                                 this.TotalPriceChecked,
                                 this.AscendingChecked,
                                 this.DescendingChecked);
 
-                        this.FilteredLocationsCount = this.FilteredLocationList2.Count;
+            await Task.WhenAll(sortList);
 
-                        this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
+            this.FilteredLocationList = sortList.Result;
+        }
 
-                        this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
+        /// <summary>
+        /// Set data for view.
+        /// </summary>
+        public async override void SetViewStrings()
+        {
+            this.TotalLocationsCount = this.HiddenFilteredLocationList?.Count ?? 0;
 
-                        await Task.WhenAll(sortList);
+            this.FilteredLocationsCount = this.FilteredLocationList?.Count ?? 0;
 
-                        this.FilteredLocationList2 = sortList.Result;
-                    }
+            this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-            }
+            this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
         }
 
         /// <summary>
@@ -211,23 +224,23 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredLocationList2 != null && this.HiddenFilteredLocationList != null)
+            if (this.FilteredLocationList != null && this.HiddenFilteredLocationList != null)
             {
                 if (!string.IsNullOrEmpty(this.SearchString))
                 {
-                    this.FilteredLocationList2 = this.HiddenFilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                    this.FilteredLocationList = this.HiddenFilteredLocationList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
                 }
                 else
                 {
-                    this.FilteredLocationList2 = this.HiddenFilteredLocationList;
+                    this.FilteredLocationList = this.HiddenFilteredLocationList;
                 }
 
-                this.FilteredLocationsCount = this.FilteredLocationList2 != null ? this.FilteredLocationList2.Count : 0;
+                this.FilteredLocationsCount = this.FilteredLocationList != null ? this.FilteredLocationList.Count : 0;
 
                 this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
 
                 var sortList = SortLists.SortLocationsList(
-                                    this.FilteredLocationList2!,
+                                    this.FilteredLocationList!,
                                     this.LocationNameChecked,
                                     this.TotalBooksChecked,
                                     this.TotalPriceChecked,
@@ -236,7 +249,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 await Task.WhenAll(sortList);
 
-                this.FilteredLocationList2 = sortList.Result;
+                this.FilteredLocationList = sortList.Result;
             }
         }
 
@@ -248,9 +261,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
-            if (this.FilteredLocationList2 != null)
+            if (this.FilteredLocationList != null)
             {
-                var selected = this.FilteredLocationList2.FirstOrDefault(x => x.LocationGuid == input);
+                var selected = this.FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
 
                 if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
                 {
@@ -402,7 +415,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             if (LocationsViewModel.fullLocationList != null)
             {
-                LocationsViewModel.RefreshView = RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
+                LocationsViewModel.RefreshView = RemoveLocationFromStaticList(selected, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
             }
         }
 
@@ -451,19 +464,6 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
-        }
-
-        private void GetPreferences()
-        {
-            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
         }
     }
 }

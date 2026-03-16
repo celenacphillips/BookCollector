@@ -86,7 +86,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public string? searchString;
 
         /// <summary>
-        /// Gets or sets the database.
+        /// Gets or sets the BaseViewModel.Database.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Database connection")]
         internal static BookCollectorDatabase Database;
@@ -112,11 +112,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public BaseViewModel()
         {
-            this.DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
-            this.DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
+            DeviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
+            DeviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
             this.InfoText = string.Empty;
             this.View = new ContentPage();
-            this.MaxViewWidth = this.DeviceWidth - 20;
+            MaxViewWidth = DeviceWidth - 20;
         }
 
         /// <summary>
@@ -127,17 +127,17 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <summary>
         /// Gets or sets the device height.
         /// </summary>
-        public double DeviceHeight { get; set; }
+        public static double DeviceHeight { get; set; }
 
         /// <summary>
         /// Gets or sets the device width.
         /// </summary>
-        public double DeviceWidth { get; set; }
+        public static double DeviceWidth { get; set; }
 
         /// <summary>
         /// Gets or sets the max view width.
         /// </summary>
-        public double MaxViewWidth { get; set; }
+        public static double MaxViewWidth { get; set; }
 
         /// <summary>
         /// Gets or sets collection view height.
@@ -271,7 +271,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 foreach (var book in books)
                 {
                     book.HideBook = true;
-                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    await BaseViewModel.Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                 }
             }
         }
@@ -414,52 +414,52 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             ReadingViewModel.fullBookList?.Clear();
             ReadingViewModel.hiddenFilteredBookList?.Clear();
-            ReadingViewModel.filteredBookList2?.Clear();
+            ReadingViewModel.filteredBookList?.Clear();
             ReadingViewModel.RefreshView = true;
 
             ToBeReadViewModel.fullBookList?.Clear();
             ToBeReadViewModel.hiddenFilteredBookList?.Clear();
-            ToBeReadViewModel.filteredBookList2?.Clear();
+            ToBeReadViewModel.filteredBookList?.Clear();
             ToBeReadViewModel.RefreshView = true;
 
             ReadViewModel.fullBookList?.Clear();
             ReadViewModel.hiddenFilteredBookList?.Clear();
-            ReadViewModel.filteredBookList2?.Clear();
+            ReadViewModel.filteredBookList?.Clear();
             ReadViewModel.RefreshView = true;
 
             AllBooksViewModel.fullBookList?.Clear();
             AllBooksViewModel.hiddenFilteredBookList?.Clear();
-            AllBooksViewModel.filteredBookList2?.Clear();
+            AllBooksViewModel.filteredBookList?.Clear();
             AllBooksViewModel.RefreshView = true;
 
             CollectionsViewModel.fullCollectionList?.Clear();
             CollectionsViewModel.hiddenFilteredCollectionList?.Clear();
-            CollectionsViewModel.filteredCollectionList2?.Clear();
+            CollectionsViewModel.filteredCollectionList?.Clear();
             CollectionsViewModel.RefreshView = true;
 
             GenresViewModel.fullGenreList?.Clear();
             GenresViewModel.hiddenFilteredGenreList?.Clear();
-            GenresViewModel.filteredGenreList2?.Clear();
+            GenresViewModel.filteredGenreList?.Clear();
             GenresViewModel.RefreshView = true;
 
             SeriesViewModel.fullSeriesList?.Clear();
             SeriesViewModel.hiddenFilteredSeriesList?.Clear();
-            SeriesViewModel.filteredSeriesList2?.Clear();
+            SeriesViewModel.filteredSeriesList?.Clear();
             SeriesViewModel.RefreshView = true;
 
             AuthorsViewModel.fullAuthorList?.Clear();
             AuthorsViewModel.hiddenFilteredAuthorList?.Clear();
-            AuthorsViewModel.filteredAuthorList2?.Clear();
+            AuthorsViewModel.filteredAuthorList?.Clear();
             AuthorsViewModel.RefreshView = true;
 
             LocationsViewModel.fullLocationList?.Clear();
             LocationsViewModel.hiddenFilteredLocationList?.Clear();
-            LocationsViewModel.filteredLocationList2?.Clear();
+            LocationsViewModel.filteredLocationList?.Clear();
             LocationsViewModel.RefreshView = true;
 
             WishListViewModel.fullWishlistBookList?.Clear();
-            WishListViewModel.filteredWishlistBookList1?.Clear();
-            WishListViewModel.filteredWishlistBookList2?.Clear();
+            WishListViewModel.hiddenFilteredWishlistBookList?.Clear();
+            WishListViewModel.filteredWishlistBookList?.Clear();
             WishListViewModel.RefreshView = true;
         }
 
@@ -539,7 +539,90 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public abstract Task SetViewModelData();
+        public async Task SetViewModelData()
+        {
+            if (RefreshView)
+            {
+                try
+                {
+                    this.SetIsBusyTrue();
+
+                    var showHidden = this.GetPreferences();
+
+                    await this.SetList(showHidden);
+
+                    var listNotNull = this.ListNullCheck();
+
+                    if (listNotNull)
+                    {
+                        await this.SetListData();
+
+                        await this.SetFilters();
+
+                        await this.SetSorts();
+                    }
+
+                    this.SetViewStrings();
+
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
+                catch (Exception ex)
+                {
+#if DEBUG
+                    await this.DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public abstract bool GetPreferences();
+
+        /// <summary>
+        /// Set the view model list.
+        /// </summary>
+        /// <param name="showHidden">The show hidden list preference.</param>
+        /// <returns>The list show hidden preference.</returns>
+        public abstract Task SetList(bool showHidden);
+
+        /// <summary>
+        /// Check if the list is null.
+        /// </summary>
+        /// <returns>If the list is null.</returns>
+        public abstract bool ListNullCheck();
+
+        /// <summary>
+        /// Iterate through the list and set necessary data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetListData();
+
+        /// <summary>
+        /// Find filters for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetFilters();
+
+        /// <summary>
+        /// Find sort values for the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetSorts();
+
+        /// <summary>
+        /// Set data for view.
+        /// </summary>
+        public abstract void SetViewStrings();
 
         /// <summary>
         /// Show popup to edit or delete object.
@@ -551,7 +634,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var edit = $"{AppStringResources.Edit}";
             var delete = $"{AppStringResources.Delete}";
 
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, title, string.Empty, edit, delete, "Options"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, edit, delete, "Options"));
 
             return answer.Result;
         }
@@ -566,7 +649,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var file = AppStringResources.UploadExistingFile;
             var url = AppStringResources.BookCoverUrl;
 
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, title, string.Empty, file, url, "Options"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, file, url, "Options"));
 
             return answer.Result;
         }
@@ -600,7 +683,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             inputMessage ??= $"{AppStringResources.AreYouSure_Question}";
 
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
 
             if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
             {
@@ -624,7 +707,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var inputConfirm = $"{AppStringResources.OK}";
 
-            await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(this.DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, null, "Commands"));
+            await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, null, "Commands"));
         }
 
         /// <summary>
@@ -655,7 +738,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public void InfoPopup()
         {
-            this.View.ShowPopup(new InformationPopup(this.DeviceWidth - 50, this.InfoText));
+            this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, this.InfoText));
         }
 
         /// <summary>
