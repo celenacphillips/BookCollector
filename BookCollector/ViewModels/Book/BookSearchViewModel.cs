@@ -13,6 +13,7 @@ namespace BookCollector.ViewModels.Book
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.ViewModels.WishListBook;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
@@ -320,6 +321,36 @@ namespace BookCollector.ViewModels.Book
         {
             this.BookCover = imageSource;
             this.View.ShowPopup(new BookCoverPopup(this.BookCover));
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
         }
 
         private void SetData()

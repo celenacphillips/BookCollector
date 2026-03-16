@@ -11,6 +11,7 @@ namespace BookCollector.ViewModels.WishListBook
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Main;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
     using BookCollector.Views.WishListBook;
@@ -597,6 +598,36 @@ namespace BookCollector.ViewModels.WishListBook
             catch (Exception ex)
             {
             }
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
         }
 
         private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)

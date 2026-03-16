@@ -200,6 +200,142 @@ namespace BookCollector.Data
         /// <summary>
         /// Sort list based on the input parameters.
         /// </summary>
+        /// <param name="bookList">List to sort.</param>
+        /// <param name="bookTitleChecked">Book title checked option.</param>
+        /// <param name="bookPublisherChecked">Book publisher checked option.</param>
+        /// <param name="bookPublishYearChecked">Book publish year checked option.</param>
+        /// <param name="authorLastNameChecked">Author last name checked option.</param>
+        /// <param name="bookFormatChecked">Book format checked option.</param>
+        /// <param name="bookPriceChecked">Book price checked option.</param>
+        /// <param name="pageCountBookTimeChecked">Page count/book time checked option.</param>
+        /// <param name="ascendingChecked">Ascending checked option.</param>
+        /// <param name="descendingChecked">Descending checked option.</param>
+        /// <returns>The sorted list.</returns>
+        public static async Task<ObservableCollection<WishlistBookModel>> SortWishlistBookList(
+            ObservableCollection<WishlistBookModel> bookList,
+            bool bookTitleChecked,
+            bool bookPublisherChecked,
+            bool bookPublishYearChecked,
+            bool authorLastNameChecked,
+            bool bookFormatChecked,
+            bool bookPriceChecked,
+            bool pageCountBookTimeChecked,
+            bool ascendingChecked,
+            bool descendingChecked)
+        {
+            var filteredList = bookList;
+
+            if (bookTitleChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).ToObservableCollection();
+                }
+            }
+
+            if (bookPublisherChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
+                }
+            }
+
+            if (bookPublishYearChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
+                }
+            }
+
+            if (authorLastNameChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
+                }
+            }
+
+            if (bookFormatChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
+                }
+            }
+
+            if (bookPriceChecked)
+            {
+                if (ascendingChecked)
+                {
+                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
+                }
+            }
+
+            if (pageCountBookTimeChecked)
+            {
+                if (ascendingChecked)
+                {
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookTotalTime);
+
+                    var list = new List<WishlistBookModel>();
+                    list.AddRange(nonAudio);
+                    list.AddRange(audio);
+
+                    filteredList = list.ToObservableCollection();
+                }
+
+                if (descendingChecked)
+                {
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookTotalTime);
+
+                    var list = new List<WishlistBookModel>();
+                    list.AddRange(nonAudio);
+                    list.AddRange(audio);
+
+                    filteredList = list.ToObservableCollection();
+                }
+            }
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Sort list based on the input parameters.
+        /// </summary>
         /// <param name="collectionList">List to sort.</param>
         /// <param name="collectionNameChecked">Name checked option.</param>
         /// <param name="totalBooksChecked">Total books checked option.</param>
@@ -501,128 +637,6 @@ namespace BookCollector.Data
                 if (descendingChecked)
                 {
                     filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
-                }
-            }
-
-            return filteredList;
-        }
-
-        /// <summary>
-        /// Sort list based on the input parameters.
-        /// </summary>
-        /// <param name="bookList">List to sort.</param>
-        /// <param name="bookTitleChecked">Book title checked option.</param>
-        /// <param name="bookPublisherChecked">Book publisher checked option.</param>
-        /// <param name="bookPublishYearChecked">Book publish year checked option.</param>
-        /// <param name="authorLastNameChecked">Author last name checked option.</param>
-        /// <param name="bookFormatChecked">Book format checked option.</param>
-        /// <param name="bookPriceChecked">Book price checked option.</param>
-        /// <param name="pageCountTimeChecked">Page count/book time checked option.</param>
-        /// <param name="ascendingChecked">Ascending checked option.</param>
-        /// <param name="descendingChecked">Descending checked option.</param>
-        /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<WishlistBookModel>> SortWishlistBookList(
-            ObservableCollection<WishlistBookModel> bookList,
-            bool bookTitleChecked,
-            bool bookPublisherChecked,
-            bool bookPublishYearChecked,
-            bool authorLastNameChecked,
-            bool bookFormatChecked,
-            bool bookPriceChecked,
-            bool pageCountTimeChecked,
-            bool ascendingChecked,
-            bool descendingChecked)
-        {
-            var filteredList = bookList;
-
-            if (bookTitleChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).ToObservableCollection();
-                }
-            }
-
-            if (bookPublisherChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
-                }
-            }
-
-            if (bookPublishYearChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
-                }
-            }
-
-            if (authorLastNameChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
-                }
-            }
-
-            if (bookFormatChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
-                }
-            }
-
-            if (bookPriceChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
-                }
-            }
-
-            if (pageCountTimeChecked)
-            {
-                if (ascendingChecked)
-                {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal).ToObservableCollection();
-                }
-
-                if (descendingChecked)
-                {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal).ToObservableCollection();
                 }
             }
 

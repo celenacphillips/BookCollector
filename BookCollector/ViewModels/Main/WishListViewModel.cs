@@ -207,7 +207,8 @@ namespace BookCollector.ViewModels.Main
             var authors = FillLists.GetAllAuthorsInWishlistBookList(this.HiddenFilteredWishlistBookList!);
             var locations = FillLists.GetAllLocationsInWishlistBookList(this.HiddenFilteredWishlistBookList!);
             var series = FillLists.GetAllSeriesInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var filteredList = FilterLists.FilterWishlistBookList(
+
+            var filteredList = FilterLists.FilterList(
                     this.HiddenFilteredWishlistBookList!,
                     this.BookFormatOption,
                     this.BookPublisherOption,
@@ -288,7 +289,7 @@ namespace BookCollector.ViewModels.Main
                 }
                 else
                 {
-                    this.FilteredWishlistBookList = await FilterLists.FilterWishlistBookList(
+                    this.FilteredWishlistBookList = await FilterLists.FilterList(
                                 this.HiddenFilteredWishlistBookList,
                                 this.BookFormatOption,
                                 this.BookPublisherOption,
@@ -301,25 +302,9 @@ namespace BookCollector.ViewModels.Main
                                 this.SearchString);
                 }
 
-                this.FilteredBooksCount = this.FilteredWishlistBookList != null ? this.FilteredWishlistBookList.Count : 0;
+                this.SetViewStrings();
 
-                this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-
-                var sortList = SortLists.SortWishlistBookList(
-                                    this.FilteredWishlistBookList!,
-                                    this.BookTitleChecked,
-                                    this.BookPublisherChecked,
-                                    this.BookPublishYearChecked,
-                                    this.AuthorLastNameChecked,
-                                    this.BookFormatChecked,
-                                    this.BookPriceChecked,
-                                    this.PageCountBookTimeChecked,
-                                    this.AscendingChecked,
-                                    this.DescendingChecked);
-
-                await Task.WhenAll(sortList);
-
-                this.FilteredWishlistBookList = sortList.Result;
+                await this.SetSorts();
             }
         }
 
@@ -356,93 +341,90 @@ namespace BookCollector.ViewModels.Main
         }
 
         /// <summary>
-        /// Show filter popup.
+        /// Set data for filter popup.
         /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task FilterPopup()
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
         {
-            if (!string.IsNullOrEmpty(this.ViewTitle))
-            {
-                var popup = new FilterPopup();
-                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View)
-                {
-                    AuthorVisible = true,
-                    AuthorOption = this.BookAuthorOption,
-                    FormatVisible = true,
-                    FormatOption = this.BookFormatOption,
-                    PublisherVisible = true,
-                    PublisherOption = this.BookPublisherOption,
-                    PublishYearVisible = true,
-                    PublishYearOption = this.BookPublishYearOption,
-                    LanguageVisible = true,
-                    LanguageOption = this.BookLanguageOption,
-                    SeriesVisible = true,
-                    SeriesOption = this.BookSeriesOption,
-                    LocationVisible = true,
-                    LocationOption = this.BookLocationOption,
-                    BookCoverVisible = true,
-                    BookCoverOption = this.BookCoverOption,
-                };
-                viewModel.SetFavoritePicker();
-                viewModel.SetFormatPicker(this.BookFormats);
-                viewModel.SetPublisherPicker(this.BookPublisherList);
-                viewModel.SetPublishYearPicker(this.BookPublishYearList);
-                viewModel.SetLanguagePicker(this.BookLanguageList);
-                viewModel.SetAuthorPicker(this.BookAuthorList);
-                viewModel.SetLocationPicker(this.BookLocationList);
-                viewModel.SetSeriesPicker(this.BookSeriesList);
+            viewModel.AuthorVisible = true;
+            viewModel.AuthorOption = this.BookAuthorOption;
+            /******************************/
+            viewModel.FormatVisible = true;
+            viewModel.FormatOption = this.BookFormatOption;
+            /******************************/
+            viewModel.PublisherVisible = true;
+            viewModel.PublisherOption = this.BookPublisherOption;
+            /******************************/
+            viewModel.PublishYearVisible = true;
+            viewModel.PublishYearOption = this.BookPublishYearOption;
+            /******************************/
+            viewModel.LanguageVisible = true;
+            viewModel.LanguageOption = this.BookLanguageOption;
+            /******************************/
+            viewModel.SeriesVisible = true;
+            viewModel.SeriesOption = this.BookSeriesOption;
+            /******************************/
+            viewModel.LocationVisible = true;
+            viewModel.LocationOption = this.BookLocationOption;
+            /******************************/
+            viewModel.BookCoverVisible = true;
+            viewModel.BookCoverOption = this.BookCoverOption;
 
-                popup.BindingContext = viewModel;
-
-                var result = await this.View.ShowPopupAsync(popup);
-                if (!result.WasDismissedByTappingOutsideOfPopup)
-                {
-                    RefreshView = true;
-                    await this.SetViewModelData();
-                }
-            }
+            return viewModel;
         }
 
         /// <summary>
-        /// Show sort popup.
+        /// Set data for filter popup.
         /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task SortPopup()
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
         {
-            if (!string.IsNullOrEmpty(this.ViewTitle))
-            {
-                var popup = new SortPopup();
-                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
-                {
-                    BookTitleVisible = true,
-                    BookTitleChecked = this.BookTitleChecked,
-                    BookPublisherVisible = true,
-                    BookPublisherChecked = this.BookPublisherChecked,
-                    BookPublishYearVisible = true,
-                    BookPublishYearChecked = this.BookPublishYearChecked,
-                    AuthorLastNameVisible = true,
-                    AuthorLastNameChecked = this.AuthorLastNameChecked,
-                    BookFormatVisible = true,
-                    BookFormatChecked = this.BookFormatChecked,
-                    PageCountTimeVisible = true,
-                    PageCountTimeChecked = this.PageCountBookTimeChecked,
-                    BookPriceVisible = true,
-                    BookPriceChecked = this.BookPriceChecked,
-                    AscendingChecked = this.AscendingChecked,
-                    DescendingChecked = this.DescendingChecked,
-                };
+            viewModel.SetFavoritePicker();
+            viewModel.SetFormatPicker(this.BookFormats);
+            viewModel.SetPublisherPicker(this.BookPublisherList);
+            viewModel.SetPublishYearPicker(this.BookPublishYearList);
+            viewModel.SetLanguagePicker(this.BookLanguageList);
+            viewModel.SetAuthorPicker(this.BookAuthorList);
+            viewModel.SetLocationPicker(this.BookLocationList);
+            viewModel.SetSeriesPicker(this.BookSeriesList);
 
-                popup.BindingContext = viewModel;
+            return viewModel;
+        }
 
-                var result = await this.View.ShowPopupAsync(popup);
-                if (!result.WasDismissedByTappingOutsideOfPopup)
-                {
-                    RefreshView = true;
-                    await this.SetViewModelData();
-                }
-            }
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            viewModel.BookTitleVisible = true;
+            viewModel.BookTitleChecked = this.BookTitleChecked;
+            /******************************/
+            viewModel.BookPublisherVisible = true;
+            viewModel.BookPublisherChecked = this.BookPublisherChecked;
+            /******************************/
+            viewModel.BookPublishYearVisible = true;
+            viewModel.BookPublishYearChecked = this.BookPublishYearChecked;
+            /******************************/
+            viewModel.AuthorLastNameVisible = true;
+            viewModel.AuthorLastNameChecked = this.AuthorLastNameChecked;
+            /******************************/
+            viewModel.BookFormatVisible = true;
+            viewModel.BookFormatChecked = this.BookFormatChecked;
+            /******************************/
+            viewModel.PageCountTimeVisible = true;
+            viewModel.PageCountTimeChecked = this.PageCountBookTimeChecked;
+            /******************************/
+            viewModel.BookPriceVisible = true;
+            viewModel.BookPriceChecked = this.BookPriceChecked;
+            /******************************/
+            viewModel.AscendingChecked = this.AscendingChecked;
+            viewModel.DescendingChecked = this.DescendingChecked;
+
+            return viewModel;
         }
 
         /// <summary>

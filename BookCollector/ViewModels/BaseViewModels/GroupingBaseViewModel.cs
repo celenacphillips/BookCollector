@@ -4,7 +4,7 @@
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
-    using System.Collections;
+    using BookCollector.ViewModels.Popups;
 
     /// <summary>
     /// GroupingBaseViewModel class.
@@ -20,5 +20,35 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets a value indicating whether total price is checked or not.
         /// </summary>
         public bool TotalPriceChecked { get; set; }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
     }
 }

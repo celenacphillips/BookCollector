@@ -13,6 +13,7 @@ namespace BookCollector.ViewModels.Book
     using BookCollector.ViewModels.Author;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Author;
     using BookCollector.Views.Book;
     using BookCollector.Views.Collection;
@@ -1304,6 +1305,36 @@ namespace BookCollector.ViewModels.Book
             catch (Exception ex)
             {
             }
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
         }
 
         private void ValidateEntry()

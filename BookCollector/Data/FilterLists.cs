@@ -30,7 +30,7 @@ namespace BookCollector.Data
         /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static async Task<ObservableCollection<BookModel>> FilterBookList(
+        public static async Task<ObservableCollection<BookModel>> FilterList(
             ObservableCollection<BookModel> bookList,
             string? favoritesOption,
             string? formatOption,
@@ -91,7 +91,7 @@ namespace BookCollector.Data
         /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static async Task<ObservableCollection<WishlistBookModel>> FilterWishlistBookList(
+        public static async Task<ObservableCollection<WishlistBookModel>> FilterList(
             ObservableCollection<WishlistBookModel> bookList,
             string? formatOption,
             string? publisherOption,
@@ -129,6 +129,91 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Apply filters to author list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="authorList">Author list to filter.</param>
+        /// <param name="searchString">Author name search string to find.</param>
+        /// <returns>A filtered author list.</returns>
+        public static async Task<ObservableCollection<AuthorModel>> FilterList(
+            ObservableCollection<AuthorModel> authorList,
+            string? searchString)
+        {
+            var filteredList = authorList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Apply filters to collection list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="collectionList">Collection list to filter.</param>
+        /// <param name="searchString">Collection name search string to find.</param>
+        /// <returns>A filtered collection list.</returns>
+        public static async Task<ObservableCollection<CollectionModel>> FilterList(
+            ObservableCollection<CollectionModel> collectionList,
+            string? searchString)
+        {
+            var filteredList = collectionList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Apply filters to genre list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="genreList">Genre list to filter.</param>
+        /// <param name="searchString">Genre name search string to find.</param>
+        /// <returns>A filtered genre list.</returns>
+        public static async Task<ObservableCollection<GenreModel>> FilterList(
+            ObservableCollection<GenreModel> genreList,
+            string? searchString)
+        {
+            var filteredList = genreList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Apply filters to location list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="locationList">Location list to filter.</param>
+        /// <param name="searchString">Location name search string to find.</param>
+        /// <returns>A filtered location list.</returns>
+        public static async Task<ObservableCollection<LocationModel>> FilterList(
+            ObservableCollection<LocationModel> locationList,
+            string? searchString)
+        {
+            var filteredList = locationList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Apply filters to series list based on the given filter options and search string.
+        /// </summary>
+        /// <param name="seriesList">Series list to filter.</param>
+        /// <param name="searchString">Series name search string to find.</param>
+        /// <returns>A filtered series list.</returns>
+        public static async Task<ObservableCollection<SeriesModel>> FilterList(
+            ObservableCollection<SeriesModel> seriesList,
+            string? searchString)
+        {
+            var filteredList = seriesList;
+
+            filteredList = FilterOnSearchString(filteredList, searchString);
+
+            return filteredList;
+        }
+
         /********************************************************/
 
         /// <summary>
@@ -162,6 +247,96 @@ namespace BookCollector.Data
             if (!string.IsNullOrEmpty(searchString))
             {
                 filterList = filterList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /// <summary>
+        /// Apply search string filter to author list based on the given search string.
+        /// </summary>
+        /// <param name="authorList">Author list to filter.</param>
+        /// <param name="searchString">Author name search string to find.</param>
+        /// <returns>A filtered book list.</returns>
+        public static ObservableCollection<AuthorModel> FilterOnSearchString(ObservableCollection<AuthorModel> authorList, string? searchString)
+        {
+            var filterList = authorList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.FullName) && x.FullName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /// <summary>
+        /// Apply search string filter to collection list based on the given search string.
+        /// </summary>
+        /// <param name="collectionList">Collection list to filter.</param>
+        /// <param name="searchString">Collection name search string to find.</param>
+        /// <returns>A filtered book list.</returns>
+        public static ObservableCollection<CollectionModel> FilterOnSearchString(ObservableCollection<CollectionModel> collectionList, string? searchString)
+        {
+            var filterList = collectionList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /// <summary>
+        /// Apply search string filter to genre list based on the given search string.
+        /// </summary>
+        /// <param name="genreList">Genre list to filter.</param>
+        /// <param name="searchString">Genre name search string to find.</param>
+        /// <returns>A filtered book list.</returns>
+        public static ObservableCollection<GenreModel> FilterOnSearchString(ObservableCollection<GenreModel> genreList, string? searchString)
+        {
+            var filterList = genreList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /// <summary>
+        /// Apply search string filter to location list based on the given search string.
+        /// </summary>
+        /// <param name="locationList">Location list to filter.</param>
+        /// <param name="searchString">Location name search string to find.</param>
+        /// <returns>A filtered book list.</returns>
+        public static ObservableCollection<LocationModel> FilterOnSearchString(ObservableCollection<LocationModel> locationList, string? searchString)
+        {
+            var filterList = locationList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /// <summary>
+        /// Apply search string filter to series list based on the given search string.
+        /// </summary>
+        /// <param name="seriesList">Series list to filter.</param>
+        /// <param name="searchString">Series name search string to find.</param>
+        /// <returns>A filtered book list.</returns>
+        public static ObservableCollection<SeriesModel> FilterOnSearchString(ObservableCollection<SeriesModel> seriesList, string? searchString)
+        {
+            var filterList = seriesList;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;

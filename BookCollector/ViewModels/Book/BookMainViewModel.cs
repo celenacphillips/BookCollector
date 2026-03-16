@@ -11,6 +11,7 @@ namespace BookCollector.ViewModels.Book
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -293,6 +294,36 @@ namespace BookCollector.ViewModels.Book
             this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
 
             return this.HiddenAuthorsOn;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
         }
     }
 }

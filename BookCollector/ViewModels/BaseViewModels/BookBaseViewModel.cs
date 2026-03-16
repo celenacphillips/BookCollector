@@ -14,6 +14,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Location;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
@@ -24,7 +25,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     /// <summary>
     /// BookBaseViewModel class.
     /// </summary>
-    public partial class BookBaseViewModel : BaseViewModel
+    public abstract partial class BookBaseViewModel : BaseViewModel
     {
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -985,6 +986,76 @@ namespace BookCollector.ViewModels.BaseViewModels
         public async override void SetViewStrings()
         {
         }
+
+        /// <summary>
+        /// Show filter popup.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task FilterPopup()
+        {
+            if (!string.IsNullOrEmpty(this.ViewTitle))
+            {
+                var popup = new FilterPopup();
+                var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View);
+                viewModel = this.SetFilterPopupValues(viewModel);
+                viewModel = this.SetFilterPopupLists(viewModel);
+
+                popup.BindingContext = viewModel;
+
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    RefreshView = true;
+                    await this.SetViewModelData();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel);
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel);
+
+        /// <summary>
+        /// Show sort popup.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task SortPopup()
+        {
+            if (!string.IsNullOrEmpty(this.ViewTitle))
+            {
+                var popup = new SortPopup();
+                var viewModel = new SortPopupViewModel(popup, this.ViewTitle);
+                viewModel = this.SetSortPopupValues(viewModel);
+
+                popup.BindingContext = viewModel;
+
+                var result = await this.View.ShowPopupAsync(popup);
+                if (!result.WasDismissedByTappingOutsideOfPopup)
+                {
+                    RefreshView = true;
+                    await this.SetViewModelData();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel);
 
         /// <summary>
         /// Navigate to the book main view when book is selected.

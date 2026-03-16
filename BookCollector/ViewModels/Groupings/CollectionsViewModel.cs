@@ -187,7 +187,9 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public async override Task SetFilters()
         {
-            await this.SearchOnCollection(this.SearchString);
+            this.FilteredCollectionList = await FilterLists.FilterList(
+                                this.HiddenFilteredCollectionList!,
+                                this.SearchString);
         }
 
         /// <summary>
@@ -237,30 +239,18 @@ namespace BookCollector.ViewModels.Groupings
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    this.FilteredCollectionList = this.HiddenFilteredCollectionList
-                        .Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(input.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase))
-                        .ToObservableCollection();
+                    this.FilteredCollectionList = FilterLists.FilterOnSearchString(this.HiddenFilteredCollectionList, input);
                 }
                 else
                 {
-                    this.FilteredCollectionList = this.HiddenFilteredCollectionList;
+                    this.FilteredCollectionList = await FilterLists.FilterList(
+                                this.HiddenFilteredCollectionList,
+                                this.SearchString);
                 }
 
-                this.FilteredCollectionsCount = this.FilteredCollectionList != null ? this.FilteredCollectionList.Count : 0;
+                this.SetViewStrings();
 
-                this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
-
-                var sortList = SortLists.SortCollectionsList(
-                                    this.FilteredCollectionList!,
-                                    this.CollectionNameChecked,
-                                    this.TotalBooksChecked,
-                                    this.TotalPriceChecked,
-                                    this.AscendingChecked,
-                                    this.DescendingChecked);
-
-                await Task.WhenAll(sortList);
-
-                this.FilteredCollectionList = sortList.Result;
+                await this.SetSorts();
             }
         }
 
@@ -390,36 +380,25 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
-        /// Show sort popup.
+        /// Set data for sort popup.
         /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task SortPopup()
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
         {
-            if (!string.IsNullOrEmpty(this.ViewTitle))
-            {
-                var popup = new SortPopup();
-                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
-                {
-                    CollectionNameVisible = true,
-                    CollectionNameChecked = this.CollectionNameChecked,
-                    TotalBooksVisible = true,
-                    TotalBooksChecked = this.TotalBooksChecked,
-                    TotalPriceVisible = true,
-                    TotalPriceChecked = this.TotalPriceChecked,
-                    AscendingChecked = this.AscendingChecked,
-                    DescendingChecked = this.DescendingChecked,
-                };
+            viewModel.CollectionNameVisible = true;
+            viewModel.CollectionNameChecked = this.CollectionNameChecked;
+            /******************************/
+            viewModel.TotalBooksVisible = true;
+            viewModel.TotalBooksChecked = this.TotalBooksChecked;
+            /******************************/
+            viewModel.TotalPriceVisible = true;
+            viewModel.TotalPriceChecked = this.TotalPriceChecked;
+            /******************************/
+            viewModel.AscendingChecked = this.AscendingChecked;
+            viewModel.DescendingChecked = this.DescendingChecked;
 
-                popup.BindingContext = viewModel;
-
-                var result = await this.View.ShowPopupAsync(popup);
-                if (!result.WasDismissedByTappingOutsideOfPopup)
-                {
-                    RefreshView = true;
-                    await this.SetViewModelData();
-                }
-            }
+            return viewModel;
         }
 
         private static void RemoveFromStaticList(CollectionModel selected)

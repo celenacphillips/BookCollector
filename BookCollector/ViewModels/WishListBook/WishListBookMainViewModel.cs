@@ -13,6 +13,7 @@ namespace BookCollector.ViewModels.WishListBook
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Main;
+    using BookCollector.ViewModels.Popups;
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.WishListBook;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -344,6 +345,36 @@ namespace BookCollector.ViewModels.WishListBook
                     Title = title,
                 });
             }
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            return viewModel;
         }
 
         private void RemoveFromStaticList()
