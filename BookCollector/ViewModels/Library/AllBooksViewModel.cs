@@ -19,7 +19,7 @@ namespace BookCollector.ViewModels.Library
     /// <summary>
     /// AllBooksViewModel class.
     /// </summary>
-    public partial class AllBooksViewModel : BookBaseViewModel
+    public partial class AllBooksViewModel : BookListBaseViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.

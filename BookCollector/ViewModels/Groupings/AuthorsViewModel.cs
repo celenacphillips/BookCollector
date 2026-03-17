@@ -130,7 +130,7 @@ namespace BookCollector.ViewModels.Groupings
 
                     books = books?.Where(x => !x.HideBook).ToObservableCollection();
 
-                    await BaseViewModel.UpdateBooksToHide(books);
+                    await UpdateBooksToHide(books);
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace BookCollector.ViewModels.Main
     /// <summary>
     /// WishListViewModel class.
     /// </summary>
-    public partial class WishListViewModel : BookBaseViewModel
+    public partial class WishListViewModel : BookListBaseViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.

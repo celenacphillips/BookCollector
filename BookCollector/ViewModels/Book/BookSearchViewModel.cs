@@ -145,9 +145,21 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Gets or sets previous view model to return to after closing the popup or saving the book.
+        /// Set the view model data.
         /// </summary>
-        public object? PreviousViewModel { get; set; }
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
+        /// <summary>
+        /// Set the view model list.
+        /// </summary>
+        /// <param name="showHidden">The show hidden list preference.</param>
+        /// <returns>A task.</returns>
+        public async override Task SetList(bool showHidden)
+        {
+        }
 
         /// <summary>
         /// Sets the expander arrow boolean values on change.
@@ -321,36 +333,6 @@ namespace BookCollector.ViewModels.Book
         {
             this.BookCover = imageSource;
             this.View.ShowPopup(new BookCoverPopup(this.BookCover));
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
-        {
-            return viewModel;
         }
 
         private void SetData()

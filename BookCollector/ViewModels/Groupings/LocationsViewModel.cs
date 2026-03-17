@@ -127,7 +127,7 @@ namespace BookCollector.ViewModels.Groupings
                         .Where(x => x.BookLocationGuid == item.LocationGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    await BaseViewModel.UpdateBooksToHide(books);
+                    await UpdateBooksToHide(books);
                 }
             }
         }

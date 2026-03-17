@@ -19,7 +19,7 @@ namespace BookCollector.ViewModels.Library
     /// <summary>
     /// ToBeReadViewModel class.
     /// </summary>
-    public partial class ToBeReadViewModel : BookBaseViewModel
+    public partial class ToBeReadViewModel : BookListBaseViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.

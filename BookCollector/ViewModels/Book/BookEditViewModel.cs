@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Book
     /// <summary>
     /// BookEditViewModel class.
     /// </summary>
-    public partial class BookEditViewModel : BookBaseViewModel
+    public partial class BookEditViewModel : BookEditBaseViewModel
     {
         /// <summary>
         /// Gets or sets the book to edit.
@@ -39,60 +39,12 @@ namespace BookCollector.ViewModels.Book
         public BookModel editedBook;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the book title is valid or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookTitleNotValid;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the book format is valid or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookFormatNotValid;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1SectionValue;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1Open;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is not open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1NotOpen;
-
-        /// <summary>
         /// Gets or sets a value indicating whether pages read stepper is enabled or not.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool pagesReadStepperEnabled;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the time listened stepper is enabled or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool timeListenedStepperEnabled;
 
         /// <summary>
         /// Gets or sets the series list.
@@ -143,14 +95,6 @@ namespace BookCollector.ViewModels.Book
         public ObservableCollection<LocationModel>? locationList;
 
         /// <summary>
-        /// Gets or sets the author list.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<AuthorModel>? authorList;
-
-        /// <summary>
         /// Gets or sets the author pickers list.
         /// </summary>
         [ObservableProperty]
@@ -165,14 +109,6 @@ namespace BookCollector.ViewModels.Book
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCheckpoints;
-
-        /// <summary>
-        /// Gets or sets the selected book format.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string selectedBookFormat;
 
         /// <summary>
         /// Gets or sets the selected series string.
@@ -227,21 +163,6 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to remove the main view before.
-        /// </summary>
-        public bool RemoveMainViewBefore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the main view before, to return to after closing the popup.
-        /// </summary>
-        public BookMainView? MainViewBefore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the popup width.
-        /// </summary>
-        public double PopupWidth { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show hidden collections or not.
         /// </summary>
         private bool HiddenCollectionsOn { get; set; }
@@ -270,11 +191,6 @@ namespace BookCollector.ViewModels.Book
         /// Gets or sets a list of authors to delete from the BaseViewModel.Database.
         /// </summary>
         private List<AuthorModel>? AuthorsToDelete { get; set; }
-
-        /// <summary>
-        /// Gets or sets previous view model to return to after closing the popup or saving the book.
-        /// </summary>
-        private object? PreviousViewModel { get; set; }
 
         /// <summary>
         /// Show view to add a new series.
@@ -340,7 +256,7 @@ namespace BookCollector.ViewModels.Book
         /// Set the view model preferences.
         /// </summary>
         /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
+        public bool GetPreferences()
         {
             this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
             this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
@@ -354,7 +270,7 @@ namespace BookCollector.ViewModels.Book
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -399,7 +315,6 @@ namespace BookCollector.ViewModels.Book
                         this.ShowPages = false;
                         this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
                         this.BookIsRead = this.EditedBook.BookListenedTime == this.EditedBook.BookTotalTime && this.EditedBook.BookTotalTime != 0;
-                        this.TimeListenedStepperEnabled = this.EditedBook.BookHoursTotal != 0 || this.EditedBook.BookMinutesTotal != 0;
                     }
 
                     if (!string.IsNullOrEmpty(this.EditedBook.BookCoverFileName))
@@ -670,7 +585,7 @@ namespace BookCollector.ViewModels.Book
 
                     if (this.RemoveMainViewBefore)
                     {
-                        Shell.Current.Navigation.RemovePage(this.MainViewBefore);
+                        Shell.Current.Navigation.RemovePage((BookMainView)this.MainViewBefore!);
                     }
 
                     var view = new BookMainView(this.EditedBook, $"{this.EditedBook.BookTitle}");
@@ -692,17 +607,6 @@ namespace BookCollector.ViewModels.Book
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Sets the expander arrow boolean values on change.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task BookInfo1Changed()
-        {
-            this.BookInfo1Open = this.BookInfo1SectionValue;
-            this.BookInfo1NotOpen = !this.BookInfo1SectionValue;
         }
 
         /// <summary>
@@ -898,7 +802,6 @@ namespace BookCollector.ViewModels.Book
                 stepper.Maximum = (int)this.EditedBook.BookPageTotal;
             }
 
-            this.TimeListenedStepperEnabled = this.EditedBook.BookTotalTime != 0;
             this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
             await this.EditedBook.SetReadingProgress();
             await this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints);
@@ -1099,26 +1002,6 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Validate book format.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ValidateBookFormat()
-        {
-            this.ValidateEntry();
-        }
-
-        /// <summary>
-        /// Validate book title.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ValidateBookTitle()
-        {
-            this.ValidateEntry();
-        }
-
-        /// <summary>
         /// Show filter list popup for book formats.
         /// </summary>
         /// <returns>A task.</returns>
@@ -1308,36 +1191,9 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Set data for filter popup.
+        /// Validate data entry.
         /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        private void ValidateEntry()
+        public override void ValidateEntry()
         {
             this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedBook.BookTitle);
             this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedBook.BookFormat);

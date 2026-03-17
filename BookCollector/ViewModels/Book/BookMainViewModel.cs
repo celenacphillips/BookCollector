@@ -61,15 +61,10 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Gets or sets previous view model to return to after closing the popup or saving the book.
-        /// </summary>
-        private object? PreviousViewModel { get; set; }
-
-        /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (this.SelectedBook != null)
             {
@@ -251,7 +246,7 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task ShareList()
+        public async Task ShareBook()
         {
             if (this.SelectedBook != null)
             {
@@ -286,44 +281,23 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
+        /// Set the view model list.
+        /// </summary>
+        /// <param name="showHidden">The show hidden list preference.</param>
+        /// <returns>A task.</returns>
+        public async override Task SetList(bool showHidden)
+        {
+        }
+
+        /// <summary>
         /// Set the view model preferences.
         /// </summary>
         /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
+        public bool GetPreferences()
         {
             this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
 
             return this.HiddenAuthorsOn;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
-        {
-            return viewModel;
         }
     }
 }

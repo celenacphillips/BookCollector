@@ -21,7 +21,7 @@ namespace BookCollector.ViewModels.Groupings
     /// <summary>
     /// ExistingBooksViewModel class.
     /// </summary>
-    public partial class ExistingBooksViewModel : BookBaseViewModel
+    public partial class ExistingBooksViewModel : BookListBaseViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.
@@ -117,16 +117,11 @@ namespace BookCollector.ViewModels.Groupings
         private string? SelectedObjectName { get; set; }
 
         /// <summary>
-        /// Gets or sets previous view model to return to.
-        /// </summary>
-        private object? PreviousViewModel { get; set; }
-
-        /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
         /// <returns>A task.</returns>
-        public async new Task SetList(bool showHiddenBooks)
+        public async override Task SetList(bool showHiddenBooks)
         {
             switch (this.SelectedObjectType)
             {

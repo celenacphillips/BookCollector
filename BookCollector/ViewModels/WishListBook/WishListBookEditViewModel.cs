@@ -22,7 +22,7 @@ namespace BookCollector.ViewModels.WishListBook
     /// <summary>
     /// WishListBookEditViewModel class.
     /// </summary>
-    public partial class WishListBookEditViewModel : BookBaseViewModel
+    public partial class WishListBookEditViewModel : BookEditBaseViewModel
     {
         /// <summary>
         /// Gets or sets the book to edit.
@@ -31,62 +31,6 @@ namespace BookCollector.ViewModels.WishListBook
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public WishlistBookModel editedWishlistBook;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the book title is valid or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookTitleNotValid;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the book format is valid or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookFormatNotValid;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1SectionValue;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1Open;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the first section in book info is open or not.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public bool bookInfo1NotOpen;
-
-        /// <summary>
-        /// Gets or sets the author list.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<AuthorModel>? authorList;
-
-        /// <summary>
-        /// Gets or sets the selected book format.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public string selectedBookFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WishListBookEditViewModel"/> class.
@@ -105,21 +49,6 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to remove the main view before.
-        /// </summary>
-        public bool RemoveMainViewBefore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the main view before, to return to after closing the popup.
-        /// </summary>
-        public WishListBookMainView? MainViewBefore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the popup width.
-        /// </summary>
-        public double PopupWidth { get; set; }
-
-        /// <summary>
         /// Add book to static list.
         /// </summary>
         /// <param name="book">Book to add.</param>
@@ -136,7 +65,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -317,7 +246,7 @@ namespace BookCollector.ViewModels.WishListBook
 
                     if (this.RemoveMainViewBefore)
                     {
-                        Shell.Current.Navigation.RemovePage(this.MainViewBefore);
+                        Shell.Current.Navigation.RemovePage((WishListBookMainView)this.MainViewBefore!);
                     }
 
                     var view = new WishListBookMainView(this.EditedWishlistBook, $"{this.EditedWishlistBook.BookTitle}");
@@ -339,17 +268,6 @@ namespace BookCollector.ViewModels.WishListBook
 #endif
                 this.SetIsBusyFalse();
             }
-        }
-
-        /// <summary>
-        /// Sets the expander arrow boolean values on change.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task BookInfo1Changed()
-        {
-            this.BookInfo1Open = this.BookInfo1SectionValue;
-            this.BookInfo1NotOpen = !this.BookInfo1SectionValue;
         }
 
         /// <summary>
@@ -520,26 +438,6 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         /// <summary>
-        /// Validate book format.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ValidateBookFormat()
-        {
-            this.ValidateEntry();
-        }
-
-        /// <summary>
-        /// Validate book title.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ValidateBookTitle()
-        {
-            this.ValidateEntry();
-        }
-
-        /// <summary>
         /// Show popup with time entries to set the total time.
         /// </summary>
         /// <returns>A task.</returns>
@@ -601,33 +499,12 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         /// <summary>
-        /// Set data for filter popup.
+        /// Validate data entry.
         /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        public override void ValidateEntry()
         {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
-        {
-            return viewModel;
+            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
+            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
         }
 
         private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)
@@ -674,12 +551,6 @@ namespace BookCollector.ViewModels.WishListBook
             }
 
             return refresh;
-        }
-
-        private void ValidateEntry()
-        {
-            this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
-            this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
         }
     }
 }

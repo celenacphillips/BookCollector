@@ -21,7 +21,7 @@
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
 
-        <ToolbarItem Command="{Binding ShareListCommand}"
+        <ToolbarItem Command="{Binding ShareBookCommand}"
                      IsEnabled="{Binding IsEnabled}">
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="MaterialDesignIcons" 

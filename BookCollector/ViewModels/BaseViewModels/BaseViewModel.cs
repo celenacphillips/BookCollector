@@ -161,6 +161,21 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool DescendingChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets previous view model to return to after closing the popup or saving the book.
+        /// </summary>
+        public object? PreviousViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the popup width.
+        /// </summary>
+        public double PopupWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the popup height.
+        /// </summary>
+        public double PopupHeight { get; set; }
+
+        /// <summary>
         /// Download an image from a URL and return byte array.
         /// </summary>
         /// <param name="imageURL">Image URL to download.</param>
@@ -258,23 +273,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             return destination;
-        }
-
-        /// <summary>
-        /// Update books in list to hide.
-        /// </summary>
-        /// <param name="books">Books to hide.</param>
-        /// <returns>A task.</returns>
-        public static async Task UpdateBooksToHide(ObservableCollection<BookModel>? books)
-        {
-            if (books != null)
-            {
-                foreach (var book in books)
-                {
-                    book.HideBook = true;
-                    await BaseViewModel.Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                }
-            }
         }
 
         /// <summary>
@@ -540,90 +538,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async Task SetViewModelData()
-        {
-            if (RefreshView)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
-
-                    var showHidden = this.GetPreferences();
-
-                    await this.SetList(showHidden);
-
-                    var listNotNull = this.ListNullCheck();
-
-                    if (listNotNull)
-                    {
-                        await this.SetListData();
-
-                        await this.SetFilters();
-
-                        await this.SetSorts();
-                    }
-
-                    this.SetViewStrings();
-
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public abstract bool GetPreferences();
-
-        /// <summary>
-        /// Set the view model list.
-        /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>The list show hidden preference.</returns>
-        public abstract Task SetList(bool showHidden);
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public abstract bool ListNullCheck();
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetListData();
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetFilters();
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetSorts();
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public abstract void SetViewStrings();
+        public abstract Task SetViewModelData();
 
         /// <summary>
         /// Show popup to edit or delete object.
@@ -636,21 +551,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             var delete = $"{AppStringResources.Delete}";
 
             var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, edit, delete, "Options"));
-
-            return answer.Result;
-        }
-
-        /// <summary>
-        /// Show popup to replace book cover photo.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async Task<string?> PopupMenu_CoverPhoto()
-        {
-            var title = AppStringResources.AddOrReplaceCoverPhoto;
-            var file = AppStringResources.UploadExistingFile;
-            var url = AppStringResources.BookCoverUrl;
-
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, file, url, "Options"));
 
             return answer.Result;
         }

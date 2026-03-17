@@ -279,7 +279,7 @@ namespace BookCollector.ViewModels.Main
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -304,64 +304,6 @@ namespace BookCollector.ViewModels.Main
                 this.SetIsBusyFalse();
                 RefreshView = false;
             }
-        }
-
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Set the view model list.
-        /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>A task.</returns>
-        public async override Task SetList(bool showHidden)
-        {
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
         }
 
         /// <summary>

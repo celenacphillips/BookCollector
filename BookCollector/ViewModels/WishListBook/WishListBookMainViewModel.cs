@@ -58,7 +58,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             if (this.SelectedWishlistBook != null)
             {
@@ -313,7 +313,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task ShareList()
+        public async Task ShareBook()
         {
             if (this.SelectedWishlistBook != null)
             {
@@ -348,33 +348,12 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         /// <summary>
-        /// Set data for filter popup.
+        /// Set the view model list.
         /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        /// <param name="showHidden">The show hidden list preference.</param>
+        /// <returns>A task.</returns>
+        public async override Task SetList(bool showHidden)
         {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
-        {
-            return viewModel;
-        }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
-        {
-            return viewModel;
         }
 
         private void RemoveFromStaticList()
