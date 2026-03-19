@@ -107,6 +107,11 @@ namespace BookCollector.ViewModels.WishListBook
         /// <returns>A task.</returns>
         public override async Task SetLists()
         {
+            var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
+
+            await Task.WhenAll(authors);
+
+            this.AuthorList = authors.Result;
         }
 
         /// <summary>
@@ -125,7 +130,7 @@ namespace BookCollector.ViewModels.WishListBook
         /// Get book data for other methods.
         /// </summary>
         /// <param name="returnData">Return type.</param>
-        /// <returns>A list of strings of book data.</returns>
+        /// <returns>An object of book data.</returns>
         public override object GetBookData(string? returnData)
         {
             if (returnData != null && returnData.Equals("strings"))
@@ -184,12 +189,6 @@ namespace BookCollector.ViewModels.WishListBook
         /// <returns>A task.</returns>
         public override async Task SetAuthorData()
         {
-            var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
-
-            await Task.WhenAll(authors);
-
-            this.AuthorList = authors.Result;
-
             this.AuthorList ??= [];
 
             if (this.EditedWishlistBook.SelectedAuthors != null && this.EditedWishlistBook.SelectedAuthors.Count > 0)

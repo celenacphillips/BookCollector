@@ -5,30 +5,19 @@
 namespace BookCollector.ViewModels.Book
 {
     using System.Collections.ObjectModel;
-    using BookCollector.CustomPermissions;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
-    using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
     using CommunityToolkit.Mvvm.ComponentModel;
-    using CommunityToolkit.Mvvm.Input;
 
     /// <summary>
     /// BookMainViewModel class.
     /// </summary>
-    public partial class BookMainViewModel : BookBaseViewModel
+    public partial class BookMainViewModel : BookMainBaseViewModel
     {
-        /// <summary>
-        /// Gets or sets the author list.
-        /// </summary>
-        [ObservableProperty]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<AuthorModel>? authorList;
-
         /// <summary>
         /// Gets or sets the selected author.
         /// </summary>
@@ -45,6 +34,8 @@ namespace BookCollector.ViewModels.Book
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCheckpoints;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BookMainViewModel"/> class.
         /// </summary>
@@ -60,225 +51,7 @@ namespace BookCollector.ViewModels.Book
             this.PreviousViewModel = previousViewModel;
         }
 
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
-            if (this.SelectedBook != null)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
-
-                    this.GetPreferences();
-
-                    var chapters = FillLists.GetAllChaptersInBook(this.SelectedBook.BookGuid);
-                    var genre = GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid);
-                    var location = GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid);
-                    var authors = FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid);
-
-                    this.ReadingDataSectionValue = true;
-                    this.ChapterListSectionValue = true;
-                    this.AuthorListSectionValue = true;
-                    this.BookInfoSectionValue = true;
-                    this.SummarySectionValue = true;
-                    this.CommentsSectionValue = true;
-
-                    if (!this.SelectedBook.BookFormat!.Equals(AppStringResources.Audiobook))
-                    {
-                        this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
-                        this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
-                        this.ShowPages = true;
-                        this.ShowTime = false;
-                        this.ShowCheckpoints = this.SelectedBook.BookPageTotal != 0;
-                    }
-                    else
-                    {
-                        this.BookIsRead = this.SelectedBook.BookListenedTime == this.SelectedBook.BookTotalTime && this.SelectedBook.BookTotalTime != 0;
-                        this.ShowUpNext = this.SelectedBook.BookListenedTime == 0;
-                        this.ShowPages = false;
-                        this.ShowTime = true;
-                        this.ShowCheckpoints = this.SelectedBook.BookTotalTime != 0;
-                    }
-
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverFileName))
-                    {
-                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                        this.SelectedBook.BookCover = ImageSource.FromFile($"{directory}/{this.SelectedBook.BookCoverFileName}");
-                    }
-
-                    if (!string.IsNullOrEmpty(this.SelectedBook.BookCoverUrl))
-                    {
-                        PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                        if (internetStatus != PermissionStatus.Granted)
-                        {
-                            internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                        }
-
-                        if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                        {
-                            this.SelectedBook.BookCover = new UriImageSource
-                            {
-                                Uri = new Uri(this.SelectedBook.BookCoverUrl),
-                                CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(14),
-                            };
-                        }
-                    }
-
-                    this.BookCover = this.SelectedBook.BookCover;
-
-                    var loadDataTasks = new Task[]
-                    {
-                        Task.Run(() => this.ReadingDataChanged()),
-                        Task.Run(() => this.ChapterListChanged()),
-                        Task.Run(() => this.AuthorListChanged()),
-                        Task.Run(() => this.BookInfoChanged()),
-                        Task.Run(() => this.SummaryChanged()),
-                        Task.Run(() => this.CommentsChanged()),
-                        Task.Run(() => this.SelectedBook.SetBookCheckpoints(this.ShowCheckpoints)),
-                        Task.Run(() => this.SelectedBook.SetCoverDisplay()),
-                        Task.Run(() => this.SelectedBook.SetPartOfSeries()),
-                        Task.Run(() => this.SelectedBook.SetPartOfCollection()),
-                        Task.Run(() => this.SelectedBook.SetBookPrice()),
-                        Task.Run(() => this.SelectedBook.TotalTimeSpan = BookModel.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
-                        Task.Run(() => this.SelectedBook.ListenTimeSpan = BookModel.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
-                    };
-
-                    await Task.WhenAll(chapters, genre, location, authors);
-
-                    this.ChapterList = chapters.Result;
-                    this.SelectedGenre = genre.Result;
-                    this.SelectedLocation = location.Result;
-                    this.SelectedAuthorList = authors.Result;
-
-                    await Task.WhenAll(loadDataTasks);
-
-                    this.SelectedBook.TotalTimeString = $"{this.SelectedBook.BookHoursTotal:0}:{this.SelectedBook.BookMinutesTotal:00}";
-                    this.SelectedBook.ListenTimeString = $"{this.SelectedBook.BookHourListened:0}:{this.SelectedBook.BookMinuteListened:00}";
-
-                    this.SetIsBusyFalse();
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Show edit book view with selected book.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task EditBook()
-        {
-            if (this.SelectedBook != null)
-            {
-                this.SetIsBusyTrue();
-
-                var view = new BookEditView(this.SelectedBook, $"{AppStringResources.EditBook}", true, (BookMainView)this.View, this.PreviousViewModel);
-
-                await Shell.Current.Navigation.PushAsync(view);
-
-                this.SetIsBusyFalse();
-            }
-        }
-
-        /// <summary>
-        /// Delete selected book.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task DeleteBook()
-        {
-            if (this.SelectedBook != null && !string.IsNullOrEmpty(this.SelectedBook.BookTitle))
-            {
-                var answer = await this.DeleteCheck(this.SelectedBook.BookTitle);
-
-                if (answer)
-                {
-                    try
-                    {
-                        this.SetIsBusyTrue();
-
-                        await BaseViewModel.Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
-                        await RemoveFromStaticList(this.SelectedBook);
-
-                        await this.ConfirmDelete(this.SelectedBook.BookTitle);
-
-                        await Shell.Current.Navigation.PopAsync();
-
-                        this.SetIsBusyFalse();
-                    }
-                    catch (Exception ex)
-                    {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await this.CanceledAction();
-                    }
-                }
-                else
-                {
-                    await this.CanceledAction();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Share book information.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ShareBook()
-        {
-            if (this.SelectedBook != null)
-            {
-                var title = this.SelectedBook.BookTitle;
-
-                string? text;
-                if (this.SelectedAuthorList != null && this.SelectedAuthorList.Count > 0)
-                {
-                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", this.SelectedBook.BookTitle).Replace("Author Name", this.SelectedAuthorList[0].FullName)}";
-
-                    if (this.SelectedAuthorList.Count > 1)
-                    {
-                        text += $", {AppStringResources.EtAl}";
-                    }
-                }
-                else
-                {
-                    text = $"{AppStringResources.BookTitle_Replace.Replace("Book Title", this.SelectedBook.BookTitle)}";
-                }
-
-                if (!string.IsNullOrEmpty(this.SelectedBook.BookURL))
-                {
-                    text += $" ({this.SelectedBook.BookURL})";
-                }
-
-                await Share.Default.RequestAsync(new ShareTextRequest
-                {
-                    Text = text,
-                    Title = title,
-                });
-            }
-        }
+        /********************************************************/
 
         /// <summary>
         /// Set the view model list.
@@ -292,12 +65,128 @@ namespace BookCollector.ViewModels.Book
         /// <summary>
         /// Set the view model preferences.
         /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public bool GetPreferences()
+        public override void GetPreferences()
         {
             this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+        }
 
-            return this.HiddenAuthorsOn;
+        /// <summary>
+        /// Set the view model lists.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetLists()
+        {
+            var chapters = FillLists.GetAllChaptersInBook(this.SelectedBook!.BookGuid);
+            var genre = GetItems.GetGenreForBook(this.SelectedBook.BookGenreGuid);
+            var location = GetItems.GetLocationForBook(this.SelectedBook.BookLocationGuid);
+            var authors = FillLists.GetAllAuthorsForBook(this.SelectedBook.BookGuid);
+
+            await Task.WhenAll(chapters, genre, location, authors);
+
+            this.ChapterList = chapters.Result;
+            this.SelectedGenre = genre.Result;
+            this.SelectedLocation = location.Result;
+            this.SelectedAuthorList = authors.Result;
+        }
+
+        /// <summary>
+        /// Set section values.
+        /// </summary>
+        public override void SetSectionValues()
+        {
+            this.ReadingDataSectionValue = true;
+            this.ChapterListSectionValue = true;
+            this.AuthorListSectionValue = true;
+            this.BookInfoSectionValue = true;
+            this.SummarySectionValue = true;
+            this.CommentsSectionValue = true;
+        }
+
+        /// <summary>
+        /// Get book data for other methods.
+        /// </summary>
+        /// <param name="returnData">Return type.</param>
+        /// <returns>An object of book data.</returns>
+        public override object? GetBookData(string? returnData)
+        {
+            if (returnData != null && returnData.Equals("strings"))
+            {
+                return (List<string?>)[this.SelectedBook!.BookCoverFileName, this.SelectedBook!.BookCoverUrl];
+            }
+
+            return this.SelectedBook;
+        }
+
+        /// <summary>
+        /// Check book format and set values.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task CheckBookFormat()
+        {
+            if (!this.SelectedBook!.BookFormat!.Equals(AppStringResources.Audiobook))
+            {
+                this.BookIsRead = this.SelectedBook.BookPageRead == this.SelectedBook.BookPageTotal && this.SelectedBook.BookPageTotal != 0;
+                this.ShowUpNext = this.SelectedBook.BookPageRead == 0;
+                this.ShowPages = true;
+                this.ShowTime = false;
+                this.ShowCheckpoints = this.SelectedBook.BookPageTotal != 0;
+            }
+            else
+            {
+                this.BookIsRead = this.SelectedBook.BookListenedTime == this.SelectedBook.BookTotalTime && this.SelectedBook.BookTotalTime != 0;
+                this.ShowUpNext = this.SelectedBook.BookListenedTime == 0;
+                this.ShowPages = false;
+                this.ShowTime = true;
+                this.ShowCheckpoints = this.SelectedBook.BookTotalTime != 0;
+            }
+        }
+
+        /// <summary>
+        /// Set other view data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetViewData()
+        {
+            var loadDataTasks = new Task[]
+            {
+                Task.Run(() => this.ReadingDataChanged()),
+                Task.Run(() => this.ChapterListChanged()),
+                Task.Run(() => this.AuthorListChanged()),
+                Task.Run(() => this.BookInfoChanged()),
+                Task.Run(() => this.SummaryChanged()),
+                Task.Run(() => this.CommentsChanged()),
+                Task.Run(() => this.SelectedBook!.SetBookCheckpoints(this.ShowCheckpoints)),
+                Task.Run(() => this.SelectedBook!.SetCoverDisplay()),
+                Task.Run(() => this.SelectedBook!.SetPartOfSeries()),
+                Task.Run(() => this.SelectedBook!.SetPartOfCollection()),
+                Task.Run(() => this.SelectedBook!.SetBookPrice()),
+                Task.Run(() => this.SelectedBook!.TotalTimeSpan = BookModel.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
+                Task.Run(() => this.SelectedBook!.ListenTimeSpan = BookModel.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
+            };
+
+            await Task.WhenAll(loadDataTasks);
+
+            this.SelectedBook!.TotalTimeString = FormatTimeString(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal);
+            this.SelectedBook.ListenTimeString = FormatTimeString(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened);
+        }
+
+        /// <summary>
+        /// Set edit view.
+        /// </summary>
+        /// <returns>Page to navigate to.</returns>
+        public override ContentPage SetEditView()
+        {
+            return new BookEditView(this.SelectedBook!, $"{AppStringResources.EditBook}", true, (BookMainView)this.View, this.PreviousViewModel);
+        }
+
+        /// <summary>
+        /// Delete book data.
+        /// </summary>
+        /// <returns>An task.</returns>
+        public override async Task DeleteData()
+        {
+            await BaseViewModel.Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook!));
+            await RemoveFromStaticList(this.SelectedBook!);
         }
     }
 }

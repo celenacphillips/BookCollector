@@ -703,7 +703,7 @@ namespace BookCollector.ViewModels.Book
         /// Get book data for other methods.
         /// </summary>
         /// <param name="returnData">Return type.</param>
-        /// <returns>A list of strings of book data.</returns>
+        /// <returns>An object of book data.</returns>
         public override object GetBookData(string? returnData)
         {
             if (returnData != null && returnData.Equals("strings"))
@@ -769,8 +769,8 @@ namespace BookCollector.ViewModels.Book
 
             await Task.WhenAll(loadDataTasks);
 
-            this.EditedBook.TotalTimeString = $"{this.EditedBook.BookHoursTotal:0}:{this.EditedBook.BookMinutesTotal:00}";
-            this.EditedBook.ListenTimeString = $"{this.EditedBook.BookHourListened:0}:{this.EditedBook.BookMinuteListened:00}";
+            this.EditedBook.TotalTimeString = FormatTimeString(this.EditedBook.BookHoursTotal, this.EditedBook.BookMinutesTotal);
+            this.EditedBook.ListenTimeString = FormatTimeString(this.EditedBook.BookHourListened, this.EditedBook.BookMinuteListened);
         }
 
         /// <summary>

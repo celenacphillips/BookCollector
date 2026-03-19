@@ -49,11 +49,6 @@ namespace BookCollector.ViewModels.Collection
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to insert the main view before or not.
-        /// </summary>
-        public bool InsertMainViewBefore { get; set; }
-
-        /// <summary>
         /// Add collection to the static list in the list view model.
         /// </summary>
         /// <param name="collection">Collection to add.</param>

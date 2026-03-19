@@ -49,11 +49,6 @@ namespace BookCollector.ViewModels.Location
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to insert the main view before or not.
-        /// </summary>
-        public bool InsertMainViewBefore { get; set; }
-
-        /// <summary>
         /// Add location to the static list in the list view model.
         /// </summary>
         /// <param name="location">Location to add.</param>

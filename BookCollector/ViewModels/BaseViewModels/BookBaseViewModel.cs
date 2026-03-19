@@ -5,6 +5,7 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Author;
@@ -297,6 +298,57 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets a value indicating whether to show hidden authors or not.
         /// </summary>
         public bool HiddenAuthorsOn { get; set; }
+
+        /// <summary>
+        /// Formats the input time to string.
+        /// </summary>
+        /// <param name="hour">Input hour.</param>
+        /// <param name="minute">Input minute.</param>
+        /// <returns>Formatted time as a string.</returns>
+        public static string FormatTimeString(int hour, int minute)
+        {
+            return $"{hour:0}:{minute:00}";
+        }
+
+        /// <summary>
+        /// Check book cover and set values.
+        /// </summary>
+        /// <param name="fileName">Book cover file name.</param>
+        /// <param name="coverUrl">Book cover url.</param>
+        /// <returns>Image source of book cover.</returns>
+        public static async Task<ImageSource?> CheckBookCover(string? fileName, string? coverUrl)
+        {
+            ImageSource? imageSource = null;
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
+            }
+
+            if (!string.IsNullOrEmpty(coverUrl))
+            {
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    imageSource = new UriImageSource
+                    {
+                        Uri = new Uri(coverUrl),
+                        CachingEnabled = true,
+                        CacheValidity = TimeSpan.FromDays(14),
+                    };
+                }
+            }
+
+            return imageSource;
+        }
 
         /// <summary>
         /// Parse out authors from string.

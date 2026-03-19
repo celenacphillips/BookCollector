@@ -75,6 +75,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string selectedBookFormat;
 
+        /********************************************************/
+
         /// <summary>
         /// Gets or sets a value indicating whether to remove the main view before.
         /// </summary>
@@ -84,6 +86,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the main view before, to return to after closing the popup.
         /// </summary>
         public object? MainViewBefore { get; set; }
+
+        /********************************************************/
 
         /// <summary>
         /// Set hours.
@@ -95,45 +99,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             return (time.Days * 24) + time.Hours;
         }
 
-        /// <summary>
-        /// Check book cover and set values.
-        /// </summary>
-        /// <param name="fileName">Book cover file name.</param>
-        /// <param name="coverUrl">Book cover url.</param>
-        /// <returns>Image source of book cover.</returns>
-        public static async Task<ImageSource?> CheckBookCover(string? fileName, string? coverUrl)
-        {
-            ImageSource? imageSource = null;
-
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
-            }
-
-            if (!string.IsNullOrEmpty(coverUrl))
-            {
-                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                if (internetStatus != PermissionStatus.Granted)
-                {
-                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                }
-
-                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                {
-                    imageSource = new UriImageSource
-                    {
-                        Uri = new Uri(coverUrl),
-                        CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(14),
-                    };
-                }
-            }
-
-            return imageSource;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Set the view model data.
@@ -153,9 +119,9 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                     this.SetSectionValues();
 
-                    List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
-
                     await this.CheckBookFormat();
+
+                    List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
 
                     this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
 
@@ -180,6 +146,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                 }
             }
         }
+
+        /********************************************************/
 
         /// <summary>
         /// Save the book to the database and return to the previous view.
@@ -266,17 +234,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             try
             {
+                var book = this.GetBookData(null);
                 string? format = string.Empty;
 
-                if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+                if (book.GetType().ToString().Contains("WishlistBookModel"))
                 {
-                    var book = (WishlistBookModel)this.GetBookData(null);
-                    format = book.BookFormat;
+                    format = ((WishlistBookModel)book).BookFormat;
                 }
                 else
                 {
-                    var book = (BookModel)this.GetBookData(null);
-                    format = book.BookFormat;
+                    format = ((BookModel)book).BookFormat;
                 }
 
                 var filterablePopup = new FilterableListPopup(
@@ -308,20 +275,19 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task TotalTimePopup()
         {
+            var book = this.GetBookData(null);
             int hours = 0;
             int minutes = 0;
 
-            if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+            if (book.GetType().ToString().Contains("WishlistBookModel"))
             {
-                var book = (WishlistBookModel)this.GetBookData(null);
-                hours = book.BookHoursTotal;
-                minutes = book.BookMinutesTotal;
+                hours = ((WishlistBookModel)book).BookHoursTotal;
+                minutes = ((WishlistBookModel)book).BookMinutesTotal;
             }
             else
             {
-                var book = (BookModel)this.GetBookData(null);
-                hours = book.BookHoursTotal;
-                minutes = book.BookMinutesTotal;
+                hours = ((BookModel)book).BookHoursTotal;
+                minutes = ((BookModel)book).BookMinutesTotal;
             }
 
             var totalTimePopup = new TimePopup(
@@ -451,7 +417,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Get book data for other methods.
         /// </summary>
         /// <param name="returnData">Return type.</param>
-        /// <returns>A list of strings of book data.</returns>
+        /// <returns>An object of book data.</returns>
         public abstract object GetBookData(string? returnData);
 
         /// <summary>
@@ -565,17 +531,16 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         private async Task DownloadCover()
         {
+            var book = this.GetBookData(null);
             string? bookCoverUrlInput = string.Empty;
 
-            if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+            if (book.GetType().ToString().Contains("WishlistBookModel"))
             {
-                var book = (WishlistBookModel)this.GetBookData(null);
-                bookCoverUrlInput = book.BookCoverUrl;
+                bookCoverUrlInput = ((WishlistBookModel)book).BookCoverUrl;
             }
             else
             {
-                var book = (BookModel)this.GetBookData(null);
-                bookCoverUrlInput = book.BookCoverUrl;
+                bookCoverUrlInput = ((BookModel)book).BookCoverUrl;
             }
 
             var result = await this.View.ShowPopupAsync<string>(new BookCoverUrlPopup(this.PopupWidth, bookCoverUrlInput));

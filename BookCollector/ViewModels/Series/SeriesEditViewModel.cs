@@ -49,11 +49,6 @@ namespace BookCollector.ViewModels.Series
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to insert the main view before or not.
-        /// </summary>
-        public bool InsertMainViewBefore { get; set; }
-
-        /// <summary>
         /// Add series to the static list in the list view model.
         /// </summary>
         /// <param name="series">Series to add.</param>

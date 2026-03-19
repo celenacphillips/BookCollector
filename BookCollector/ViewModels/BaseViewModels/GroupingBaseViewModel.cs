@@ -25,6 +25,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool TotalPriceChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to insert the main view before or not.
+        /// </summary>
+        public bool InsertMainViewBefore { get; set; }
+
+        /// <summary>
         /// Update books in list to hide.
         /// </summary>
         /// <param name="books">Books to hide.</param>

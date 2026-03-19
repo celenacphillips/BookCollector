@@ -13,9 +13,7 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Collection;
-    using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
