@@ -5,8 +5,10 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
+    using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -84,6 +86,290 @@ namespace BookCollector.ViewModels.BaseViewModels
         public object? MainViewBefore { get; set; }
 
         /// <summary>
+        /// Set hours.
+        /// </summary>
+        /// <param name="time">Total time span.</param>
+        /// <returns>Hours.</returns>
+        public static int SetHours(TimeSpan time)
+        {
+            return (time.Days * 24) + time.Hours;
+        }
+
+        /// <summary>
+        /// Check book cover and set values.
+        /// </summary>
+        /// <param name="fileName">Book cover file name.</param>
+        /// <param name="coverUrl">Book cover url.</param>
+        /// <returns>Image source of book cover.</returns>
+        public static async Task<ImageSource?> CheckBookCover(string? fileName, string? coverUrl)
+        {
+            ImageSource? imageSource = null;
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
+            }
+
+            if (!string.IsNullOrEmpty(coverUrl))
+            {
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    imageSource = new UriImageSource
+                    {
+                        Uri = new Uri(coverUrl),
+                        CachingEnabled = true,
+                        CacheValidity = TimeSpan.FromDays(14),
+                    };
+                }
+            }
+
+            return imageSource;
+        }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+            if (RefreshView)
+            {
+                try
+                {
+                    this.SetIsBusyTrue();
+
+                    this.GetPreferences();
+
+                    await this.SetLists();
+
+                    this.SetSectionValues();
+
+                    List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
+
+                    await this.CheckBookFormat();
+
+                    this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
+
+                    await this.SetViewData();
+
+                    await this.SetAuthorData();
+
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
+                catch (Exception ex)
+                {
+#if DEBUG
+                    await this.DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                    this.SetIsBusyFalse();
+                    RefreshView = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Save the book to the database and return to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task SaveBook()
+        {
+            try
+            {
+                if (this.BookTitleNotValid || this.BookFormatNotValid)
+                {
+                    if (this.BookTitleNotValid)
+                    {
+                        await this.DisplayMessage(AppStringResources.BookTitleNotValid, null);
+                    }
+
+                    if (this.BookFormatNotValid)
+                    {
+                        await this.DisplayMessage(AppStringResources.BookFormatNotValid, null);
+                    }
+
+                    this.SetIsBusyFalse();
+                }
+                else
+                {
+                    this.SetIsBusyTrue();
+
+                    await this.SetBookDataForSaving();
+
+#if ANDROID
+                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
+                    {
+                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
+                    }
+#endif
+
+                    await this.SaveData();
+
+                    var view = this.SetReturnView();
+                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
+
+                    await Shell.Current.Navigation.PopAsync();
+
+                    this.SetIsBusyFalse();
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                await this.DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
+#endif
+                this.SetIsBusyFalse();
+            }
+        }
+
+        /// <summary>
+        /// Show book search view to search for a book and fill the book info from the search result.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookSearch()
+        {
+            this.SetIsBusyTrue();
+
+            var book = this.GetBookData(null);
+
+            var view = new BookSearchView(null, null, null, book, this);
+
+            await Shell.Current.Navigation.PushModalAsync(view);
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Show filter list popup for book formats.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookFormatChanged()
+        {
+            try
+            {
+                string? format = string.Empty;
+
+                if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+                {
+                    var book = (WishlistBookModel)this.GetBookData(null);
+                    format = book.BookFormat;
+                }
+                else
+                {
+                    var book = (BookModel)this.GetBookData(null);
+                    format = book.BookFormat;
+                }
+
+                var filterablePopup = new FilterableListPopup(
+                    AppStringResources.SelectABookFormat,
+                    [.. this.BookFormats!],
+                    format,
+                    false);
+                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
+
+                if (!string.IsNullOrEmpty(result.Result))
+                {
+                    this.SetBookFormat(result.Result);
+                    this.SelectedBookFormat = result.Result ?? AppStringResources.SelectABookFormat;
+                    await this.ValidateBookFormat();
+                }
+
+                await this.CheckBookFormat();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Show popup with time entries to set the total time, and update the reading progress
+        /// values and checkpoints visibility.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task TotalTimePopup()
+        {
+            int hours = 0;
+            int minutes = 0;
+
+            if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+            {
+                var book = (WishlistBookModel)this.GetBookData(null);
+                hours = book.BookHoursTotal;
+                minutes = book.BookMinutesTotal;
+            }
+            else
+            {
+                var book = (BookModel)this.GetBookData(null);
+                hours = book.BookHoursTotal;
+                minutes = book.BookMinutesTotal;
+            }
+
+            var totalTimePopup = new TimePopup(
+                AppStringResources.TotalTime,
+                this.PopupWidth,
+                hours,
+                minutes);
+            var result = await this.View.ShowPopupAsync<TimeSpan>(totalTimePopup);
+
+            if (!result.WasDismissedByTappingOutsideOfPopup)
+            {
+                await this.SetTotalTime(result.Result);
+            }
+        }
+
+        /// <summary>
+        /// Show popup to choose between adding a cover photo by picking an existing file
+        /// or by entering an image url, and set the book cover accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task AddUploadCoverPhoto()
+        {
+            var action = await this.PopupMenu_CoverPhoto();
+
+            if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.UploadExistingFile))
+            {
+                await this.UploadCover();
+            }
+
+            if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.BookCoverUrl))
+            {
+                await this.DownloadCover();
+            }
+        }
+
+        /// <summary>
+        /// Remove the book cover and delete the related file if exists, and set the
+        /// related book properties accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task RemoveCoverPhoto()
+        {
+            this.SetBookCover(null, null);
+        }
+
+        /// <summary>
         /// Show popup to replace book cover photo.
         /// </summary>
         /// <returns>A task.</returns>
@@ -129,6 +415,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ValidateEntry();
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the view model list.
         /// </summary>
@@ -139,16 +427,194 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
-        }
-
-        /// <summary>
         /// Validate data entry.
         /// </summary>
         public abstract void ValidateEntry();
+
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        public abstract void GetPreferences();
+
+        /// <summary>
+        /// Set the view model lists.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetLists();
+
+        /// <summary>
+        /// Set section values.
+        /// </summary>
+        public abstract void SetSectionValues();
+
+        /// <summary>
+        /// Get book data for other methods.
+        /// </summary>
+        /// <param name="returnData">Return type.</param>
+        /// <returns>A list of strings of book data.</returns>
+        public abstract object GetBookData(string? returnData);
+
+        /// <summary>
+        /// Check book format and set values.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task CheckBookFormat();
+
+        /// <summary>
+        /// Set other view data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetViewData();
+
+        /// <summary>
+        /// Set author data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetAuthorData();
+
+        /// <summary>
+        /// Set book format.
+        /// </summary>
+        /// <param name="format">Book format.</param>
+        public abstract void SetBookFormat(string format);
+
+        /// <summary>
+        /// Set total time.
+        /// </summary>
+        /// <param name="time">Total time span.</param>
+        /// <returns>A task.</returns>
+        public abstract Task SetTotalTime(TimeSpan time);
+
+        /// <summary>
+        /// Set book cover.
+        /// </summary>
+        /// <param name="imageSource">Book cover image source.</param>
+        /// <param name="fileName">Book cover image filename.</param>
+        public abstract void SetBookCover(ImageSource? imageSource, string? fileName);
+
+        /// <summary>
+        /// Set book data for saving.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetBookDataForSaving();
+
+        /// <summary>
+        /// Save book data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SaveData();
+
+        /// <summary>
+        /// Set return view.
+        /// </summary>
+        /// <returns>Page to return to.</returns>
+        public abstract ContentPage SetReturnView();
+
+        /********************************************************/
+
+        private async Task UploadCover()
+        {
+            this.SetIsBusyTrue();
+
+            PermissionStatus storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Media>();
+
+            if (storageReadStatus != PermissionStatus.Granted)
+            {
+                storageReadStatus = await Permissions.RequestAsync<Permissions.Media>();
+            }
+
+            if (storageReadStatus == PermissionStatus.Granted)
+            {
+                MediaPickerOptions pickerOptions = new ();
+
+                try
+                {
+                    var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
+
+                    if (photos?.Count > 0)
+                    {
+                        var firstPhoto = photos.First();
+
+                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+
+                        var fi = new FileInfo(firstPhoto.FullPath);
+                        var filePath = $"{directory}/{fi.Name}";
+                        File.Copy(firstPhoto.FullPath, filePath, true);
+                        this.SetBookCover(ImageSource.FromFile(firstPhoto.FullPath), fi.Name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.SetIsBusyFalse();
+                    this.SetBookCover(null, null);
+                    await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
+                }
+            }
+            else
+            {
+                await this.DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
+            }
+
+            this.SetIsBusyFalse();
+        }
+
+        private async Task DownloadCover()
+        {
+            string? bookCoverUrlInput = string.Empty;
+
+            if (this.GetBookData(null).GetType().ToString().Contains("WishlistBookModel"))
+            {
+                var book = (WishlistBookModel)this.GetBookData(null);
+                bookCoverUrlInput = book.BookCoverUrl;
+            }
+            else
+            {
+                var book = (BookModel)this.GetBookData(null);
+                bookCoverUrlInput = book.BookCoverUrl;
+            }
+
+            var result = await this.View.ShowPopupAsync<string>(new BookCoverUrlPopup(this.PopupWidth, bookCoverUrlInput));
+            var bookCoverUrl = result.Result;
+
+            if (!string.IsNullOrEmpty(bookCoverUrl))
+            {
+                this.SetIsBusyTrue();
+
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    try
+                    {
+                        this.SetBookCover(
+                            new UriImageSource
+                            {
+                                Uri = new Uri(bookCoverUrl),
+                                CachingEnabled = true,
+                                CacheValidity = TimeSpan.FromDays(14),
+                            },
+                            null);
+
+                        this.SetIsBusyFalse();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.SetIsBusyFalse();
+                        this.SetBookCover(null, null);
+                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
+                    }
+                }
+            }
+        }
     }
 }

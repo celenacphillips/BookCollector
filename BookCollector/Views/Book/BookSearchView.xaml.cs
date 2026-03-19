@@ -22,37 +22,26 @@ public partial class BookSearchView : ContentPage
     /// <param name="inputAuthorName">Author Name to send into the search view.</param>
     /// <param name="book">The book to add the returned search data to.</param>
     /// <param name="previousViewModel">he previous view model this method has been called from.</param>
-    public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, BookModel? book, object? previousViewModel)
+    public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, object? book, object? previousViewModel)
     {
         var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
         {
             ViewTitle = $"{AppStringResources.BookSearch}",
-            SelectedBook = book,
             PreviousViewModel = previousViewModel,
         };
-        this.BindingContext = viewModel;
 
-        this.InitializeComponent();
-        this.FindByName<CollectionView>("bookList").IsVisible = false;
-        this.rootLayout.SizeChanged += this.OnLayoutMeasured;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BookSearchView"/> class. WishlistBookModel version.
-    /// </summary>
-    /// <param name="inputIsbn">ISBN to send into the search view.</param>
-    /// <param name="inputTitle">Title to send into the search view.</param>
-    /// <param name="inputAuthorName">Author Name to send into the search view.</param>
-    /// <param name="book">The book to add the returned search data to.</param>
-    /// <param name="previousViewModel">he previous view model this method has been called from.</param>
-    public BookSearchView(string? inputIsbn, string? inputTitle, string? inputAuthorName, WishlistBookModel? book, object? previousViewModel)
-    {
-        var viewModel = new BookSearchViewModel(inputIsbn, inputTitle, inputAuthorName, this)
+        if (book != null)
         {
-            ViewTitle = $"{AppStringResources.BookSearch}",
-            SelectedWishListBook = book,
-            PreviousViewModel = previousViewModel,
-        };
+            if (book.GetType().ToString().Contains("WishListBookEditViewModel"))
+            {
+                viewModel.SelectedWishListBook = (WishlistBookModel)book;
+            }
+            else
+            {
+                viewModel.SelectedBook = (BookModel)book;
+            }
+        }
+
         this.BindingContext = viewModel;
 
         this.InitializeComponent();

@@ -5,17 +5,12 @@
 namespace BookCollector.ViewModels.WishListBook
 {
     using System.Collections.ObjectModel;
-    using BookCollector.CustomPermissions;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Main;
-    using BookCollector.ViewModels.Popups;
-    using BookCollector.Views.Book;
-    using BookCollector.Views.Popups;
     using BookCollector.Views.WishListBook;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -48,6 +43,8 @@ namespace BookCollector.ViewModels.WishListBook
             RefreshView = true;
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Add book to static list.
         /// </summary>
@@ -61,358 +58,7 @@ namespace BookCollector.ViewModels.WishListBook
             }
         }
 
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
-        {
-            if (RefreshView)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
-
-                    var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
-
-                    this.BookInfo1SectionValue = true;
-                    this.AuthorListSectionValue = true;
-                    this.BookInfoSectionValue = true;
-                    this.SummarySectionValue = true;
-                    this.CommentsSectionValue = true;
-
-                    if (this.EditedWishlistBook.BookFormat == null || !this.EditedWishlistBook.BookFormat.Equals(AppStringResources.Audiobook))
-                    {
-                        this.ShowPages = true;
-                        this.ShowTime = false;
-                    }
-                    else
-                    {
-                        this.ShowTime = true;
-                        this.ShowPages = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverFileName))
-                    {
-                        var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                        this.EditedWishlistBook.BookCover = ImageSource.FromFile($"{directory}/{this.EditedWishlistBook.BookCoverFileName}");
-                    }
-
-                    if (!string.IsNullOrEmpty(this.EditedWishlistBook.BookCoverUrl))
-                    {
-                        PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                        if (internetStatus != PermissionStatus.Granted)
-                        {
-                            internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                        }
-
-                        if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                        {
-                            this.EditedWishlistBook.BookCover = new UriImageSource
-                            {
-                                Uri = new Uri(this.EditedWishlistBook.BookCoverUrl),
-                                CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(14),
-                            };
-                        }
-                    }
-
-                    this.BookCover = this.EditedWishlistBook.BookCover;
-
-                    var loadDataTasks = new Task[]
-                    {
-                        Task.Run(() => this.ValidateEntry()),
-                        Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
-                        Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
-                        Task.Run(() => this.BookInfo1Changed()),
-                        Task.Run(() => this.ReadingDataChanged()),
-                        Task.Run(() => this.ChapterListChanged()),
-                        Task.Run(() => this.AuthorListChanged()),
-                        Task.Run(() => this.BookInfoChanged()),
-                        Task.Run(() => this.SummaryChanged()),
-                        Task.Run(() => this.CommentsChanged()),
-                        Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = WishlistBookModel.SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
-                    };
-
-                    await Task.WhenAll(authors);
-
-                    this.AuthorList = authors.Result;
-
-                    this.AuthorList ??= [];
-
-                    if (this.EditedWishlistBook.SelectedAuthors != null && this.EditedWishlistBook.SelectedAuthors.Count > 0)
-                    {
-                        foreach (var selectedAuthor in this.EditedWishlistBook.SelectedAuthors)
-                        {
-                            if (this.AuthorList != null && selectedAuthor != null)
-                            {
-                                var author = new AuthorModel()
-                                {
-                                    FirstName = selectedAuthor.FirstName,
-                                    LastName = selectedAuthor.LastName,
-                                };
-
-                                this.AuthorList.Add(author);
-                            }
-                        }
-                    }
-
-                    await Task.WhenAll(loadDataTasks);
-
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Show book search view to search for a book and fill the book info from the search result.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task BookSearch()
-        {
-            this.SetIsBusyTrue();
-
-            var view = new BookSearchView(null, null, null, this.EditedWishlistBook, this);
-
-            await Shell.Current.Navigation.PushModalAsync(view);
-
-            this.SetIsBusyFalse();
-        }
-
-        /// <summary>
-        /// Save the book to the database and return to the previous view.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task SaveBook()
-        {
-            try
-            {
-                this.SetIsBusyTrue();
-
-                if (this.BookTitleNotValid || this.BookFormatNotValid)
-                {
-                    if (this.BookTitleNotValid)
-                    {
-                        await this.DisplayMessage(AppStringResources.BookTitleNotValid, null);
-                    }
-
-                    if (this.BookFormatNotValid)
-                    {
-                        await this.DisplayMessage(AppStringResources.BookFormatNotValid, null);
-                    }
-
-                    this.SetIsBusyFalse();
-                }
-                else
-                {
-                    this.SetIsBusyTrue();
-
-                    var dataTasks = new Task[]
-                    {
-                        Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
-                        Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
-                        Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
-                        Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
-                    };
-
-                    await Task.WhenAll(dataTasks);
-
-#if ANDROID
-                    if (Platform.CurrentActivity != null && Platform.CurrentActivity.Window != null)
-                    {
-                        Platform.CurrentActivity.Window.DecorView.ClearFocus();
-                    }
-#endif
-
-                    this.EditedWishlistBook = await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.EditedWishlistBook));
-                    await AddToStaticList(this.EditedWishlistBook);
-
-                    if (this.RemoveMainViewBefore)
-                    {
-                        Shell.Current.Navigation.RemovePage((WishListBookMainView)this.MainViewBefore!);
-                    }
-
-                    var view = new WishListBookMainView(this.EditedWishlistBook, $"{this.EditedWishlistBook.BookTitle}");
-                    Shell.Current.Navigation.InsertPageBefore(view, this.View);
-
-                    await Shell.Current.Navigation.PopAsync();
-
-                    this.SetIsBusyFalse();
-                }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
-            }
-        }
-
-        /// <summary>
-        /// Show popup to choose between adding a cover photo by picking an existing file
-        /// or by entering an image url, and set the book cover accordingly.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task AddUploadCoverPhoto()
-        {
-            var action = await this.PopupMenu_CoverPhoto();
-
-            if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.UploadExistingFile))
-            {
-                this.SetIsBusyTrue();
-
-                PermissionStatus storageReadStatus = await Permissions.RequestAsync<Permissions.Photos>();
-                storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Photos>();
-
-                if (storageReadStatus == PermissionStatus.Granted)
-                {
-                    MediaPickerOptions pickerOptions = new ();
-
-                    try
-                    {
-                        var photos = await MediaPicker.PickPhotosAsync(pickerOptions);
-
-                        if (photos?.Count > 0)
-                        {
-                            var firstPhoto = photos.First();
-                            this.BookCover = ImageSource.FromFile(firstPhoto.FullPath);
-                            this.EditedWishlistBook.HasBookCover = true;
-                            this.EditedWishlistBook.HasNoBookCover = false;
-
-                            var directory = $"{FileSystem.AppDataDirectory}/BookCovers";
-
-                            if (!Directory.Exists(directory))
-                            {
-                                Directory.CreateDirectory(directory);
-                            }
-
-                            var fi = new FileInfo(firstPhoto.FullPath);
-                            var filePath = $"{directory}/{fi.Name}";
-                            File.Copy(firstPhoto.FullPath, filePath, true);
-
-                            this.EditedWishlistBook.BookCoverFileName = fi.Name;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        this.SetIsBusyFalse();
-                        await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    }
-
-                    if (this.EditedWishlistBook.HasNoBookCover)
-                    {
-                        await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
-                    }
-                }
-                else
-                {
-                    await this.DisplayMessage(AppStringResources.PleaseAllowPhotoPermissionToAddCover, null);
-                }
-
-                this.SetIsBusyFalse();
-            }
-
-            if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.BookCoverUrl))
-            {
-                var result = await this.View.ShowPopupAsync<string>(new BookCoverUrlPopup(this.PopupWidth, this.EditedWishlistBook.BookCoverUrl));
-                var bookCoverUrl = result.Result;
-
-                if (!string.IsNullOrEmpty(bookCoverUrl))
-                {
-                    this.SetIsBusyTrue();
-
-                    PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                    if (internetStatus != PermissionStatus.Granted)
-                    {
-                        internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                    }
-
-                    if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                    {
-                        try
-                        {
-                            this.BookCover = new UriImageSource
-                            {
-                                Uri = new Uri(bookCoverUrl),
-                                CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(14),
-                            };
-                            this.EditedWishlistBook.BookCover = this.BookCover;
-                            this.EditedWishlistBook.HasBookCover = true;
-                            this.EditedWishlistBook.HasNoBookCover = false;
-                            this.EditedWishlistBook.BookCoverUrl = bookCoverUrl;
-
-                            this.SetIsBusyFalse();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.SetIsBusyFalse();
-                            this.BookCover = null;
-                            this.EditedWishlistBook.BookCover = null;
-                            this.EditedWishlistBook.HasBookCover = false;
-                            this.EditedWishlistBook.HasNoBookCover = true;
-                            this.EditedWishlistBook.BookCoverUrl = null;
-                            await this.DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
-#if DEBUG
-                            await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                            await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        }
-                    }
-
-                    this.SetIsBusyFalse();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Remove the book cover and delete the related file if exists, and set the
-        /// related book properties accordingly.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task RemoveCoverPhoto()
-        {
-            this.EditedWishlistBook.HasBookCover = false;
-            this.EditedWishlistBook.HasNoBookCover = true;
-            this.EditedWishlistBook.BookCover = null;
-            this.EditedWishlistBook.BookCoverUrl = null;
-            this.EditedWishlistBook.BookCoverFileName = null;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Add a new author to the author list.
@@ -437,66 +83,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.AuthorList?.Remove(author);
         }
 
-        /// <summary>
-        /// Show popup with time entries to set the total time.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task TotalTimePopup()
-        {
-            try
-            {
-                var totalTimePopup = new TimePopup(AppStringResources.TotalTime, this.PopupWidth, this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal);
-                var result = await this.View.ShowPopupAsync<TimeSpan>(totalTimePopup);
-                this.EditedWishlistBook.TotalTimeSpan = result.Result;
-
-                this.EditedWishlistBook.BookHoursTotal = result.Result.Hours;
-                this.EditedWishlistBook.BookMinutesTotal = result.Result.Minutes;
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        /// <summary>
-        /// Show filter list popup for book formats.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task BookFormatChanged()
-        {
-            try
-            {
-                var filterablePopup = new FilterableListPopup(
-                    AppStringResources.SelectABookFormat,
-                    [.. this.BookFormats!],
-                    this.EditedWishlistBook.BookFormat,
-                    false);
-                var result = await this.View.ShowPopupAsync<string?>(filterablePopup);
-
-                if (!string.IsNullOrEmpty(result.Result))
-                {
-                    this.EditedWishlistBook.BookFormat = result.Result;
-                    this.SelectedBookFormat = this.EditedWishlistBook.BookFormat ?? AppStringResources.SelectABookFormat;
-                    await this.ValidateBookFormat();
-                }
-
-                if (!this.SelectedBookFormat.Equals(AppStringResources.Audiobook))
-                {
-                    this.ShowPages = true;
-                    this.ShowTime = false;
-                }
-
-                if (this.SelectedBookFormat.Equals(AppStringResources.Audiobook))
-                {
-                    this.ShowPages = false;
-                    this.ShowTime = true;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
+        /********************************************************/
 
         /// <summary>
         /// Validate data entry.
@@ -506,6 +93,218 @@ namespace BookCollector.ViewModels.WishListBook
             this.BookTitleNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookTitle);
             this.BookFormatNotValid = string.IsNullOrEmpty(this.EditedWishlistBook.BookFormat);
         }
+
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        public override void GetPreferences()
+        {
+        }
+
+        /// <summary>
+        /// Set the view model lists.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetLists()
+        {
+        }
+
+        /// <summary>
+        /// Set section values.
+        /// </summary>
+        public override void SetSectionValues()
+        {
+            this.BookInfo1SectionValue = true;
+            this.AuthorListSectionValue = true;
+            this.BookInfoSectionValue = true;
+            this.SummarySectionValue = true;
+            this.CommentsSectionValue = true;
+        }
+
+        /// <summary>
+        /// Get book data for other methods.
+        /// </summary>
+        /// <param name="returnData">Return type.</param>
+        /// <returns>A list of strings of book data.</returns>
+        public override object GetBookData(string? returnData)
+        {
+            if (returnData != null && returnData.Equals("strings"))
+            {
+                return (List<string?>)[this.EditedWishlistBook.BookCoverFileName, this.EditedWishlistBook.BookCoverUrl];
+            }
+
+            return this.EditedWishlistBook;
+        }
+
+        /// <summary>
+        /// Check book format and set values.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task CheckBookFormat()
+        {
+            if (this.EditedWishlistBook.BookFormat == null || !this.EditedWishlistBook.BookFormat.Equals(AppStringResources.Audiobook))
+            {
+                this.ShowPages = true;
+                this.ShowTime = false;
+            }
+            else
+            {
+                this.ShowTime = true;
+                this.ShowPages = false;
+            }
+        }
+
+        /// <summary>
+        /// Set other view data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetViewData()
+        {
+            var loadDataTasks = new Task[]
+            {
+                Task.Run(() => this.ValidateEntry()),
+                Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
+                Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
+                Task.Run(() => this.BookInfo1Changed()),
+                Task.Run(() => this.ReadingDataChanged()),
+                Task.Run(() => this.ChapterListChanged()),
+                Task.Run(() => this.AuthorListChanged()),
+                Task.Run(() => this.BookInfoChanged()),
+                Task.Run(() => this.SummaryChanged()),
+                Task.Run(() => this.CommentsChanged()),
+                Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = WishlistBookModel.SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
+            };
+
+            await Task.WhenAll(loadDataTasks);
+        }
+
+        /// <summary>
+        /// Set author data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetAuthorData()
+        {
+            var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
+
+            await Task.WhenAll(authors);
+
+            this.AuthorList = authors.Result;
+
+            this.AuthorList ??= [];
+
+            if (this.EditedWishlistBook.SelectedAuthors != null && this.EditedWishlistBook.SelectedAuthors.Count > 0)
+            {
+                foreach (var selectedAuthor in this.EditedWishlistBook.SelectedAuthors)
+                {
+                    if (this.AuthorList != null && selectedAuthor != null)
+                    {
+                        var author = new AuthorModel()
+                        {
+                            FirstName = selectedAuthor.FirstName,
+                            LastName = selectedAuthor.LastName,
+                        };
+
+                        this.AuthorList.Add(author);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set book format.
+        /// </summary>
+        /// <param name="format">Book format.</param>
+        public override void SetBookFormat(string format)
+        {
+            this.EditedWishlistBook.BookFormat = format;
+        }
+
+        /// <summary>
+        /// Set total time.
+        /// </summary>
+        /// <param name="time">Total time span.</param>
+        /// <returns>A task.</returns>
+        public override async Task SetTotalTime(TimeSpan time)
+        {
+            this.EditedWishlistBook.TotalTimeSpan = time;
+
+            this.EditedWishlistBook.BookHoursTotal = SetHours(time);
+            this.EditedWishlistBook.BookMinutesTotal = this.EditedWishlistBook.TotalTimeSpan.Minutes;
+        }
+
+        /// <summary>
+        /// Set book cover.
+        /// </summary>
+        /// <param name="imageSource">Book cover image source.</param>
+        /// <param name="fileName">Book cover image filename.</param>
+        public override void SetBookCover(ImageSource? imageSource, string? fileName)
+        {
+            if (imageSource == null)
+            {
+                this.BookCover = null;
+                this.EditedWishlistBook.BookCover = null;
+                this.EditedWishlistBook.BookCoverUrl = null;
+                this.EditedWishlistBook.BookCoverFileName = null;
+
+                this.EditedWishlistBook.HasBookCover = false;
+                this.EditedWishlistBook.HasNoBookCover = true;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    this.EditedWishlistBook.BookCoverFileName = fileName;
+                }
+
+                this.BookCover = imageSource;
+                this.EditedWishlistBook.BookCover = imageSource;
+                this.EditedWishlistBook.HasBookCover = true;
+                this.EditedWishlistBook.HasNoBookCover = false;
+            }
+        }
+
+        /// <summary>
+        /// Set book data for saving.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetBookDataForSaving()
+        {
+            var dataTasks = new Task[]
+            {
+                Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
+                Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
+                Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
+                Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
+            };
+
+            await Task.WhenAll(dataTasks);
+        }
+
+        /// <summary>
+        /// Save book data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SaveData()
+        {
+            this.EditedWishlistBook = await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.EditedWishlistBook));
+            await AddToStaticList(this.EditedWishlistBook);
+        }
+
+        /// <summary>
+        /// Set return view.
+        /// </summary>
+        /// <returns>Page to return to.</returns>
+        public override ContentPage SetReturnView()
+        {
+            if (this.RemoveMainViewBefore)
+            {
+                Shell.Current.Navigation.RemovePage((WishListBookMainView)this.MainViewBefore!);
+            }
+
+            return new WishListBookMainView(this.EditedWishlistBook, $"{this.EditedWishlistBook.BookTitle}");
+        }
+
+        /********************************************************/
 
         private static bool AddWishListBookToStaticList(WishlistBookModel book, ObservableCollection<WishlistBookModel> bookList, ObservableCollection<WishlistBookModel>? filteredBookList)
         {
