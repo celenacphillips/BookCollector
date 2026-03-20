@@ -5,7 +5,9 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using BookCollector.CustomPermissions;
+    using BookCollector.Data;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Author;
@@ -17,6 +19,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -300,92 +303,81 @@ namespace BookCollector.ViewModels.BaseViewModels
         public bool HiddenAuthorsOn { get; set; }
 
         /// <summary>
-        /// Formats the input time to string.
+        /// Sets the book total time based on the book format and updates the book total time property accordingly.
         /// </summary>
-        /// <param name="hour">Input hour.</param>
-        /// <param name="minute">Input minute.</param>
-        /// <returns>Formatted time as a string.</returns>
-        public static string FormatTimeString(int hour, int minute)
+        /// <param name="format">Book format.</param>
+        /// <param name="hourTotal">Hour total.</param>
+        /// <param name="minuteTotal">Minute total.</param>
+        /// <returns>The formatted total time, or null.</returns>
+        public static double? SetBookTotalTime(string? format, int hourTotal, int minuteTotal)
         {
-            return $"{hour:0}:{minute:00}";
+            return format!.Equals(AppStringResources.Audiobook) ? (double)hourTotal + ((double)minuteTotal / 60) : null;
         }
 
         /// <summary>
-        /// Check book cover and set values.
+        /// Creates a parsed string with the input values.
         /// </summary>
-        /// <param name="fileName">Book cover file name.</param>
-        /// <param name="coverUrl">Book cover url.</param>
-        /// <returns>Image source of book cover.</returns>
-        public static async Task<ImageSource?> CheckBookCover(string? fileName, string? coverUrl)
+        /// <param name="bookPrice">Book price.</param>
+        /// <returns>Parsed string.</returns>
+        public static double SetBookPriceValue(string? bookPrice)
         {
-            ImageSource? imageSource = null;
-
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
-            }
-
-            if (!string.IsNullOrEmpty(coverUrl))
-            {
-                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                if (internetStatus != PermissionStatus.Granted)
-                {
-                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                }
-
-                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                {
-                    imageSource = new UriImageSource
-                    {
-                        Uri = new Uri(coverUrl),
-                        CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(14),
-                    };
-                }
-            }
-
-            return imageSource;
+            return !string.IsNullOrEmpty(bookPrice) ? (bookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol)
+                ? double.Parse(bookPrice[1..]) : double.Parse(bookPrice)) : 0;
         }
 
         /// <summary>
-        /// Parse out authors from string.
+        /// Set the book cover display.
         /// </summary>
-        /// <param name="inputstring">Input string to parse.</param>
-        /// <returns>A list of authors parsed out.</returns>
-        public static async Task<ObservableCollection<AuthorModel>> ParseOutAuthorsFromstring(string? inputstring)
+        /// <param name="bookCoverFileName">Book cover file name.</param>
+        /// <param name="bookCoverUrl">Book cover URL.</param>
+        /// <param name="bookCover">Book cover image source.</param>
+        /// <returns>Two booleans (has a book cover and not) and an image source of the book cover.</returns>
+        public static async Task<(bool, bool, ImageSource?)> SetCoverDisplay(string? bookCoverFileName, string? bookCoverUrl, ImageSource? bookCover)
         {
-            var authorList = new ObservableCollection<AuthorModel>();
+            var hasBookCover = !string.IsNullOrEmpty(bookCoverFileName) || !string.IsNullOrEmpty(bookCoverUrl) || bookCover != null;
+            var hasNoBookCover = string.IsNullOrEmpty(bookCoverFileName) && string.IsNullOrEmpty(bookCoverUrl) && bookCover == null;
 
-            if (!string.IsNullOrEmpty(inputstring))
+            var bookCoverImageSource = await CheckBookCover(bookCoverFileName, bookCoverUrl);
+
+            return (hasBookCover, hasNoBookCover, bookCoverImageSource);
+        }
+
+        /// <summary>
+        /// Set author list string.
+        /// </summary>
+        /// <param name="authorList">Author list to parse through.</param>
+        /// <returns>The formatted author list string.</returns>
+        public static string? SetAuthorListStringFromInputList(ObservableCollection<AuthorModel>? authorList)
+        {
+            var authorListString = string.Empty;
+
+            if (authorList != null)
             {
-                var list = SplitStringIntoAuthorList(inputstring);
+                authorList = authorList.Where(x => !string.IsNullOrEmpty(x.FirstName) && !string.IsNullOrEmpty(x.LastName)).ToObservableCollection();
 
-                foreach (var item in list)
+                for (int i = 0; i < authorList.Count; i++)
                 {
-                    if (item != null)
+                    if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
+                        !string.IsNullOrEmpty(authorList[i].LastName))
                     {
-                        AuthorModel? author = null;
-                        bool skip = false;
+                        authorListString += authorList[i].ReverseFullName;
 
-                        author = await BaseViewModel.Database.GetAuthorByNameAsync(item.FirstName, item.LastName);
-
-                        if (!skip)
+                        if (i != authorList.Count - 1)
                         {
-                            author ??= new AuthorModel();
-
-                            author.FirstName = item.FirstName;
-                            author.LastName = item.LastName;
-
-                            authorList.Add(author);
+                            authorListString += "; ";
+                        }
+                    }
+                    else
+                    {
+                        if (authorList.Count > 1)
+                        {
+                            authorListString = authorListString[.. (authorListString.LastIndexOf("; ") - 1)];
                         }
                     }
                 }
             }
 
-            return authorList;
+            return authorListString;
         }
 
         /// <summary>
@@ -572,7 +564,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var authors = SplitStringIntoAuthorList(book.AuthorListString);
+                    var authors = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in authors)
                     {
@@ -762,7 +754,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var authors = SplitStringIntoAuthorList(book.AuthorListString);
+                    var authors = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in authors)
                     {
@@ -838,6 +830,46 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             return refresh;
+        }
+
+        /// <summary>
+        /// Check book cover and set values.
+        /// </summary>
+        /// <param name="fileName">Book cover file name.</param>
+        /// <param name="coverUrl">Book cover url.</param>
+        /// <returns>Image source of book cover.</returns>
+        public static async Task<ImageSource?> CheckBookCover(string? fileName, string? coverUrl)
+        {
+            ImageSource? imageSource = null;
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
+
+                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
+            }
+
+            if (!string.IsNullOrEmpty(coverUrl))
+            {
+                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
+
+                if (internetStatus != PermissionStatus.Granted)
+                {
+                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
+                }
+
+                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+                {
+                    imageSource = new UriImageSource
+                    {
+                        Uri = new Uri(coverUrl),
+                        CachingEnabled = true,
+                        CacheValidity = TimeSpan.FromDays(14),
+                    };
+                }
+            }
+
+            return imageSource;
         }
 
         /// <summary>

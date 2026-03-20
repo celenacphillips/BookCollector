@@ -4,10 +4,12 @@
 
 namespace BookCollector.ViewModels.BaseViewModels
 {
-    using System.Collections.ObjectModel;
+    using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.Popups;
+    using DocumentFormat.OpenXml.Office2010.ExcelAc;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// GroupingBaseViewModel class.
@@ -47,19 +49,69 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Set the count of unread books.
+        /// </summary>
+        /// <param name="list">List of books.</param>
+        /// <returns>The count of unread books.</returns>
+        public static int SetUnreadCount(ObservableCollection<BookModel> list)
+        {
+            return list.Count(x => x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0));
+        }
+
+        /// <summary>
+        /// Set the count of read books.
+        /// </summary>
+        /// <param name="list">List of books.</param>
+        /// <returns>The count of read books.</returns>
+        public static int SetReadCount(ObservableCollection<BookModel> list)
+        {
+            return list.Count(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
+                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0));
+        }
+
+        /// <summary>
+        /// Set the count of reading books.
+        /// </summary>
+        /// <param name="list">List of books.</param>
+        /// <returns>The count of reading books.</returns>
+        public static int SetReadingCount(ObservableCollection<BookModel> list)
+        {
+            return list.Count(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
+                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0));
+        }
+
+        /// <summary>
+        /// Set total books string, total book count, unread count, read count, and reading count.
+        /// </summary>
+        /// <param name="list">List of books.</param>
+        /// <param name="totalBooks">Optional total books for series grouping.</param>
+        /// <returns>A parsed string and counts.</returns>
+        public static (string?, int) SetTotalBooksStringAndCounts(ObservableCollection<BookModel>? list, string? totalBooks = null)
+        {
+            int count = 0, unread = 0, read = 0, reading = 0;
+
+            if (list != null)
+            {
+                count = list.Count;
+                unread = SetUnreadCount(list);
+                read = SetReadCount(list);
+                reading = SetReadingCount(list);
+            }
+
+            var totalBooksString = !string.IsNullOrEmpty(totalBooks) ?
+                                    StringManipulation.SetTotalBooksString(count, int.Parse(totalBooks), unread) :
+                                    StringManipulation.SetTotalBooksAndUnreadString(count, unread);
+
+            return (totalBooksString, count);
+        }
+
+        /// <summary>
         /// Set the first filtered list based on the full  list and the show hidden preference.
         /// </summary>
         /// <param name="showHidden">Show hidden.</param>
         /// <returns>A task.</returns>
         public async override Task SetList(bool showHidden)
-        {
-        }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
         {
         }
 

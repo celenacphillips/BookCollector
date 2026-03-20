@@ -808,7 +808,7 @@ namespace BookCollector.Data
                 {
                     if (!string.IsNullOrEmpty(authorString))
                     {
-                        list.AddRange(BaseViewModel.SplitStringIntoAuthorList(authorString));
+                        list.AddRange(await StringManipulation.SplitAuthorListStringIntoAuthorList(authorString));
                     }
                 }
 

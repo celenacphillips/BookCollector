@@ -227,7 +227,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var list = BaseViewModel.SplitStringIntoAuthorList(book.AuthorListString);
+                    var list = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in list)
                     {
@@ -265,7 +265,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var list = BaseViewModel.SplitStringIntoAuthorList(book.AuthorListString);
+                    var list = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in list)
                     {

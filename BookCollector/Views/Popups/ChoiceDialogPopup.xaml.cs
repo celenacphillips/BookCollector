@@ -5,6 +5,8 @@
 namespace BookCollector.Views.Popups;
 
 using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 
 /// <summary>
 /// ChoiceDialogPopup class.
@@ -28,6 +30,29 @@ public partial class ChoiceDialogPopup : Popup<string>
         this.Confirm = confirm;
         this.Deny = !string.IsNullOrEmpty(deny) ? deny : string.Empty;
         this.DenyVisible = !string.IsNullOrEmpty(deny);
+
+        this.OptionsVisible = type.Equals("Options");
+        this.CommandsVisible = type.Equals("Commands");
+
+        this.BindingContext = this;
+
+        this.InitializeComponent();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChoiceDialogPopup"/> class.
+    /// </summary>
+    /// <param name="popupWidth">Popup width.</param>
+    /// <param name="dialogTitle">Title of popup.</param>
+    /// <param name="dialogMessage">Popup message.</param>
+    /// <param name="actions">List of actions that can be performed.</param>
+    /// <param name="type">Type of popup to display: Commands or Options.</param>
+    public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, List<string> actions, string type)
+    {
+        this.PopupWidth = popupWidth;
+        this.Title = dialogTitle;
+        this.Message = dialogMessage;
+        this.Choices = actions;
 
         this.OptionsVisible = type.Equals("Options");
         this.CommandsVisible = type.Equals("Commands");
@@ -77,6 +102,16 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// </summary>
     public bool CommandsVisible { get; set; }
 
+    /// <summary>
+    /// Gets or sets the choice actions.
+    /// </summary>
+    public List<string> Choices { get; set; }
+
+    /// <summary>
+    /// Gets or sets the selected choice.
+    /// </summary>
+    public string SelectedChoice { get; set; }
+
     private async void OnDenyButton_Clicked(object sender, EventArgs e)
     {
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -89,5 +124,14 @@ public partial class ChoiceDialogPopup : Popup<string>
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
         await this.CloseAsync(this.Confirm, token: cts.Token);
+    }
+
+    private async void OnChoiceButton_Clicked(object sender, EventArgs e)
+    {
+        var button = (Button)sender;
+
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+        await this.CloseAsync(button.BindingContext.ToString(), token: cts.Token);
     }
 }

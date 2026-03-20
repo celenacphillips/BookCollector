@@ -27,21 +27,26 @@
                Margin="20"
                IsVisible="{Binding CommandsVisible}"/>
 
-        <Button Text="{Binding Confirm}"
-                Grid.Row="0" Grid.Column="1"
-                Clicked="OnConfirmButton_Clicked"
-                HorizontalOptions="Center"
-                Margin="10"
-                Style="{StaticResource PickerButton}"
-                IsVisible="{Binding OptionsVisible}"/>
+        <CollectionView ItemsSource="{Binding Choices}"
+                        IsVisible="{Binding OptionsVisible}"
+                        Margin="10">
 
-        <Button Text="{Binding Deny}"
-                Grid.Row="0" Grid.Column="0"
-                Clicked="OnDenyButton_Clicked"
-                HorizontalOptions="Center"
-                Style="{StaticResource PickerButton}"
-                Margin="10,10,10,20"
-                IsVisible="{Binding OptionsVisible}"/>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Grid>
+
+                        <Button Text="{Binding}"
+                                Grid.Row="0" Grid.Column="1"
+                                Clicked="OnChoiceButton_Clicked"
+                                HorizontalOptions="Center"
+                                Margin="10"
+                                Style="{StaticResource PickerButton}"/>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
 
         <HorizontalStackLayout IsVisible="{Binding CommandsVisible}"
                                HorizontalOptions="Center">

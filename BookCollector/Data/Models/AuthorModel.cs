@@ -5,6 +5,7 @@
 namespace BookCollector.Data.Models
 {
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.ViewModels.BaseViewModels;
 
     /// <summary>
     /// AuthorModel class.
@@ -66,19 +67,7 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInAuthorList(this.AuthorGuid, showHiddenBooks);
-            var count = 0;
-            var unread = 0;
-
-            if (list != null)
-            {
-                count = list.Count;
-                unread = list.Count(x => (x.BookPageRead == 0 &&
-                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
-                    && !x.UpNext);
-            }
-
-            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
-            this.AuthorTotalBooks = count;
+            (this.TotalBooksString, this.AuthorTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list);
         }
 
         /// <summary>

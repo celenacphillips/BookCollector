@@ -5,6 +5,7 @@
 namespace BookCollector.Data.Models
 {
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.ViewModels.BaseViewModels;
 
     /// <summary>
     /// SeriesModel class.
@@ -38,12 +39,7 @@ namespace BookCollector.Data.Models
         /// </summary>
         public string? ParsedSeriesName
         {
-            get => (!string.IsNullOrEmpty(this.SeriesName) &&
-                    (this.SeriesName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.SeriesName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.SeriesName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
-                        ? this.SeriesName[(this.SeriesName.IndexOf(' ') + 1) ..]
-                        : this.SeriesName;
+            get => StringManipulation.SetParsedName(this.SeriesName);
         }
 
         /// <summary>
@@ -63,21 +59,7 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
-            var count = 0;
-            var unread = 0;
-
-            if (list != null)
-            {
-                count = list.Count;
-                unread = list.Count(x => (x.BookPageRead == 0 &&
-                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
-                    && !x.UpNext);
-            }
-
-            this.TotalBooksString = !string.IsNullOrEmpty(this.TotalBooksInSeries) ?
-                                    StringManipulation.SetTotalBooksString(count, int.Parse(this.TotalBooksInSeries), unread) :
-                                    StringManipulation.SetTotalBooksAndUnreadString(count, unread);
-            this.SeriesTotalBooks = count;
+            (this.TotalBooksString, this.SeriesTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list);
         }
 
         /// <summary>

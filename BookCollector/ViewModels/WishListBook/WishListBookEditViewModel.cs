@@ -5,12 +5,14 @@
 namespace BookCollector.ViewModels.WishListBook
 {
     using System.Collections.ObjectModel;
+    using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Main;
     using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -107,11 +109,11 @@ namespace BookCollector.ViewModels.WishListBook
         /// <returns>A task.</returns>
         public override async Task SetLists()
         {
-            var authors = ParseOutAuthorsFromstring(this.EditedWishlistBook.AuthorListString);
+            var authors = StringManipulation.SplitAuthorListStringIntoAuthorList(this.EditedWishlistBook.AuthorListString!);
 
             await Task.WhenAll(authors);
 
-            this.AuthorList = authors.Result;
+            this.AuthorList = authors.Result.ToObservableCollection();
         }
 
         /// <summary>
@@ -177,7 +179,7 @@ namespace BookCollector.ViewModels.WishListBook
                 Task.Run(() => this.BookInfoChanged()),
                 Task.Run(() => this.SummaryChanged()),
                 Task.Run(() => this.CommentsChanged()),
-                Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = WishlistBookModel.SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
+                Task.Run(() => this.EditedWishlistBook.TotalTimeSpan = SetTime(this.EditedWishlistBook.BookHoursTotal, this.EditedWishlistBook.BookMinutesTotal)),
             };
 
             await Task.WhenAll(loadDataTasks);
@@ -273,7 +275,7 @@ namespace BookCollector.ViewModels.WishListBook
                 Task.Run(() => this.EditedWishlistBook.SetCoverDisplay()),
                 Task.Run(() => this.EditedWishlistBook.SetPartOfSeries()),
                 Task.Run(() => this.EditedWishlistBook.SetBookPrice()),
-                Task.Run(() => this.EditedWishlistBook.SetAuthorListString(this.AuthorList, false)),
+                Task.Run(() => this.EditedWishlistBook.SetAuthorListStringFromInputList(this.AuthorList)),
             };
 
             await Task.WhenAll(dataTasks);

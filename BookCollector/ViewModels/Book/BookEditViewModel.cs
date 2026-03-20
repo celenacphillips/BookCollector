@@ -763,14 +763,14 @@ namespace BookCollector.ViewModels.Book
                 Task.Run(() => this.BookInfoChanged()),
                 Task.Run(() => this.SummaryChanged()),
                 Task.Run(() => this.CommentsChanged()),
-                Task.Run(() => this.EditedBook.TotalTimeSpan = BookModel.SetTime(this.EditedBook.BookHoursTotal, this.EditedBook.BookMinutesTotal)),
-                Task.Run(() => this.EditedBook.ListenTimeSpan = BookModel.SetTime(this.EditedBook.BookHourListened, this.EditedBook.BookMinuteListened)),
+                Task.Run(() => this.EditedBook.TotalTimeSpan = SetTime(this.EditedBook.BookHoursTotal, this.EditedBook.BookMinutesTotal)),
+                Task.Run(() => this.EditedBook.ListenTimeSpan = SetTime(this.EditedBook.BookHourListened, this.EditedBook.BookMinuteListened)),
             };
 
             await Task.WhenAll(loadDataTasks);
 
-            this.EditedBook.TotalTimeString = FormatTimeString(this.EditedBook.BookHoursTotal, this.EditedBook.BookMinutesTotal);
-            this.EditedBook.ListenTimeString = FormatTimeString(this.EditedBook.BookHourListened, this.EditedBook.BookMinuteListened);
+            this.EditedBook.TotalTimeString = StringManipulation.FormatTimeString(this.EditedBook.BookHoursTotal, this.EditedBook.BookMinutesTotal);
+            this.EditedBook.ListenTimeString = StringManipulation.FormatTimeString(this.EditedBook.BookHourListened, this.EditedBook.BookMinuteListened);
         }
 
         /// <summary>
@@ -959,7 +959,7 @@ namespace BookCollector.ViewModels.Book
                     }
                 }
 
-                await this.EditedBook.SetAuthorListString(authorList, false);
+                await this.EditedBook.SetAuthorListStringFromInputList(authorList);
             }
 
             this.AuthorList = authorList;

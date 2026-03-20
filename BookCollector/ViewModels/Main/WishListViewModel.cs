@@ -463,7 +463,7 @@ namespace BookCollector.ViewModels.Main
 
                     if (!string.IsNullOrEmpty(book.AuthorListString))
                     {
-                        var authorList = await ParseOutAuthorsFromstring(book.AuthorListString);
+                        var authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                         text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", book.BookTitle).Replace("Author Name", authorList[0].FullName)}";
 

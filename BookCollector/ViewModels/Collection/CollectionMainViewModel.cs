@@ -160,7 +160,7 @@ namespace BookCollector.ViewModels.Collection
         /// <returns>A task.</returns>
         public async override Task SetListData()
         {
-            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetAuthorListString()));
+            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetAuthorListStringFromDatabase()));
             await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetCoverDisplay()));
             await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetReadingProgress()));
             await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetBookTotalTime()));

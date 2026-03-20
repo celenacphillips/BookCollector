@@ -276,36 +276,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Parse author list string to author list.
-        /// </summary>
-        /// <param name="input">String to parse.</param>
-        /// <returns>A list of authors.</returns>
-        public static List<AuthorModel> SplitStringIntoAuthorList(string input)
-        {
-            var list = new List<AuthorModel>();
-
-            string[] authorNames = input.Split(";");
-
-            foreach (var authorName in authorNames)
-            {
-                if (!string.IsNullOrEmpty(authorName.Trim()))
-                {
-                    string[] name = authorName.Split(",");
-
-                    AuthorModel author1 = new ()
-                    {
-                        FirstName = name[1].Trim(),
-                        LastName = name[0].Trim(),
-                    };
-
-                    list.Add(author1);
-                }
-            }
-
-            return list;
-        }
-
-        /// <summary>
         /// Copy the tapped text.
         /// </summary>
         /// <param name="input">Text to copy to clipboard.</param>
@@ -317,92 +287,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 await Clipboard.SetTextAsync(input.ToString());
                 await Toast.Make($"{AppStringResources.TextCopied}").Show();
-            }
-        }
-
-        /// <summary>
-        /// Set the book cover image source of a book.
-        /// </summary>
-        /// <param name="book">Book to set cover for.</param>
-        public static async void SetBookCover(BookModel book)
-        {
-            if (!string.IsNullOrEmpty(book.BookCoverFileName))
-            {
-                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                if (!File.Exists($"{directory}/{book.BookCoverFileName}"))
-                {
-                    book.HasBookCover = false;
-                    book.HasNoBookCover = true;
-                }
-                else
-                {
-                    book.BookCover = ImageSource.FromFile($"{directory}/{book.BookCoverFileName}");
-                }
-            }
-
-            if (!string.IsNullOrEmpty(book.BookCoverUrl))
-            {
-                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                if (internetStatus != PermissionStatus.Granted)
-                {
-                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                }
-
-                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                {
-                    book.BookCover = new UriImageSource
-                    {
-                        Uri = new Uri(book.BookCoverUrl),
-                        CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(14),
-                    };
-                }
-                else
-                {
-                    book.HasBookCover = false;
-                    book.HasNoBookCover = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set the book cover image source of a book.
-        /// </summary>
-        /// <param name="book">Book to set cover for.</param>
-        public static async void SetBookCover(WishlistBookModel book)
-        {
-            if (!string.IsNullOrEmpty(book.BookCoverFileName))
-            {
-                var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
-
-                book.BookCover = ImageSource.FromFile($"{directory}/{book.BookCoverFileName}");
-            }
-
-            if (!string.IsNullOrEmpty(book.BookCoverUrl))
-            {
-                PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
-
-                if (internetStatus != PermissionStatus.Granted)
-                {
-                    internetStatus = await Permissions.RequestAsync<InternetPermission>();
-                }
-
-                if (internetStatus == PermissionStatus.Granted && Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
-                {
-                    book.BookCover = new UriImageSource
-                    {
-                        Uri = new Uri(book.BookCoverUrl),
-                        CachingEnabled = true,
-                        CacheValidity = TimeSpan.FromDays(14),
-                    };
-                }
-                else
-                {
-                    book.HasBookCover = false;
-                    book.HasNoBookCover = true;
-                }
             }
         }
 
@@ -522,6 +406,17 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Sets the time span for the book based on the book format and updates the total time span property accordingly.
+        /// </summary>
+        /// <param name="hour">Hour to set.</param>
+        /// <param name="minute">Minute to set.</param>
+        /// <returns>New time span created.</returns>
+        public static TimeSpan SetTime(int hour, int minute)
+        {
+            return new TimeSpan(hour, minute, 0);
+        }
+
+        /// <summary>
         /// Set refreshing values and reset the view model data.
         /// </summary>
         /// <returns>A task.</returns>
@@ -544,13 +439,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Show popup to edit or delete object.
         /// </summary>
         /// <param name="title">Title of popup.</param>
+        /// <param name="actions">List of actions that can be performed.</param>
         /// <returns>A task.</returns>
-        public async Task<string?> PopupMenu(string title)
+        public async Task<string?> PopupActionMenu(string title, List<string> actions)
         {
-            var edit = $"{AppStringResources.Edit}";
-            var delete = $"{AppStringResources.Delete}";
-
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, edit, delete, "Options"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, actions, "Options"));
 
             return answer.Result;
         }

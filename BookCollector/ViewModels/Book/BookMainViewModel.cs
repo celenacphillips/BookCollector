@@ -160,14 +160,14 @@ namespace BookCollector.ViewModels.Book
                 Task.Run(() => this.SelectedBook!.SetPartOfSeries()),
                 Task.Run(() => this.SelectedBook!.SetPartOfCollection()),
                 Task.Run(() => this.SelectedBook!.SetBookPrice()),
-                Task.Run(() => this.SelectedBook!.TotalTimeSpan = BookModel.SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
-                Task.Run(() => this.SelectedBook!.ListenTimeSpan = BookModel.SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
+                Task.Run(() => this.SelectedBook!.TotalTimeSpan = SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
+                Task.Run(() => this.SelectedBook!.ListenTimeSpan = SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
             };
 
             await Task.WhenAll(loadDataTasks);
 
-            this.SelectedBook!.TotalTimeString = FormatTimeString(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal);
-            this.SelectedBook.ListenTimeString = FormatTimeString(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened);
+            this.SelectedBook!.TotalTimeString = StringManipulation.FormatTimeString(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal);
+            this.SelectedBook.ListenTimeString = StringManipulation.FormatTimeString(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened);
         }
 
         /// <summary>

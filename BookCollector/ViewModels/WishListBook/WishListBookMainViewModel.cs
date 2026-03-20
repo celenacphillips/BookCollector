@@ -5,6 +5,7 @@
 namespace BookCollector.ViewModels.WishListBook
 {
     using System.Collections.ObjectModel;
+    using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
@@ -14,6 +15,7 @@ namespace BookCollector.ViewModels.WishListBook
     using BookCollector.ViewModels.Main;
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.WishListBook;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -128,11 +130,11 @@ namespace BookCollector.ViewModels.WishListBook
         /// <returns>A task.</returns>
         public override async Task SetLists()
         {
-            var authors = ParseOutAuthorsFromstring(this.SelectedWishlistBook!.AuthorListString);
+            var authors = StringManipulation.SplitAuthorListStringIntoAuthorList(this.SelectedWishlistBook!.AuthorListString!);
 
             await Task.WhenAll(authors);
 
-            this.AuthorList = authors.Result;
+            this.AuthorList = authors.Result.ToObservableCollection();
         }
 
         /// <summary>
@@ -194,7 +196,7 @@ namespace BookCollector.ViewModels.WishListBook
                 Task.Run(() => this.SelectedWishlistBook!.SetCoverDisplay()),
                 Task.Run(() => this.SelectedWishlistBook!.SetPartOfSeries()),
                 Task.Run(() => this.SelectedWishlistBook!.SetBookPrice()),
-                Task.Run(() => this.SelectedWishlistBook!.TotalTimeSpan = WishlistBookModel.SetTime(this.SelectedWishlistBook.BookHoursTotal, this.SelectedWishlistBook.BookMinutesTotal)),
+                Task.Run(() => this.SelectedWishlistBook!.TotalTimeSpan = SetTime(this.SelectedWishlistBook.BookHoursTotal, this.SelectedWishlistBook.BookMinutesTotal)),
             };
 
             await Task.WhenAll(loadDataTasks);
@@ -285,7 +287,7 @@ namespace BookCollector.ViewModels.WishListBook
 
         private async Task SaveAuthors()
         {
-            var authorList = SplitStringIntoAuthorList(this.SelectedWishlistBook!.AuthorListString!);
+            var authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(this.SelectedWishlistBook!.AuthorListString!);
 
             foreach (var author in authorList)
             {

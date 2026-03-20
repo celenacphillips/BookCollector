@@ -30,8 +30,8 @@
                         x:Name="collectionView">
             
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid x:Name="Root" x:DataType="local:FilterablePicker">
+                <DataTemplate x:DataType="x:String">
+                    <Grid x:Name="Root">
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
@@ -49,7 +49,7 @@
                         </VisualStateManager.VisualStateGroups>
 
 
-                        <Label Text="{Binding .}"
+                        <Label Text="{Binding}"
                                HeightRequest="50"
                                HorizontalOptions="Fill"
                                HorizontalTextAlignment="Center"

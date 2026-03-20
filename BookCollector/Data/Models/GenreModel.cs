@@ -5,6 +5,7 @@
 namespace BookCollector.Data.Models
 {
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.ViewModels.BaseViewModels;
 
     /// <summary>
     /// GenreModel class.
@@ -37,12 +38,7 @@ namespace BookCollector.Data.Models
         /// </summary>
         public string? ParsedGenreName
         {
-            get => (!string.IsNullOrEmpty(this.GenreName) &&
-                    (this.GenreName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.GenreName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.GenreName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
-                        ? this.GenreName[(this.GenreName.IndexOf(' ') + 1) ..]
-                        : this.GenreName;
+            get => StringManipulation.SetParsedName(this.GenreName);
         }
 
         /// <summary>
@@ -62,19 +58,7 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInGenreList(this.GenreGuid, showHiddenBooks);
-            var count = 0;
-            var unread = 0;
-
-            if (list != null)
-            {
-                count = list.Count;
-                unread = list.Count(x => (x.BookPageRead == 0 &&
-                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
-                    && !x.UpNext);
-            }
-
-            this.TotalBooksString = StringManipulation.SetTotalBooksAndUnreadString(count, unread);
-            this.GenreTotalBooks = count;
+            (this.TotalBooksString, this.GenreTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list);
         }
 
         /// <summary>

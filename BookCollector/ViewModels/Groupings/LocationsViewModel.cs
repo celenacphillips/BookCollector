@@ -259,7 +259,8 @@ namespace BookCollector.ViewModels.Groupings
 
                 if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
                 {
-                    var action = await this.PopupMenu(selected.LocationName);
+                    List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
+                    var action = await this.PopupActionMenu(selected.LocationName, actions);
 
                     if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
                     {
