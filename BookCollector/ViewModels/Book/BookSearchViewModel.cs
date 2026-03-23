@@ -153,15 +153,6 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
-        /// Set the view model list.
-        /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>A task.</returns>
-        public async override Task SetList(bool showHidden)
-        {
-        }
-
-        /// <summary>
         /// Sets the expander arrow boolean values on change.
         /// </summary>
         /// <returns>A task.</returns>

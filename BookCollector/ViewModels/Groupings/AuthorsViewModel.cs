@@ -83,6 +83,8 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public AuthorModel? selectedAuthor;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorsViewModel"/> class.
         /// </summary>
@@ -96,21 +98,30 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden authors or not.
         /// </summary>
         private bool ShowHiddenAuthors { get; set; }
+
+        /********************************************************/
 
         /// <summary>
         /// Set the first filtered list based on the full author list and the show hidden authors preference.
         /// </summary>
         /// <param name="showHiddenAuthors">Show hidden authors.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenAuthors)
+        public static async Task SetList(bool showHiddenAuthors)
         {
             fullAuthorList ??= await FillLists.GetAllAuthorsList();
 
-            hiddenFilteredAuthorList = SetList<AuthorModel>(fullAuthorList!, showHiddenAuthors).ToObservableCollection();
+            hiddenFilteredAuthorList = SetHiddenFilteredList<AuthorModel>(fullAuthorList!, showHiddenAuthors).ToObservableCollection();
         }
 
         /// <summary>
@@ -135,89 +146,7 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
-
-            return this.ShowHiddenAuthors;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredAuthorList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            this.FilteredAuthorList = this.HiddenFilteredAuthorList;
-
-            await Task.WhenAll(this.FilteredAuthorList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-            await Task.WhenAll(this.FilteredAuthorList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            this.FilteredAuthorList = await FilterLists.FilterList(
-                                this.HiddenFilteredAuthorList!,
-                                this.SearchString);
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortAuthorList(
-                                this.FilteredAuthorList!,
-                                this.AuthorLastNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredAuthorList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalAuthorsCount = this.HiddenFilteredAuthorList?.Count ?? 0;
-
-            this.FilteredAuthorsCount = this.FilteredAuthorList?.Count ?? 0;
-
-            this.TotalAuthorsString = StringManipulation.SetTotalAuthorsString(this.FilteredAuthorsCount, this.TotalAuthorsCount);
-
-            this.ShowCollectionViewFooter = this.FilteredAuthorsCount > 0;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Search the list based on the author name.
@@ -229,23 +158,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredAuthorList != null && this.HiddenFilteredAuthorList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredAuthorList = FilterLists.FilterOnSearchString(this.HiddenFilteredAuthorList, input);
-                }
-                else
-                {
-                    this.FilteredAuthorList = await FilterLists.FilterList(
-                                this.HiddenFilteredAuthorList,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
+            (this.FilteredAuthorList, this.FilteredAuthorsCount, this.TotalAuthorsString) = await this.Search(this.HiddenFilteredAuthorList, this.TotalAuthorsCount, this.AuthorLastNameChecked);
         }
 
         /// <summary>
@@ -256,26 +169,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuAuthor(Guid? input)
         {
-            if (this.FilteredAuthorList != null)
-            {
-                var selected = this.FilteredAuthorList.FirstOrDefault(x => x.AuthorGuid == input);
+            var selected = this.FilteredAuthorList?.FirstOrDefault(x => x.AuthorGuid == input);
 
-                if (selected != null)
-                {
-                    List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
-                    var action = await this.PopupActionMenu(selected.FullName, actions);
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
-                    {
-                        await this.EditAuthor(selected);
-                    }
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                    {
-                        await this.DeleteAuthor(selected);
-                    }
-                }
-            }
+            await this.PopupMenu(selected, selected?.FullName);
         }
 
         /// <summary>
@@ -310,65 +206,53 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
-        /// <summary>
-        /// Navigate to author edit view for selected author.
-        /// </summary>
-        /// <param name="selected">Selected author.</param>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task EditAuthor(AuthorModel selected)
-        {
-            this.SetIsBusyTrue();
-
-            var view = new AuthorEditView(selected, selected.FullName, true);
-
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
-        }
+        /********************************************************/
 
         /// <summary>
-        /// Delete selected author.
+        /// Set the view model data.
         /// </summary>
-        /// <param name="selected">Selected author.</param>
         /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task DeleteAuthor(AuthorModel selected)
+        public override async Task SetViewModelData()
         {
-            var answer = await this.DeleteCheck(selected.FullName);
-
-            if (answer)
+            if (RefreshView)
             {
                 try
                 {
-                    this.SetIsBusyTrue();
+                    this.GetPreferences();
 
-                    await BaseViewModel.Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
-                    RemoveFromStaticList(selected);
-                    await RemoveBookFromGrouping(selected);
+                    await SetList(this.ShowHiddenAuthors);
 
-                    await this.ConfirmDelete(selected.FullName);
-
-                    await this.SetViewModelData();
-
-                    this.SetIsBusyFalse();
+                    (this.TotalAuthorsCount,
+                        this.FilteredAuthorsCount,
+                        this.TotalAuthorsString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredAuthorList) = await this.SetViewModelData(this.HiddenFilteredAuthorList, this.AuthorLastNameChecked);
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    await this.CanceledAction();
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
                 }
             }
-            else
-            {
-                await this.CanceledAction();
-            }
+        }
+
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
+        {
+            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+
+            return this.ShowHiddenAuthors;
         }
 
         /// <summary>
@@ -392,6 +276,36 @@ namespace BookCollector.ViewModels.Groupings
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Show edit view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task Edit(object selected)
+        {
+            this.SetIsBusyTrue();
+
+            var view = new AuthorEditView((AuthorModel)selected, $"{AppStringResources.EditAuthor}", true);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Delete grouping from database.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task DeleteGrouping(object selected)
+        {
+            await Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
+            RemoveFromStaticList((AuthorModel)selected);
+            await RemoveBookFromGrouping((AuthorModel)selected);
+        }
+
+        /********************************************************/
 
         private static void RemoveFromStaticList(AuthorModel selected)
         {

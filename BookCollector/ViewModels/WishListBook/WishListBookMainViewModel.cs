@@ -89,14 +89,8 @@ namespace BookCollector.ViewModels.WishListBook
                     }
                     catch (Exception ex)
                     {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        this.SetIsBusyFalse();
+                        await this.ViewModelCatch(ex);
+                        RefreshView = false;
                     }
                 }
                 else
@@ -107,15 +101,6 @@ namespace BookCollector.ViewModels.WishListBook
         }
 
         /********************************************************/
-
-        /// <summary>
-        /// Set the view model list.
-        /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>A task.</returns>
-        public async override Task SetList(bool showHidden)
-        {
-        }
 
         /// <summary>
         /// Set the view model preferences.

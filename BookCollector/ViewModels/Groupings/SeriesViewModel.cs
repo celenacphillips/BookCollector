@@ -83,6 +83,8 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public SeriesModel? selectedSeries;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SeriesViewModel"/> class.
         /// </summary>
@@ -96,6 +98,13 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden series or not.
         /// </summary>
@@ -106,16 +115,18 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         private bool SeriesNameChecked { get; set; }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the first filtered list based on the full series list and the show hidden series preference.
         /// </summary>
         /// <param name="showHiddenSeries">Show hidden series.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenSeries)
+        public static async Task SetList(bool showHiddenSeries)
         {
             fullSeriesList ??= await FillLists.GetAllSeriesList();
 
-            hiddenFilteredSeriesList = SetList<SeriesModel>(fullSeriesList!, showHiddenSeries).ToObservableCollection();
+            hiddenFilteredSeriesList = SetHiddenFilteredList<SeriesModel>(fullSeriesList!, showHiddenSeries).ToObservableCollection();
         }
 
         /// <summary>
@@ -140,89 +151,7 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.SeriesNameChecked = Preferences.Get($"{this.ViewTitle}_SeriesNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
-
-            return this.ShowHiddenSeries;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredSeriesList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            this.FilteredSeriesList = this.HiddenFilteredSeriesList;
-
-            await Task.WhenAll(this.FilteredSeriesList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-            await Task.WhenAll(this.FilteredSeriesList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            this.FilteredSeriesList = await FilterLists.FilterList(
-                                this.HiddenFilteredSeriesList!,
-                                this.SearchString);
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortSeriesList(
-                                this.FilteredSeriesList!,
-                                this.SeriesNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredSeriesList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalSeriesCount = this.HiddenFilteredSeriesList?.Count ?? 0;
-
-            this.FilteredSeriesCount = this.FilteredSeriesList?.Count ?? 0;
-
-            this.TotalSeriesString = StringManipulation.SetTotalSeriesString(this.FilteredSeriesCount, this.TotalSeriesCount);
-
-            this.ShowCollectionViewFooter = this.FilteredSeriesCount > 0;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Search the list based on the series name.
@@ -234,23 +163,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredSeriesList != null && this.HiddenFilteredSeriesList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredSeriesList = FilterLists.FilterOnSearchString(this.HiddenFilteredSeriesList, input);
-                }
-                else
-                {
-                    this.FilteredSeriesList = await FilterLists.FilterList(
-                                this.HiddenFilteredSeriesList,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
+            (this.FilteredSeriesList, this.FilteredSeriesCount, this.TotalSeriesString) = await this.Search(this.HiddenFilteredSeriesList, this.TotalSeriesCount, this.SeriesNameChecked);
         }
 
         /// <summary>
@@ -261,26 +174,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuSeries(Guid? input)
         {
-            if (this.FilteredSeriesList != null)
-            {
-                var selected = this.FilteredSeriesList.FirstOrDefault(x => x.SeriesGuid == input);
+            var selected = this.FilteredSeriesList?.FirstOrDefault(x => x.SeriesGuid == input);
 
-                if (selected != null && !string.IsNullOrEmpty(selected.SeriesName))
-                {
-                    List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
-                    var action = await this.PopupActionMenu(selected.SeriesName, actions);
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
-                    {
-                        await this.EditSeries(selected);
-                    }
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                    {
-                        await this.DeleteSeries(selected);
-                    }
-                }
-            }
+            await this.PopupMenu(selected, selected?.SeriesName);
         }
 
         /// <summary>
@@ -315,68 +211,53 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /********************************************************/
+
         /// <summary>
-        /// Navigate to series edit view for selected series.
+        /// Set the view model data.
         /// </summary>
-        /// <param name="selected">Selected series.</param>
         /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task EditSeries(SeriesModel selected)
+        public override async Task SetViewModelData()
         {
-            this.SetIsBusyTrue();
+            if (RefreshView)
+            {
+                try
+                {
+                    this.GetPreferences();
 
-            var view = new SeriesEditView(selected, $"{AppStringResources.EditSeries}", true);
+                    await SetList(this.ShowHiddenSeries);
 
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
+                    (this.TotalSeriesCount,
+                        this.FilteredSeriesCount,
+                        this.TotalSeriesString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredSeriesList) = await this.SetViewModelData(this.HiddenFilteredSeriesList, this.SeriesNameChecked);
+                }
+                catch (Exception ex)
+                {
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
+                }
+            }
         }
 
         /// <summary>
-        /// Delete selected series.
+        /// Set the view model preferences.
         /// </summary>
-        /// <param name="selected">Selected series.</param>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task DeleteSeries(SeriesModel selected)
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
-            if (!string.IsNullOrEmpty(selected.SeriesName))
-            {
-                var answer = await this.DeleteCheck(selected.SeriesName);
+            this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-                if (answer)
-                {
-                    try
-                    {
-                        this.SetIsBusyTrue();
+            this.SeriesNameChecked = Preferences.Get($"{this.ViewTitle}_SeriesNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-                        await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
-                        RemoveFromStaticList(selected);
-                        await RemoveBookFromGrouping(selected);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
 
-                        await this.ConfirmDelete(selected.SeriesName);
-
-                        await this.SetViewModelData();
-
-                        this.SetIsBusyFalse();
-                    }
-                    catch (Exception ex)
-                    {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await this.CanceledAction();
-                    }
-                }
-                else
-                {
-                    await this.CanceledAction();
-                }
-            }
+            return this.ShowHiddenSeries;
         }
 
         /// <summary>
@@ -400,6 +281,36 @@ namespace BookCollector.ViewModels.Groupings
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Show edit view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task Edit(object selected)
+        {
+            this.SetIsBusyTrue();
+
+            var view = new SeriesEditView((SeriesModel)selected, $"{AppStringResources.EditSeries}", true);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Delete grouping from database.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task DeleteGrouping(object selected)
+        {
+            await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
+            RemoveFromStaticList((SeriesModel)selected);
+            await RemoveBookFromGrouping((SeriesModel)selected);
+        }
+
+        /********************************************************/
 
         private static void RemoveFromStaticList(SeriesModel selected)
         {

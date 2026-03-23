@@ -132,14 +132,8 @@ namespace BookCollector.ViewModels.Author
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                RefreshView = false;
             }
         }
 

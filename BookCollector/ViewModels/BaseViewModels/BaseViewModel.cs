@@ -121,11 +121,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static bool RefreshView { get; set; }
-
-        /// <summary>
         /// Gets or sets the device height.
         /// </summary>
         public static double DeviceHeight { get; set; }
@@ -225,7 +220,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <param name="showHidden">Show hidden.</param>
         /// <typeparam name="T">Object to convert to.</typeparam>
         /// <returns>A list filtered based on the hidden parameter.</returns>
-        public static List<T> SetList<T>(object source, bool showHidden)
+        public static List<T> SetHiddenFilteredList<T>(object source, bool showHidden)
             where T : new()
         {
             var destination = new List<T>();
@@ -424,16 +419,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         public async Task Refresh()
         {
             this.SetRefreshTrue();
-            RefreshView = true;
             await this.SetViewModelData();
             this.SetRefreshFalse();
         }
-
-        /// <summary>
-        /// Set the view model data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetViewModelData();
 
         /// <summary>
         /// Show popup to edit or delete object.
@@ -446,6 +434,25 @@ namespace BookCollector.ViewModels.BaseViewModels
             var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, actions, "Options"));
 
             return answer.Result;
+        }
+
+        /// <summary>
+        /// Set the view model catch data.
+        /// </summary>
+        /// <param name="ex">Exception.</param>
+        /// <returns>A task.</returns>
+        public async Task ViewModelCatch(Exception ex)
+        {
+#if DEBUG
+            await this.DisplayMessage("Error!", ex.Message);
+#endif
+
+#if RELEASE
+            await this.DisplayMessage(AppStringR;esources.AnErrorOccurred, null);
+#endif
+            await this.CanceledAction();
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>
@@ -526,6 +533,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             await this.DisplayMessage(title, message);
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Show info popup.
         /// </summary>
@@ -534,6 +543,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, this.InfoText));
         }
+
+        /********************************************************/
 
         /// <summary>
         /// Set values when view is busy.
@@ -572,6 +583,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             this.IsRefreshing = false;
         }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public abstract Task SetViewModelData();
+
+        /********************************************************/
 
         /// <summary>
         /// Get current date and parse into string.

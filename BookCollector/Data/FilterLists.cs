@@ -30,8 +30,8 @@ namespace BookCollector.Data
         /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static async Task<ObservableCollection<BookModel>> FilterList(
-            ObservableCollection<BookModel> bookList,
+        public static async Task<ObservableCollection<BookModel>?> FilterList(
+            ObservableCollection<BookModel>? bookList,
             string? favoritesOption,
             string? formatOption,
             string? publisherOption,
@@ -91,8 +91,8 @@ namespace BookCollector.Data
         /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static async Task<ObservableCollection<WishlistBookModel>> FilterList(
-            ObservableCollection<WishlistBookModel> bookList,
+        public static async Task<ObservableCollection<WishlistBookModel>?> FilterList(
+            ObservableCollection<WishlistBookModel>? bookList,
             string? formatOption,
             string? publisherOption,
             string? languageOption,
@@ -107,13 +107,13 @@ namespace BookCollector.Data
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
-            filteredList = FilterBookFormat_Wishlist(filteredList, formatOption);
+            filteredList = FilterBookFormat(filteredList, formatOption);
 
-            filteredList = FilterBookPublisher_Wishlist(filteredList, publisherOption);
+            filteredList = FilterBookPublisher(filteredList, publisherOption);
 
-            filteredList = FilterBookLanguage_Wishlist(filteredList, languageOption);
+            filteredList = FilterBookLanguage(filteredList, languageOption);
 
-            filteredList = FilterBookPublishYear_Wishlist(filteredList, publishYearOption);
+            filteredList = FilterBookPublishYear(filteredList, publishYearOption);
 
             filteredList = FilterBookAuthor(filteredList, authorOption);
 
@@ -123,7 +123,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(bookCoverOption))
             {
-                filteredList = FilterBooksOnBookCovers_Wishlist(filteredList, bookCoverOption);
+                filteredList = FilterBooksOnBookCovers(filteredList, bookCoverOption);
             }
 
             return filteredList;
@@ -135,8 +135,8 @@ namespace BookCollector.Data
         /// <param name="authorList">Author list to filter.</param>
         /// <param name="searchString">Author name search string to find.</param>
         /// <returns>A filtered author list.</returns>
-        public static async Task<ObservableCollection<AuthorModel>> FilterList(
-            ObservableCollection<AuthorModel> authorList,
+        public static async Task<ObservableCollection<AuthorModel>?> FilterList(
+            ObservableCollection<AuthorModel>? authorList,
             string? searchString)
         {
             var filteredList = authorList;
@@ -152,8 +152,8 @@ namespace BookCollector.Data
         /// <param name="collectionList">Collection list to filter.</param>
         /// <param name="searchString">Collection name search string to find.</param>
         /// <returns>A filtered collection list.</returns>
-        public static async Task<ObservableCollection<CollectionModel>> FilterList(
-            ObservableCollection<CollectionModel> collectionList,
+        public static async Task<ObservableCollection<CollectionModel>?> FilterList(
+            ObservableCollection<CollectionModel>? collectionList,
             string? searchString)
         {
             var filteredList = collectionList;
@@ -169,8 +169,8 @@ namespace BookCollector.Data
         /// <param name="genreList">Genre list to filter.</param>
         /// <param name="searchString">Genre name search string to find.</param>
         /// <returns>A filtered genre list.</returns>
-        public static async Task<ObservableCollection<GenreModel>> FilterList(
-            ObservableCollection<GenreModel> genreList,
+        public static async Task<ObservableCollection<GenreModel>?> FilterList(
+            ObservableCollection<GenreModel>? genreList,
             string? searchString)
         {
             var filteredList = genreList;
@@ -186,8 +186,8 @@ namespace BookCollector.Data
         /// <param name="locationList">Location list to filter.</param>
         /// <param name="searchString">Location name search string to find.</param>
         /// <returns>A filtered location list.</returns>
-        public static async Task<ObservableCollection<LocationModel>> FilterList(
-            ObservableCollection<LocationModel> locationList,
+        public static async Task<ObservableCollection<LocationModel>?> FilterList(
+            ObservableCollection<LocationModel>? locationList,
             string? searchString)
         {
             var filteredList = locationList;
@@ -203,8 +203,8 @@ namespace BookCollector.Data
         /// <param name="seriesList">Series list to filter.</param>
         /// <param name="searchString">Series name search string to find.</param>
         /// <returns>A filtered series list.</returns>
-        public static async Task<ObservableCollection<SeriesModel>> FilterList(
-            ObservableCollection<SeriesModel> seriesList,
+        public static async Task<ObservableCollection<SeriesModel>?> FilterList(
+            ObservableCollection<SeriesModel>? seriesList,
             string? searchString)
         {
             var filteredList = seriesList;
@@ -222,11 +222,11 @@ namespace BookCollector.Data
         /// <param name="bookList">Book list to filter.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<BookModel> FilterOnSearchString(ObservableCollection<BookModel> bookList, string? searchString)
+        public static ObservableCollection<BookModel>? FilterOnSearchString(ObservableCollection<BookModel>? bookList, string? searchString)
         {
             if (!string.IsNullOrEmpty(searchString))
             {
-                return bookList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                return bookList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
             else
             {
@@ -240,13 +240,13 @@ namespace BookCollector.Data
         /// <param name="bookList">Book list to filter.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<WishlistBookModel> FilterOnSearchString(ObservableCollection<WishlistBookModel> bookList, string? searchString)
+        public static ObservableCollection<WishlistBookModel>? FilterOnSearchString(ObservableCollection<WishlistBookModel>? bookList, string? searchString)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -258,13 +258,13 @@ namespace BookCollector.Data
         /// <param name="authorList">Author list to filter.</param>
         /// <param name="searchString">Author name search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<AuthorModel> FilterOnSearchString(ObservableCollection<AuthorModel> authorList, string? searchString)
+        public static ObservableCollection<AuthorModel>? FilterOnSearchString(ObservableCollection<AuthorModel>? authorList, string? searchString)
         {
             var filterList = authorList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.FullName) && x.FullName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.FullName) && x.FullName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -276,13 +276,13 @@ namespace BookCollector.Data
         /// <param name="collectionList">Collection list to filter.</param>
         /// <param name="searchString">Collection name search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<CollectionModel> FilterOnSearchString(ObservableCollection<CollectionModel> collectionList, string? searchString)
+        public static ObservableCollection<CollectionModel>? FilterOnSearchString(ObservableCollection<CollectionModel>? collectionList, string? searchString)
         {
             var filterList = collectionList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -294,13 +294,13 @@ namespace BookCollector.Data
         /// <param name="genreList">Genre list to filter.</param>
         /// <param name="searchString">Genre name search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<GenreModel> FilterOnSearchString(ObservableCollection<GenreModel> genreList, string? searchString)
+        public static ObservableCollection<GenreModel>? FilterOnSearchString(ObservableCollection<GenreModel>? genreList, string? searchString)
         {
             var filterList = genreList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -312,13 +312,13 @@ namespace BookCollector.Data
         /// <param name="locationList">Location list to filter.</param>
         /// <param name="searchString">Location name search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<LocationModel> FilterOnSearchString(ObservableCollection<LocationModel> locationList, string? searchString)
+        public static ObservableCollection<LocationModel>? FilterOnSearchString(ObservableCollection<LocationModel>? locationList, string? searchString)
         {
             var filterList = locationList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -330,13 +330,13 @@ namespace BookCollector.Data
         /// <param name="seriesList">Series list to filter.</param>
         /// <param name="searchString">Series name search string to find.</param>
         /// <returns>A filtered book list.</returns>
-        public static ObservableCollection<SeriesModel> FilterOnSearchString(ObservableCollection<SeriesModel> seriesList, string? searchString)
+        public static ObservableCollection<SeriesModel>? FilterOnSearchString(ObservableCollection<SeriesModel>? seriesList, string? searchString)
         {
             var filterList = seriesList;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -344,94 +344,100 @@ namespace BookCollector.Data
 
         /********************************************************/
 
-        private static ObservableCollection<BookModel> FilterFavoriteBooks(ObservableCollection<BookModel> bookList, string favoritesOption)
+        private static ObservableCollection<BookModel>? FilterFavoriteBooks(ObservableCollection<BookModel>? bookList, string favoritesOption)
         {
             var filterList = bookList;
 
             if (favoritesOption.Equals(AppStringResources.Favorites))
             {
-                filterList = bookList.Where(x => x.IsFavorite).ToObservableCollection();
+                filterList = bookList?.Where(x => x.IsFavorite).ToObservableCollection();
             }
 
             if (favoritesOption.Equals(AppStringResources.NonFavorites))
             {
-                filterList = bookList.Where(x => !x.IsFavorite).ToObservableCollection();
+                filterList = bookList?.Where(x => !x.IsFavorite).ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookFormat(ObservableCollection<BookModel> bookList, string? formatOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookFormat(ObservableCollection<BookModel>? bookList, string? formatOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(formatOption) && !formatOption.Equals(AppStringResources.AllFormats))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookFormat_Wishlist(ObservableCollection<WishlistBookModel> bookList, string? formatOption)
+        private static ObservableCollection<WishlistBookModel>? FilterBookFormat(ObservableCollection<WishlistBookModel>? bookList, string? formatOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(formatOption) && !formatOption.Equals(AppStringResources.AllFormats))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookFormat) && x.BookFormat.Equals(formatOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookPublisher(ObservableCollection<BookModel> bookList, string? publisherOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookPublisher(ObservableCollection<BookModel>? bookList, string? publisherOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(publisherOption) && publisherOption.Equals(AppStringResources.NoPublisher))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublisher))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookPublisher))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookPublisher_Wishlist(ObservableCollection<WishlistBookModel> bookList, string? publisherOption)
+        private static ObservableCollection<WishlistBookModel>? FilterBookPublisher(ObservableCollection<WishlistBookModel>? bookList, string? publisherOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(publisherOption) && publisherOption.Equals(AppStringResources.NoPublisher))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublisher))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookPublisher))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookPublishYear(ObservableCollection<BookModel> bookList, string? publishYearOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookPublishYear(ObservableCollection<BookModel>? bookList, string? publishYearOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(publishYearOption) && publishYearOption.Equals(AppStringResources.NoPublishYear))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
                                      .ToObservableCollection();
             }
 
@@ -439,7 +445,7 @@ namespace BookCollector.Data
             {
                 var years = publishYearOption.Split(" - ");
 
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
                                             int.Parse(years[0]) <= int.Parse(x.BookPublishYear) &&
                                             int.Parse(years[1]) >= int.Parse(x.BookPublishYear))
                                      .ToObservableCollection();
@@ -448,13 +454,13 @@ namespace BookCollector.Data
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookPublishYear_Wishlist(ObservableCollection<WishlistBookModel> bookList, string? publishYearOption)
+        private static ObservableCollection<WishlistBookModel>? FilterBookPublishYear(ObservableCollection<WishlistBookModel>? bookList, string? publishYearOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(publishYearOption) && publishYearOption.Equals(AppStringResources.NoPublishYear))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookPublishYear))
                                      .ToObservableCollection();
             }
 
@@ -462,7 +468,7 @@ namespace BookCollector.Data
             {
                 var years = publishYearOption.Split(" - ");
 
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublishYear) &&
                                             int.Parse(years[0]) <= int.Parse(x.BookPublishYear) &&
                                             int.Parse(years[1]) >= int.Parse(x.BookPublishYear))
                                      .ToObservableCollection();
@@ -471,45 +477,49 @@ namespace BookCollector.Data
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookLanguage(ObservableCollection<BookModel> bookList, string? languageOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookLanguage(ObservableCollection<BookModel>? bookList, string? languageOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(languageOption) && languageOption.Equals(AppStringResources.NoLanguage))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookLanguage))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookLanguage))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookLanguage_Wishlist(ObservableCollection<WishlistBookModel> bookList, string? languageOption)
+        private static ObservableCollection<WishlistBookModel>? FilterBookLanguage(ObservableCollection<WishlistBookModel>? bookList, string? languageOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(languageOption) && languageOption.Equals(AppStringResources.NoLanguage))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookLanguage))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookLanguage))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower()))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookRating(ObservableCollection<BookModel> bookList, string ratingOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookRating(ObservableCollection<BookModel>? bookList, string ratingOption)
         {
             var filterList = bookList;
 
@@ -522,120 +532,130 @@ namespace BookCollector.Data
 
             if (!ratingOption.Equals(AppStringResources.AllRatings))
             {
-                filterList = bookList.Where(x => x.Rating == int.Parse(ratingOption))
+                filterList = bookList?.Where(x => x.Rating == int.Parse(ratingOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBookAuthor(ObservableCollection<BookModel> bookList, string? authorOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBookAuthor(ObservableCollection<BookModel>? bookList, string? authorOption)
         {
             var filterList = bookList;
             var newFilteredList = new ObservableCollection<BookModel>();
 
             if (!string.IsNullOrEmpty(authorOption) && authorOption.Equals(AppStringResources.NoAuthor))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.AuthorListString))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookAuthor(ObservableCollection<WishlistBookModel> bookList, string? authorOption)
+        /********************************************************/
+
+        private static ObservableCollection<WishlistBookModel>? FilterBookAuthor(ObservableCollection<WishlistBookModel>? bookList, string? authorOption)
         {
             var filterList = bookList;
             var newFilteredList = new ObservableCollection<WishlistBookModel>();
 
             if (!string.IsNullOrEmpty(authorOption) && authorOption.Equals(AppStringResources.NoAuthor))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.AuthorListString))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.AuthorListString))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookLocation(ObservableCollection<WishlistBookModel> bookList, string? locationOption)
+        /********************************************************/
+
+        private static ObservableCollection<WishlistBookModel>? FilterBookLocation(ObservableCollection<WishlistBookModel>? bookList, string? locationOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(locationOption) && locationOption.Equals(AppStringResources.NoLocation))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(locationOption) && !locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.ToLower().Equals(locationOption.ToLower()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.ToLower().Equals(locationOption.ToLower()))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBookSeries(ObservableCollection<WishlistBookModel> bookList, string? seriesOption)
+        /********************************************************/
+
+        private static ObservableCollection<WishlistBookModel>? FilterBookSeries(ObservableCollection<WishlistBookModel>? bookList, string? seriesOption)
         {
             var filterList = bookList;
 
             if (!string.IsNullOrEmpty(seriesOption) && seriesOption.Equals(AppStringResources.NoSeries))
             {
-                filterList = bookList.Where(x => string.IsNullOrEmpty(x.BookSeries))
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookSeries))
                                      .ToObservableCollection();
             }
 
             if (!string.IsNullOrEmpty(seriesOption) && !seriesOption.Equals(AppStringResources.NoSeries) && !seriesOption.Equals(AppStringResources.AllSeries))
             {
-                filterList = bookList.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
                                      .ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<BookModel> FilterBooksOnBookCovers(ObservableCollection<BookModel> bookList, string bookCoverOption)
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBooksOnBookCovers(ObservableCollection<BookModel>? bookList, string bookCoverOption)
         {
             var filterList = bookList;
 
             if (bookCoverOption.Equals(AppStringResources.HasABookCover))
             {
-                filterList = bookList.Where(x => x.HasBookCover).ToObservableCollection();
+                filterList = bookList?.Where(x => x.HasBookCover).ToObservableCollection();
             }
 
             if (bookCoverOption.Equals(AppStringResources.HasNoBookCover))
             {
-                filterList = bookList.Where(x => x.HasNoBookCover).ToObservableCollection();
+                filterList = bookList?.Where(x => x.HasNoBookCover).ToObservableCollection();
             }
 
             return filterList;
         }
 
-        private static ObservableCollection<WishlistBookModel> FilterBooksOnBookCovers_Wishlist(ObservableCollection<WishlistBookModel> bookList, string bookCoverOption)
+        private static ObservableCollection<WishlistBookModel>? FilterBooksOnBookCovers(ObservableCollection<WishlistBookModel>? bookList, string bookCoverOption)
         {
             var filterList = bookList;
 
             if (bookCoverOption.Equals(AppStringResources.HasABookCover))
             {
-                filterList = bookList.Where(x => x.HasBookCover).ToObservableCollection();
+                filterList = bookList?.Where(x => x.HasBookCover).ToObservableCollection();
             }
 
             if (bookCoverOption.Equals(AppStringResources.HasNoBookCover))
             {
-                filterList = bookList.Where(x => x.HasNoBookCover).ToObservableCollection();
+                filterList = bookList?.Where(x => x.HasNoBookCover).ToObservableCollection();
             }
 
             return filterList;

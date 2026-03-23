@@ -75,6 +75,8 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int filteredLocationsCount;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationsViewModel"/> class.
         /// </summary>
@@ -88,6 +90,13 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden locations or not.
         /// </summary>
@@ -98,16 +107,18 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         private bool LocationNameChecked { get; set; }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the first filtered list based on the full location list and the show hidden locations preference.
         /// </summary>
         /// <param name="showHiddenLocations">Show hidden locations.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenLocations)
+        public static async Task SetList(bool showHiddenLocations)
         {
             fullLocationList ??= await FillLists.GetAllLocationsList();
 
-            hiddenFilteredLocationList = SetList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
+            hiddenFilteredLocationList = SetHiddenFilteredList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
         }
 
         /// <summary>
@@ -132,89 +143,7 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
-
-            return this.ShowHiddenLocations;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredLocationList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            this.FilteredLocationList = this.HiddenFilteredLocationList;
-
-            await Task.WhenAll(this.FilteredLocationList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-            await Task.WhenAll(this.FilteredLocationList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            this.FilteredLocationList = await FilterLists.FilterList(
-                                this.HiddenFilteredLocationList!,
-                                this.SearchString);
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortLocationsList(
-                                this.FilteredLocationList!,
-                                this.LocationNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredLocationList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalLocationsCount = this.HiddenFilteredLocationList?.Count ?? 0;
-
-            this.FilteredLocationsCount = this.FilteredLocationList?.Count ?? 0;
-
-            this.TotalLocationsString = StringManipulation.SetTotalLocationsString(this.FilteredLocationsCount, this.TotalLocationsCount);
-
-            this.ShowCollectionViewFooter = this.FilteredLocationsCount > 0;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Search the list based on the location name.
@@ -226,23 +155,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredLocationList != null && this.HiddenFilteredLocationList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredLocationList = FilterLists.FilterOnSearchString(this.HiddenFilteredLocationList, input);
-                }
-                else
-                {
-                    this.FilteredLocationList = await FilterLists.FilterList(
-                                this.HiddenFilteredLocationList,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
+            (this.FilteredLocationList, this.FilteredLocationsCount, this.TotalLocationsString) = await this.Search(this.HiddenFilteredLocationList, this.TotalLocationsCount, this.LocationNameChecked);
         }
 
         /// <summary>
@@ -253,26 +166,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuLocation(Guid? input)
         {
-            if (this.FilteredLocationList != null)
-            {
-                var selected = this.FilteredLocationList.FirstOrDefault(x => x.LocationGuid == input);
+            var selected = this.FilteredLocationList?.FirstOrDefault(x => x.LocationGuid == input);
 
-                if (selected != null && !string.IsNullOrEmpty(selected.LocationName))
-                {
-                    List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
-                    var action = await this.PopupActionMenu(selected.LocationName, actions);
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
-                    {
-                        await this.EditLocation(selected);
-                    }
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                    {
-                        await this.DeleteLocation(selected);
-                    }
-                }
-            }
+            await this.PopupMenu(selected, selected?.LocationName);
         }
 
         /// <summary>
@@ -307,68 +203,53 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /********************************************************/
+
         /// <summary>
-        /// Navigate to location edit view for selected location.
+        /// Set the view model data.
         /// </summary>
-        /// <param name="selected">Selected location.</param>
         /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task EditLocation(LocationModel selected)
+        public override async Task SetViewModelData()
         {
-            this.SetIsBusyTrue();
+            if (RefreshView)
+            {
+                try
+                {
+                    this.GetPreferences();
 
-            var view = new LocationEditView(selected, $"{AppStringResources.EditLocation}", true);
+                    await SetList(this.ShowHiddenLocations);
 
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
+                    (this.TotalLocationsCount,
+                        this.FilteredLocationsCount,
+                        this.TotalLocationsString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredLocationList) = await this.SetViewModelData(this.HiddenFilteredLocationList, this.LocationNameChecked);
+                }
+                catch (Exception ex)
+                {
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
+                }
+            }
         }
 
         /// <summary>
-        /// Delete selected location.
+        /// Set the view model preferences.
         /// </summary>
-        /// <param name="selected">Selected location.</param>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task DeleteLocation(LocationModel selected)
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
-            if (!string.IsNullOrEmpty(selected.LocationName))
-            {
-                var answer = await this.DeleteCheck(selected.LocationName);
+            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-                if (answer)
-                {
-                    try
-                    {
-                        this.SetIsBusyTrue();
+            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-                        await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
-                        RemoveFromStaticList(selected);
-                        await RemoveBookFromGrouping(selected);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
 
-                        await this.ConfirmDelete(selected.LocationName);
-
-                        await this.SetViewModelData();
-
-                        this.SetIsBusyFalse();
-                    }
-                    catch (Exception ex)
-                    {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await this.CanceledAction();
-                    }
-                }
-                else
-                {
-                    await this.CanceledAction();
-                }
-            }
+            return this.ShowHiddenLocations;
         }
 
         /// <summary>
@@ -392,6 +273,36 @@ namespace BookCollector.ViewModels.Groupings
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Show edit view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task Edit(object selected)
+        {
+            this.SetIsBusyTrue();
+
+            var view = new LocationEditView((LocationModel)selected, $"{AppStringResources.EditLocation}", true);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Delete grouping from database.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task DeleteGrouping(object selected)
+        {
+            await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
+            RemoveFromStaticList((LocationModel)selected);
+            await RemoveBookFromGrouping((LocationModel)selected);
+        }
+
+        /********************************************************/
 
         private static void RemoveFromStaticList(LocationModel selected)
         {

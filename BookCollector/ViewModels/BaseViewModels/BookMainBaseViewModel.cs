@@ -23,6 +23,15 @@ namespace BookCollector.ViewModels.BaseViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<AuthorModel>? authorList;
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static bool RefreshView { get; set; }
+
+        /********************************************************/
+
         /// <summary>
         /// Set the view model data.
         /// </summary>
@@ -51,14 +60,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                RefreshView = false;
             }
         }
 
@@ -130,14 +133,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                     catch (Exception ex)
                     {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await this.CanceledAction();
+                        await this.ViewModelCatch(ex);
                     }
                 }
                 else

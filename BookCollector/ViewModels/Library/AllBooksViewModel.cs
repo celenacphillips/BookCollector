@@ -80,6 +80,8 @@ namespace BookCollector.ViewModels.Library
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalBooksString;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AllBooksViewModel"/> class.
         /// </summary>
@@ -93,16 +95,74 @@ namespace BookCollector.ViewModels.Library
             RefreshView = true;
         }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
+
+        /********************************************************/
+
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenBooks)
+        public static async Task SetList(bool showHiddenBooks)
         {
             fullBookList ??= await FillLists.GetAllBooksList();
 
-            hiddenFilteredBookList = SetList<BookModel>(fullBookList!, showHiddenBooks).ToObservableCollection();
+            hiddenFilteredBookList = SetHiddenFilteredList<BookModel>(fullBookList!, showHiddenBooks).ToObservableCollection();
+        }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Search the list based on the book title.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BookSearchOnTitle(string? input)
+        {
+            this.SearchString = input;
+
+            (this.FilteredBookList, this.FilteredBooksCount, this.TotalBooksString) = await this.BookSearch(this.HiddenFilteredBookList, this.TotalBooksCount);
+        }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetViewModelData()
+        {
+            if (RefreshView)
+            {
+                try
+                {
+                    this.GetPreferences();
+
+                    await SetList(ShowHiddenBooks);
+
+                    (this.TotalBooksCount,
+                        this.FilteredBooksCount,
+                        this.TotalBooksString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredBookList,
+                        this.BookPublisherList,
+                        this.BookLanguageList,
+                        this.BookPublishYearList,
+                        this.BookAuthorList) = await this.SetViewModelData(this.HiddenFilteredBookList);
+                }
+                catch (Exception ex)
+                {
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
+                }
+            }
         }
 
         /// <summary>
@@ -138,138 +198,6 @@ namespace BookCollector.ViewModels.Library
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
 
             return ShowHiddenBooks;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredBookList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetAuthorListStringFromDatabase()));
-            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetCoverDisplay()));
-            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetReadingProgress()));
-            await Task.WhenAll(this.HiddenFilteredBookList!.Select(x => x.SetBookTotalTime()));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            var authors = FillLists.GetAllAuthorsInBookList(this.HiddenFilteredBookList!);
-            var bookPublishers = FillLists.GetAllPublishersInBookList(this.HiddenFilteredBookList!);
-            var bookLanguages = FillLists.GetAllLanguagesInBookList(this.HiddenFilteredBookList!);
-            var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(this.HiddenFilteredBookList!);
-
-            var filteredList = FilterLists.FilterList(
-                    this.HiddenFilteredBookList!,
-                    this.FavoriteBooksOption,
-                    this.BookFormatOption,
-                    this.BookPublisherOption,
-                    this.BookLanguageOption,
-                    this.BookRatingOption,
-                    this.BookPublishYearOption,
-                    this.BookAuthorOption,
-                    this.BookCoverOption,
-                    this.SearchString);
-
-            await Task.WhenAll(filteredList);
-
-            this.FilteredBookList = filteredList.Result;
-
-            await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors);
-
-            this.BookPublisherList = bookPublishers.Result;
-            this.BookLanguageList = bookLanguages.Result;
-            this.BookPublishYearList = bookPublishYears.Result;
-            this.BookAuthorList = authors.Result;
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortBookList(
-                                    this.FilteredBookList!,
-                                    this.BookTitleChecked,
-                                    this.BookReadingDateChecked,
-                                    this.BookReadPercentageChecked,
-                                    this.BookPublisherChecked,
-                                    this.BookPublishYearChecked,
-                                    this.AuthorLastNameChecked,
-                                    this.BookFormatChecked,
-                                    this.BookPriceChecked,
-                                    this.PageCountBookTimeChecked,
-                                    this.AscendingChecked,
-                                    this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredBookList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalBooksCount = this.HiddenFilteredBookList?.Count ?? 0;
-
-            this.FilteredBooksCount = this.FilteredBookList?.Count ?? 0;
-
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-
-            this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
-        }
-
-        /// <summary>
-        /// Search the list based on the book title.
-        /// </summary>
-        /// <param name="input">Input string to find.</param>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task BookSearchOnTitle(string? input)
-        {
-            this.SearchString = input;
-
-            if (this.FilteredBookList != null && this.HiddenFilteredBookList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredBookList = FilterLists.FilterOnSearchString(this.HiddenFilteredBookList, input);
-                }
-                else
-                {
-                    this.FilteredBookList = await FilterLists.FilterList(
-                                this.HiddenFilteredBookList,
-                                this.FavoriteBooksOption,
-                                this.BookFormatOption,
-                                this.BookPublisherOption,
-                                this.BookLanguageOption,
-                                this.BookRatingOption,
-                                this.BookPublishYearOption,
-                                this.BookAuthorOption,
-                                this.BookCoverOption,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
         }
 
         /// <summary>

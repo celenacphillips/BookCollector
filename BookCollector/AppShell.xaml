@@ -15,6 +15,49 @@
     x:DataType="local:AppShell"
     Shell.FlyoutBehavior="Flyout">
 
+    <!--<Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor"
+                                            Value="{DynamicResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Source="{Binding Icon}"
+                       HorizontalOptions="Center"
+                       Margin="20,20,0,20"
+                       HeightRequest="30"
+                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="{Binding Title}"
+                       Padding="10"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       Grid.Row="0" Grid.Column="1"/>
+
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>-->
+
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Library}">
             <Tab.Icon>

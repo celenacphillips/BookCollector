@@ -132,6 +132,6 @@ public partial class ChoiceDialogPopup : Popup<string>
 
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await this.CloseAsync(button.BindingContext.ToString(), token: cts.Token);
+        await this.CloseAsync(button!.BindingContext!.ToString(), token: cts.Token);
     }
 }

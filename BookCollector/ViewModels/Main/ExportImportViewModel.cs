@@ -266,6 +266,11 @@ namespace BookCollector.ViewModels.Main
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static bool RefreshView { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to manually upload book covers or not.
         /// </summary>
         public static bool ManuallyUploadLibraryCovers { get; set; }
@@ -411,15 +416,8 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await this.CanceledAction();
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;
@@ -532,15 +530,8 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await this.CanceledAction();
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;

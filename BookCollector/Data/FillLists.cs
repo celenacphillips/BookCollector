@@ -194,7 +194,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of publishers, ordered alphabetically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllPublishersInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllPublishersInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var publisherList = new ObservableCollection<string>();
 
@@ -256,7 +256,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of authors, ordered alphabetically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllAuthorsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllAuthorsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var authorListNames = new ObservableCollection<string>();
             var authorList = new ObservableCollection<AuthorModel>();
@@ -294,7 +294,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of locations, ordered alphabetically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllLocationsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllLocationsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var locationList = new ObservableCollection<string>();
 
@@ -318,7 +318,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of series, ordered alphabetically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllSeriesInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllSeriesInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var seriesList = new ObservableCollection<string>();
 
@@ -368,7 +368,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of publish year ranges, ordered numerically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllPublisherYearsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllPublisherYearsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var publishYearList = new ObservableCollection<string>();
 
@@ -420,7 +420,7 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="bookList">Book list to search.</param>
         /// <returns>A list of languages, ordered alphabetically.</returns>
-        public static async Task<ObservableCollection<string>> GetAllLanguagesInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        public static async Task<ObservableCollection<string>> GetAllLanguagesInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var languageList = new ObservableCollection<string>();
 
@@ -550,7 +550,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookCollectionGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
@@ -595,7 +595,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookGenreGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
@@ -640,7 +640,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookSeriesGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
@@ -685,7 +685,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookLocationGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {

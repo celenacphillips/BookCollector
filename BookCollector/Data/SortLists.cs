@@ -33,7 +33,7 @@ namespace BookCollector.Data
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <param name="seriesOrderChecked">Series order checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<BookModel>> SortBookList(
+        public static async Task<ObservableCollection<BookModel>> SortList(
             ObservableCollection<BookModel> bookList,
             bool bookTitleChecked,
             bool bookReadingDateChecked,
@@ -211,7 +211,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<WishlistBookModel>> SortWishlistBookList(
+        public static async Task<ObservableCollection<WishlistBookModel>> SortList(
             ObservableCollection<WishlistBookModel> bookList,
             bool bookTitleChecked,
             bool bookPublisherChecked,
@@ -343,7 +343,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<CollectionModel>> SortCollectionsList(
+        public static async Task<ObservableCollection<CollectionModel>> SortList(
             ObservableCollection<CollectionModel> collectionList,
             bool collectionNameChecked,
             bool totalBooksChecked,
@@ -405,7 +405,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<GenreModel>> SortGenresList(
+        public static async Task<ObservableCollection<GenreModel>> SortList(
             ObservableCollection<GenreModel> genreList,
             bool genreNameChecked,
             bool totalBooksChecked,
@@ -467,7 +467,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<SeriesModel>> SortSeriesList(
+        public static async Task<ObservableCollection<SeriesModel>> SortList(
             ObservableCollection<SeriesModel> seriesList,
             bool seriesNameChecked,
             bool totalBooksChecked,
@@ -529,7 +529,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<LocationModel>> SortLocationsList(
+        public static async Task<ObservableCollection<LocationModel>> SortList(
             ObservableCollection<LocationModel> locationList,
             bool locationNameChecked,
             bool totalBooksChecked,
@@ -591,7 +591,7 @@ namespace BookCollector.Data
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
         /// <returns>The sorted list.</returns>
-        public static async Task<ObservableCollection<AuthorModel>> SortAuthorList(
+        public static async Task<ObservableCollection<AuthorModel>> SortList(
             ObservableCollection<AuthorModel> authorList,
             bool authorLastNameChecked,
             bool totalBooksChecked,

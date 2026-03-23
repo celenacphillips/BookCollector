@@ -78,6 +78,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /********************************************************/
 
         /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static bool RefreshView { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to remove the main view before.
         /// </summary>
         public bool RemoveMainViewBefore { get; set; }
@@ -134,14 +139,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
+                    await this.ViewModelCatch(ex);
                     RefreshView = false;
                 }
             }
@@ -197,14 +195,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                RefreshView = false;
             }
         }
 
@@ -382,15 +374,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /********************************************************/
-
-        /// <summary>
-        /// Set the view model list.
-        /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>A task.</returns>
-        public async override Task SetList(bool showHidden)
-        {
-        }
 
         /// <summary>
         /// Validate data entry.

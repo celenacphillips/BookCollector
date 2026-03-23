@@ -5,6 +5,7 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
+    using BookCollector.Data;
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
@@ -51,6 +52,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<string>? bookLanguageList;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BookListBaseViewModel"/> class.
         /// </summary>
@@ -61,6 +64,13 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
         }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden books or not.
@@ -171,49 +181,297 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <summary>
         /// Set the view model data.
         /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetViewModelData()
+        /// <param name="hiddenBookList">Book list.</param>
+        /// <returns>A series of values to set on the view.</returns>
+        public async Task<(
+            int,
+            int,
+            string,
+            bool,
+            ObservableCollection<BookModel>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?)>
+            SetViewModelData(ObservableCollection<BookModel>? hiddenBookList)
         {
-            if (RefreshView)
+            this.SetIsBusyTrue();
+
+            int totalBooksCount = 0, filteredBooksCount = 0;
+            var showCollectionViewFooter = false;
+
+            var filteredBookList = new ObservableCollection<BookModel>();
+            var bookPublisherList = new ObservableCollection<string>();
+            var bookLanguageList = new ObservableCollection<string>();
+            var bookPublishYearList = new ObservableCollection<string>();
+            var bookAuthorList = new ObservableCollection<string>();
+
+            if (hiddenBookList != null)
             {
-                try
+                totalBooksCount = hiddenBookList.Count;
+
+                await Task.WhenAll(hiddenBookList.Select(x => x.SetAuthorListStringFromDatabase()));
+                await Task.WhenAll(hiddenBookList.Select(x => x.SetCoverDisplay()));
+
+                var authors = FillLists.GetAllAuthorsInBookList(hiddenBookList);
+                var bookPublishers = FillLists.GetAllPublishersInBookList(hiddenBookList);
+                var bookLanguages = FillLists.GetAllLanguagesInBookList(hiddenBookList);
+                var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(hiddenBookList);
+
+                var filteredList = FilterLists.FilterList(
+                        hiddenBookList,
+                        this.FavoriteBooksOption,
+                        this.BookFormatOption,
+                        this.BookPublisherOption,
+                        this.BookLanguageOption,
+                        this.BookRatingOption,
+                        this.BookPublishYearOption,
+                        this.BookAuthorOption,
+                        this.BookCoverOption,
+                        this.SearchString);
+
+                await Task.WhenAll(filteredList);
+
+                filteredBookList = filteredList.Result;
+
+                if (filteredBookList != null)
                 {
-                    this.SetIsBusyTrue();
+                    filteredBooksCount = filteredBookList.Count;
 
-                    var showHidden = this.GetPreferences();
+                    showCollectionViewFooter = filteredBooksCount > 0;
 
-                    await this.SetList(showHidden);
+                    await Task.WhenAll(filteredBookList.Select(x => x.SetReadingProgress()));
+                    await Task.WhenAll(filteredBookList.Select(x => x.SetBookTotalTime()));
 
-                    var listNotNull = this.ListNullCheck();
-
-                    if (listNotNull)
-                    {
-                        await this.SetListData();
-
-                        await this.SetFilters();
-
-                        await this.SetSorts();
-                    }
-
-                    this.SetViewStrings();
-
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
+                    filteredBookList = await SortLists.SortList(
+                                   filteredBookList!,
+                                   this.BookTitleChecked,
+                                   this.BookReadingDateChecked,
+                                   this.BookReadPercentageChecked,
+                                   this.BookPublisherChecked,
+                                   this.BookPublishYearChecked,
+                                   this.AuthorLastNameChecked,
+                                   this.BookFormatChecked,
+                                   this.BookPriceChecked,
+                                   this.PageCountBookTimeChecked,
+                                   this.AscendingChecked,
+                                   this.DescendingChecked);
                 }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await this.DisplayMessage("Error!", ex.Message);
-#endif
 
-#if RELEASE
-                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
+                await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors);
+
+                bookPublisherList = bookPublishers.Result;
+                bookLanguageList = bookLanguages.Result;
+                bookPublishYearList = bookPublishYears.Result;
+                bookAuthorList = authors.Result;
             }
+
+            var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
+
+            this.SetIsBusyFalse();
+            RefreshView = false;
+
+            return (totalBooksCount, filteredBooksCount, totalBooksString, showCollectionViewFooter, filteredBookList, bookPublisherList, bookLanguageList, bookPublishYearList, bookAuthorList);
         }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <param name="hiddenBookList">Book list.</param>
+        /// <returns>A series of values to set on the view.</returns>
+        public async Task<(
+            int,
+            int,
+            string,
+            bool,
+            ObservableCollection<WishlistBookModel>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?,
+            ObservableCollection<string>?)>
+            SetViewModelData(ObservableCollection<WishlistBookModel>? hiddenBookList)
+        {
+            this.SetIsBusyTrue();
+
+            int totalBooksCount = 0, filteredBooksCount = 0;
+            var showCollectionViewFooter = false;
+
+            var filteredBookList = new ObservableCollection<WishlistBookModel>();
+            var bookPublisherList = new ObservableCollection<string>();
+            var bookLanguageList = new ObservableCollection<string>();
+            var bookPublishYearList = new ObservableCollection<string>();
+            var bookAuthorList = new ObservableCollection<string>();
+            var bookLocationList = new ObservableCollection<string>();
+            var bookSeriesList = new ObservableCollection<string>();
+
+            if (hiddenBookList != null)
+            {
+                totalBooksCount = hiddenBookList.Count;
+
+                await Task.WhenAll(hiddenBookList.Select(x => x.SetCoverDisplay()));
+
+                var authors = FillLists.GetAllAuthorsInBookList(hiddenBookList);
+                var bookPublishers = FillLists.GetAllPublishersInBookList(hiddenBookList);
+                var bookLanguages = FillLists.GetAllLanguagesInBookList(hiddenBookList);
+                var bookPublishYears = FillLists.GetAllPublisherYearsInBookList(hiddenBookList);
+                var bookLocations = FillLists.GetAllLocationsInBookList(hiddenBookList);
+                var bookSeries = FillLists.GetAllSeriesInBookList(hiddenBookList);
+
+                var filteredList = FilterLists.FilterList(
+                        hiddenBookList,
+                        this.FavoriteBooksOption,
+                        this.BookFormatOption,
+                        this.BookPublisherOption,
+                        this.BookLanguageOption,
+                        this.BookRatingOption,
+                        this.BookPublishYearOption,
+                        this.BookAuthorOption,
+                        this.BookCoverOption,
+                        this.SearchString);
+
+                await Task.WhenAll(filteredList);
+
+                filteredBookList = filteredList.Result;
+
+                if (filteredBookList != null)
+                {
+                    filteredBooksCount = filteredBookList.Count;
+
+                    showCollectionViewFooter = filteredBooksCount > 0;
+                    await Task.WhenAll(filteredBookList.Select(x => x.SetBookTotalTime()));
+
+                    filteredBookList = await SortLists.SortList(
+                                   filteredBookList!,
+                                   this.BookTitleChecked,
+                                   this.BookPublisherChecked,
+                                   this.BookPublishYearChecked,
+                                   this.AuthorLastNameChecked,
+                                   this.BookFormatChecked,
+                                   this.BookPriceChecked,
+                                   this.PageCountBookTimeChecked,
+                                   this.AscendingChecked,
+                                   this.DescendingChecked);
+                }
+
+                await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors, bookLocations, bookSeries);
+
+                bookPublisherList = bookPublishers.Result;
+                bookLanguageList = bookLanguages.Result;
+                bookPublishYearList = bookPublishYears.Result;
+                bookAuthorList = authors.Result;
+                bookLocationList = bookLocations.Result;
+                bookSeriesList = bookSeries.Result;
+            }
+
+            var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
+
+            this.SetIsBusyFalse();
+            RefreshView = false;
+
+            return (totalBooksCount,
+                filteredBooksCount,
+                totalBooksString,
+                showCollectionViewFooter,
+                filteredBookList,
+                bookPublisherList,
+                bookLanguageList,
+                bookPublishYearList,
+                bookAuthorList,
+                bookLocationList,
+                bookSeriesList);
+        }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Filter and sort book list.
+        /// </summary>
+        /// <param name="hiddenFilteredBookList">Book list.</param>
+        /// <param name="totalBooksCount">Total book count.</param>
+        /// <returns>A series of values to set on the view.</returns>
+        public async Task<(
+            ObservableCollection<BookModel>?,
+            int,
+            string)> BookSearch(ObservableCollection<BookModel>? hiddenFilteredBookList, int totalBooksCount)
+        {
+            var filteredBookList = await FilterLists.FilterList(
+                            hiddenFilteredBookList,
+                            this.FavoriteBooksOption,
+                            this.BookFormatOption,
+                            this.BookPublisherOption,
+                            this.BookLanguageOption,
+                            this.BookRatingOption,
+                            this.BookPublishYearOption,
+                            this.BookAuthorOption,
+                            this.BookCoverOption,
+                            this.SearchString);
+
+            var filteredBooksCount = filteredBookList?.Count ?? 0;
+
+            var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
+
+            filteredBookList = await SortLists.SortList(
+                                filteredBookList!,
+                                this.BookTitleChecked,
+                                this.BookReadingDateChecked,
+                                this.BookReadPercentageChecked,
+                                this.BookPublisherChecked,
+                                this.BookPublishYearChecked,
+                                this.AuthorLastNameChecked,
+                                this.BookFormatChecked,
+                                this.BookPriceChecked,
+                                this.PageCountBookTimeChecked,
+                                this.AscendingChecked,
+                                this.DescendingChecked);
+
+            return (filteredBookList, filteredBooksCount, totalBooksString);
+        }
+
+        /// <summary>
+        /// Filter and sort wishlist book list.
+        /// </summary>
+        /// <param name="hiddenFilteredBookList">Book list.</param>
+        /// <param name="totalBooksCount">Total book count.</param>
+        /// <returns>A series of values to set on the view.</returns>
+        public async Task<(
+            ObservableCollection<WishlistBookModel>?,
+            int,
+            string)> BookSearch(ObservableCollection<WishlistBookModel>? hiddenFilteredBookList, int totalBooksCount)
+        {
+            var filteredBookList = await FilterLists.FilterList(
+                            hiddenFilteredBookList,
+                            this.FavoriteBooksOption,
+                            this.BookFormatOption,
+                            this.BookPublisherOption,
+                            this.BookLanguageOption,
+                            this.BookRatingOption,
+                            this.BookPublishYearOption,
+                            this.BookAuthorOption,
+                            this.BookCoverOption,
+                            this.SearchString);
+
+            var filteredBooksCount = filteredBookList?.Count ?? 0;
+
+            var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
+
+            filteredBookList = await SortLists.SortList(
+                                   filteredBookList!,
+                                   this.BookTitleChecked,
+                                   this.BookPublisherChecked,
+                                   this.BookPublishYearChecked,
+                                   this.AuthorLastNameChecked,
+                                   this.BookFormatChecked,
+                                   this.BookPriceChecked,
+                                   this.PageCountBookTimeChecked,
+                                   this.AscendingChecked,
+                                   this.DescendingChecked);
+
+            return (filteredBookList, filteredBooksCount, totalBooksString);
+        }
+
+        /********************************************************/
 
         /// <summary>
         /// Set the view model preferences.
@@ -222,42 +480,27 @@ namespace BookCollector.ViewModels.BaseViewModels
         public abstract bool GetPreferences();
 
         /// <summary>
-        /// Set the view model list.
+        /// Set data for filter popup.
         /// </summary>
-        /// <param name="showHidden">The show hidden list preference.</param>
-        /// <returns>A task.</returns>
-        public async override Task SetList(bool showHidden)
-        {
-        }
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel);
 
         /// <summary>
-        /// Check if the list is null.
+        /// Set data for filter popup.
         /// </summary>
-        /// <returns>If the list is null.</returns>
-        public abstract bool ListNullCheck();
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel);
 
         /// <summary>
-        /// Iterate through the list and set necessary data.
+        /// Set data for sort popup.
         /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetListData();
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public abstract SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel);
 
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetFilters();
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public abstract Task SetSorts();
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public abstract void SetViewStrings();
+        /********************************************************/
 
         /// <summary>
         /// Show filter popup.
@@ -285,20 +528,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public abstract FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel);
-
-        /// <summary>
-        /// Set data for filter popup.
-        /// </summary>
-        /// <param name="viewModel">Filter popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public abstract FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel);
-
-        /// <summary>
         /// Show sort popup.
         /// </summary>
         /// <returns>A task.</returns>
@@ -321,13 +550,6 @@ namespace BookCollector.ViewModels.BaseViewModels
                 }
             }
         }
-
-        /// <summary>
-        /// Set data for sort popup.
-        /// </summary>
-        /// <param name="viewModel">Sort popup viewmodel.</param>
-        /// <returns>The updated viewmodel.</returns>
-        public abstract SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel);
 
         /// <summary>
         /// Navigate to the book main view when book is selected.

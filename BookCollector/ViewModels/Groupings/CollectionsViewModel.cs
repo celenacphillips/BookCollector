@@ -81,6 +81,8 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public CollectionModel? selectedCollection;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionsViewModel"/> class.
         /// </summary>
@@ -95,6 +97,13 @@ namespace BookCollector.ViewModels.Groupings
             RefreshView = true;
         }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden collections or not.
         /// </summary>
@@ -105,16 +114,18 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         private bool CollectionNameChecked { get; set; }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the first filtered list based on the full collection list and the show hidden collections preference.
         /// </summary>
         /// <param name="showHiddenCollections">Show hidden collection.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenCollections)
+        public static async Task SetList(bool showHiddenCollections)
         {
             fullCollectionList ??= await FillLists.GetAllCollectionsList();
 
-            hiddenFilteredCollectionList = SetList<CollectionModel>(fullCollectionList!, showHiddenCollections).ToObservableCollection();
+            hiddenFilteredCollectionList = SetHiddenFilteredList<CollectionModel>(fullCollectionList!, showHiddenCollections).ToObservableCollection();
         }
 
         /// <summary>
@@ -139,89 +150,7 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-
-            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
-
-            return this.ShowHiddenCollections;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredCollectionList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            this.FilteredCollectionList = this.HiddenFilteredCollectionList;
-
-            await Task.WhenAll(this.FilteredCollectionList!.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-            await Task.WhenAll(this.FilteredCollectionList!.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            this.FilteredCollectionList = await FilterLists.FilterList(
-                                this.HiddenFilteredCollectionList!,
-                                this.SearchString);
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortCollectionsList(
-                                this.FilteredCollectionList!,
-                                this.CollectionNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredCollectionList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalCollectionsCount = this.HiddenFilteredCollectionList?.Count ?? 0;
-
-            this.FilteredCollectionsCount = this.FilteredCollectionList?.Count ?? 0;
-
-            this.TotalCollectionsString = StringManipulation.SetTotalCollectionsString(this.FilteredCollectionsCount, this.TotalCollectionsCount);
-
-            this.ShowCollectionViewFooter = this.FilteredCollectionsCount > 0;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Search the list based on the collection name.
@@ -233,23 +162,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.SearchString = input;
 
-            if (this.FilteredCollectionList != null && this.HiddenFilteredCollectionList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredCollectionList = FilterLists.FilterOnSearchString(this.HiddenFilteredCollectionList, input);
-                }
-                else
-                {
-                    this.FilteredCollectionList = await FilterLists.FilterList(
-                                this.HiddenFilteredCollectionList,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
+            (this.FilteredCollectionList, this.FilteredCollectionsCount, this.TotalCollectionsString) = await this.Search(this.HiddenFilteredCollectionList, this.TotalCollectionsCount, this.CollectionNameChecked);
         }
 
         /// <summary>
@@ -260,26 +173,9 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task PopupMenuCollection(Guid? input)
         {
-            if (this.FilteredCollectionList != null)
-            {
-                var selected = this.FilteredCollectionList.FirstOrDefault(x => x.CollectionGuid == input);
+            var selected = this.FilteredCollectionList?.FirstOrDefault(x => x.CollectionGuid == input);
 
-                if (selected != null && !string.IsNullOrEmpty(selected.CollectionName))
-                {
-                    List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
-                    var action = await this.PopupActionMenu(selected.CollectionName, actions);
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
-                    {
-                        await this.EditCollection(selected);
-                    }
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                    {
-                        await this.DeleteCollection(selected);
-                    }
-                }
-            }
+            await this.PopupMenu(selected, selected?.CollectionName);
         }
 
         /// <summary>
@@ -314,68 +210,53 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
+        /********************************************************/
+
         /// <summary>
-        /// Navigate to collection edit view for selected collection.
+        /// Set the view model data.
         /// </summary>
-        /// <param name="selected">Selected collection.</param>
         /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task EditCollection(CollectionModel selected)
+        public override async Task SetViewModelData()
         {
-            this.SetIsBusyTrue();
+            if (RefreshView)
+            {
+                try
+                {
+                    this.GetPreferences();
 
-            var view = new CollectionEditView(selected, $"{AppStringResources.EditCollection}", true);
+                    await SetList(this.ShowHiddenCollections);
 
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
+                    (this.TotalCollectionsCount,
+                        this.FilteredCollectionsCount,
+                        this.TotalCollectionsString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredCollectionList) = await this.SetViewModelData(this.HiddenFilteredCollectionList, this.CollectionNameChecked);
+                }
+                catch (Exception ex)
+                {
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
+                }
+            }
         }
 
         /// <summary>
-        /// Delete selected collection.
+        /// Set the view model preferences.
         /// </summary>
-        /// <param name="selected">Selected collection.</param>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task DeleteCollection(CollectionModel selected)
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
-            if (!string.IsNullOrEmpty(selected.CollectionName))
-            {
-                var answer = await this.DeleteCheck(selected.CollectionName);
+            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-                if (answer)
-                {
-                    try
-                    {
-                        this.SetIsBusyTrue();
+            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", true /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
 
-                        await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
-                        RemoveFromStaticList(selected);
-                        await RemoveBookFromGrouping(selected);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
 
-                        await this.ConfirmDelete(selected.CollectionName);
-
-                        await this.SetViewModelData();
-
-                        this.SetIsBusyFalse();
-                    }
-                    catch (Exception ex)
-                    {
-#if DEBUG
-                        await this.DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await this.CanceledAction();
-                    }
-                }
-                else
-                {
-                    await this.CanceledAction();
-                }
-            }
+            return this.ShowHiddenCollections;
         }
 
         /// <summary>
@@ -399,6 +280,36 @@ namespace BookCollector.ViewModels.Groupings
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Show edit view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task Edit(object selected)
+        {
+            this.SetIsBusyTrue();
+
+            var view = new CollectionEditView((CollectionModel)selected, $"{AppStringResources.EditCollection}", true);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Delete grouping from database.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task DeleteGrouping(object selected)
+        {
+            await Database.DeleteCollectionAsync(ConvertTo<CollectionDatabaseModel>(selected));
+            RemoveFromStaticList((CollectionModel)selected);
+            await RemoveBookFromGrouping((CollectionModel)selected);
+        }
+
+        /********************************************************/
 
         private static void RemoveFromStaticList(CollectionModel selected)
         {

@@ -105,6 +105,8 @@ namespace BookCollector.ViewModels.Main
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? totalBooksString;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WishListViewModel"/> class.
         /// </summary>
@@ -117,6 +119,13 @@ namespace BookCollector.ViewModels.Main
             this.ViewTitle = AppStringResources.Wishlist;
             RefreshView = true;
         }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets the saved book location filter option.
@@ -133,143 +142,21 @@ namespace BookCollector.ViewModels.Main
         /// </summary>
         public bool ShowHiddenWishlistBooks { get; set; }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
         /// <returns>A task.</returns>
-        public static async new Task SetList(bool showHiddenBooks)
+        public static async Task SetList(bool showHiddenBooks)
         {
             fullWishlistBookList ??= await FillLists.GetBookWishList();
 
-            hiddenFilteredWishlistBookList = SetList<WishlistBookModel>(fullWishlistBookList!, showHiddenBooks).ToObservableCollection();
+            hiddenFilteredWishlistBookList = SetHiddenFilteredList<WishlistBookModel>(fullWishlistBookList!, showHiddenBooks).ToObservableCollection();
         }
 
-        /// <summary>
-        /// Set the view model preferences.
-        /// </summary>
-        /// <returns>The list show hidden preference.</returns>
-        public override bool GetPreferences()
-        {
-            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
-
-            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
-            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);
-            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
-            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
-            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
-            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_SeriesSelection", AppStringResources.AllSeries /* Default */);
-            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_LocationSelection", AppStringResources.AllLocations /* Default */);
-            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
-
-            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", true /* Default */);
-            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", false /* Default */);
-            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
-            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
-            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
-
-            return this.ShowHiddenWishlistBooks;
-        }
-
-        /// <summary>
-        /// Check if the list is null.
-        /// </summary>
-        /// <returns>If the list is null.</returns>
-        public override bool ListNullCheck()
-        {
-            return this.HiddenFilteredWishlistBookList != null;
-        }
-
-        /// <summary>
-        /// Iterate through the list and set necessary data.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetListData()
-        {
-            await Task.WhenAll(this.HiddenFilteredWishlistBookList!.Select(x => x.SetCoverDisplay()));
-            await Task.WhenAll(this.HiddenFilteredWishlistBookList!.Select(x => x.SetBookTotalTime()));
-        }
-
-        /// <summary>
-        /// Find filters for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetFilters()
-        {
-            var bookPublishers = FillLists.GetAllPublishersInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var bookLanguages = FillLists.GetAllLanguagesInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var bookPublishYears = FillLists.GetAllPublisherYearsInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var authors = FillLists.GetAllAuthorsInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var locations = FillLists.GetAllLocationsInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-            var series = FillLists.GetAllSeriesInWishlistBookList(this.HiddenFilteredWishlistBookList!);
-
-            var filteredList = FilterLists.FilterList(
-                    this.HiddenFilteredWishlistBookList!,
-                    this.BookFormatOption,
-                    this.BookPublisherOption,
-                    this.BookLanguageOption,
-                    this.BookPublishYearOption,
-                    this.BookAuthorOption,
-                    this.BookLocationOption,
-                    this.BookSeriesOption,
-                    this.BookCoverOption,
-                    this.SearchString);
-
-            await Task.WhenAll(filteredList);
-
-            this.FilteredWishlistBookList = filteredList.Result;
-
-            await Task.WhenAll(bookPublishers, bookLanguages, bookPublishYears, authors, locations, series);
-
-            this.BookPublisherList = bookPublishers.Result;
-            this.BookLanguageList = bookLanguages.Result;
-            this.BookPublishYearList = bookPublishYears.Result;
-            this.BookAuthorList = authors.Result;
-            this.BookLocationList = locations.Result;
-            this.BookSeriesList = series.Result;
-        }
-
-        /// <summary>
-        /// Find sort values for the list.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async override Task SetSorts()
-        {
-            var sortList = SortLists.SortWishlistBookList(
-                                    this.FilteredWishlistBookList!,
-                                    this.BookTitleChecked,
-                                    this.BookPublisherChecked,
-                                    this.BookPublishYearChecked,
-                                    this.AuthorLastNameChecked,
-                                    this.BookFormatChecked,
-                                    this.BookPriceChecked,
-                                    this.PageCountBookTimeChecked,
-                                    this.AscendingChecked,
-                                    this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredWishlistBookList = sortList.Result;
-        }
-
-        /// <summary>
-        /// Set data for view.
-        /// </summary>
-        public async override void SetViewStrings()
-        {
-            this.TotalBooksCount = this.HiddenFilteredWishlistBookList?.Count ?? 0;
-
-            this.FilteredBooksCount = this.FilteredWishlistBookList?.Count ?? 0;
-
-            this.TotalBooksString = StringManipulation.SetTotalBooksString(this.FilteredBooksCount, this.TotalBooksCount);
-
-            this.ShowCollectionViewFooter = this.FilteredBooksCount > 0;
-        }
+        /********************************************************/
 
         /// <summary>
         /// Search the list based on the book title.
@@ -281,31 +168,7 @@ namespace BookCollector.ViewModels.Main
         {
             this.SearchString = input;
 
-            if (this.FilteredWishlistBookList != null && this.HiddenFilteredWishlistBookList != null)
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    this.FilteredWishlistBookList = FilterLists.FilterOnSearchString(this.HiddenFilteredWishlistBookList, input);
-                }
-                else
-                {
-                    this.FilteredWishlistBookList = await FilterLists.FilterList(
-                                this.HiddenFilteredWishlistBookList,
-                                this.BookFormatOption,
-                                this.BookPublisherOption,
-                                this.BookLanguageOption,
-                                this.BookPublishYearOption,
-                                this.BookAuthorOption,
-                                this.BookLocationOption,
-                                this.BookSeriesOption,
-                                this.BookCoverOption,
-                                this.SearchString);
-                }
-
-                this.SetViewStrings();
-
-                await this.SetSorts();
-            }
+            (this.FilteredWishlistBookList, this.FilteredBooksCount, this.TotalBooksString) = await this.BookSearch(this.HiddenFilteredWishlistBookList, this.TotalBooksCount);
         }
 
         /// <summary>
@@ -338,6 +201,98 @@ namespace BookCollector.ViewModels.Main
             await Shell.Current.Navigation.PushAsync(view);
 
             this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Share wishlist information.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ShareList()
+        {
+            this.SetIsBusyTrue();
+
+            var data = await this.CreateShareWishList();
+            var filePath = $"{FileSystem.CacheDirectory}/{AppStringResources.Wishlist}.txt";
+            var title = AppStringResources.Wishlist;
+
+            File.WriteAllLines(filePath, data);
+
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = title,
+                File = new ShareFile(filePath),
+            });
+
+            // File.Delete(filePath);
+            this.SetIsBusyFalse();
+        }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetViewModelData()
+        {
+            if (RefreshView)
+            {
+                try
+                {
+                    this.GetPreferences();
+
+                    await SetList(ShowHiddenBooks);
+
+                    (this.TotalBooksCount,
+                        this.FilteredBooksCount,
+                        this.TotalBooksString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredWishlistBookList,
+                        this.BookPublisherList,
+                        this.BookLanguageList,
+                        this.BookPublishYearList,
+                        this.BookAuthorList,
+                        this.BookLocationList,
+                        this.BookSeriesList) = await this.SetViewModelData(this.HiddenFilteredWishlistBookList);
+                }
+                catch (Exception ex)
+                {
+                    await this.ViewModelCatch(ex);
+                    RefreshView = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
+        {
+            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
+
+            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
+            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);
+            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
+            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
+            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_SeriesSelection", AppStringResources.AllSeries /* Default */);
+            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_LocationSelection", AppStringResources.AllLocations /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
+
+            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", true /* Default */);
+            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", false /* Default */);
+            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
+            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
+            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+
+            return this.ShowHiddenWishlistBooks;
         }
 
         /// <summary>
@@ -427,30 +382,7 @@ namespace BookCollector.ViewModels.Main
             return viewModel;
         }
 
-        /// <summary>
-        /// Share wishlist information.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task ShareList()
-        {
-            this.SetIsBusyTrue();
-
-            var data = await this.CreateShareWishList();
-            var filePath = $"{FileSystem.CacheDirectory}/{AppStringResources.Wishlist}.txt";
-            var title = AppStringResources.Wishlist;
-
-            File.WriteAllLines(filePath, data);
-
-            await Share.Default.RequestAsync(new ShareFileRequest
-            {
-                Title = title,
-                File = new ShareFile(filePath),
-            });
-
-            // File.Delete(filePath);
-            this.SetIsBusyFalse();
-        }
+        /********************************************************/
 
         private async Task<List<string>> CreateShareWishList()
         {
