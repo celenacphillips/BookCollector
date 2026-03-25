@@ -26,12 +26,12 @@ namespace BookCollector.Data
         /// <param name="bookPublisherChecked">Book publisher checked option.</param>
         /// <param name="bookPublishYearChecked">Book publish year checked option.</param>
         /// <param name="authorLastNameChecked">Author last name checked option.</param>
+        /// <param name="seriesOrderChecked">Series order checked option.</param>
         /// <param name="bookFormatChecked">Book format checked option.</param>
         /// <param name="bookPriceChecked">Book price checked option.</param>
         /// <param name="pageCountBookTimeChecked">Page count/book time checked option.</param>
         /// <param name="ascendingChecked">Ascending checked option.</param>
         /// <param name="descendingChecked">Descending checked option.</param>
-        /// <param name="seriesOrderChecked">Series order checked option.</param>
         /// <returns>The sorted list.</returns>
         public static async Task<ObservableCollection<BookModel>> SortList(
             ObservableCollection<BookModel> bookList,
@@ -41,12 +41,12 @@ namespace BookCollector.Data
             bool bookPublisherChecked,
             bool bookPublishYearChecked,
             bool authorLastNameChecked,
+            bool seriesOrderChecked,
             bool bookFormatChecked,
             bool bookPriceChecked,
             bool pageCountBookTimeChecked,
             bool ascendingChecked,
-            bool descendingChecked,
-            bool seriesOrderChecked = false)
+            bool descendingChecked)
         {
             var filteredList = bookList;
 
@@ -67,12 +67,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.StartDateValue).OrderBy(x => x.EndDateValue).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.EndDateValue).ThenBy(x => x.StartDateValue).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.StartDateValue).OrderByDescending(x => x.EndDateValue).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.EndDateValue).ThenByDescending(x => x.StartDateValue).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -80,12 +80,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.Progress).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.Progress).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.Progress).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.Progress).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -93,12 +93,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPublisher).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPublisher).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -106,12 +106,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPublishYear).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPublishYear).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -119,12 +119,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.AuthorListString).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.AuthorListString).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -132,12 +132,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookFormat).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookFormat).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -145,12 +145,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPrice).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPrice).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -158,12 +158,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookNumberInSeries).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookNumberInSeries).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookNumberInSeries).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookNumberInSeries).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -171,8 +171,8 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal);
-                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookTotalTime);
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.BookPageTotal).ThenBy(x => x.ParsedTitle);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.BookTotalTime).ThenBy(x => x.ParsedTitle);
 
                     var list = new List<BookModel>();
                     list.AddRange(nonAudio);
@@ -183,8 +183,8 @@ namespace BookCollector.Data
 
                 if (descendingChecked)
                 {
-                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal);
-                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookTotalTime);
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.BookPageTotal).ThenByDescending(x => x.ParsedTitle);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.BookTotalTime).ThenByDescending(x => x.ParsedTitle);
 
                     var list = new List<BookModel>();
                     list.AddRange(nonAudio);
@@ -242,12 +242,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublisher).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPublisher).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublisher).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPublisher).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -255,12 +255,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPublishYear).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPublishYear).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPublishYear).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPublishYear).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -268,12 +268,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.AuthorListString).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.AuthorListString).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.AuthorListString).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.AuthorListString).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -281,12 +281,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookFormat).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookFormat).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookFormat).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookFormat).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -294,12 +294,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPrice).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookPrice).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPrice).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookPrice).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
@@ -307,8 +307,8 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookPageTotal);
-                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.ParsedTitle).OrderBy(x => x.BookTotalTime);
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderBy(x => x.BookPageTotal).ThenBy(x => x.ParsedTitle);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderBy(x => x.BookTotalTime).ThenBy(x => x.ParsedTitle);
 
                     var list = new List<WishlistBookModel>();
                     list.AddRange(nonAudio);
@@ -319,8 +319,8 @@ namespace BookCollector.Data
 
                 if (descendingChecked)
                 {
-                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookPageTotal);
-                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.ParsedTitle).OrderByDescending(x => x.BookTotalTime);
+                    var nonAudio = filteredList.Where(x => x.BookFormat != AppStringResources.Audiobook).OrderByDescending(x => x.BookPageTotal).ThenByDescending(x => x.ParsedTitle);
+                    var audio = filteredList.Where(x => x.BookFormat == AppStringResources.Audiobook).OrderByDescending(x => x.BookTotalTime).ThenByDescending(x => x.ParsedTitle);
 
                     var list = new List<WishlistBookModel>();
                     list.AddRange(nonAudio);
@@ -370,12 +370,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedCollectionName).OrderBy(x => x.CollectionTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.CollectionTotalBooks).ThenBy(x => x.ParsedCollectionName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedCollectionName).OrderByDescending(x => x.CollectionTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.CollectionTotalBooks).ThenByDescending(x => x.ParsedCollectionName).ToObservableCollection();
                 }
             }
 
@@ -383,12 +383,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedCollectionName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.TotalCostOfBooks).ThenBy(x => x.ParsedCollectionName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedCollectionName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.TotalCostOfBooks).ThenByDescending(x => x.ParsedCollectionName).ToObservableCollection();
                 }
             }
 
@@ -432,12 +432,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedGenreName).OrderBy(x => x.GenreTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.GenreTotalBooks).ThenBy(x => x.ParsedGenreName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedGenreName).OrderByDescending(x => x.GenreTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.GenreTotalBooks).ThenByDescending(x => x.ParsedGenreName).ToObservableCollection();
                 }
             }
 
@@ -445,12 +445,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedGenreName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.TotalCostOfBooks).ThenBy(x => x.ParsedGenreName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedGenreName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.TotalCostOfBooks).ThenByDescending(x => x.ParsedGenreName).ToObservableCollection();
                 }
             }
 
@@ -494,12 +494,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedSeriesName).OrderBy(x => x.SeriesTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.SeriesTotalBooks).ThenBy(x => x.ParsedSeriesName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedSeriesName).OrderByDescending(x => x.SeriesTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.SeriesTotalBooks).ThenByDescending(x => x.ParsedSeriesName).ToObservableCollection();
                 }
             }
 
@@ -507,12 +507,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedSeriesName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.TotalCostOfBooks).ThenBy(x => x.ParsedSeriesName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedSeriesName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.TotalCostOfBooks).ThenByDescending(x => x.ParsedSeriesName).ToObservableCollection();
                 }
             }
 
@@ -556,12 +556,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedLocationName).OrderBy(x => x.LocationTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.LocationTotalBooks).ThenBy(x => x.ParsedLocationName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedLocationName).OrderByDescending(x => x.LocationTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.LocationTotalBooks).ThenByDescending(x => x.ParsedLocationName).ToObservableCollection();
                 }
             }
 
@@ -569,12 +569,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.ParsedLocationName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.TotalCostOfBooks).ThenBy(x => x.ParsedLocationName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.ParsedLocationName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.TotalCostOfBooks).ThenByDescending(x => x.ParsedLocationName).ToObservableCollection();
                 }
             }
 
@@ -605,12 +605,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.LastName).ThenByDescending(x => x.FirstName).ToObservableCollection();
                 }
             }
 
@@ -618,12 +618,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.AuthorTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.AuthorTotalBooks).ThenBy(x => x.LastName).ThenBy(x => x.FirstName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.AuthorTotalBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.AuthorTotalBooks).ThenByDescending(x => x.LastName).ThenByDescending(x => x.FirstName).ToObservableCollection();
                 }
             }
 
@@ -631,12 +631,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.FirstName).OrderBy(x => x.LastName).OrderBy(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.TotalCostOfBooks).ThenBy(x => x.LastName).ThenBy(x => x.FirstName).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.FirstName).OrderByDescending(x => x.LastName).OrderByDescending(x => x.TotalCostOfBooks).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.TotalCostOfBooks).ThenByDescending(x => x.LastName).ThenByDescending(x => x.FirstName).ToObservableCollection();
                 }
             }
 

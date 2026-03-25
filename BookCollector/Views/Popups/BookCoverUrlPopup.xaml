@@ -9,8 +9,7 @@
                CanBeDismissedByTappingOutsideOfPopup="True"
                WidthRequest="{Binding PopupWidth}"
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-               Margin="0"
-               x:DataType="model:BookModel">
+               Margin="0">
 
     <VerticalStackLayout>
 

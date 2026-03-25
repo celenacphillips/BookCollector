@@ -5,6 +5,7 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
+    using BookCollector.Data;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -61,7 +62,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -153,6 +154,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var book = this.GetBookData(null);
             var bookTitle = string.Empty;
             var bookUrl = string.Empty;
+            var authorList = new List<AuthorModel>();
 
             if (book != null)
             {
@@ -160,11 +162,13 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     bookTitle = ((WishlistBookModel)book).BookTitle;
                     bookUrl = ((WishlistBookModel)book).BookURL;
+                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(((WishlistBookModel)book).AuthorListString);
                 }
                 else
                 {
                     bookTitle = ((BookModel)book).BookTitle;
                     bookUrl = ((BookModel)book).BookURL;
+                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(((BookModel)book).AuthorListString);
                 }
             }
 
@@ -173,11 +177,11 @@ namespace BookCollector.ViewModels.BaseViewModels
                 var title = bookTitle;
 
                 string? text;
-                if (this.AuthorList != null && this.AuthorList.Count > 0)
+                if (authorList != null && authorList.Count > 0)
                 {
-                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", bookTitle).Replace("Author Name", this.AuthorList[0].FullName)}";
+                    text = $"{AppStringResources.BookTitleByAuthorName.Replace("Book Title", bookTitle).Replace("Author Name", authorList[0].FullName)}";
 
-                    if (this.AuthorList.Count > 1)
+                    if (authorList.Count > 1)
                     {
                         text += $", {AppStringResources.EtAl}";
                     }

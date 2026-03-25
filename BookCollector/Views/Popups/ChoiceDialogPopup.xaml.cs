@@ -107,11 +107,6 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// </summary>
     public List<string> Choices { get; set; }
 
-    /// <summary>
-    /// Gets or sets the selected choice.
-    /// </summary>
-    public string SelectedChoice { get; set; }
-
     private async void OnDenyButton_Clicked(object sender, EventArgs e)
     {
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -132,6 +127,6 @@ public partial class ChoiceDialogPopup : Popup<string>
 
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-        await this.CloseAsync(button!.BindingContext!.ToString(), token: cts.Token);
+        await this.CloseAsync(button.Text, token: cts.Token);
     }
 }

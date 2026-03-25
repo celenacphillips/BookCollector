@@ -121,7 +121,7 @@ namespace BookCollector.ViewModels.Location
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -138,12 +138,6 @@ namespace BookCollector.ViewModels.Location
         private static async Task<bool> AddLocationToStaticList(LocationModel location, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
         {
             var refresh = false;
-
-            await Task.WhenAll(
-            [
-                location.SetTotalBooks(true),
-                location.SetTotalCostOfBooks(true),
-            ]);
 
             try
             {

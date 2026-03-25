@@ -843,7 +843,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                         {
                             collectionViewModel = (CollectionMainViewModel)previousViewModel;
 
-                            if (collectionViewModel.SelectedCollection != selected)
+                            if (!collectionViewModel.SelectedCollection!.ParsedCollectionName!.Equals(selected.ParsedCollectionName))
                             {
                                 CollectionMainViewModel.RefreshView = RemoveBookFromStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
                                 collectionViewModel = new CollectionMainViewModel(selected, new ContentPage());
@@ -892,7 +892,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                         {
                             genreViewModel = (GenreMainViewModel)previousViewModel;
 
-                            if (genreViewModel.SelectedGenre != selected)
+                            if (!genreViewModel.SelectedGenre!.ParsedGenreName!.Equals(selected.ParsedGenreName))
                             {
                                 GenreMainViewModel.RefreshView = RemoveBookFromStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
                                 genreViewModel = new GenreMainViewModel(selected, new ContentPage());
@@ -941,7 +941,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                         {
                             seriesViewModel = (SeriesMainViewModel)previousViewModel;
 
-                            if (seriesViewModel.SelectedSeries != selected)
+                            if (!seriesViewModel.SelectedSeries!.ParsedSeriesName!.Equals(selected.ParsedSeriesName))
                             {
                                 SeriesMainViewModel.RefreshView = RemoveBookFromStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
                                 seriesViewModel = new SeriesMainViewModel(selected, new ContentPage());
@@ -994,7 +994,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                             {
                                 authorViewModel = (AuthorMainViewModel)previousViewModel;
 
-                                if (authorViewModel.SelectedAuthor != selected)
+                                if (!authorViewModel.SelectedAuthor!.FullName.Equals(selected.FullName))
                                 {
                                     AuthorMainViewModel.RefreshView = RemoveBookFromStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
                                     authorViewModel = new AuthorMainViewModel(selected, new ContentPage());
@@ -1044,7 +1044,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                         {
                             locationViewModel = (LocationMainViewModel)previousViewModel;
 
-                            if (locationViewModel.SelectedLocation != selected)
+                            if (!locationViewModel.SelectedLocation!.ParsedLocationName!.Equals(selected.ParsedLocationName))
                             {
                                 LocationMainViewModel.RefreshView = RemoveBookFromStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
                                 locationViewModel = new LocationMainViewModel(selected, new ContentPage());

@@ -42,7 +42,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.InfoText = $"{AppStringResources.BookEditView_InfoText.Replace("book", $"{this.EditedWishlistBook.BookTitle}")}";
             this.SelectedBookFormat = this.EditedWishlistBook.BookFormat ?? AppStringResources.SelectABookFormat;
             this.PopupWidth = DeviceWidth - 50;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -238,7 +238,8 @@ namespace BookCollector.ViewModels.WishListBook
         /// </summary>
         /// <param name="imageSource">Book cover image source.</param>
         /// <param name="fileName">Book cover image filename.</param>
-        public override void SetBookCover(ImageSource? imageSource, string? fileName)
+        /// <param name="fileUrl">Book cover image url.</param>
+        public override void SetBookCover(ImageSource? imageSource, string? fileName, string? fileUrl)
         {
             if (imageSource == null)
             {
@@ -255,6 +256,11 @@ namespace BookCollector.ViewModels.WishListBook
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     this.EditedWishlistBook.BookCoverFileName = fileName;
+                }
+
+                if (!string.IsNullOrEmpty(fileUrl))
+                {
+                    this.EditedWishlistBook.BookCoverUrl = fileUrl;
                 }
 
                 this.BookCover = imageSource;
@@ -303,6 +309,15 @@ namespace BookCollector.ViewModels.WishListBook
             }
 
             return new WishListBookMainView(this.EditedWishlistBook, $"{this.EditedWishlistBook.BookTitle}");
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /********************************************************/

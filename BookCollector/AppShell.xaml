@@ -190,8 +190,7 @@
                           ContentTemplate="{DataTemplate supportViews:SupportView}"/>
             
             <ShellContent Title="{x:Static localization:AppStringResources.ChangeLog}"
-                          ContentTemplate="{DataTemplate supportViews:ChangeLogView}"
-                          IsVisible="False"/>
+                          ContentTemplate="{DataTemplate supportViews:ChangeLogView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.DataStorage}"
                           ContentTemplate="{DataTemplate supportViews:DataStorageView}"/>

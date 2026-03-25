@@ -565,11 +565,11 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blank1 items (Blank2 unread).
+        ///   Looks up a localized string similar to Blank1 items.
         /// </summary>
-        internal static string Blank1ItemsBlank2Unread {
+        internal static string Blank1Items {
             get {
-                return ResourceManager.GetString("Blank1ItemsBlank2Unread", resourceCulture);
+                return ResourceManager.GetString("Blank1Items", resourceCulture);
             }
         }
         
@@ -583,11 +583,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blank1 of Blank2 items (Blank3 unread).
+        ///   Looks up a localized string similar to (Blank1 unread).
         /// </summary>
-        internal static string Blank1OfBlank2ItemsBlank3Unread {
+        internal static string Blank1Unread {
             get {
-                return ResourceManager.GetString("Blank1OfBlank2ItemsBlank3Unread", resourceCulture);
+                return ResourceManager.GetString("Blank1Unread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Blank1 unread, Blank2 reading).
+        /// </summary>
+        internal static string Blank1UnreadBlank2Reading {
+            get {
+                return ResourceManager.GetString("Blank1UnreadBlank2Reading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Blank1 unread, Blank2 reading, Blank3 read).
+        /// </summary>
+        internal static string Blank1UnreadBlank2ReadingBlank3Read {
+            get {
+                return ResourceManager.GetString("Blank1UnreadBlank2ReadingBlank3Read", resourceCulture);
             }
         }
         
@@ -1187,6 +1205,19 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to • Minor code enhancements
+        ///• UI bug fixes, enhancements, and clarity to verbiage
+        ///• Added Book Cover filter to Wishlist
+        ///• Add text editor to Pages Read Popup
+        ///• Other bug fixes.
+        /// </summary>
+        internal static string ChangeLogEntry {
+            get {
+                return ResourceManager.GetString("ChangeLogEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ChapterGuid [LEAVE THIS COLUMN BLANK TO ADD NEW RECORD].
         /// </summary>
         internal static string ChapterGuid {
@@ -1750,15 +1781,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter Page Range.
-        /// </summary>
-        internal static string EnterPageRange {
-            get {
-                return ResourceManager.GetString("EnterPageRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Enter Publisher.
         /// </summary>
         internal static string EnterPublisher {
@@ -1773,6 +1795,15 @@ namespace BookCollector.Resources.Localization {
         internal static string EnterPublishYear {
             get {
                 return ResourceManager.GetString("EnterPublishYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Range.
+        /// </summary>
+        internal static string EnterRange {
+            get {
+                return ResourceManager.GetString("EnterRange", resourceCulture);
             }
         }
         
@@ -2635,6 +2666,15 @@ namespace BookCollector.Resources.Localization {
         internal static string MainSettings {
             get {
                 return ResourceManager.GetString("MainSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There has been a major update and a breaking change made..
+        /// </summary>
+        internal static string MajorChangeMessage {
+            get {
+                return ResourceManager.GetString("MajorChangeMessage", resourceCulture);
             }
         }
         
@@ -3723,6 +3763,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time Range.
+        /// </summary>
+        internal static string TimeRange {
+            get {
+                return ResourceManager.GetString("TimeRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To Be Read.
         /// </summary>
         internal static string ToBeRead {
@@ -3993,6 +4042,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (This will put the book on the Reading View for easy access.).
+        /// </summary>
+        internal static string UpNext_Explainer {
+            get {
+                return ResourceManager.GetString("UpNext_Explainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue this book up next for reading?.
         /// </summary>
         internal static string UpNext_Question {
@@ -4007,25 +4065,6 @@ namespace BookCollector.Resources.Localization {
         internal static string UserSelectedImagesMessage {
             get {
                 return ResourceManager.GetString("UserSelectedImagesMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resolved Play Store compatibility errors.
-        ///Updated verbiage in app..
-        /// </summary>
-        internal static string v101_ChangeLogEntry {
-            get {
-                return ResourceManager.GetString("v101_ChangeLogEntry", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove legacy permissions for device compatibility..
-        /// </summary>
-        internal static string v102_ChangeLogEntry {
-            get {
-                return ResourceManager.GetString("v102_ChangeLogEntry", resourceCulture);
             }
         }
         

@@ -229,5 +229,13 @@ namespace BookCollector.Data.BookAPI
         public async override Task SetViewModelData()
         {
         }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
     }
 }

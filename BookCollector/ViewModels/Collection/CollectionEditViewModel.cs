@@ -121,7 +121,7 @@ namespace BookCollector.ViewModels.Collection
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -138,12 +138,6 @@ namespace BookCollector.ViewModels.Collection
         private static async Task<bool> AddCollectionToStaticList(CollectionModel collection, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
         {
             var refresh = false;
-
-            await Task.WhenAll(
-            [
-                collection.SetTotalBooks(true),
-                collection.SetTotalCostOfBooks(true),
-            ]);
 
             try
             {

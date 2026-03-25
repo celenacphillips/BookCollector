@@ -313,6 +313,14 @@ namespace BookCollector.ViewModels.Popups
         }
 
         /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
+        /// <summary>
         /// Set the selected values as preferences and close popup.
         /// </summary>
         /// <returns>A task.</returns>

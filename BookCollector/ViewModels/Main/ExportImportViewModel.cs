@@ -262,7 +262,7 @@ namespace BookCollector.ViewModels.Main
         {
             this.View = view;
             this.InfoText = AppStringResources.ExportImportView_InfoText;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /// <summary>
@@ -307,8 +307,17 @@ namespace BookCollector.ViewModels.Main
                 this.ImagesChecked = false;
 
                 this.SetIsBusyFalse();
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /// <summary>
@@ -417,7 +426,7 @@ namespace BookCollector.ViewModels.Main
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;
@@ -531,7 +540,7 @@ namespace BookCollector.ViewModels.Main
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;

@@ -392,6 +392,8 @@
                                                      IsVisible="{Binding ShowUpNext}">
                                     <Label Text="{x:Static localization:AppStringResources.UpNext_Question}"
                                            Style="{DynamicResource Header}"/>
+                                    <Label Text="{x:Static localization:AppStringResources.UpNext_Explainer}"
+                                           Style="{DynamicResource Explainer}"/>
                                     <Switch x:Name="UpNextToggle"
                                             IsToggled="{Binding EditedBook.UpNext}"
                                             HorizontalOptions="Start"
@@ -704,11 +706,18 @@
 
                                                 <Label Text="{x:Static localization:AppStringResources.PageRange}"
                                                        Grid.Row="0" Grid.Column="1"
+                                                       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=ShowPages}"
+                                                       Style="{DynamicResource SubTitle}"/>
+
+                                                <Label Text="{x:Static localization:AppStringResources.TimeRange}"
+                                                       Grid.Row="0" Grid.Column="1"
+                                                       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewModel:BookEditViewModel}}, Path=ShowTime}"
                                                        Style="{DynamicResource SubTitle}"/>
 
                                                 <Editor Text="{Binding ChapterName}"
                                                         Placeholder="{x:Static localization:AppStringResources.EnterChapterName}"
                                                         HorizontalTextAlignment="Center"
+                                                        VerticalOptions="End"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="0">
                                                     <Editor.Keyboard>
@@ -721,8 +730,9 @@
                                                 </Editor>
 
                                                 <Editor Text="{Binding PageRange}"
-                                                        Placeholder="{x:Static localization:AppStringResources.EnterPageRange}"
+                                                        Placeholder="{x:Static localization:AppStringResources.EnterRange}"
                                                         HorizontalTextAlignment="Center"
+                                                        VerticalOptions="End"
                                                         AutoSize="TextChanges"
                                                         Grid.Row="1" Grid.Column="1"/>
 
@@ -981,45 +991,53 @@
                                 </Grid>
                                 <!-- Book Location -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
                                     <!-- Book Publisher -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookPublisher}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges">
-                                            <Editor.Keyboard>
-                                                <Keyboard x:FactoryMethod="Create">
-                                                    <x:Arguments>
-                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                    </x:Arguments>
-                                                </Keyboard>
-                                            </Editor.Keyboard>
-                                        </Editor>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                    
+                                    <Editor Text="{Binding EditedBook.BookPublisher}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Publisher -->
 
                                     <!-- Book Publish Year -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookPublishYear}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
-                                                HorizontalTextAlignment="Center"
-                                                Keyboard="Numeric"
-                                                MaxLength="4"
-                                                AutoSize="TextChanges"/>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    
+                                    <Editor Text="{Binding EditedBook.BookPublishYear}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            Keyboard="Numeric"
+                                            MaxLength="4"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="1"/>
                                     <!-- Book Publish Year -->
+                                    
                                 </Grid>
 
                                 <!-- Book Identifier -->
@@ -1033,45 +1051,53 @@
                                 </VerticalStackLayout>
                                 <!-- Book Identifier -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid Margin="10">
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
                                     <!-- Book Language -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookLanguage}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges">
-                                            <Editor.Keyboard>
-                                                <Keyboard x:FactoryMethod="Create">
-                                                    <x:Arguments>
-                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                    </x:Arguments>
-                                                </Keyboard>
-                                            </Editor.Keyboard>
-                                        </Editor>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                    
+                                    <Editor Text="{Binding EditedBook.BookLanguage}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Language -->
 
                                     <!-- Book Price -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.BookPrice}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPrice}"
-                                                HorizontalTextAlignment="Center"
-                                                Keyboard="Numeric"
-                                                AutoSize="TextChanges" />
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    
+                                    <Editor Text="{Binding EditedBook.BookPrice}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookPrice}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="1"/>
                                     <!-- Book Price -->
+                                    
                                 </Grid>
 
                                 <!-- Book URL -->
@@ -1085,53 +1111,61 @@
                                 </VerticalStackLayout>
                                 <!-- Book URL -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid Margin="10">
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
                                     <!-- Book Loaned To -->
-                                    <VerticalStackLayout Margin="10"
-                                                     Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
-                                           Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedBook.LoanedTo}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterName}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges"/>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                    
+                                    <Editor Text="{Binding EditedBook.LoanedTo}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterName}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0"/>
                                     <!-- Book Loaned To -->
 
                                     <!-- Book Loaned Out On -->
-                                    <VerticalStackLayout Margin="10"
-                                                     Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
-                                               Style="{DynamicResource Header}"/>
-                                            <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookLoanedOutOn}"
-                                                                         Placeholder="{x:Static localization:AppStringResources.EnterDate}"
-                                                                         Mode="Date"
-                                                                         BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
-                                                                         TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
-                                                                         HorizontalTextAlignment="Center"
-                                                                         HeaderBackgroundColor="{DynamicResource Primary}"
-                                                                         CloseOnOutsideClick="True"
-                                                                         ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
-                                                                         SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
-                                                                         ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
-                                                                         YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
-                                                                         YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
-                                                                         SelectedYearMonthBackgroundColor="{DynamicResource Primary}">
-                                                <ndtp:NullableDateTimePicker.Icon>
-                                                    <FontImageSource FontFamily="MaterialDesignIcons"
-                                                                     Glyph="&#xF00EE;"
-                                                                     Size="34"
-                                                                     Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-                                                </ndtp:NullableDateTimePicker.Icon>
-                                            </ndtp:NullableDateTimePicker>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookLoanedOutOn}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    
+                                    <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookLoanedOutOn}"
+                                                                 Placeholder="{x:Static localization:AppStringResources.EnterDate}"
+                                                                 Mode="Date"
+                                                                 BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 HorizontalTextAlignment="Center"
+                                                                 HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                 CloseOnOutsideClick="True"
+                                                                 ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                 SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                 ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                 YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 SelectedYearMonthBackgroundColor="{DynamicResource Primary}"
+                                                                 Grid.Row="1" Grid.Column="1"
+                                                                 VerticalOptions="End">
+                                        <ndtp:NullableDateTimePicker.Icon>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF00EE;"
+                                                             Size="34"
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                                        </ndtp:NullableDateTimePicker.Icon>
+                                    </ndtp:NullableDateTimePicker>
                                     <!-- Book Loaned Out On -->
+                                    
                                 </Grid>
 
                                 <!-- Hide Book -->

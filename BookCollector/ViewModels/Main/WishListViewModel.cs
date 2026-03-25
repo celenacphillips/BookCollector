@@ -117,7 +117,7 @@ namespace BookCollector.ViewModels.Main
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = AppStringResources.WishListView_InfoText;
             this.ViewTitle = AppStringResources.Wishlist;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -125,17 +125,7 @@ namespace BookCollector.ViewModels.Main
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
-
-        /// <summary>
-        /// Gets or sets the saved book location filter option.
-        /// </summary>
-        public string? BookLocationOption { get; set; }
-
-        /// <summary>
-        /// Gets or sets the saved book series filter option.
-        /// </summary>
-        public string? BookSeriesOption { get; set; }
+        public static bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden wishlist books or not.
@@ -242,7 +232,7 @@ namespace BookCollector.ViewModels.Main
                 {
                     this.GetPreferences();
 
-                    await SetList(ShowHiddenBooks);
+                    await SetList(this.ShowHiddenWishlistBooks);
 
                     (this.TotalBooksCount,
                         this.FilteredBooksCount,
@@ -259,7 +249,7 @@ namespace BookCollector.ViewModels.Main
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -344,6 +334,7 @@ namespace BookCollector.ViewModels.Main
             viewModel.SetAuthorPicker(this.BookAuthorList);
             viewModel.SetLocationPicker(this.BookLocationList);
             viewModel.SetSeriesPicker(this.BookSeriesList);
+            viewModel.SetBookCoverPicker();
 
             return viewModel;
         }
@@ -380,6 +371,15 @@ namespace BookCollector.ViewModels.Main
             viewModel.DescendingChecked = this.DescendingChecked;
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /********************************************************/

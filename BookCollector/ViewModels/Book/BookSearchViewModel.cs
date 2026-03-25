@@ -153,6 +153,14 @@ namespace BookCollector.ViewModels.Book
         }
 
         /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
+        /// <summary>
         /// Sets the expander arrow boolean values on change.
         /// </summary>
         /// <returns>A task.</returns>

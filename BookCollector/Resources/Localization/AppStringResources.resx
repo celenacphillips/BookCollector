@@ -380,10 +380,6 @@
   <data name="HideAuthor_Question" xml:space="preserve">
     <value>Hide Author when Settings &gt; Show Hidden Authors is off? This will also hide any books associated with this author.</value>
   </data>
-  <data name="Blank1OfBlank2ItemsBlank3Unread" xml:space="preserve">
-    <value>Blank1 of Blank2 items (Blank3 unread)</value>
-    <comment>Blank1, Blank2, and Blank3 should not be translated.</comment>
-  </data>
   <data name="Blank1OfBlank2Items" xml:space="preserve">
     <value>Blank1 of Blank2 items</value>
     <comment>Blank1 and Blank2 should not be translated.</comment>
@@ -786,9 +782,9 @@
   <data name="NoSeries" xml:space="preserve">
     <value>No Series</value>
   </data>
-  <data name="Blank1ItemsBlank2Unread" xml:space="preserve">
-    <value>Blank1 items (Blank2 unread)</value>
-    <comment>Blank1 and Blank2 should not be translated.</comment>
+  <data name="Blank1Items" xml:space="preserve">
+    <value>Blank1 items</value>
+    <comment>Blank1 should not be translated.</comment>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sort By</value>
@@ -1167,8 +1163,8 @@ Make sure to check/uncheck checkboxes before importing or exporting.</value>
   <data name="EnterChapterName" xml:space="preserve">
     <value>Enter Chapter Name</value>
   </data>
-  <data name="EnterPageRange" xml:space="preserve">
-    <value>Enter Page Range</value>
+  <data name="EnterRange" xml:space="preserve">
+    <value>Enter Range</value>
   </data>
   <data name="EnterPublisher" xml:space="preserve">
     <value>Enter Publisher</value>
@@ -1441,13 +1437,6 @@ Visit them at </value>
   <data name="PleaseSelectAnotherFolder" xml:space="preserve">
     <value>Cannot access this folder. Please select another.</value>
   </data>
-  <data name="v101_ChangeLogEntry" xml:space="preserve">
-    <value>Resolved Play Store compatibility errors.
-Updated verbiage in app.</value>
-  </data>
-  <data name="v102_ChangeLogEntry" xml:space="preserve">
-    <value>Remove legacy permissions for device compatibility.</value>
-  </data>
   <data name="FAQ_Question1" xml:space="preserve">
     <value>Can I add books with an ISBN?</value>
   </data>
@@ -1528,5 +1517,33 @@ From the Groupings tab, you can add new or existing books directly to the group.
 Currently, the Import feature only works with a spreadsheet workbook specifically formatted for this app. Assuming you have all checkboxes checked, your workbook needs to have 9 spreadsheets in it: WishlistBooks, Books, Chapters, Collections, Genres, Series, Locations, BookAuthors, and Authors. Each of those spreadsheets needs to have the correct columns, in the correct order, for the import to work.
 
 Importing from and exporting to other sources is a feature that will be implemented at a later time.</value>
+  </data>
+  <data name="Blank1UnreadBlank2ReadingBlank3Read" xml:space="preserve">
+    <value>(Blank1 unread, Blank2 reading, Blank3 read)</value>
+    <comment>Blank1, Blank2, and Blank3 should not be translated.</comment>
+  </data>
+  <data name="Blank1Unread" xml:space="preserve">
+    <value>(Blank1 unread)</value>
+    <comment>Blank1 should not be translated.</comment>
+  </data>
+  <data name="Blank1UnreadBlank2Reading" xml:space="preserve">
+    <value>(Blank1 unread, Blank2 reading)</value>
+    <comment>Blank1 and Blank2 should not be translated.</comment>
+  </data>
+  <data name="UpNext_Explainer" xml:space="preserve">
+    <value>(This will put the book on the Reading View for easy access.)</value>
+  </data>
+  <data name="TimeRange" xml:space="preserve">
+    <value>Time Range</value>
+  </data>
+  <data name="ChangeLogEntry" xml:space="preserve">
+    <value>• Minor code enhancements
+• UI bug fixes, enhancements, and clarity to verbiage
+• Added Book Cover filter to Wishlist
+• Add text editor to Pages Read Popup
+• Other bug fixes</value>
+  </data>
+  <data name="MajorChangeMessage" xml:space="preserve">
+    <value>There has been a major update and a breaking change made.</value>
   </data>
 </root>

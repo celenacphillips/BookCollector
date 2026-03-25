@@ -87,7 +87,7 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.LocationView_InfoText}";
             this.ViewTitle = AppStringResources.Locations;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -95,7 +95,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
+        public static bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden locations or not.
@@ -228,7 +228,7 @@ namespace BookCollector.ViewModels.Groupings
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -300,6 +300,15 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
             RemoveFromStaticList((LocationModel)selected);
             await RemoveBookFromGrouping((LocationModel)selected);
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /********************************************************/

@@ -121,7 +121,7 @@ namespace BookCollector.ViewModels.Genre
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -138,12 +138,6 @@ namespace BookCollector.ViewModels.Genre
         private static async Task<bool> AddGenreToStaticList(GenreModel genre, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
         {
             var refresh = false;
-
-            await Task.WhenAll(
-            [
-                genre.SetTotalBooks(true),
-                genre.SetTotalCostOfBooks(true),
-            ]);
 
             try
             {

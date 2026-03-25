@@ -180,6 +180,14 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
+        /// <summary>
         /// Creates the entries for the charts and sets up the pie chart with the given values and section name.
         /// </summary>
         /// <param name="chartValues">Chart values to display.</param>

@@ -226,7 +226,7 @@ namespace BookCollector.Data
         {
             if (!string.IsNullOrEmpty(searchString))
             {
-                return bookList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                return bookList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
             else
             {
@@ -246,7 +246,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -264,7 +264,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.FullName) && x.FullName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.FullName) && x.FullName.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -282,7 +282,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -300,7 +300,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -318,7 +318,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -336,7 +336,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
 
             return filterList;
@@ -403,7 +403,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.ToLower().Equals(publisherOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -422,7 +422,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(publisherOption) && !publisherOption.Equals(AppStringResources.NoPublisher) && !publisherOption.Equals(AppStringResources.AllPublishers))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.Equals(publisherOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookPublisher) && x.BookPublisher.ToLower().Equals(publisherOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -491,7 +491,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.Equals(languageOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -510,7 +510,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(languageOption) && !languageOption.Equals(AppStringResources.NoLanguage) && !languageOption.Equals(AppStringResources.AllLanguages))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLanguage) && x.BookLanguage.ToLower().Equals(languageOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -554,7 +554,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.ToLower().Contains(authorOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -576,7 +576,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.ToLower().Contains(authorOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -597,7 +597,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(locationOption) && !locationOption.Equals(AppStringResources.NoLocation) && !locationOption.Equals(AppStringResources.AllLocations))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.ToLower().Equals(locationOption.ToLower()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy) && x.BookWhereToBuy.ToLower().Equals(locationOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 
@@ -618,7 +618,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(seriesOption) && !seriesOption.Equals(AppStringResources.NoSeries) && !seriesOption.Equals(AppStringResources.AllSeries))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.Equals(seriesOption))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookSeries) && x.BookSeries.ToLower().Equals(seriesOption.ToLower().Trim()))
                                      .ToObservableCollection();
             }
 

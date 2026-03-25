@@ -95,7 +95,7 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesView_InfoText}";
             this.ViewTitle = AppStringResources.Series;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -103,7 +103,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
+        public static bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show hidden series or not.
@@ -236,7 +236,7 @@ namespace BookCollector.ViewModels.Groupings
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -308,6 +308,15 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteSeriesAsync(ConvertTo<SeriesDatabaseModel>(selected));
             RemoveFromStaticList((SeriesModel)selected);
             await RemoveBookFromGrouping((SeriesModel)selected);
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /********************************************************/

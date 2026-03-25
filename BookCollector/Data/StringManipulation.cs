@@ -31,10 +31,18 @@ namespace BookCollector.Data
         /// <param name="filteredCount">Filtered count of books.</param>
         /// <param name="totalCount">Total count of books.</param>
         /// <param name="unreadCount">Unread count of books.</param>
+        /// <param name="readingCount">Reading count of books.</param>
+        /// <param name="readCount">Read count of books.</param>
         /// <returns>Parsed string.</returns>
-        public static string SetTotalBooksString(int filteredCount, int totalCount, int unreadCount)
+        public static string SetTotalBooksAndReadingStatusString(int filteredCount, int totalCount, int unreadCount, int readingCount, int readCount)
         {
-            return AppStringResources.Blank1OfBlank2ItemsBlank3Unread.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("Blank3", $"{unreadCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+            var totalBooksString = AppStringResources.Blank1OfBlank2Items.Replace("Blank1", $"{filteredCount}").Replace("Blank2", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+
+            totalBooksString += $" {AppStringResources.Blank1Unread.Replace("Blank1", $"{unreadCount}")}";
+
+            // totalBooksString += $" {AppStringResources.Blank1UnreadBlank2Reading.Replace("Blank1", $"{unreadCount}").Replace("Blank2", $"{readingCount}")}";
+            // totalBooksString += $" {AppStringResources.Blank1UnreadBlank2ReadingBlank3Read.Replace("Blank1", $"{unreadCount}").Replace("Blank2", $"{readingCount}").Replace("Blank3", $"{readCount}")}";
+            return totalBooksString;
         }
 
         /// <summary>
@@ -42,10 +50,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="totalCount">Total count of books.</param>
         /// <param name="unreadCount">Unread count of books.</param>
+        /// <param name="readingCount">Reading count of books.</param>
+        /// <param name="readCount">Read count of books.</param>
         /// <returns>Parsed string.</returns>
-        public static string SetTotalBooksAndUnreadString(int totalCount, int unreadCount)
+        public static string SetTotalBooksAndReadingStatusString(int totalCount, int unreadCount, int readingCount, int readCount)
         {
-            return AppStringResources.Blank1ItemsBlank2Unread.Replace("Blank1", $"{totalCount}").Replace("Blank2", $"{unreadCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+            var totalBooksString = AppStringResources.Blank1Items.Replace("Blank1", $"{totalCount}").Replace("items", totalCount == 1 ? AppStringResources.Book.ToLower() : AppStringResources.Books.ToLower());
+
+            totalBooksString += $" {AppStringResources.Blank1Unread.Replace("Blank1", $"{unreadCount}")}";
+
+            // totalBooksString += $" {AppStringResources.Blank1UnreadBlank2Reading.Replace("Blank1", $"{unreadCount}").Replace("Blank2", $"{readingCount}")}";
+            // totalBooksString += $" {AppStringResources.Blank1UnreadBlank2ReadingBlank3Read.Replace("Blank1", $"{unreadCount}").Replace("Blank2", $"{readingCount}").Replace("Blank3", $"{readCount}")}";
+            return totalBooksString;
         }
 
         /// <summary>
@@ -222,9 +238,14 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="input">String to parse.</param>
         /// <returns>A list of authors.</returns>
-        public static async Task<List<AuthorModel>> SplitAuthorListStringIntoAuthorList(string input)
+        public static async Task<List<AuthorModel>> SplitAuthorListStringIntoAuthorList(string? input)
         {
             var list = new List<AuthorModel>();
+
+            if (input == null)
+            {
+                return list;
+            }
 
             string[] authorNames = input.Split(";");
 

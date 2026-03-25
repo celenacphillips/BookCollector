@@ -92,7 +92,7 @@ namespace BookCollector.ViewModels.Library
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.ReadView_InfoText}";
             this.ViewTitle = AppStringResources.Read;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.Library
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
+        public static bool RefreshView { get; set; }
 
         /********************************************************/
 
@@ -160,7 +160,6 @@ namespace BookCollector.ViewModels.Library
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
                 }
             }
         }
@@ -291,6 +290,15 @@ namespace BookCollector.ViewModels.Library
             viewModel.DescendingChecked = this.DescendingChecked;
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
     }
 }

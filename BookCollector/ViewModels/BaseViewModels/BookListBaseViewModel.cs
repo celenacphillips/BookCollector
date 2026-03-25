@@ -68,11 +68,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         /********************************************************/
 
         /// <summary>
-        /// Gets or sets a value indicating whether to refresh the view or not.
-        /// </summary>
-        public static bool RefreshView { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show hidden books or not.
         /// </summary>
         public static bool ShowHiddenBooks { get; set; }
@@ -124,17 +119,27 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public string? BookCoverOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the saved book location filter option.
+        /// </summary>
+        public string? BookLocationOption { get; set; }
+
+        /// <summary>
+        /// Gets or sets the saved book series filter option.
+        /// </summary>
+        public string? BookSeriesOption { get; set; }
+
+        /// <summary>
+        /// Gets or sets the saved book author filter option.
+        /// </summary>
+        public string? BookAuthorOption { get; set; }
+
         /********************************************************/
 
         /// <summary>
         /// Gets or sets a value indicating whether the book title option is checked or not.
         /// </summary>
         public bool BookTitleChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets the saved book author filter option.
-        /// </summary>
-        public string? BookAuthorOption { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the book reading date option is checked or not.
@@ -175,6 +180,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets a value indicating whether the book price option is checked or not.
         /// </summary>
         public bool BookPriceChecked { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series or is checked or not.
+        /// </summary>
+        public bool SeriesOrderChecked { get; set; }
 
         /********************************************************/
 
@@ -251,6 +261,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                                    this.BookPublisherChecked,
                                    this.BookPublishYearChecked,
                                    this.AuthorLastNameChecked,
+                                   this.SeriesOrderChecked,
                                    this.BookFormatChecked,
                                    this.BookPriceChecked,
                                    this.PageCountBookTimeChecked,
@@ -269,7 +280,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalBooksCount, filteredBooksCount, totalBooksString, showCollectionViewFooter, filteredBookList, bookPublisherList, bookLanguageList, bookPublishYearList, bookAuthorList);
         }
@@ -321,13 +332,13 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 var filteredList = FilterLists.FilterList(
                         hiddenBookList,
-                        this.FavoriteBooksOption,
                         this.BookFormatOption,
                         this.BookPublisherOption,
                         this.BookLanguageOption,
-                        this.BookRatingOption,
                         this.BookPublishYearOption,
                         this.BookAuthorOption,
+                        this.BookLocationOption,
+                        this.BookSeriesOption,
                         this.BookCoverOption,
                         this.SearchString);
 
@@ -368,7 +379,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalBooksCount,
                 filteredBooksCount,
@@ -420,6 +431,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                                 this.BookPublisherChecked,
                                 this.BookPublishYearChecked,
                                 this.AuthorLastNameChecked,
+                                this.SeriesOrderChecked,
                                 this.BookFormatChecked,
                                 this.BookPriceChecked,
                                 this.PageCountBookTimeChecked,
@@ -521,7 +533,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.SetRefreshView(true);
                     await this.SetViewModelData();
                 }
             }
@@ -545,7 +557,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 var result = await this.View.ShowPopupAsync(popup);
                 if (!result.WasDismissedByTappingOutsideOfPopup)
                 {
-                    RefreshView = true;
+                    this.SetRefreshView(true);
                     await this.SetViewModelData();
                 }
             }

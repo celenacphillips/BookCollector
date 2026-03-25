@@ -179,5 +179,14 @@ namespace BookCollector.ViewModels.Book
             await BaseViewModel.Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook!));
             await RemoveFromStaticList(this.SelectedBook!);
         }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
+        }
     }
 }

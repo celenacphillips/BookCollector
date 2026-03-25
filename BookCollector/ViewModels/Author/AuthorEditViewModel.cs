@@ -133,7 +133,7 @@ namespace BookCollector.ViewModels.Author
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -161,11 +161,6 @@ namespace BookCollector.ViewModels.Author
         {
             var refresh = false;
 
-            // await Task.WhenAll(new Task[]
-            // {
-            //    author.SetTotalBooks(Hi),
-            //    author.SetTotalCostOfBooks(true),
-            // });
             try
             {
                 var oldAuthor = authorList.FirstOrDefault(x => x.AuthorGuid == author.AuthorGuid);

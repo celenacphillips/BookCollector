@@ -31,7 +31,7 @@ namespace BookCollector.ViewModels.Author
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static ObservableCollection<BookModel>? fullBookList;
+        public ObservableCollection<BookModel>? fullBookList;
 
         /// <summary>
         /// Gets or sets the first filtered list.
@@ -40,7 +40,7 @@ namespace BookCollector.ViewModels.Author
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static ObservableCollection<BookModel>? hiddenFilteredBookList;
+        public ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -49,7 +49,7 @@ namespace BookCollector.ViewModels.Author
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
-        public static new ObservableCollection<BookModel>? filteredBookList;
+        public new ObservableCollection<BookModel>? filteredBookList;
 
         /// <summary>
         /// Gets or sets the total count of books, based on the first filtered list.
@@ -97,8 +97,15 @@ namespace BookCollector.ViewModels.Author
             this.SelectedAuthor = author;
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.AuthorMainView_InfoText.Replace("author", $"{this.SelectedAuthor.FullName}")}";
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
+        public static new bool RefreshView { get; set; }
 
         /********************************************************/
 
@@ -184,7 +191,7 @@ namespace BookCollector.ViewModels.Author
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -310,6 +317,15 @@ namespace BookCollector.ViewModels.Author
             viewModel.DescendingChecked = this.DescendingChecked;
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
     }
 }

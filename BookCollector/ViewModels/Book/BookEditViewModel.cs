@@ -160,7 +160,7 @@ namespace BookCollector.ViewModels.Book
             this.PreviousViewModel = previousViewModel;
             this.SelectedBookFormat = this.EditedBook.BookFormat ?? AppStringResources.SelectABookFormat;
             this.PopupWidth = DeviceWidth - 50;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -202,10 +202,10 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public static async Task AddSeries()
+        public async Task AddSeries()
         {
             var view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}");
-            await AddGrouping(view);
+            await this.AddGrouping(view);
         }
 
         /// <summary>
@@ -213,10 +213,10 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public static async Task AddCollection()
+        public async Task AddCollection()
         {
             var view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}");
-            await AddGrouping(view);
+            await this.AddGrouping(view);
         }
 
         /// <summary>
@@ -224,10 +224,10 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public static async Task AddGenre()
+        public async Task AddGenre()
         {
             var view = new GenreEditView(new GenreModel(), $"{AppStringResources.AddNewGenre}");
-            await AddGrouping(view);
+            await this.AddGrouping(view);
         }
 
         /// <summary>
@@ -235,10 +235,10 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public static async Task AddLocation()
+        public async Task AddLocation()
         {
             var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}");
-            await AddGrouping(view);
+            await this.AddGrouping(view);
         }
 
         /// <summary>
@@ -246,10 +246,10 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <returns>A task.</returns>
         [RelayCommand]
-        public static async Task AddNewAuthor()
+        public async Task AddNewAuthor()
         {
             var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}");
-            await AddGrouping(view);
+            await this.AddGrouping(view);
         }
 
         /// <summary>
@@ -312,7 +312,10 @@ namespace BookCollector.ViewModels.Book
                 stepper.Maximum = (int)this.EditedBook.BookPageTotal;
             }
 
-            this.ShowCheckpoints = this.EditedBook.BookTotalTime != 0;
+            this.ShowCheckpoints = this.EditedBook.BookFormat != null &&
+                ((!this.EditedBook.BookFormat!.Equals(AppStringResources.Audiobook) && this.EditedBook.BookPageTotal != 0) ||
+                (this.EditedBook.BookFormat!.Equals(AppStringResources.Audiobook) && this.EditedBook.BookTotalTime != 0));
+
             await this.EditedBook.SetReadingProgress();
             await this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints);
         }
@@ -886,7 +889,8 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <param name="imageSource">Book cover image source.</param>
         /// <param name="fileName">Book cover image filename.</param>
-        public override void SetBookCover(ImageSource? imageSource, string? fileName)
+        /// <param name="fileUrl">Book cover image url.</param>
+        public override void SetBookCover(ImageSource? imageSource, string? fileName, string? fileUrl)
         {
             if (imageSource == null)
             {
@@ -902,6 +906,11 @@ namespace BookCollector.ViewModels.Book
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     this.EditedBook.BookCoverFileName = fileName;
+                }
+
+                if (!string.IsNullOrEmpty(fileUrl))
+                {
+                    this.EditedBook.BookCoverUrl = fileUrl;
                 }
 
                 this.BookCover = imageSource;
@@ -929,8 +938,6 @@ namespace BookCollector.ViewModels.Book
                 Task.Run(() => this.EditedBook.SetPartOfSeries()),
                 Task.Run(() => this.EditedBook.SetPartOfCollection()),
                 Task.Run(() => this.EditedBook.SetBookPrice()),
-                Task.Run(() => this.EditedBook.SetBookChapters(this.ChapterList)),
-                Task.Run(() => this.EditedBook.RemoveBookChapters(this.ChaptersToDelete)),
             };
 
             if (this.EditedBook.UpNext == true &&
@@ -981,6 +988,12 @@ namespace BookCollector.ViewModels.Book
                 await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author1));
             }
 
+            var dataTasks = new Task[]
+            {
+                Task.Run(() => this.EditedBook.SetBookChapters(this.ChapterList)),
+                Task.Run(() => this.EditedBook.RemoveBookChapters(this.ChaptersToDelete)),
+            };
+
             await AddToStaticList(this.EditedBook, this.PreviousViewModel);
         }
 
@@ -998,12 +1011,21 @@ namespace BookCollector.ViewModels.Book
             return new BookMainView(this.EditedBook, $"{this.EditedBook.BookTitle}");
         }
 
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
+        }
+
         /********************************************************/
 
-        private static async Task AddGrouping(ContentPage view)
+        private async Task AddGrouping(ContentPage view)
         {
             await Shell.Current.Navigation.PushAsync(view);
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
     }
 }

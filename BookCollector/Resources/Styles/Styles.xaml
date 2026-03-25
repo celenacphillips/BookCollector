@@ -389,6 +389,11 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
     </Style>
 
+    <Style x:Key="Explainer" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Italic" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource Secondary}}" />
+    </Style>
+
     <Style x:Key="Subtitle" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
     </Style>

@@ -8,8 +8,7 @@
                xmlns:controls="clr-namespace:BookCollector.Views.Controls"
                CanBeDismissedByTappingOutsideOfPopup="True"
                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-               Margin="0"
-               x:DataType="viewModel:BookBaseViewModel">
+               Margin="0">
     <VerticalStackLayout Padding="20">
         <controls:PinchandPanContainer>
             <Image Source="{Binding BookCover}"/>

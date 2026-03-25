@@ -90,7 +90,7 @@ namespace BookCollector.ViewModels.WishListBook
                     catch (Exception ex)
                     {
                         await this.ViewModelCatch(ex);
-                        RefreshView = false;
+                        this.SetRefreshView(false);
                     }
                 }
                 else
@@ -202,8 +202,17 @@ namespace BookCollector.ViewModels.WishListBook
         /// <returns>An task.</returns>
         public override async Task DeleteData()
         {
-            await BaseViewModel.Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook!));
+            await Database.DeleteWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(this.SelectedWishlistBook!));
             this.RemoveFromStaticList();
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
         }
 
         /********************************************************/
@@ -252,7 +261,7 @@ namespace BookCollector.ViewModels.WishListBook
         {
             SeriesModel? series = null;
 
-            series = await BaseViewModel.Database.GetSeriesByNameAsync(this.SelectedWishlistBook!.BookSeries);
+            series = await Database.GetSeriesByNameAsync(this.SelectedWishlistBook!.BookSeries);
 
             if (series == null || series.SeriesGuid == null)
             {
@@ -261,7 +270,7 @@ namespace BookCollector.ViewModels.WishListBook
                     SeriesName = this.SelectedWishlistBook.BookSeries,
                 };
 
-                series = await BaseViewModel.Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
+                series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
                 await SeriesEditViewModel.AddToStaticList(series);
                 SeriesViewModel.RefreshView = true;
             }
@@ -278,17 +287,17 @@ namespace BookCollector.ViewModels.WishListBook
             {
                 var addAuthor = author;
 
-                var existingAuthor = await BaseViewModel.Database.GetAuthorByNameAsync(addAuthor.FirstName, addAuthor.LastName);
+                var existingAuthor = await Database.GetAuthorByNameAsync(addAuthor.FirstName, addAuthor.LastName);
 
                 if (existingAuthor != null && existingAuthor.AuthorGuid != null)
                 {
                     addAuthor = existingAuthor;
-                    await BaseViewModel.Database.AddAuthorToBookAsync(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
+                    await Database.AddAuthorToBookAsync(addAuthor.AuthorGuid, this.SelectedWishlistBook.BookGuid);
                 }
                 else
                 {
                     addAuthor.AuthorGuid = Guid.NewGuid();
-                    await BaseViewModel.Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
+                    await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(addAuthor), this.SelectedWishlistBook.BookGuid);
                     await AuthorEditViewModel.AddToStaticList(addAuthor);
                     AuthorsViewModel.RefreshView = true;
                 }

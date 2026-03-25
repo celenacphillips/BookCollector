@@ -354,6 +354,14 @@ namespace BookCollector.ViewModels.Popups
         {
         }
 
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
         private void SetPreferences()
         {
             if (this.BookTitleVisible)

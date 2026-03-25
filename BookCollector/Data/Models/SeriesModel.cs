@@ -59,7 +59,7 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
-            (this.TotalBooksString, this.SeriesTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list);
+            (this.TotalBooksString, this.SeriesTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list, this.TotalBooksInSeries);
         }
 
         /// <summary>

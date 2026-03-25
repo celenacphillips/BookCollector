@@ -135,12 +135,12 @@ namespace BookCollector.ViewModels.BaseViewModels
                     await this.SetAuthorData();
 
                     this.SetIsBusyFalse();
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
@@ -303,7 +303,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task AddUploadCoverPhoto()
         {
-            var action = await this.PopupMenu_CoverPhoto();
+            List<string> actions = [AppStringResources.UploadExistingFile, AppStringResources.BookCoverUrl];
+            var action = await this.PopupActionMenu(AppStringResources.AddOrReplaceCoverPhoto, actions);
 
             if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.UploadExistingFile))
             {
@@ -324,22 +325,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task RemoveCoverPhoto()
         {
-            this.SetBookCover(null, null);
-        }
-
-        /// <summary>
-        /// Show popup to replace book cover photo.
-        /// </summary>
-        /// <returns>A task.</returns>
-        public async Task<string?> PopupMenu_CoverPhoto()
-        {
-            var title = AppStringResources.AddOrReplaceCoverPhoto;
-            var file = AppStringResources.UploadExistingFile;
-            var url = AppStringResources.BookCoverUrl;
-
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, file, url, "Options"));
-
-            return answer.Result;
+            this.SetBookCover(null, null, null);
         }
 
         /// <summary>
@@ -439,7 +425,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         /// <param name="imageSource">Book cover image source.</param>
         /// <param name="fileName">Book cover image filename.</param>
-        public abstract void SetBookCover(ImageSource? imageSource, string? fileName);
+        /// <param name="fileUrl">Book cover image url.</param>
+        public abstract void SetBookCover(ImageSource? imageSource, string? fileName, string? fileUrl);
 
         /// <summary>
         /// Set book data for saving.
@@ -494,13 +481,13 @@ namespace BookCollector.ViewModels.BaseViewModels
                         var fi = new FileInfo(firstPhoto.FullPath);
                         var filePath = $"{directory}/{fi.Name}";
                         File.Copy(firstPhoto.FullPath, filePath, true);
-                        this.SetBookCover(ImageSource.FromFile(firstPhoto.FullPath), fi.Name);
+                        this.SetBookCover(ImageSource.FromFile(firstPhoto.FullPath), fi.Name, null);
                     }
                 }
                 catch (Exception ex)
                 {
                     this.SetIsBusyFalse();
-                    this.SetBookCover(null, null);
+                    this.SetBookCover(null, null, null);
                     await this.DisplayMessage(AppStringResources.PickingCoverCanceled, null);
                 }
             }
@@ -551,14 +538,15 @@ namespace BookCollector.ViewModels.BaseViewModels
                                 CachingEnabled = true,
                                 CacheValidity = TimeSpan.FromDays(14),
                             },
-                            null);
+                            null,
+                            bookCoverUrl);
 
                         this.SetIsBusyFalse();
                     }
                     catch (Exception ex)
                     {
                         this.SetIsBusyFalse();
-                        this.SetBookCover(null, null);
+                        this.SetBookCover(null, null, null);
                         await this.DisplayMessage(AppStringResources.AnErrorOccurred, AppStringResources.ErrorDownloadingImage);
                     }
                 }

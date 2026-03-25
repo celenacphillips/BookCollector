@@ -103,8 +103,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             var totalBooksString = !string.IsNullOrEmpty(totalBooks) ?
-                                    StringManipulation.SetTotalBooksString(count, int.Parse(totalBooks), unread) :
-                                    StringManipulation.SetTotalBooksAndUnreadString(count, unread);
+                                    StringManipulation.SetTotalBooksAndReadingStatusString(count, int.Parse(totalBooks), unread, reading, read) :
+                                    StringManipulation.SetTotalBooksAndReadingStatusString(count, unread, reading, read);
 
             return (totalBooksString, count);
         }
@@ -228,7 +228,6 @@ namespace BookCollector.ViewModels.BaseViewModels
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
                 }
             }
             else
@@ -467,7 +466,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalString = StringManipulation.SetTotalAuthorsString(filteredCount, totalCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
@@ -527,7 +526,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalString = StringManipulation.SetTotalCollectionsString(filteredCount, totalCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
@@ -587,7 +586,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalString = StringManipulation.SetTotalGenresString(filteredCount, totalCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
@@ -647,7 +646,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalString = StringManipulation.SetTotalLocationsString(filteredCount, totalCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
@@ -707,7 +706,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             var totalString = StringManipulation.SetTotalSeriesString(filteredCount, totalCount);
 
             this.SetIsBusyFalse();
-            RefreshView = false;
+            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }

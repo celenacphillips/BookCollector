@@ -100,7 +100,7 @@ namespace BookCollector.ViewModels.Groupings
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -108,7 +108,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
+        public static bool RefreshView { get; set; }
 
         /// <summary>
         /// Gets or sets the selected grouping object.
@@ -230,7 +230,7 @@ namespace BookCollector.ViewModels.Groupings
                 catch (Exception ex)
                 {
                     await this.ViewModelCatch(ex);
-                    RefreshView = false;
+                    this.SetRefreshView(false);
                 }
             }
         }
@@ -363,6 +363,15 @@ namespace BookCollector.ViewModels.Groupings
             return viewModel;
         }
 
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
+        }
+
         /********************************************************/
 
         /// <summary>
@@ -492,7 +501,7 @@ namespace BookCollector.ViewModels.Groupings
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 

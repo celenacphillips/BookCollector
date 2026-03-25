@@ -448,7 +448,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 #endif
 
 #if RELEASE
-            await this.DisplayMessage(AppStringR;esources.AnErrorOccurred, null);
+            await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
             await this.CanceledAction();
 
@@ -574,6 +574,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         public void SetRefreshTrue()
         {
             this.IsRefreshing = true;
+            this.SetRefreshView(true);
         }
 
         /// <summary>
@@ -591,6 +592,12 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         /// <returns>A task.</returns>
         public abstract Task SetViewModelData();
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public abstract void SetRefreshView(bool value);
 
         /********************************************************/
 

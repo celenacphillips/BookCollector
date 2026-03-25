@@ -102,12 +102,21 @@ namespace BookCollector.ViewModels.Statistics
         /// <returns>A task.</returns>
         [RelayCommand]
         public async Task UpdateMaxNumber()
-        {
-            if (!string.IsNullOrEmpty(this.YearCount) && int.Parse(this.YearCount) < 21 && int.Parse(this.YearCount) > 0)
+       {
+            if (!string.IsNullOrEmpty(this.YearCount))
             {
-                this.YearCountNotValid = false;
-                await this.SetViewModelData();
-                this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount.ToString());
+                var tryIntParse = int.TryParse(this.YearCount, out var year);
+
+                if (tryIntParse && year < 21 && year > 0)
+                {
+                    this.YearCountNotValid = false;
+                    await this.SetViewModelData();
+                    this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount.ToString());
+                }
+                else
+                {
+                    this.YearCountNotValid = true;
+                }
             }
             else
             {
