@@ -1208,7 +1208,7 @@ namespace BookCollector.Resources.Localization {
         ///   Looks up a localized string similar to • Minor code enhancements
         ///• UI bug fixes, enhancements, and clarity to verbiage
         ///• Added Book Cover filter to Wishlist
-        ///• Add text editor to Pages Read Popup
+        ///• Added text editor to Pages Read Popup
         ///• Other bug fixes.
         /// </summary>
         internal static string ChangeLogEntry {
