@@ -2,12 +2,18 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Enums;
-
 namespace BookCollector.Views.Controls;
 
+using BookCollector.Data.Enums;
+
+/// <summary>
+/// Favorite class.
+/// </summary>
 public partial class Favorite : ContentView
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether the value is on or not.
+    /// </summary>
     public static readonly BindableProperty CurrentValueProperty =
              BindableProperty.Create(
                  nameof(CurrentValue),
@@ -17,6 +23,9 @@ public partial class Favorite : ContentView
 
     private readonly Favorite view;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Favorite"/> class.
+    /// </summary>
     public Favorite()
     {
         this.view = this;
@@ -24,6 +33,9 @@ public partial class Favorite : ContentView
         this.SetHeart();
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the value is on or not.
+    /// </summary>
     public bool CurrentValue
     {
         get => (bool)this.GetValue(CurrentValueProperty);
@@ -38,7 +50,7 @@ public partial class Favorite : ContentView
         }
     }
 
-    private static ImageSource CreateHeartLabel(HeartState state)
+    private static FontImageSource CreateHeartLabel(HeartState state)
     {
         return state switch
         {

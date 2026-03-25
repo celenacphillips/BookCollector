@@ -52,7 +52,7 @@
 
                 <VerticalStackLayout IsVisible="{Binding IsVisible}"
                                      x:Name="rootLayout">
-                    <Label Text="{Binding TotalCollectionsstring}"
+                    <Label Text="{Binding TotalCollectionsString}"
                            HorizontalOptions="End"
                            Margin="0,0,20,0"
                            TextColor="{DynamicResource Primary}"

@@ -2,13 +2,19 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Groupings;
+
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Groupings;
 
-namespace BookCollector.Views.Groupings;
-
+/// <summary>
+/// SeriesView class.
+/// </summary>
 public partial class SeriesView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SeriesView"/> class.
+    /// </summary>
     public SeriesView()
     {
         this.ViewModel = new SeriesViewModel(this);
@@ -19,7 +25,27 @@ public partial class SeriesView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private SeriesViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -42,24 +68,5 @@ public partial class SeriesView : ContentPage
                 this.seriesCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private SeriesViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        this.Dispatcher.Dispatch(() =>
-        {
-            var items = this.ToolbarItems.ToList();
-            this.ToolbarItems.Clear();
-            foreach (var item in items)
-            {
-                this.ToolbarItems.Add(item);
-            }
-        });
-
-        await this.ViewModel.SetViewModelData();
     }
 }

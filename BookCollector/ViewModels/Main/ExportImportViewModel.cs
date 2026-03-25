@@ -2,115 +2,248 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.CustomPermissions;
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Data.Spreadsheet;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.Author;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Book;
-using BookCollector.ViewModels.Collection;
-using BookCollector.ViewModels.Genre;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Location;
-using BookCollector.ViewModels.Series;
-using BookCollector.ViewModels.WishListBook;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Color = Microsoft.Maui.Graphics.Color;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-
 namespace BookCollector.ViewModels.Main
 {
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Data.Spreadsheet;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.Author;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Book;
+    using BookCollector.ViewModels.Collection;
+    using BookCollector.ViewModels.Genre;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Location;
+    using BookCollector.ViewModels.Series;
+    using BookCollector.ViewModels.WishListBook;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Maui.Storage;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+    using Color = Microsoft.Maui.Graphics.Color;
+
+    /// <summary>
+    /// ExportImportViewModel class.
+    /// </summary>
     public partial class ExportImportViewModel : BaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the start output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? startOutput;
 
+        /// <summary>
+        /// Gets or sets the books output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? booksOutput;
 
+        /// <summary>
+        /// Gets or sets the wishlist output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? wishListOutput;
 
+        /// <summary>
+        /// Gets or sets the collections output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? collectionsOutput;
 
+        /// <summary>
+        /// Gets or sets the genres output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? genresOutput;
 
+        /// <summary>
+        /// Gets or sets the series output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? seriesOutput;
 
+        /// <summary>
+        /// Gets or sets the authors output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? authorsOutput;
 
+        /// <summary>
+        /// Gets or sets the locations output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? locationsOutput;
 
+        /// <summary>
+        /// Gets or sets the chapters output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? chaptersOutput;
 
+        /// <summary>
+        /// Gets or sets the book authors output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? bookAuthorsOutput;
 
+        /// <summary>
+        /// Gets or sets the final output string.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? finalOutput;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether books is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool booksChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether wishlist is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool wishListChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collections is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool collectionsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether genres is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool genresChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether series is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool seriesChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether authors is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether locations is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool locationsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether chapters is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool chaptersChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether book authors is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookAuthorsChecked;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether images is checked or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool imagesChecked;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether checkboxes are visible or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool checkboxesVisible;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether output is visible or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool outputVisible;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether export is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool exportEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether import is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool importEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether refresh is enabled or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool refreshEnabled;
 
         private readonly Color? busyColor = Application.Current?.UserAppTheme == AppTheme.Dark ?
@@ -121,20 +254,37 @@ namespace BookCollector.ViewModels.Main
 
         private string imageLocation = string.Empty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportImportViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public ExportImportViewModel(ContentPage view)
         {
             this.View = view;
             this.InfoText = AppStringResources.ExportImportView_InfoText;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to manually upload book covers or not.
+        /// </summary>
         public static bool ManuallyUploadLibraryCovers { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to manually upload book covers or not.
+        /// </summary>
         public static bool ManuallyUploadWishlistCovers { get; set; }
 
-        public async Task SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
         {
             if (RefreshView)
             {
@@ -157,23 +307,27 @@ namespace BookCollector.ViewModels.Main
                 this.ImagesChecked = false;
 
                 this.SetIsBusyFalse();
-                RefreshView = false;
+                this.SetRefreshView(false);
             }
         }
 
-        [RelayCommand]
-        public async Task Refresh()
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
         {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
+            RefreshView = value;
         }
 
+        /// <summary>
+        /// Export data from the device and store it in a spreadsheet workbook.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Export()
         {
-            var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
+            var action = await this.DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureExport_Question, null, null);
 
             if (action)
             {
@@ -192,7 +346,7 @@ namespace BookCollector.ViewModels.Main
                         }
                         else
                         {
-                            await CanceledAction();
+                            await this.CanceledAction();
 
                             this.SetIsBusyFalse();
                             this.ImportEnabled = true;
@@ -210,7 +364,7 @@ namespace BookCollector.ViewModels.Main
                             Directory.CreateDirectory(this.imageLocation);
                         }
 
-                        await DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
+                        await this.DisplayMessage(AppStringResources.BookCoverDownloads, AppStringResources.BookCoversDownloadMessage);
                     }
 
                     await Task.Delay(1);
@@ -225,7 +379,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = true;
                     this.CheckboxesVisible = false;
 
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -246,21 +400,21 @@ namespace BookCollector.ViewModels.Main
 
                     this.FinalOutput = AppStringResources.ExportResultsFinish;
 
-                    await DisplayMessage(AppStringResources.ExportComplete, null);
+                    await this.DisplayMessage(AppStringResources.ExportComplete, null);
 
                     this.SetIsBusyFalse();
                     this.RefreshEnabled = true;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    await CanceledAction();
+                    await this.CanceledAction();
                     Preferences.Set("ExportLocation", AppStringResources.DefaultExportLocation);
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
+                    await this.DisplayMessage(AppStringResources.PleaseSelectAnotherFolder, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ImportEnabled = true;
@@ -271,15 +425,8 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await CanceledAction();
-#if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
+                    await this.ViewModelCatch(ex);
+                    this.SetRefreshView(false);
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;
@@ -288,23 +435,28 @@ namespace BookCollector.ViewModels.Main
             }
             else
             {
-                await CanceledAction();
+                await this.CanceledAction();
             }
         }
 
+        /// <summary>
+        /// Import data into the device from a spreadsheet workbook.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Import()
         {
-            var action = await DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImport_Question, null, null);
+            var action = await this.DisplayMessage(AppStringResources.AreYouSure_Question, AppStringResources.AreYouSureImport_Question, null, null);
 
             if (action)
             {
                 try
                 {
+                    string[] acceptableFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
                     var customFileType = new FilePickerFileType(
                     new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
-                        { DevicePlatform.Android, new[] { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }, // MIME type
+                        { DevicePlatform.Android, acceptableFileTypes }, // MIME type
                     });
 
                     PickOptions pickerOptions = new ()
@@ -320,25 +472,23 @@ namespace BookCollector.ViewModels.Main
                         {
                             ManuallyUploadLibraryCovers = true;
                             ManuallyUploadWishlistCovers = true;
+
                             // To fix later.
                             // Create a popup for each book that allows the user to select the image. - Done
                             // Display the image title and the book cover for the user to confirm or reselect. - To Do
 #if ANDROID
-                            //var version = (int)Build.VERSION.SdkInt;
-
-                            //if (version >= 33)
-                            //{
+                            // var version = (int)Build.VERSION.SdkInt;
+                            // if (version >= 33)
+                            // {
                             //    await DisplayMessage(AppStringResources.PleaseSelectTheImages, null);
-
                             //    var picker = ServiceHelper.GetService<IAndroidImagePicker>();
                             //    var uris = await picker.PickImagesAsync();
-
                             //    foreach (var uri in uris)
                             //    {
                             //        var info = this.GetImageInfo(uri);
                             //        this.selectedFiles.Add(info);
                             //    }
-                            //}
+                            // }
 #endif
                         }
 
@@ -376,11 +526,11 @@ namespace BookCollector.ViewModels.Main
 
                         this.FinalOutput = AppStringResources.ImportResultsFinish;
 
-                        await DisplayMessage(AppStringResources.ImportComplete, null);
+                        await this.DisplayMessage(AppStringResources.ImportComplete, null);
 
                         if (errors > 0)
                         {
-                            await DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
+                            await this.DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
                         }
 
                         this.SetIsBusyFalse();
@@ -389,15 +539,8 @@ namespace BookCollector.ViewModels.Main
                 }
                 catch (Exception ex)
                 {
-                    await CanceledAction();
-#if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
+                    await this.ViewModelCatch(ex);
+                    this.SetRefreshView(false);
                     this.ImportEnabled = true;
                     this.ExportEnabled = true;
                     this.RefreshEnabled = true;
@@ -406,7 +549,7 @@ namespace BookCollector.ViewModels.Main
             }
             else
             {
-                await CanceledAction();
+                await this.CanceledAction();
             }
         }
 
@@ -485,7 +628,7 @@ namespace BookCollector.ViewModels.Main
         {
             if (booksChecked && authorsChecked && bookAuthorsChecked)
             {
-                var authors = await Database.GetAllAuthorsAsync();
+                await Database.GetAllAuthorsAsync();
             }
 
             ReadingViewModel.RefreshView = true;
@@ -499,11 +642,167 @@ namespace BookCollector.ViewModels.Main
             LocationsViewModel.RefreshView = true;
         }
 
+        private static List<string?> SetBookColumns()
+        {
+            return
+            [
+                $"{AppStringResources.BookGuid_Blank}",
+                $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookSeriesGuid.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookNumber.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPublisher.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPublishYear.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
+                $"{AppStringResources.PagesRead.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
+                $"{AppStringResources.ListenHours.Replace(" ", string.Empty)}",
+                $"{AppStringResources.ListenMinutes.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalHours.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalMinutes.Replace(" ", string.Empty)}",
+                $"{AppStringResources.ReadingStartDate.Replace(" ", string.Empty)}",
+                $"{AppStringResources.ReadingEndDate.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookLocationGuid.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookComments.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookCollectionGuid.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookGenreGuid.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookURL.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookRating.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookLoanedTo.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookLoanedOutOn.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookCoverFileName.Replace(" ", string.Empty)}",
+            ];
+        }
+
+        private static List<string?> SetWishlistBookColumns()
+        {
+            return
+            [
+                $"{AppStringResources.BookGuid_Blank}",
+                $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookAuthors.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookSeries.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookNumber.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPublisher.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPublishYear.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalHours.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalMinutes.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookComments.Replace(" ", string.Empty)}",
+                $"{AppStringResources.WhereToBuy.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.BookURL.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookCoverFileName.Replace(" ", string.Empty)}",
+            ];
+        }
+
+        private static List<string?> SetChapterColumns()
+        {
+            return
+            [
+                $"{AppStringResources.ChapterGuid}",
+                $"{AppStringResources.ChapterName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.PageRange.Replace(" ", string.Empty)}",
+                $"{AppStringResources.ChapterOrder.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
+            ];
+        }
+
+        private static List<string?> SetCollectionColumns()
+        {
+            return
+            [
+                $"{AppStringResources.CollectionGuid}",
+                $"{AppStringResources.CollectionName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+            ];
+        }
+
+        private static List<string?> SetGenreColumns()
+        {
+            return
+            [
+                $"{AppStringResources.GenreGuid}",
+                $"{AppStringResources.GenreName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+            ];
+        }
+
+        private static List<string?> SetSeriesColumns()
+        {
+            return
+            [
+                $"{AppStringResources.SeriesGuid}",
+                $"{AppStringResources.SeriesName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.TotalBooksInSeries.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+            ];
+        }
+
+        private static List<string?> SetBookAuthorColumns()
+        {
+            return
+            [
+                $"{AppStringResources.BookAuthorGuid}",
+                $"{AppStringResources.AuthorGuid.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
+            ];
+        }
+
+        private static List<string?> SetAuthorColumns()
+        {
+            return
+            [
+                $"{AppStringResources.AuthorGuid_Blank}",
+                $"{AppStringResources.FirstName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.LastName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+            ];
+        }
+
+        private static List<string?> SetLocationColumns()
+        {
+            return
+            [
+                $"{AppStringResources.LocationGuid}",
+                $"{AppStringResources.LocationName.Replace(" ", string.Empty)}",
+                $"{AppStringResources.Hide_Question}",
+            ];
+        }
+
+        private static string BookCoverFileName(string bookTitle, string format, string extension)
+        {
+            string output = bookTitle.Replace(" ", "_")
+                                     .Replace("<", "_")
+                                     .Replace(">", "_")
+                                     .Replace(":", "_")
+                                     .Replace("\"", "_")
+                                     .Replace("|", "_")
+                                     .Replace("\\", "_")
+                                     .Replace("?", "_")
+                                     .Replace("*", "_")
+                                     .Replace("/", "_");
+
+            return $"{output}-{format}{extension}";
+        }
+
         private async Task ManuallySetBookCover(BookModel book, bool imagesChecked)
         {
             if (imagesChecked && ManuallyUploadLibraryCovers)
             {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle!));
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
                 {
@@ -512,7 +811,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -523,7 +822,7 @@ namespace BookCollector.ViewModels.Main
                             var firstPhoto = photos.First();
                             var bookCoverImageSource = ImageSource.FromFile(firstPhoto.FullPath);
 
-                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle));
+                            var result = await this.View.ShowPopupAsync<bool>(new BookCoverMatchingPopup(bookCoverImageSource, book.BookTitle!));
 
                             if (!result.Result)
                             {
@@ -559,7 +858,7 @@ namespace BookCollector.ViewModels.Main
         {
             if (imagesChecked && ManuallyUploadWishlistCovers)
             {
-                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle));
+                var answer = await this.View.ShowPopupAsync<string>(new MissingBookCoverPopup(book.BookTitle!));
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.SkipAll))
                 {
@@ -568,7 +867,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -693,162 +992,6 @@ namespace BookCollector.ViewModels.Main
             this.BookAuthorsOutput = AppStringResources.Table_Waiting.Replace("Table", "BookAuthors");
         }
 
-        private List<string?> SetBookColumns()
-        {
-            return
-            [
-                $"{AppStringResources.BookGuid_Blank}",
-                $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookSeriesGuid.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookNumber.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPublisher.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPublishYear.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
-                $"{AppStringResources.PagesRead.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
-                $"{AppStringResources.ListenHours.Replace(" ", string.Empty)}",
-                $"{AppStringResources.ListenMinutes.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalHours.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalMinutes.Replace(" ", string.Empty)}",
-                $"{AppStringResources.ReadingStartDate.Replace(" ", string.Empty)}",
-                $"{AppStringResources.ReadingEndDate.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookLocationGuid.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookComments.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookCollectionGuid.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookGenreGuid.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookURL.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookRating.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookLoanedTo.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookLoanedOutOn.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-                $"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookCoverFileName.Replace(" ", string.Empty)}",
-            ];
-        }
-
-        private List<string?> SetWishlistBookColumns()
-        {
-            return
-            [
-                $"{AppStringResources.BookGuid_Blank}",
-                $"{AppStringResources.BookTitle.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookAuthors.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookSeries.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookNumber.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPublisher.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPublishYear.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalHours.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalMinutes.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookComments.Replace(" ", string.Empty)}",
-                $"{AppStringResources.WhereToBuy.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-                $"{AppStringResources.BookURL.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookCoverFileName.Replace(" ", string.Empty)}",
-            ];
-        }
-
-        private List<string?> SetChapterColumns()
-        {
-            return
-            [
-                $"{AppStringResources.ChapterGuid}",
-                $"{AppStringResources.ChapterName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.PageRange.Replace(" ", string.Empty)}",
-                $"{AppStringResources.ChapterOrder.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
-            ];
-        }
-
-        private List<string?> SetCollectionColumns()
-        {
-            return
-            [
-                $"{AppStringResources.CollectionGuid}",
-                $"{AppStringResources.CollectionName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-            ];
-        }
-
-        private List<string?> SetGenreColumns()
-        {
-            return
-            [
-                $"{AppStringResources.GenreGuid}",
-                $"{AppStringResources.GenreName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-            ];
-        }
-
-        private List<string?> SetSeriesColumns()
-        {
-            return
-            [
-                $"{AppStringResources.SeriesGuid}",
-                $"{AppStringResources.SeriesName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.TotalBooksInSeries.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-            ];
-        }
-
-        private List<string?> SetBookAuthorColumns()
-        {
-            return
-            [
-                $"{AppStringResources.BookAuthorGuid}",
-                $"{AppStringResources.AuthorGuid.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookGuid.Replace(" ", string.Empty)}",
-            ];
-        }
-
-        private List<string?> SetAuthorColumns()
-        {
-            return
-            [
-                $"{AppStringResources.AuthorGuid_Blank}",
-                $"{AppStringResources.FirstName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.LastName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-            ];
-        }
-
-        private List<string?> SetLocationColumns()
-        {
-            return
-            [
-                $"{AppStringResources.LocationGuid}",
-                $"{AppStringResources.LocationName.Replace(" ", string.Empty)}",
-                $"{AppStringResources.Hide_Question}",
-            ];
-        }
-
-        private string BookCoverFileName(string bookTitle, string format, string extension)
-        {
-            string output = bookTitle.Replace(" ", "_")
-                                     .Replace("<", "_")
-                                     .Replace(">", "_")
-                                     .Replace(":", "_")
-                                     .Replace("\"", "_")
-                                     .Replace("|", "_")
-                                     .Replace("\\", "_")
-                                     .Replace("?", "_")
-                                     .Replace("*", "_")
-                                     .Replace("/", "_");
-
-            return $"{output}-{format}{extension}";
-        }
-
         /*********************** Table Methods ***********************/
 
         /*********************** Book Methods ***********************/
@@ -873,7 +1016,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetBookColumns(),
+                    SetBookColumns(),
                 };
 
                 if (bookList != null)
@@ -960,7 +1103,7 @@ namespace BookCollector.ViewModels.Main
                                 {
                                     var byteArray = DownloadImage(book.BookCoverUrl);
                                     var fi = new FileInfo(book.BookCoverUrl);
-                                    var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
+                                    var fileName = BookCoverFileName(book.BookTitle!, book.BookFormat!, fi.Extension);
                                     var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                     File.WriteAllBytes(exportLocation, byteArray);
                                 }
@@ -1000,7 +1143,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetBookColumns();
+                var columnNames = SetBookColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1008,7 +1151,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1020,7 +1163,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1032,7 +1175,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]).Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 BookSeriesGuid = ParseGuid(values[2]),
                                 BookNumberInSeries = values[3],
@@ -1093,12 +1236,12 @@ namespace BookCollector.ViewModels.Main
 
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileName))
                             {
-                                await ManuallySetBookCover(book, this.ImagesChecked);
+                                await this.ManuallySetBookCover(book, this.ImagesChecked);
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 
                             await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                            BookEditViewModel.AddToStaticList(book);
+                            await BookEditViewModel.AddToStaticList(book);
 
                             importCount++;
                             this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1125,6 +1268,7 @@ namespace BookCollector.ViewModels.Main
 
             return 0;
         }
+
         /*********************** Book Methods ***********************/
 
         /*********************** WishListBook Methods ***********************/
@@ -1150,7 +1294,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetWishlistBookColumns(),
+                    SetWishlistBookColumns(),
                 };
 
                 if (bookList != null)
@@ -1239,7 +1383,7 @@ namespace BookCollector.ViewModels.Main
                                 var byteArray = DownloadImage(book.BookCoverUrl);
 
                                 var fi = new FileInfo(book.BookCoverUrl);
-                                var fileName = this.BookCoverFileName(book.BookTitle, book.BookFormat, fi.Extension);
+                                var fileName = BookCoverFileName(book.BookTitle!, book.BookFormat!, fi.Extension);
                                 var exportLocation = $"{bookCoverFileLocation}/{fileName}";
                                 File.WriteAllBytes(exportLocation, byteArray);
                             }
@@ -1275,7 +1419,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetWishlistBookColumns();
+                var columnNames = SetWishlistBookColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1283,7 +1427,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1295,7 +1439,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1307,7 +1451,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new WishlistBookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]).Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 AuthorListString = values[2],
                                 BookSeries = values[3],
@@ -1352,12 +1496,12 @@ namespace BookCollector.ViewModels.Main
 
                             if (this.ImagesChecked && !string.IsNullOrEmpty(book.BookCoverFileName))
                             {
-                                await ManuallySetBookCover(book, this.ImagesChecked);
+                                await this.ManuallySetBookCover(book, this.ImagesChecked);
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 
                             await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
-                            WishListBookEditViewModel.AddToStaticList(book);
+                            await WishListBookEditViewModel.AddToStaticList(book);
 
                             importCount++;
                             this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1409,7 +1553,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetChapterColumns(),
+                    SetChapterColumns(),
                 };
 
                 if (chapterList != null)
@@ -1458,7 +1602,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetChapterColumns();
+                var columnNames = SetChapterColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1466,7 +1610,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1478,7 +1622,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1494,7 +1638,7 @@ namespace BookCollector.ViewModels.Main
                                 ChapterName = values[1],
                                 PageRange = values[2],
                                 ChapterOrder = ParseInt(values[3]),
-                                BookGuid = ParseGuid(values[4]).Value,
+                                BookGuid = ParseGuid(values[4]) !.Value,
                             };
 
                             await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
@@ -1549,7 +1693,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetCollectionColumns(),
+                    SetCollectionColumns(),
                 };
 
                 if (collectionList != null)
@@ -1596,7 +1740,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetCollectionColumns();
+                var columnNames = SetCollectionColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1604,7 +1748,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1616,7 +1760,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1634,7 +1778,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
-                            CollectionEditViewModel.AddToStaticList(collection);
+                            await CollectionEditViewModel.AddToStaticList(collection);
 
                             importCount++;
                             this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1686,7 +1830,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetGenreColumns(),
+                    SetGenreColumns(),
                 };
 
                 if (genreList != null)
@@ -1733,7 +1877,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetGenreColumns();
+                var columnNames = SetGenreColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1741,7 +1885,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1753,7 +1897,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1771,7 +1915,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
-                            GenreEditViewModel.AddToStaticList(genre);
+                            await GenreEditViewModel.AddToStaticList(genre);
 
                             importCount++;
                             this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1823,7 +1967,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetSeriesColumns(),
+                    SetSeriesColumns(),
                 };
 
                 if (seriesList != null)
@@ -1871,7 +2015,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetSeriesColumns();
+                var columnNames = SetSeriesColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -1879,7 +2023,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -1891,7 +2035,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -1910,7 +2054,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
-                            SeriesEditViewModel.AddToStaticList(series);
+                            await SeriesEditViewModel.AddToStaticList(series);
 
                             importCount++;
                             this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -1962,7 +2106,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetBookAuthorColumns(),
+                    SetBookAuthorColumns(),
                 };
 
                 if (bookAuthorList != null)
@@ -2009,7 +2153,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetBookAuthorColumns();
+                var columnNames = SetBookAuthorColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2017,7 +2161,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -2029,7 +2173,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2042,8 +2186,8 @@ namespace BookCollector.ViewModels.Main
                             var bookAuthor = new BookAuthorModel()
                             {
                                 BookAuthorGuid = ParseGuid(values[0]),
-                                AuthorGuid = ParseGuid(values[1]).Value,
-                                BookGuid = ParseGuid(values[2]).Value,
+                                AuthorGuid = ParseGuid(values[1]) !.Value,
+                                BookGuid = ParseGuid(values[2]) !.Value,
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);
@@ -2098,7 +2242,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetAuthorColumns(),
+                    SetAuthorColumns(),
                 };
 
                 if (authorList != null)
@@ -2146,7 +2290,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetAuthorColumns();
+                var columnNames = SetAuthorColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2154,7 +2298,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -2166,7 +2310,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2185,7 +2329,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
-                            AuthorEditViewModel.AddToStaticList(author);
+                            await AuthorEditViewModel.AddToStaticList(author);
 
                             importCount++;
                             this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -2237,7 +2381,7 @@ namespace BookCollector.ViewModels.Main
 
                 var stringItems = new List<List<string?>>
                 {
-                    this.SetLocationColumns(),
+                    SetLocationColumns(),
                 };
 
                 if (locationList != null)
@@ -2284,7 +2428,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = this.SetLocationColumns();
+                var columnNames = SetLocationColumns();
 
                 (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
 
@@ -2292,7 +2436,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (valuesList == null || valuesList.Count == 0)
                 {
-                    this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
+                    this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
 
@@ -2304,7 +2448,7 @@ namespace BookCollector.ViewModels.Main
                     }
                 }
 
-                this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList.Count}");
+                this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
@@ -2322,7 +2466,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
-                            LocationEditViewModel.AddToStaticList(location);
+                            await LocationEditViewModel.AddToStaticList(location);
 
                             importCount++;
                             this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");

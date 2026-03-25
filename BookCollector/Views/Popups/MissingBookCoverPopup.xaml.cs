@@ -2,13 +2,20 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Popups;
+
 using BookCollector.Resources.Localization;
 using CommunityToolkit.Maui.Views;
 
-namespace BookCollector.Views.Popups;
-
+/// <summary>
+/// MissingBookCoverPopup class.
+/// </summary>
 public partial class MissingBookCoverPopup : Popup<string>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MissingBookCoverPopup"/> class.
+    /// </summary>
+    /// <param name="bookTitle">Book title.</param>
     public MissingBookCoverPopup(string bookTitle)
     {
         this.MissingMessage = AppStringResources.MissingBookCover.Replace("Book", bookTitle);
@@ -18,6 +25,9 @@ public partial class MissingBookCoverPopup : Popup<string>
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Gets or sets the missing message.
+    /// </summary>
     public string MissingMessage { get; set; }
 
     private async void OnSkipAllButton_Clicked(object sender, EventArgs e)

@@ -2,18 +2,18 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:local="clr-namespace:BookCollector.Views.Support"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:dataModels="clr-namespace:BookCollector.Data"
              x:Class="BookCollector.Views.Support.ChangeLogView"
-             Title="{x:Static localization:AppStringResources.ChangeLog}">
+             Title="{x:Static localization:AppStringResources.ChangeLog}"
+             x:DataType="local:ChangeLogView">
 
     <CollectionView ItemsSource="{Binding Versions}"
                     Margin="20">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="dataModels:ChangeLogModel">
-                <toolkit:Expander IsExpanded="False"
-                                  Command="{Binding VersionExpanderChangedCommand}"
-                                  CommandParameter="{Binding Source={x:Reference Expander}, Path=IsExpanded}"
+                <toolkit:Expander IsExpanded="True"
                                   Margin="0"
                                   x:Name="Expander">
                     <toolkit:Expander.Header>
@@ -27,30 +27,6 @@
                             <Label Text="{Binding Version}"
                                    Style="{DynamicResource expanderHeaderLabel}"
                                    Grid.Row="0" Grid.Column="0"/>
-
-                            <Image IsVisible="{Binding VersionOpen}"
-                                   HorizontalOptions="End"
-                                   Margin="0,7,10,2"
-                                   Grid.Row="0" Grid.Column="1">
-                                <Image.Source>
-                                    <FontImageSource FontFamily="MaterialDesignIcons"
-                                                     Glyph="&#xF0140;"
-                                                     Size="24"
-                                                     Color="{DynamicResource TextDark}" />
-                                </Image.Source>
-                            </Image>
-
-                            <Image IsVisible="{Binding VersionNotOpen}"
-                                   HorizontalOptions="End"
-                                   Margin="0,7,10,2"
-                                   Grid.Row="0" Grid.Column="1">
-                                <Image.Source>
-                                    <FontImageSource FontFamily="MaterialDesignIcons"
-                                                 Glyph="&#xF0143;"
-                                                 Size="24"
-                                                 Color="{DynamicResource TextDark}" />
-                                </Image.Source>
-                            </Image>
                         </Grid>
                     </toolkit:Expander.Header>
 

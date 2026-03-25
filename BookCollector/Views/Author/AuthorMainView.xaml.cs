@@ -2,14 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Author;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.Author;
 using BookCollector.ViewModels.BaseViewModels;
 
-namespace BookCollector.Views.Author;
-
+/// <summary>
+/// AuthorMainView class.
+/// </summary>
 public partial class AuthorMainView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthorMainView"/> class.
+    /// </summary>
+    /// <param name="author">Author to view.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
     public AuthorMainView(AuthorModel author, string viewTitle)
     {
         this.ViewModel = new AuthorMainViewModel(author, this)
@@ -23,7 +31,27 @@ public partial class AuthorMainView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private AuthorMainViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -46,24 +74,5 @@ public partial class AuthorMainView : ContentPage
                 this.bookCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private AuthorMainViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        this.Dispatcher.Dispatch(() =>
-        {
-            var items = this.ToolbarItems.ToList();
-            this.ToolbarItems.Clear();
-            foreach (var item in items)
-            {
-                this.ToolbarItems.Add(item);
-            }
-        });
-
-        await this.ViewModel.SetViewModelData();
     }
 }

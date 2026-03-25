@@ -12,9 +12,10 @@
     xmlns:settingsViews="clr-namespace:BookCollector.Views.Settings"
     xmlns:supportViews="clr-namespace:BookCollector.Views.Support"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="local:AppShell"
     Shell.FlyoutBehavior="Flyout">
 
-    <Shell.ItemTemplate>
+    <!--<Shell.ItemTemplate>
         <DataTemplate>
             <Grid>
                 <VisualStateManager.VisualStateGroups>
@@ -55,16 +56,16 @@
 
             </Grid>
         </DataTemplate>
-    </Shell.ItemTemplate>
+    </Shell.ItemTemplate>-->
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Library}">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialDesignIcons"
                                  Glyph="&#xF125F;"
-                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"/>
             </Tab.Icon>
-            
+
             <ShellContent Title="{x:Static localization:AppStringResources.Reading}"
                           ContentTemplate="{DataTemplate libraryViews:ReadingView}"/>
 
@@ -189,8 +190,7 @@
                           ContentTemplate="{DataTemplate supportViews:SupportView}"/>
             
             <ShellContent Title="{x:Static localization:AppStringResources.ChangeLog}"
-                          ContentTemplate="{DataTemplate supportViews:ChangeLogView}"
-                          IsVisible="False"/>
+                          ContentTemplate="{DataTemplate supportViews:ChangeLogView}"/>
 
             <ShellContent Title="{x:Static localization:AppStringResources.DataStorage}"
                           ContentTemplate="{DataTemplate supportViews:DataStorageView}"/>

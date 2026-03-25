@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:local="clr-namespace:BookCollector.Views.Settings"
              x:Class="BookCollector.Views.Settings.MainSettingsView"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="{x:Static localization:AppStringResources.Settings}"
-             x:Name="this">
+             x:Name="this"
+             x:DataType="local:MainSettingsView">
 
     <ScrollView BindingContext="{x:Reference this}">
         <VerticalStackLayout>

@@ -2,35 +2,38 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Support;
+
 using BookCollector.Data;
 using BookCollector.Resources.Localization;
 
-namespace BookCollector.Views.Support;
-
+/// <summary>
+/// ChangeLogView class.
+/// </summary>
 public partial class ChangeLogView : ContentPage
 {
-    public List<ChangeLogModel> Versions { get; set; }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChangeLogView"/> class.
+    /// </summary>
     public ChangeLogView()
     {
-        this.Versions = new List<ChangeLogModel>();
+        this.Versions = [];
         this.CreateVersionChangeLog();
         this.InitializeComponent();
         this.BindingContext = this;
     }
 
+    /// <summary>
+    /// Gets or sets the list of versions.
+    /// </summary>
+    public List<ChangeLogModel> Versions { get; set; }
+
     private void CreateVersionChangeLog()
     {
         this.Versions.Add(new ChangeLogModel()
         {
-            Version = "v 1.0.2",
-            Changes = AppStringResources.v102_ChangeLogEntry,
-        });
-
-        this.Versions.Add(new ChangeLogModel()
-        {
-            Version = "v 1.0.1",
-            Changes = AppStringResources.v101_ChangeLogEntry,
+            Version = AppInfo.VersionString,
+            Changes = AppStringResources.ChangeLogEntry,
         });
     }
 }

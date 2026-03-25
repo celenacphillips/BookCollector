@@ -2,37 +2,70 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Location;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Location
 {
-    public partial class LocationEditViewModel : LocationBaseViewModel
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Location;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// LocationEditViewModel class.
+    /// </summary>
+    public partial class LocationEditViewModel : LocationsViewModel
     {
+        /// <summary>
+        /// Gets or sets the location to edit.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public LocationModel editedLocation;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the location name is valid or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool locationNameNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocationEditViewModel"/> class.
+        /// </summary>
+        /// <param name="location">Location to edit.</param>
+        /// <param name="view">View related to view model.</param>
         public LocationEditViewModel(LocationModel location, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
             this.EditedLocation = (LocationModel)location.Clone();
         }
 
-        public bool InsertMainViewBefore { get; set; }
+        /// <summary>
+        /// Add location to the static list in the list view model.
+        /// </summary>
+        /// <param name="location">Location to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(LocationModel location)
+        {
+            if (LocationsViewModel.fullLocationList != null)
+            {
+                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
+            }
+        }
 
-        public async Task SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -48,6 +81,10 @@ namespace BookCollector.ViewModels.Location
             }
         }
 
+        /// <summary>
+        /// Save location to the database and returns to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveLocation()
         {
@@ -57,7 +94,7 @@ namespace BookCollector.ViewModels.Location
 
                 if (this.LocationNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.LocationNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.LocationNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -70,7 +107,7 @@ namespace BookCollector.ViewModels.Location
 #endif
 
                     this.EditedLocation = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(this.EditedLocation));
-                    AddToStaticList(this.EditedLocation);
+                    await AddToStaticList(this.EditedLocation);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -83,53 +120,24 @@ namespace BookCollector.ViewModels.Location
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                this.SetRefreshView(false);
             }
         }
 
+        /// <summary>
+        /// Check if the location name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
-        }
-
-        [RelayCommand]
-        public void ValidateLocationName()
+        public async Task ValidateLocationName()
         {
             this.ValidateEntry();
-        }
-
-        private void ValidateEntry()
-        {
-            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
-        }
-
-        public static async Task AddToStaticList(LocationModel location)
-        {
-            if (LocationsViewModel.fullLocationList != null)
-            {
-                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList2);
-            }
         }
 
         private static async Task<bool> AddLocationToStaticList(LocationModel location, ObservableCollection<LocationModel> locationList, ObservableCollection<LocationModel>? filteredLocationList)
         {
             var refresh = false;
-
-            await Task.WhenAll(new Task[]
-            {
-                location.SetTotalBooks(true),
-                location.SetTotalCostOfBooks(true),
-            });
 
             try
             {
@@ -171,6 +179,11 @@ namespace BookCollector.ViewModels.Location
             }
 
             return refresh;
+        }
+
+        private void ValidateEntry()
+        {
+            this.LocationNameNotValid = string.IsNullOrEmpty(this.EditedLocation.LocationName);
         }
     }
 }

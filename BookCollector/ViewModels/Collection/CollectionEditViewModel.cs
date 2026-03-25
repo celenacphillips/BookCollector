@@ -2,38 +2,70 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using BookCollector.Views.Collection;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Collection
 {
-    public partial class CollectionEditViewModel : CollectionBaseViewModel
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Collection;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// CollectionEditViewModel class.
+    /// </summary>
+    public partial class CollectionEditViewModel : CollectionsViewModel
     {
+        /// <summary>
+        /// Gets or sets the collection to edit.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public CollectionModel editedCollection;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the collection name is valid or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool collectionNameNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectionEditViewModel"/> class.
+        /// </summary>
+        /// <param name="collection">Collection to edit.</param>
+        /// <param name="view">View related to view model.</param>
         public CollectionEditViewModel(CollectionModel collection, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
             this.EditedCollection = (CollectionModel)collection.Clone();
         }
 
-        public bool InsertMainViewBefore { get; set; }
+        /// <summary>
+        /// Add collection to the static list in the list view model.
+        /// </summary>
+        /// <param name="collection">Collection to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(CollectionModel collection)
+        {
+            if (CollectionsViewModel.fullCollectionList != null)
+            {
+                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList);
+            }
+        }
 
-        public async Task SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -49,6 +81,10 @@ namespace BookCollector.ViewModels.Collection
             }
         }
 
+        /// <summary>
+        /// Save collection to the database and returns to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveCollection()
         {
@@ -58,7 +94,7 @@ namespace BookCollector.ViewModels.Collection
 
                 if (this.CollectionNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.CollectionNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.CollectionNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -71,66 +107,37 @@ namespace BookCollector.ViewModels.Collection
 #endif
 
                     this.EditedCollection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(this.EditedCollection));
-                    AddToStaticList(this.EditedCollection);
+                    await AddToStaticList(this.EditedCollection);
 
                     if (this.InsertMainViewBefore)
                     {
-                        CollectionMainView view = new CollectionMainView(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                        CollectionMainView view = new (this.EditedCollection, $"{this.EditedCollection.CollectionName}");
                         Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
 
                     await Shell.Current.Navigation.PopAsync();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-#if DEBUG
-                await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                this.SetRefreshView(false);
             }
         }
 
+        /// <summary>
+        /// Check if the collection name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
-        }
-
-        [RelayCommand]
-        public void ValidateCollectionName()
+        public async Task ValidateCollectionName()
         {
             this.ValidateEntry();
-        }
-
-        private void ValidateEntry()
-        {
-            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
-        }
-
-        public static async Task AddToStaticList(CollectionModel collection)
-        {
-            if (CollectionsViewModel.fullCollectionList != null)
-            {
-                CollectionsViewModel.RefreshView = await AddCollectionToStaticList(collection, CollectionsViewModel.fullCollectionList, CollectionsViewModel.filteredCollectionList2);
-            }
         }
 
         private static async Task<bool> AddCollectionToStaticList(CollectionModel collection, ObservableCollection<CollectionModel> collectionList, ObservableCollection<CollectionModel>? filteredCollectionList)
         {
             var refresh = false;
-
-            await Task.WhenAll(new Task[]
-            {
-                collection.SetTotalBooks(true),
-                collection.SetTotalCostOfBooks(true),
-            });
 
             try
             {
@@ -172,6 +179,11 @@ namespace BookCollector.ViewModels.Collection
             }
 
             return refresh;
+        }
+
+        private void ValidateEntry()
+        {
+            this.CollectionNameNotValid = string.IsNullOrEmpty(this.EditedCollection.CollectionName);
         }
     }
 }

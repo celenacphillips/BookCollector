@@ -2,64 +2,130 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.Popups;
-using BookCollector.Views.Genre;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Groupings
 {
-    public partial class GenresViewModel : GenreBaseViewModel
-    {
-        [ObservableProperty]
-        public string? totalGenresstring;
+    using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Genre;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
 
+    /// <summary>
+    /// GenresViewModel class.
+    /// </summary>
+    public partial class GenresViewModel : GroupingBaseViewModel
+    {
+        /// <summary>
+        /// Gets or sets the full genre list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<GenreModel>? fullGenreList;
+
+        /// <summary>
+        /// Gets or sets the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<GenreModel>? hiddenFilteredGenreList;
+
+        /// <summary>
+        /// Gets or sets the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<GenreModel>? filteredGenreList;
+
+        /// <summary>
+        /// Gets or sets the total genres string.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? totalGenresString;
+
+        /// <summary>
+        /// Gets or sets the total count of genres, based on the first filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int totalGenresCount;
+
+        /// <summary>
+        /// Gets or sets the total count of genres, based on the second filtered list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int filteredGenresCount;
+
+        /********************************************************/
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenresViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public GenresViewModel(ContentPage view)
         {
             this.View = view;
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.GenreView_InfoText}";
             this.ViewTitle = AppStringResources.Genres;
-            RefreshView = true;
+            this.SetRefreshView(true);
         }
 
-        private bool ShowHiddenGenres { get; set; }
+        /********************************************************/
 
-        private bool GenreNameChecked { get; set; }
-
-        private bool TotalBooksChecked { get; set; }
-
-        private bool TotalPriceChecked { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether to refresh the view or not.
+        /// </summary>
         public static bool RefreshView { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hidden genres or not.
+        /// </summary>
+        private bool ShowHiddenGenres { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether genre named is checked or not.
+        /// </summary>
+        private bool GenreNameChecked { get; set; }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Set the first filtered list based on the full genre list and the show hidden genres preference.
+        /// </summary>
+        /// <param name="showHiddenGenres">Show hidden genres.</param>
+        /// <returns>A task.</returns>
         public static async Task SetList(bool showHiddenGenres)
         {
-            if (fullGenreList == null)
-            {
-                fullGenreList = await FillLists.GetAllGenresList();
-            }
+            fullGenreList ??= await FillLists.GetAllGenresList();
 
-            if (!showHiddenGenres)
-            {
-                filteredGenreList1 = new ObservableCollection<GenreModel>(fullGenreList!.Where(x => !x.HideGenre));
-            }
-            else
-            {
-                filteredGenreList1 = new ObservableCollection<GenreModel>(fullGenreList!);
-            }
+            hiddenFilteredGenreList = SetHiddenFilteredList<GenreModel>(fullGenreList!, showHiddenGenres).ToObservableCollection();
         }
 
+        /// <summary>
+        /// Set books to hide books that are related to the genre.
+        /// </summary>
+        /// <param name="showHiddenGenres">Show hidden genres.</param>
+        /// <returns>A task.</returns>
         public static async Task HideBooks(bool showHiddenGenres)
         {
             if (!showHiddenGenres)
@@ -68,146 +134,63 @@ namespace BookCollector.ViewModels.Groupings
 
                 foreach (var item in hideList)
                 {
-                    var books = AllBooksViewModel.filteredBookList1?
+                    var books = AllBooksViewModel.hiddenFilteredBookList?
                         .Where(x => x.BookGenreGuid == item.GenreGuid && !x.HideBook)
                         .ToObservableCollection();
 
-                    foreach (var book in books)
-                    {
-                        book.HideBook = true;
-                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                    }
+                    await UpdateBooksToHide(books);
                 }
             }
         }
 
-        public async Task SetViewModelData()
-        {
-            if (RefreshView)
-            {
-                try
-                {
-                    this.SetIsBusyTrue();
+        /********************************************************/
 
-                    this.GetPreferences();
-
-                    await SetList(this.ShowHiddenGenres);
-
-                    if (this.FilteredGenreList1 != null)
-                    {
-                        this.FilteredGenreList2 = this.FilteredGenreList1;
-
-                        this.TotalGenresCount = this.FilteredGenreList1 != null ? this.FilteredGenreList1.Count : 0;
-
-                        this.SearchOnGenre(this.SearchString);
-
-                        await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalBooks(ShowHiddenBook)));
-                        await Task.WhenAll(this.FilteredGenreList2.Select(x => x.SetTotalCostOfBooks(ShowHiddenBook)));
-
-                        var sortList = SortLists.SortGenresList(
-                                this.FilteredGenreList2,
-                                this.GenreNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-                        this.FilteredGenresCount = this.FilteredGenreList2.Count;
-
-                        this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
-
-                        this.ShowCollectionViewFooter = this.FilteredGenresCount > 0;
-
-                        await Task.WhenAll(sortList);
-
-                        this.FilteredGenreList2 = sortList.Result;
-                    }
-
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                    this.SetIsBusyFalse();
-                    RefreshView = false;
-                }
-            }
-        }
-
+        /// <summary>
+        /// Search the list based on the genre name.
+        /// </summary>
+        /// <param name="input">Input string to find.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public async void SearchOnGenre(string? input)
+        public async Task SearchOnGenre(string? input)
         {
             this.SearchString = input;
 
-            if (this.FilteredGenreList2 != null && this.FilteredGenreList1 != null)
-            {
-                if (!string.IsNullOrEmpty(this.SearchString))
-                {
-                    this.FilteredGenreList2 = this.FilteredGenreList1.Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Contains(this.SearchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
-                }
-                else
-                {
-                    this.FilteredGenreList2 = this.FilteredGenreList1;
-                }
-
-                this.FilteredGenresCount = this.FilteredGenreList2 != null ? this.FilteredGenreList2.Count : 0;
-
-                this.TotalGenresstring = StringManipulation.SetTotalGenresString(this.FilteredGenresCount, this.TotalGenresCount);
-            }
-
-            var sortList = SortLists.SortGenresList(
-                                this.FilteredGenreList2,
-                                this.GenreNameChecked,
-                                this.TotalBooksChecked,
-                                this.TotalPriceChecked,
-                                this.AscendingChecked,
-                                this.DescendingChecked);
-
-            await Task.WhenAll(sortList);
-
-            this.FilteredGenreList2 = sortList.Result;
+            (this.FilteredGenreList, this.FilteredGenresCount, this.TotalGenresString) = await this.Search(this.HiddenFilteredGenreList, this.TotalGenresCount, this.GenreNameChecked);
         }
 
+        /// <summary>
+        /// Show popup with options to interact with the selected genre object.
+        /// </summary>
+        /// <param name="input">Genre guid to interact with.</param>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PopupMenuGenre(Guid? input)
         {
-            if (this.FilteredGenreList2 != null)
+            var selected = this.FilteredGenreList?.FirstOrDefault(x => x.GenreGuid == input);
+
+            await this.PopupMenu(selected, selected?.GenreName);
+        }
+
+        /// <summary>
+        /// Changes the view based on the selected genre.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task GenreSelectionChanged()
+        {
+            if (this.SelectedGenre != null && !string.IsNullOrEmpty(this.SelectedGenre.GenreName))
             {
-                var selected = this.FilteredGenreList2.FirstOrDefault(x => x.GenreGuid == input);
+                var view = new GenreMainView(this.SelectedGenre, this.SelectedGenre.GenreName);
 
-                if (selected != null && !string.IsNullOrEmpty(selected.GenreName))
-                {
-                    var action = await PopupMenu(selected.GenreName);
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
-                    {
-                        await this.EditGenre(selected);
-                    }
-
-                    if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                    {
-                        await this.DeleteGenre(selected);
-                    }
-                }
+                await Shell.Current.Navigation.PushAsync(view);
+                this.SelectedGenre = null;
             }
         }
 
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            RefreshView = true;
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
-        }
-
+        /// <summary>
+        /// Create a new genre and navigate to the genre edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AddGenre()
         {
@@ -220,93 +203,44 @@ namespace BookCollector.ViewModels.Groupings
             this.SetIsBusyFalse();
         }
 
-        [RelayCommand]
-        public async Task EditGenre(GenreModel selected)
+        /********************************************************/
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public override async Task SetViewModelData()
         {
-            this.SetIsBusyTrue();
-
-            var view = new GenreEditView(selected, $"{AppStringResources.EditGenre}", true);
-
-            await Shell.Current.Navigation.PushAsync(view);
-
-            this.SetIsBusyFalse();
-        }
-
-        [RelayCommand]
-        public async Task DeleteGenre(GenreModel selected)
-        {
-            if (!string.IsNullOrEmpty(selected.GenreName))
+            if (RefreshView)
             {
-                var answer = await DeleteCheck(selected.GenreName);
-
-                if (answer)
+                try
                 {
-                    try
-                    {
-                        this.SetIsBusyTrue();
+                    this.GetPreferences();
 
-                        await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
-                        this.RemoveFromStaticList(selected);
-                        await this.RemoveBookFromGrouping(selected);
+                    await SetList(this.ShowHiddenGenres);
 
-                        await ConfirmDelete(selected.GenreName);
-
-                        await this.SetViewModelData();
-
-                        this.SetIsBusyFalse();
-                    }
-                    catch (Exception ex)
-                    {
-#if DEBUG
-                        await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                        await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                        await CanceledAction();
-                    }
+                    (this.TotalGenresCount,
+                        this.FilteredGenresCount,
+                        this.TotalGenresString,
+                        this.ShowCollectionViewFooter,
+                        this.FilteredGenreList) = await this.SetViewModelData(this.HiddenFilteredGenreList, this.GenreNameChecked);
                 }
-                else
+                catch (Exception ex)
                 {
-                    await CanceledAction();
+                    await this.ViewModelCatch(ex);
+                    this.SetRefreshView(false);
                 }
             }
         }
 
-        [RelayCommand]
-        public async Task SortPopup()
-        {
-            if (!string.IsNullOrEmpty(this.ViewTitle))
-            {
-                var popup = new SortPopup();
-                var viewModel = new SortPopupViewModel(popup, this.ViewTitle)
-                {
-                    GenreNameVisible = true,
-                    GenreNameChecked = this.GenreNameChecked,
-                    TotalBooksVisible = true,
-                    TotalBooksChecked = this.TotalBooksChecked,
-                    TotalPriceVisible = true,
-                    TotalPriceChecked = this.TotalPriceChecked,
-                    AscendingChecked = this.AscendingChecked,
-                    DescendingChecked = this.DescendingChecked,
-                };
-
-                popup.BindingContext = viewModel;
-
-                var result = await this.View.ShowPopupAsync(popup);
-                if (!result.WasDismissedByTappingOutsideOfPopup)
-                {
-                    RefreshView = true;
-                    await this.SetViewModelData();
-                }
-            }
-        }
-
-        private void GetPreferences()
+        /// <summary>
+        /// Set the view model preferences.
+        /// </summary>
+        /// <returns>The list show hidden preference.</returns>
+        public override bool GetPreferences()
         {
             this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
-            ShowHiddenBook = Preferences.Get("HiddenBooksOn", true /* Default */);
+            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
             this.GenreNameChecked = Preferences.Get($"{this.ViewTitle}_GenreNameSelection", true /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
@@ -314,17 +248,80 @@ namespace BookCollector.ViewModels.Groupings
 
             this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+
+            return this.ShowHiddenGenres;
         }
 
-        private void RemoveFromStaticList(GenreModel selected)
+        /// <summary>
+        /// Set data for sort popup.
+        /// </summary>
+        /// <param name="viewModel">Sort popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override SortPopupViewModel SetSortPopupValues(SortPopupViewModel viewModel)
+        {
+            viewModel.GenreNameVisible = true;
+            viewModel.GenreNameChecked = this.GenreNameChecked;
+            /******************************/
+            viewModel.TotalBooksVisible = true;
+            viewModel.TotalBooksChecked = this.TotalBooksChecked;
+            /******************************/
+            viewModel.TotalPriceVisible = true;
+            viewModel.TotalPriceChecked = this.TotalPriceChecked;
+            /******************************/
+            viewModel.AscendingChecked = this.AscendingChecked;
+            viewModel.DescendingChecked = this.DescendingChecked;
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Show edit view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task Edit(object selected)
+        {
+            this.SetIsBusyTrue();
+
+            var view = new GenreEditView((GenreModel)selected, $"{AppStringResources.EditGenre}", true);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
+        /// Delete grouping from database.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task DeleteGrouping(object selected)
+        {
+            await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
+            RemoveFromStaticList((GenreModel)selected);
+            await RemoveBookFromGrouping((GenreModel)selected);
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+            RefreshView = value;
+        }
+
+        /********************************************************/
+
+        private static void RemoveFromStaticList(GenreModel selected)
         {
             if (GenresViewModel.fullGenreList != null)
             {
-                GenresViewModel.RefreshView = this.RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList2);
+                GenresViewModel.RefreshView = RemoveGenreFromStaticList(selected, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
             }
         }
 
-        private bool RemoveGenreFromStaticList(GenreModel selected, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
+        private static bool RemoveGenreFromStaticList(GenreModel selected, ObservableCollection<GenreModel> genreList, ObservableCollection<GenreModel>? filteredGenreList)
         {
             var refresh = false;
 
@@ -356,15 +353,18 @@ namespace BookCollector.ViewModels.Groupings
             return refresh;
         }
 
-        private async Task RemoveBookFromGrouping(GenreModel genre)
+        private static async Task RemoveBookFromGrouping(GenreModel genre)
         {
             var books = AllBooksViewModel.fullBookList?.Where(x => x.BookGenreGuid == genre.GenreGuid).ToList();
 
-            foreach (var book in books)
+            if (books != null)
             {
-                book.BookGenreGuid = null;
-                await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
-                await BookBaseViewModel.AddToStaticList(book);
+                foreach (var book in books)
+                {
+                    book.BookGenreGuid = null;
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    await BookBaseViewModel.AddToStaticList(book);
+                }
             }
         }
     }

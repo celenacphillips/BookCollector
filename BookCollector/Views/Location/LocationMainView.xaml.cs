@@ -2,14 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Location;
+
 using BookCollector.Data.Models;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Location;
 
-namespace BookCollector.Views.Location;
-
+/// <summary>
+/// LocationMainView class.
+/// </summary>
 public partial class LocationMainView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocationMainView"/> class.
+    /// </summary>
+    /// <param name="location">Location to view.</param>
+    /// <param name="viewTitle">The value to display on the menu bar.</param>
     public LocationMainView(LocationModel location, string viewTitle)
     {
         this.ViewModel = new LocationMainViewModel(location, this)
@@ -23,7 +31,27 @@ public partial class LocationMainView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private LocationMainViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -46,24 +74,5 @@ public partial class LocationMainView : ContentPage
                 this.bookCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private LocationMainViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        this.Dispatcher.Dispatch(() =>
-        {
-            var items = this.ToolbarItems.ToList();
-            this.ToolbarItems.Clear();
-            foreach (var item in items)
-            {
-                this.ToolbarItems.Add(item);
-            }
-        });
-
-        await this.ViewModel.SetViewModelData();
     }
 }

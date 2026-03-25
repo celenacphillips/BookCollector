@@ -21,7 +21,7 @@
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
 
-        <ToolbarItem Command="{Binding ShareListCommand}"
+        <ToolbarItem Command="{Binding ShareBookCommand}"
                      IsEnabled="{Binding IsEnabled}">
             <ToolbarItem.IconImageSource>
                 <FontImageSource FontFamily="MaterialDesignIcons" 
@@ -232,6 +232,8 @@
                                                      IsVisible="{Binding ShowUpNext}">
                                     <Label Text="{x:Static localization:AppStringResources.UpNext_Question}"
                                            Style="{DynamicResource Header}"/>
+                                    <Label Text="{x:Static localization:AppStringResources.UpNext_Explainer}"
+                                           Style="{DynamicResource Explainer}"/>
                                     <Switch IsToggled="{Binding SelectedBook.UpNext}"
                                             IsEnabled="False"
                                             HorizontalOptions="Start"

@@ -2,21 +2,41 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.ViewModels.Statistics
 {
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Library;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// ReadingDataViewModel class.
+    /// </summary>
     public partial class ReadingDataViewModel : StatisticsBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the reading data list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<ReadingData> readingDataList;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the year count input is valid or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool yearCountNotValid;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadingDataViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public ReadingDataViewModel(ContentPage view)
         {
             this.View = view;
@@ -24,12 +44,16 @@ namespace BookCollector.ViewModels.Statistics
             this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount);
         }
 
+        /// <summary>
+        /// Gets or sets the year count.
+        /// </summary>
         public string YearCount { get; set; }
 
-        [ObservableProperty]
-        public bool yearCountNotValid;
-
-        public async Task SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -37,9 +61,9 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                this.ReadingDataList = new List<ReadingData>();
+                this.ReadingDataList = [];
 
-                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
+                if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }
@@ -48,9 +72,9 @@ namespace BookCollector.ViewModels.Statistics
                 {
                     var year = DateTime.Now.Year - i;
 
-                    var bookReadCount = GetCounts.GetBookCountReadInYear(year, this.ShowHiddenBooks);
-                    var pageReadCount = GetCounts.GetBookPageCountReadInYear(year, this.ShowHiddenBooks);
-                    var listenedTimeCount = GetCounts.GetBookTimeCountReadInYear(year, this.ShowHiddenBooks);
+                    var bookReadCount = GetCounts.GetBookCountReadInYear(year);
+                    var pageReadCount = GetCounts.GetBookPageCountReadInYear(year);
+                    var listenedTimeCount = GetCounts.GetBookTimeCountReadInYear(year);
 
                     await Task.WhenAll(bookReadCount, pageReadCount);
 
@@ -68,33 +92,31 @@ namespace BookCollector.ViewModels.Statistics
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
             }
         }
 
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
-        }
-
+        /// <summary>
+        /// Update the max number of years of data to show.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task UpdateMaxNumber()
-        {
-            if (!string.IsNullOrEmpty(this.YearCount) && int.Parse(this.YearCount) < 21 && int.Parse(this.YearCount) > 0)
+       {
+            if (!string.IsNullOrEmpty(this.YearCount))
             {
-                this.YearCountNotValid = false;
-                await this.SetViewModelData();
-                this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount.ToString());
+                var tryIntParse = int.TryParse(this.YearCount, out var year);
+
+                if (tryIntParse && year < 21 && year > 0)
+                {
+                    this.YearCountNotValid = false;
+                    await this.SetViewModelData();
+                    this.InfoText = AppStringResources.ReadingData_InfoText.Replace("number", this.YearCount.ToString());
+                }
+                else
+                {
+                    this.YearCountNotValid = true;
+                }
             }
             else
             {

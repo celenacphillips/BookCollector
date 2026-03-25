@@ -2,149 +2,328 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.Views.Controls;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Popups
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.Views.Controls;
+    using CommunityToolkit.Maui.Views;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// FilterPopupViewModel class.
+    /// </summary>
     public partial class FilterPopupViewModel : BaseViewModel
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether to show favorites or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool favoriteVisible;
 
+        /// <summary>
+        /// Gets or sets the favorites list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? favoritePicker;
 
+        /// <summary>
+        /// Gets or sets the favorites option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? favoriteOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show formats or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool formatVisible;
 
+        /// <summary>
+        /// Gets or sets the formats list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? formatPicker;
 
+        /// <summary>
+        /// Gets or sets the formats option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? formatOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show authors or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorVisible;
 
+        /// <summary>
+        /// Gets or sets the authors list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? authorPicker;
 
+        /// <summary>
+        /// Gets or sets the authors option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? authorOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show publishers or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool publisherVisible;
 
+        /// <summary>
+        /// Gets or sets the publishers list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? publisherPicker;
 
+        /// <summary>
+        /// Gets or sets the publishers option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? publisherOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show publish years or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool publishYearVisible;
 
+        /// <summary>
+        /// Gets or sets the publish years list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? publishYearPicker;
 
+        /// <summary>
+        /// Gets or sets the publish years option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? publishYearOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show languages or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool languageVisible;
 
+        /// <summary>
+        /// Gets or sets the languages list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? languagePicker;
 
+        /// <summary>
+        /// Gets or sets the languages option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? languageOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show ratings or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool ratingVisible;
 
+        /// <summary>
+        /// Gets or sets the ratings list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? ratingPicker;
 
+        /// <summary>
+        /// Gets or sets the ratings option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? ratingOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show locations or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool locationVisible;
 
+        /// <summary>
+        /// Gets or sets the locations list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? locationPicker;
 
+        /// <summary>
+        /// Gets or sets the locations option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? locationOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show series or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool seriesVisible;
 
+        /// <summary>
+        /// Gets or sets the series list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? seriesPicker;
 
+        /// <summary>
+        /// Gets or sets the series option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? seriesOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show book covers or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool bookCoverVisible;
 
+        /// <summary>
+        /// Gets or sets the book covers list.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public List<string>? bookCoverPicker;
 
+        /// <summary>
+        /// Gets or sets the book covers option.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? bookCoverOption;
 
         /********************************************************/
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilterPopupViewModel"/> class.
+        /// </summary>
+        /// <param name="popup">Popup related to the view model.</param>
+        /// <param name="viewTitle">Title of the popup.</param>
+        /// <param name="view">View calling the popup.</param>
         public FilterPopupViewModel(Popup popup, string viewTitle, ContentPage view)
         {
             this.Popup = popup;
             this.ViewTitle = viewTitle;
             this.View = view;
-            this.PopupWidth = this.DeviceWidth - 30;
-            this.PopupHeight = this.DeviceHeight - 200;
+            this.PopupWidth = DeviceWidth - 30;
+            this.PopupHeight = DeviceHeight - 200;
 
             this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
 
-        public double PopupWidth { get; set; }
-
-        public double PopupHeight { get; set; }
-
-        private Popup Popup { get; set; }
-
+        /// <summary>
+        /// Gets or sets the popup overlay.
+        /// </summary>
         public Grid OverlaySection { get; set; }
 
+        /// <summary>
+        /// Gets or sets the popup.
+        /// </summary>
+        private Popup Popup { get; set; }
+
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
+        {
+        }
+
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
+        /// <summary>
+        /// Set the selected values as preferences and close popup.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Close()
         {
@@ -155,6 +334,9 @@ namespace BookCollector.ViewModels.Popups
             await this.Popup.CloseAsync(token: cts.Token);
         }
 
+        /// <summary>
+        /// Set values of favorite picker.
+        /// </summary>
         public void SetFavoritePicker()
         {
             this.FavoritePicker =
@@ -165,26 +347,42 @@ namespace BookCollector.ViewModels.Popups
             ];
         }
 
+        /// <summary>
+        /// Set values of format picker.
+        /// </summary>
+        /// <param name="formats">Formats list for the picker.</param>
         public void SetFormatPicker(ObservableCollection<string>? formats)
         {
-            this.FormatPicker = formats != null ? [..formats] : null;
+            this.FormatPicker = formats != null ? [.. formats] : null;
             this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
         }
 
+        /// <summary>
+        /// Set values of author picker.
+        /// </summary>
+        /// <param name="authorNames">Author names list for the picker.</param>
         public void SetAuthorPicker(ObservableCollection<string>? authorNames)
         {
-            this.AuthorPicker = authorNames != null ? [..authorNames] : null;
+            this.AuthorPicker = authorNames != null ? [.. authorNames] : null;
             this.AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
             this.AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
         }
 
+        /// <summary>
+        /// Set values of publisher picker.
+        /// </summary>
+        /// <param name="publisherNames">Publisher names list for the picker.</param>
         public void SetPublisherPicker(ObservableCollection<string>? publisherNames)
         {
-            this.PublisherPicker = publisherNames != null ? [..publisherNames] : null;
+            this.PublisherPicker = publisherNames != null ? [.. publisherNames] : null;
             this.PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
             this.PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
         }
 
+        /// <summary>
+        /// Set values of publish year picker.
+        /// </summary>
+        /// <param name="publishYears">Publish year ranges list for the picker.</param>
         public void SetPublishYearPicker(ObservableCollection<string>? publishYears)
         {
             this.PublishYearPicker = publishYears != null ? [.. publishYears] : null;
@@ -192,13 +390,20 @@ namespace BookCollector.ViewModels.Popups
             this.PublishYearPicker?.Insert(1, AppStringResources.NoPublishYear);
         }
 
+        /// <summary>
+        /// Set values of language picker.
+        /// </summary>
+        /// <param name="languages">Languages list for the picker.</param>
         public void SetLanguagePicker(ObservableCollection<string>? languages)
         {
-            this.LanguagePicker = languages != null ? [..languages] : null;
+            this.LanguagePicker = languages != null ? [.. languages] : null;
             this.LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
             this.LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
         }
 
+        /// <summary>
+        /// Set values of rating picker.
+        /// </summary>
         public void SetRatingPicker()
         {
             this.RatingPicker =
@@ -213,6 +418,10 @@ namespace BookCollector.ViewModels.Popups
             ];
         }
 
+        /// <summary>
+        /// Set values of location picker.
+        /// </summary>
+        /// <param name="locations">Locations list for the picker.</param>
         public void SetLocationPicker(ObservableCollection<string>? locations)
         {
             this.LocationPicker = locations != null ? [.. locations] : null;
@@ -220,6 +429,10 @@ namespace BookCollector.ViewModels.Popups
             this.LocationPicker?.Insert(1, AppStringResources.NoLocation);
         }
 
+        /// <summary>
+        /// Set values of series picker.
+        /// </summary>
+        /// <param name="series">Series list for the picker.</param>
         public void SetSeriesPicker(ObservableCollection<string>? series)
         {
             this.SeriesPicker = series != null ? [.. series] : null;
@@ -227,6 +440,9 @@ namespace BookCollector.ViewModels.Popups
             this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
         }
 
+        /// <summary>
+        /// Set values of book cover picker.
+        /// </summary>
         public void SetBookCoverPicker()
         {
             this.BookCoverPicker =
@@ -237,6 +453,10 @@ namespace BookCollector.ViewModels.Popups
             ];
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task FavoriteChanged()
         {
@@ -251,6 +471,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task AuthorChanged()
         {
@@ -265,6 +489,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PublisherChanged()
         {
@@ -279,6 +507,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task PublishYearChanged()
         {
@@ -293,6 +525,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task FormatChanged()
         {
@@ -307,6 +543,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task LanguageChanged()
         {
@@ -321,6 +561,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task RatingChanged()
         {
@@ -335,6 +579,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task LocationChanged()
         {
@@ -349,6 +597,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SeriesChanged()
         {
@@ -363,6 +615,10 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task BookCoverChanged()
         {

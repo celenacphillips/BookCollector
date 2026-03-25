@@ -5,9 +5,9 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
              xmlns:controls="clr-namespace:BookCollector.Views.Controls.Location"
-             x:DataType="viewModel:LocationBaseViewModel">
+             x:DataType="viewModel:GroupingBaseViewModel">
 
-    <CollectionView ItemsSource="{Binding FilteredLocationList2}"
+    <CollectionView ItemsSource="{Binding FilteredLocationList}"
                     SelectionMode="{Binding CollectionViewSelectionMode}"
                     SelectedItem="{Binding SelectedLocation}"
                     SelectionChangedCommand="{Binding LocationSelectionChangedCommand}"

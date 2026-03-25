@@ -2,22 +2,31 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Support;
+
 using BookCollector.Data;
 using BookCollector.Resources.Localization;
 
-namespace BookCollector.Views.Support;
-
+/// <summary>
+/// FAQView class.
+/// </summary>
 public partial class FAQView : ContentPage
 {
-    public List<FAQModel> Questions { get; set; }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FAQView"/> class.
+    /// </summary>
     public FAQView()
     {
-        this.Questions = new List<FAQModel>();
+        this.Questions = [];
         this.CreateQuestions();
         this.InitializeComponent();
         this.BindingContext = this;
     }
+
+    /// <summary>
+    /// Gets or sets the list of questions.
+    /// </summary>
+    public List<FAQModel> Questions { get; set; }
 
     private void CreateQuestions()
     {

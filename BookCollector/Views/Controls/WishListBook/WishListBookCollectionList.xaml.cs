@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.WishListBook;
 
+/// <summary>
+/// WishListBookCollectionList class.
+/// </summary>
 public partial class WishListBookCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WishListBookCollectionList"/> class.
+    /// </summary>
     public WishListBookCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

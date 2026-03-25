@@ -2,20 +2,27 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml.Office;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Xml;
-using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
-
 namespace BookCollector.Data.Spreadsheet
 {
-    public class ReadWriteSpreadsheet : BaseViewModel
+    using System.Xml;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using DocumentFormat.OpenXml;
+    using DocumentFormat.OpenXml.Packaging;
+    using DocumentFormat.OpenXml.Spreadsheet;
+    using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
+
+    /// <summary>
+    /// ReadWriteSpreadsheet class.
+    /// </summary>
+    public class ReadWriteSpreadsheet : ObservableObject
     {
+        /// <summary>
+        /// Create a spreadsheet workbook with a given filename in a given folder path.
+        /// </summary>
+        /// <param name="folderPath">Folder path to create the spreadsheet workbook at.</param>
+        /// <param name="filename">File name of spreadsheet workbook.</param>
+        /// <returns>File path of created spreadsheet workbook.</returns>
         public static async Task<string> CreateSpreadsheet(string folderPath, string filename)
         {
             var filepath = $"{folderPath}/{filename}";
@@ -54,17 +61,23 @@ namespace BookCollector.Data.Spreadsheet
             {
                 if (ex.Message.Equals($"Access to the path '{filepath}' is denied."))
                 {
-                    //await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
+                    // await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
                 }
 
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Writes to spreadsheet workbook at given file path with given list of items and table name.
+        /// </summary>
+        /// <param name="filePath">File path of spreadsheet workbook to write to.</param>
+        /// <param name="itemsList">Values to write to the spreadsheet workbook.</param>
+        /// <param name="tableName">Spreadsheet name.</param>
         public static void WriteToSpreadsheet(string filePath, List<List<string?>> itemsList, string tableName)
         {
             using SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(filePath, true);
@@ -113,6 +126,13 @@ namespace BookCollector.Data.Spreadsheet
             worksheetPart.Worksheet.Save();
         }
 
+        /// <summary>
+        /// Reads from spreadsheet workbook at given file path with given sheet name and list of column names.
+        /// </summary>
+        /// <param name="fileName">File path of spreadsheet workbook to read from.</param>
+        /// <param name="sheetName">Spreadsheet name.</param>
+        /// <param name="columnNames">Column names to search spreadsheet for.</param>
+        /// <returns>Spreadsheet values and a message.</returns>
         public static (List<List<string>>, string) ReadSpreadSheet(string fileName, string sheetName, List<string?> columnNames)
         {
             List<List<string>> spreadsheetValues = [];

@@ -2,14 +2,20 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.ViewModels.Statistics;
-
 namespace BookCollector.Views.Statistics;
 
+using BookCollector.ViewModels.Statistics;
+
+/// <summary>
+/// ReadingDataView class.
+/// </summary>
 public partial class ReadingDataView : ContentPage
 {
     private ReadingDataViewModel viewModel;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReadingDataView"/> class.
+    /// </summary>
     public ReadingDataView()
     {
         this.viewModel = new ReadingDataViewModel(this);
@@ -18,6 +24,9 @@ public partial class ReadingDataView : ContentPage
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
     protected override async void OnAppearing()
     {
         this.Dispatcher.Dispatch(() =>

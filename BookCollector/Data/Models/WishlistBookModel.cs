@@ -2,29 +2,53 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Database;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Globalization;
-
 namespace BookCollector.Data.Models
 {
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Mvvm.ComponentModel;
+
+    /// <summary>
+    /// WishlistBookModel class.
+    /// </summary>
     public partial class WishlistBookModel : WishlistBookDatabaseModel, ICloneable
     {
+        /// <summary>
+        /// Gets or sets the book cover image source.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ImageSource? bookCover;
 
-        internal static BookCollectorDatabase Database;
+        /// <summary>
+        /// Gets or sets the book total time.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public double? bookTotalTime;
 
+        /// <summary>
+        /// Gets or sets the book time span.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public TimeSpan totalTimeSpan;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WishlistBookModel"/> class.
+        /// </summary>
         public WishlistBookModel()
         {
-            Database = new BookCollectorDatabase();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WishlistBookModel"/> class.
+        /// </summary>
+        /// <param name="dbModel">Database model to convert from.</param>
         public WishlistBookModel(WishlistBookDatabaseModel dbModel)
         {
             this.BookGuid = dbModel.BookGuid;
@@ -57,141 +81,96 @@ namespace BookCollector.Data.Models
             this.BookIdentifier = dbModel.BookIdentifier;
         }
 
+        /// <summary>
+        /// Gets or sets the list of selected authors.
+        /// </summary>
         public List<AuthorModel?>? SelectedAuthors { get; set; }
 
+        /// <summary>
+        /// Gets publisher publish date string.
+        /// </summary>
         public string PublisherPublishDatestring
         {
-            get => $"{(!string.IsNullOrEmpty(this.BookPublisher) ? this.BookPublisher : AppStringResources.NoPublisher)}, {(!string.IsNullOrEmpty(this.BookPublishYear) ? this.BookPublishYear : AppStringResources.NoDate)}";
+            get => StringManipulation.SetPublisherPublishDateString(this.BookPublisher, this.BookPublishYear);
         }
 
+        /// <summary>
+        /// Gets the parsed book title.
+        /// </summary>
         public string? ParsedTitle
         {
-            get => (!string.IsNullOrEmpty(this.BookTitle) &&
-                    (this.BookTitle.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.BookTitle.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
-                    this.BookTitle.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
-                        ? this.BookTitle[(this.BookTitle.IndexOf(' ') + 1) ..]
-                        : this.BookTitle;
+            get => StringManipulation.SetParsedName(this.BookTitle);
         }
 
+        /// <summary>
+        /// Gets the book price as a double.
+        /// </summary>
         public double BookPriceValue
         {
-            get => !string.IsNullOrEmpty(this.BookPrice) ? double.Parse(this.BookPrice[1..]) : 0;
+            get => BookBaseViewModel.SetBookPriceValue(this.BookPrice);
         }
 
+        /// <summary>
+        /// Gets the book duration total string.
+        /// </summary>
         public string? BookDurationTotal
         {
-            get => !this.BookFormat!.Equals(AppStringResources.Audiobook) ?
-                AppStringResources.BlankPages.Replace("Blank", this.BookPageTotal.ToString()) :
-                AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", this.BookHoursTotal.ToString().PadLeft(2, '0')).Replace("Blank2", this.BookMinutesTotal.ToString().PadLeft(2, '0'));
+            get => StringManipulation.SetBookDurationTotal(this.BookFormat, this.BookPageTotal, this.BookHoursTotal, this.BookMinutesTotal);
         }
 
-        [ObservableProperty]
-        public double? bookTotalTime;
-
-        [ObservableProperty]
-        public TimeSpan totalTimeSpan;
-
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new object that is a copy of this instance.</returns>
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
+        /// <summary>
+        /// Sets the part of series string based on the book's series information, including the series name and book number in the series if available.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetPartOfSeries()
         {
-            this.HasSeries = !string.IsNullOrEmpty(this.BookSeries);
-            var output = string.Empty;
-
-            if (!string.IsNullOrEmpty(this.BookSeries))
-            {
-                if (this.BookNumberInSeries != null)
-                {
-                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{this.BookSeries}")}, {AppStringResources.BookNumber.Replace("Number", $"{this.BookNumberInSeries}")}";
-                }
-
-                if (this.BookNumberInSeries == null)
-                {
-                    output = $"{AppStringResources.PartofSeries.Replace("blank", $"{this.BookSeries}")}";
-                }
-            }
-
-            this.PartOfSeries = output;
+            (this.HasSeries, this.PartOfSeries, this.BookSeries) = await StringManipulation.SetSeriesString(this.BookSeriesGuid, this.BookSeries, this.BookNumberInSeries);
         }
 
+        /// <summary>
+        /// Set the book cover display.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetCoverDisplay()
         {
-            this.HasBookCover = !string.IsNullOrEmpty(this.BookCoverFileName) || !string.IsNullOrEmpty(this.BookCoverUrl) || this.BookCover != null;
-            this.HasNoBookCover = string.IsNullOrEmpty(this.BookCoverFileName) && string.IsNullOrEmpty(this.BookCoverUrl) && this.BookCover == null;
-
-            BaseViewModel.SetBookCover(this);
+            (this.HasBookCover, this.HasNoBookCover, this.BookCover) = await BookBaseViewModel.SetCoverDisplay(this.BookCoverFileName, this.BookCoverUrl, this.BookCover);
         }
 
-        public async Task<ObservableCollection<BookAuthorModel>> SetAuthorListString(ObservableCollection<AuthorModel>? authorList, bool addToBookAuthorlist = true)
+        /// <summary>
+        /// Sets the author list string for the book.
+        /// </summary>
+        /// <param name="authorList">Author list to parse.</param>
+        /// <returns>A list of book authors.</returns>
+        public async Task SetAuthorListStringFromInputList(ObservableCollection<AuthorModel>? authorList)
         {
-            var bookAuthorList = new ObservableCollection<BookAuthorModel>();
-
-            this.AuthorListString = string.Empty;
-
-            if (authorList != null)
-            {
-                authorList = authorList.Where(x => !string.IsNullOrEmpty(x.FirstName) && !string.IsNullOrEmpty(x.LastName)).ToObservableCollection();
-
-                for (int i = 0; i < authorList.Count; i++)
-                {
-                    if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
-                        !string.IsNullOrEmpty(authorList[i].LastName))
-                    {
-                        if (addToBookAuthorlist && this.BookGuid != null && authorList[i].AuthorGuid != null)
-                        {
-                            bookAuthorList.Add(new BookAuthorModel()
-                            {
-                                BookGuid = this.BookGuid.Value,
-                                AuthorGuid = authorList[i].AuthorGuid.Value,
-                            });
-                        }
-
-                        this.AuthorListString += authorList[i].ReverseFullName;
-
-                        if (i != authorList.Count - 1)
-                        {
-                            this.AuthorListString += "; ";
-                        }
-                    }
-                    else
-                    {
-                        if (authorList.Count > 1)
-                        {
-                            this.AuthorListString = this.AuthorListString[..(this.AuthorListString.LastIndexOf("; ") - 1)];
-                        }
-                    }
-                }
-            }
-
-            return bookAuthorList;
+            this.AuthorListString = BookBaseViewModel.SetAuthorListStringFromInputList(authorList);
         }
 
+        /// <summary>
+        /// Set book price, formatted with currency symbol.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetBookPrice()
         {
-            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
-
-            var cultureInfo = new CultureInfo(cultureCode);
-
-            if (this.BookPrice == null || !this.BookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))
-            {
-                var parsed = double.TryParse(this.BookPrice, out double price);
-
-                this.BookPrice = string.Format(cultureInfo, "{0:C}", parsed ? price : 0);
-            }
+            this.BookPrice = StringManipulation.SetBookPrice(this.BookPrice);
         }
 
+        /// <summary>
+        /// Sets the book total time based on the book format and updates the book total time property accordingly.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task SetBookTotalTime()
         {
-            this.BookTotalTime = this.BookFormat!.Equals(AppStringResources.Audiobook) ? (double)this.BookHoursTotal + ((double)this.BookMinutesTotal / 60) : null;
-        }
-
-        public TimeSpan SetTime(int hour, int minute)
-        {
-            return new TimeSpan(hour, minute, 0);
+            this.BookTotalTime = BookBaseViewModel.SetBookTotalTime(this.BookFormat, this.BookHoursTotal, this.BookMinutesTotal);
         }
     }
 }

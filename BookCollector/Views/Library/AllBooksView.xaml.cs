@@ -1,13 +1,20 @@
 // <copyright file="AllBooksView.xaml.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
-using BookCollector.ViewModels.Library;
-using BookCollector.ViewModels.BaseViewModels;
 
 namespace BookCollector.Views.Library;
 
+using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.ViewModels.Library;
+
+/// <summary>
+/// AllBooksView class.
+/// </summary>
 public partial class AllBooksView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AllBooksView"/> class.
+    /// </summary>
     public AllBooksView()
     {
         this.ViewModel = new AllBooksViewModel(this);
@@ -18,7 +25,27 @@ public partial class AllBooksView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private AllBooksViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -41,24 +68,5 @@ public partial class AllBooksView : ContentPage
                 this.bookCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private AllBooksViewModel ViewModel { get; set; }
-
-    // Need this to make sure new info populates when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        this.Dispatcher.Dispatch(() =>
-        {
-            var items = this.ToolbarItems.ToList();
-            this.ToolbarItems.Clear();
-            foreach (var item in items)
-            {
-                this.ToolbarItems.Add(item);
-            }
-        });
-
-        await this.ViewModel.SetViewModelData();
     }
 }

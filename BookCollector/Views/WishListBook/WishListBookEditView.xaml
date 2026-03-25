@@ -351,7 +351,7 @@
                                 </CollectionView>
                                 <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
@@ -434,6 +434,7 @@
                                                Style="{DynamicResource Header}"/>
                                         <Button Text="{Binding EditedWishlistBook.TotalTimeSpan, StringFormat='{}{0:hh\\:mm}'}"
                                                 Style="{DynamicResource PickerButton}"
+                                                HorizontalOptions="Center"
                                                 Margin="0,10,0,0"
                                                 Command="{Binding TotalTimePopupCommand}"/>
                                     </VerticalStackLayout>
@@ -459,45 +460,53 @@
                                 </VerticalStackLayout>
                                 <!-- Book Location -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
                                     <!-- Book Publisher -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedWishlistBook.BookPublisher}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges">
-                                            <Editor.Keyboard>
-                                                <Keyboard x:FactoryMethod="Create">
-                                                    <x:Arguments>
-                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                    </x:Arguments>
-                                                </Keyboard>
-                                            </Editor.Keyboard>
-                                        </Editor>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPublisher}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                    
+                                    <Editor Text="{Binding EditedWishlistBook.BookPublisher}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterPublisher}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Publisher -->
 
                                     <!-- Book Publish Year -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedWishlistBook.BookPublishYear}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
-                                                HorizontalTextAlignment="Center"
-                                                Keyboard="Numeric"
-                                                MaxLength="4"
-                                                AutoSize="TextChanges"/>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPublishYear}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Editor Text="{Binding EditedWishlistBook.BookPublishYear}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterPublishYear}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            Keyboard="Numeric"
+                                            MaxLength="4"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="1"/>
                                     <!-- Book Publish Year -->
+                                    
                                 </Grid>
 
                                 <!-- Book Identifier -->
@@ -511,45 +520,52 @@
                                 </VerticalStackLayout>
                                 <!-- Book Identifier -->
 
-                                <Grid Margin="0,0,0,10">
-
+                                <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
                                     <!-- Book Language -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="0">
-                                        <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedWishlistBook.BookLanguage}"
-                                                Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
-                                                HorizontalTextAlignment="Center"
-                                                AutoSize="TextChanges">
-                                            <Editor.Keyboard>
-                                                <Keyboard x:FactoryMethod="Create">
-                                                    <x:Arguments>
-                                                        <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
-                                                    </x:Arguments>
-                                                </Keyboard>
-                                            </Editor.Keyboard>
-                                        </Editor>
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookLanguage}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                    
+                                    <Editor Text="{Binding EditedWishlistBook.BookLanguage}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterBookLanguage}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Language -->
 
                                     <!-- Book Price -->
-                                    <VerticalStackLayout Margin="10"
-                                                         Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
-                                               Style="{DynamicResource Header}"/>
-                                        <Editor Text="{Binding EditedWishlistBook.BookPrice}"
-                                                Placeholder="{x:Static localization:AppStringResources.BookPrice}"
-                                                HorizontalTextAlignment="Center"
-                                                Keyboard="Numeric"
-                                                AutoSize="TextChanges" />
-                                    </VerticalStackLayout>
+                                    <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    
+                                    <Editor Text="{Binding EditedWishlistBook.BookPrice}"
+                                            Placeholder="{x:Static localization:AppStringResources.BookPrice}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="1"/>
                                     <!-- Book Price -->
+                                    
                                 </Grid>
 
                                 <!-- Book URL -->

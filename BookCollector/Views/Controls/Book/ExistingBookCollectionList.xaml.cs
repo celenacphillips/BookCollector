@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.Book;
 
+/// <summary>
+/// ExistingBookCollectionList class.
+/// </summary>
 public partial class ExistingBookCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExistingBookCollectionList"/> class.
+    /// </summary>
     public ExistingBookCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

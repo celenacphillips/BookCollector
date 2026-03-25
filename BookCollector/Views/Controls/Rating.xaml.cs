@@ -2,14 +2,20 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Controls;
+
 using BookCollector.Data.Enums;
 using DocumentFormat.OpenXml.Drawing;
 using Colors = Microsoft.Maui.Graphics.Colors;
 
-namespace BookCollector.Views.Controls;
-
+/// <summary>
+/// Rating class.
+/// </summary>
 public partial class Rating : ContentView
 {
+    /// <summary>
+    /// Gets or sets the value selected.
+    /// </summary>
     public static readonly BindableProperty CurrentValueProperty =
              BindableProperty.Create(
                  nameof(CurrentValue),
@@ -20,6 +26,9 @@ public partial class Rating : ContentView
     private const int MAXVALUE = 5;
     private readonly Rating view;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Rating"/> class.
+    /// </summary>
     public Rating()
     {
         this.view = this;
@@ -27,6 +36,9 @@ public partial class Rating : ContentView
         this.SetStars();
     }
 
+    /// <summary>
+    /// Gets or sets the value selected.
+    /// </summary>
     public int CurrentValue
     {
         get => (int)this.GetValue(CurrentValueProperty);
@@ -41,7 +53,7 @@ public partial class Rating : ContentView
         }
     }
 
-    private static ImageSource CreateStarLabel(StarState state)
+    private static FontImageSource CreateStarLabel(StarState state)
     {
         return state switch
         {

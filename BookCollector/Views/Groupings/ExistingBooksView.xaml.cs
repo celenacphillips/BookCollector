@@ -2,13 +2,22 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
+namespace BookCollector.Views.Groupings;
+
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Groupings;
 
-namespace BookCollector.Views.Groupings;
-
+/// <summary>
+/// ExistingBooksView class.
+/// </summary>
 public partial class ExistingBooksView : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExistingBooksView"/> class.
+    /// </summary>
+    /// <param name="selected">Selected grouping.</param>
+    /// <param name="viewTitle">Selected grouping name.</param>
+    /// <param name="previousViewModel">Selected grouping main page.</param>
     public ExistingBooksView(object selected, string viewTitle, object previousViewModel)
     {
         this.ViewModel = new ExistingBooksViewModel(selected, this, previousViewModel)
@@ -22,7 +31,27 @@ public partial class ExistingBooksView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private void OnLayoutMeasured(object sender, EventArgs e)
+    private ExistingBooksViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Called when the view becomes visible.
+    /// </summary>
+    protected override async void OnAppearing()
+    {
+        this.Dispatcher.Dispatch(() =>
+        {
+            var items = this.ToolbarItems.ToList();
+            this.ToolbarItems.Clear();
+            foreach (var item in items)
+            {
+                this.ToolbarItems.Add(item);
+            }
+        });
+
+        await this.ViewModel.SetViewModelData();
+    }
+
+    private void OnLayoutMeasured(object? sender, EventArgs? e)
     {
         this.Dispatcher.Dispatch(() =>
         {
@@ -45,24 +74,5 @@ public partial class ExistingBooksView : ContentPage
                 this.bookCollectionList.IsVisible = true;
             }
         });
-    }
-
-    private ExistingBooksViewModel ViewModel { get; set; }
-
-    // Need this to make sure books populate when you
-    // navigate back to the view.
-    protected override async void OnAppearing()
-    {
-        this.Dispatcher.Dispatch(() =>
-        {
-            var items = this.ToolbarItems.ToList();
-            this.ToolbarItems.Clear();
-            foreach (var item in items)
-            {
-                this.ToolbarItems.Add(item);
-            }
-        });
-
-        await this.ViewModel.SetViewModelData();
     }
 }

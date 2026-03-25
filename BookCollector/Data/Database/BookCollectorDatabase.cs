@@ -2,30 +2,38 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using CommunityToolkit.Maui.Core.Extensions;
-using SQLite;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.Data.Database
 {
-    public partial class BookCollectorDatabase : BaseViewModel
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using SQLite;
+
+    /// <summary>
+    /// BookCollectorDatabase class.
+    /// </summary>
+    public partial class BookCollectorDatabase : ObservableObject
     {
         private SQLiteAsyncConnection database;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookCollectorDatabase"/> class.
+        /// </summary>
         public BookCollectorDatabase()
         {
         }
 
+        /// <summary>
+        /// Initialize the database and creates the necessary tables if they do not exist.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task Init()
         {
-            if (this.database is null)
-            {
-                this.database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-            }
+            this.database ??= new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
             try
             {
@@ -49,12 +57,13 @@ namespace BookCollector.Data.Database
             }
         }
 
+        /// <summary>
+        /// Drop all the tables in the this.database.
+        /// </summary>
+        /// <returns>A task.</returns>
         public async Task DropAllTables()
         {
-            if (this.database is null)
-            {
-                this.database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-            }
+            this.database ??= new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
             await this.database.DropTableAsync<AuthorDatabaseModel>();
             await this.database.DropTableAsync<BookAuthorModel>();
@@ -70,6 +79,17 @@ namespace BookCollector.Data.Database
         }
 
         /*********************** Book Methods ***********************/
+
+        /// <summary>
+        /// Get a list of all books that are currently being read. A book is considered
+        /// to be currently being read if the number of pages read is not equal to the total
+        /// number of pages and the number of pages read is not equal to 0, or if the book
+        /// is marked as up next, or if the number of hours listened is not equal to the
+        /// total number of hours and the number of minutes listened is not equal to the
+        /// total number of minutes and the number of hours listened is not equal to 0 and
+        /// the number of minutes listened is not equal to 0.
+        /// </summary>
+        /// <returns>A list of all books that are currently being read.</returns>
         public async Task<List<BookModel>> GetAllReadingBooksAsync()
         {
             try
@@ -91,10 +111,17 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get a list of all books that are yet to be read. A book is considered to be yet
+        /// to be read if the number of pages read is equal to 0 and the number of hours
+        /// listened is equal to 0 and the number of minutes listened is equal to 0 and the
+        /// book is not marked as up next.
+        /// </summary>
+        /// <returns>A list of all books that are yet to be read.</returns>
         public async Task<List<BookModel>> GetAllToBeReadBooksAsync()
         {
             try
@@ -116,10 +143,19 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get a list of all books that have been read. A book is considered to be read if
+        /// the number of pages read is equal to the total number of pages and the number of
+        /// pages read is not equal to 0, or if the number of hours listened is equal to the
+        /// total number of hours and the number of minutes listened is equal to the total
+        /// number of minutes and the number of hours listened is not equal to 0 and the number
+        /// of minutes listened is not equal to 0.
+        /// </summary>
+        /// <returns>A list of all books that have have been read.</returns>
         public async Task<List<BookModel>> GetAllReadBooksAsync()
         {
             try
@@ -140,10 +176,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get a list of all books in the database, regardless of their reading status.
+        /// </summary>
+        /// <returns>A list of all books.</returns>
         public async Task<List<BookModel>> GetAllBooksAsync()
         {
             try
@@ -162,10 +202,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get the genre for a book based on the provided genre guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the genre to retrieve.</param>
+        /// <returns>Selected genre.</returns>
         public async Task<GenreModel?> GetGenreForBookAsync(Guid? inputGuid)
         {
             try
@@ -176,14 +221,19 @@ namespace BookCollector.Data.Database
                     .Where(x => x.GenreGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<GenreModel>(genre);
+                return BaseViewModel.ConvertTo<GenreModel>(genre);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get the location for a book based on the provided location guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the location to retrieve.</param>
+        /// <returns>Selected location.</returns>
         public async Task<LocationModel?> GetLocationForBookAsync(Guid? inputGuid)
         {
             try
@@ -194,14 +244,19 @@ namespace BookCollector.Data.Database
                     .Where(x => x.LocationGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<LocationModel>(location);
+                return BaseViewModel.ConvertTo<LocationModel>(location);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get the series for a book based on the provided series guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the series to retrieve.</param>
+        /// <returns>Selected series.</returns>
         public async Task<SeriesModel?> GetSeriesForBookAsync(Guid? inputGuid)
         {
             try
@@ -212,14 +267,19 @@ namespace BookCollector.Data.Database
                     .Where(x => x.SeriesGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get the collection for a book based on the provided collection guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the collection to retrieve.</param>
+        /// <returns>Selected collection.</returns>
         public async Task<CollectionModel?> GetCollectionForBookAsync(Guid? inputGuid)
         {
             try
@@ -230,71 +290,19 @@ namespace BookCollector.Data.Database
                     .Where(x => x.CollectionGuid == inputGuid)
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<CollectionModel>(collection);
+                return BaseViewModel.ConvertTo<CollectionModel>(collection);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<BookModel>> GetBooksReadInYearAsync(int year, bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate))
-                    .ToListAsync();
-
-                var booksList = books
-                    .Where(x => !string.IsNullOrEmpty(x.BookEndDate) && DateTime.Parse(x.BookEndDate).Year == year)
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<BookModel>> GetAllBooksWithAPriceAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <summary>
+        /// Get all book authors for a book based on the provided book guid.
+        /// </summary>
+        /// <param name="bookGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of book authors for the book.</returns>
         public async Task<List<BookAuthorModel>> GetAllBookAuthorsForBookAsync(Guid? bookGuid)
         {
             try
@@ -310,10 +318,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all author guids for a book based on the provided book guid.
+        /// </summary>
+        /// <param name="bookGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of author guids for the book.</returns>
         public async Task<List<Guid>> GetAllAuthorGuidsForBookAsync(Guid bookGuid)
         {
             try
@@ -328,12 +341,17 @@ namespace BookCollector.Data.Database
                 .Select(x => x.AuthorGuid)
                 .Distinct()];
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get authors objects based on a list of guids provided.
+        /// </summary>
+        /// <param name="authorGuids">The guids to retrieve authors for.</param>
+        /// <returns>A list of authors for the book.</returns>
         public async Task<List<AuthorModel>> GetAllAuthorsForBookAsync(List<Guid> authorGuids)
         {
             try
@@ -350,7 +368,7 @@ namespace BookCollector.Data.Database
 
                     if (author != null)
                     {
-                        authors.Add(ConvertTo<AuthorModel>(author));
+                        authors.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
                     }
                 }
 
@@ -358,10 +376,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a book in the this.database.
+        /// </summary>
+        /// <param name="book">Book to save.</param>
+        /// <returns>Book that has been saved.</returns>
         public async Task<BookDatabaseModel> SaveBookAsync(BookDatabaseModel book)
         {
             try
@@ -393,10 +416,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove book from the this.database.
+        /// </summary>
+        /// <param name="book">Book to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteBookAsync(BookDatabaseModel book)
         {
             try
@@ -406,77 +434,18 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<BookDatabaseModel?> GetBookByGuidAsync(Guid bookGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var book = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => x.BookGuid == bookGuid)
-                    .FirstOrDefaultAsync();
-
-                return book;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<BookDatabaseModel?> GetBookByNameAsync(string bookName)
-        {
-            try
-            {
-                await this.Init();
-
-                var book = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Equals(bookName))
-                    .FirstOrDefaultAsync();
-
-                return book;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<BookModel>> GetAllBooksWithoutBookCoversAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => x.HasNoBookCover || !x.HasBookCover)
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Book Methods ***********************/
 
         /*********************** Wishlist Book Methods ***********************/
+
+        /// <summary>
+        /// Get all wishlist books in the this.database.
+        /// </summary>
+        /// <returns>A list of wishlist books.</returns>
         public async Task<List<WishlistBookModel>> GetAllWishlistBooksAsync()
         {
             try
@@ -495,290 +464,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithAPriceAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookPrice))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithALocationAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithoutALocationAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => string.IsNullOrEmpty(x.BookWhereToBuy))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<string?>> GetAllWishlistBooksLocationsAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookWhereToBuy))
-                    .ToListAsync();
-
-                if (!showHiddenBooks)
-                {
-                    books = [.. books.Where(x => !x.HideBook)];
-                }
-
-                var locations = books
-                    .Select(x => x.BookWhereToBuy)
-                    .Distinct()
-                    .ToList();
-
-                return locations;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithASeriesAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookSeries))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithoutASeriesAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => string.IsNullOrEmpty(x.BookSeries))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<string?>> GetAllWishlistBooksSeriesAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookSeries))
-                    .ToListAsync();
-
-                if (!showHiddenBooks)
-                {
-                    books = [.. books.Where(x => !x.HideBook)];
-                }
-
-                var series = books
-                    .Select(x => x.BookSeries)
-                    .Distinct()
-                    .ToList();
-
-                return series;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithAuthorsAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.AuthorListString))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithoutAuthorsAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => string.IsNullOrEmpty(x.AuthorListString))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<string?>> GetAllWishlistBooksAuthorsAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.AuthorListString))
-                    .ToListAsync();
-
-                if (!showHiddenBooks)
-                {
-                    books = [.. books.Where(x => !x.HideBook)];
-                }
-
-                var authors = books
-                    .Select(x => x.AuthorListString)
-                    .Distinct()
-                    .ToList();
-
-                return authors;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <summary>
+        /// Add or update a wishlist book in the this.database.
+        /// </summary>
+        /// <param name="book">Wishlist book to save.</param>
+        /// <returns>Wishlist book that has been saved.</returns>
         public async Task<WishlistBookModel> SaveWishlistBookAsync(WishlistBookDatabaseModel book)
         {
             try
@@ -806,14 +500,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(book);
                 }
 
-                return ConvertTo<WishlistBookModel>(book);
+                return BaseViewModel.ConvertTo<WishlistBookModel>(book);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove wishlist book from the this.database.
+        /// </summary>
+        /// <param name="book">Wishlist book to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteWishlistBookAsync(WishlistBookDatabaseModel book)
         {
             try
@@ -823,136 +522,19 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<WishlistBookDatabaseModel?> GetWishlistBookByGuidAsync(Guid bookGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var book = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => x.BookGuid == bookGuid)
-                    .FirstOrDefaultAsync();
-
-                return book;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<WishlistBookDatabaseModel?> GetWishlistBookByNameAsync(string bookName)
-        {
-            try
-            {
-                await this.Init();
-
-                var book = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.Equals(bookName))
-                    .FirstOrDefaultAsync();
-
-                return book;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<WishlistBookModel>> GetAllWishlistBooksWithoutBookCoversAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<WishlistBookDatabaseModel>()
-                    .Where(x => x.HasNoBookCover)
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new WishlistBookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Wishlist Book Methods ***********************/
 
-        /*********************** Statistics Methods ***********************/
-        public async Task<List<BookModel>> GetBooksByFavoriteAsync(bool showHiddenBooks, bool favoriteValue)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => x.IsFavorite == favoriteValue)
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<List<BookModel>> GetBooksByRatingAsync(bool showHiddenBooks, int ratingValue)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => x.Rating == ratingValue)
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        /*********************** Statistics Methods ***********************/
-
         /*********************** Chapter Methods ***********************/
+
+        /// <summary>
+        /// Get all chapters in a book based on the provided book guid.
+        /// </summary>
+        /// <param name="bookGuid">Book guid to get chapters for.</param>
+        /// <returns>A list of chapters in the given book.</returns>
         public async Task<List<ChapterModel>> GetChaptersInBookAsync(Guid bookGuid)
         {
             try
@@ -972,10 +554,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all chapters in the database, regardless of the book they belong to.
+        /// </summary>
+        /// <returns>A list of all chapters added for every book.</returns>
         public async Task<List<ChapterModel>> GetAllChaptersAsync()
         {
             try
@@ -995,10 +581,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a chapter in the this.database.
+        /// </summary>
+        /// <param name="chapter">Chapter to save.</param>
+        /// <returns>A task.</returns>
         public async Task SaveChapterAsync(ChapterDatabaseModel chapter)
         {
             try
@@ -1028,10 +619,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove chapter from the this.database.
+        /// </summary>
+        /// <param name="chapter">Chapter to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteChapterAsync(ChapterDatabaseModel chapter)
         {
             try
@@ -1041,25 +637,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<ChapterDatabaseModel?> GetChapterByGuidAsync(Guid chapterGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var series = await this.database.Table<ChapterDatabaseModel>()
-                    .Where(x => x.ChapterGuid == chapterGuid)
-                    .FirstOrDefaultAsync();
-
-                return series;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
@@ -1067,6 +645,10 @@ namespace BookCollector.Data.Database
 
         /*********************** Book Author Methods ***********************/
 
+        /// <summary>
+        /// Get all book authors in the database, regardless of the book they belong to.
+        /// </summary>
+        /// <returns>A list of all book authors added for every book.</returns>
         public async Task<List<BookAuthorModel>> GetAllBookAuthorsAsync()
         {
             try
@@ -1081,10 +663,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a book author in the this.database.
+        /// </summary>
+        /// <param name="bookAuthor">Book author to save.</param>
+        /// <returns>A task.</returns>
         public async Task SaveBookAuthorAsync(BookAuthorModel bookAuthor)
         {
             try
@@ -1114,23 +701,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task DeleteBookAuthorAsync(BookAuthorModel bookAuthor)
-        {
-            try
-            {
-                await this.Init();
-                await this.database.DeleteAsync(bookAuthor);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <summary>
+        /// Remove book author from the this.database.
+        /// </summary>
+        /// <param name="authorGuid">Author guid to match.</param>
+        /// <param name="bookGuid">Book guid to match.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteBookAuthorAsync(Guid authorGuid, Guid bookGuid)
         {
             try
@@ -1148,10 +728,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update an author to a book in the this.database.
+        /// </summary>
+        /// <param name="authorGuid">Author guid to add.</param>
+        /// <param name="bookGuid">Book guid to add to.</param>
+        /// <returns>A task.</returns>
         public async Task AddAuthorToBookAsync(Guid? authorGuid, Guid? bookGuid)
         {
             try
@@ -1180,13 +766,19 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Book Author Methods ***********************/
 
         /*********************** Author Methods ***********************/
+
+        /// <summary>
+        /// Get all book authors for an author based on the provided author guid.
+        /// </summary>
+        /// <param name="authorGuid">Author guid to get book authors for.</param>
+        /// <returns>A list of book authors.</returns>
         public async Task<List<BookAuthorModel>> GetAllBookAuthorsForAuthorAsync(Guid authorGuid)
         {
             try
@@ -1202,10 +794,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all the books for an author based on the provided author guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="authorGuid">Author guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books for the provided author.</returns>
         public async Task<List<BookModel>> GetAllBooksForAuthorAsync(Guid authorGuid, bool showHiddenBooks)
         {
             try
@@ -1245,55 +843,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<int> GetAllBooksCountForAuthorAsync(Guid authorGuid, bool showHiddenBooks)
-        {
-            return 0;
-
-            //try
-            //{
-            //    await this.Init();
-
-            //    var bookAuthors = await this.database.Table<BookAuthorModel>()
-            //        .Where(x => x.AuthorGuid == authorGuid)
-            //        .OrderBy(x => x.BookGuid)
-            //        .ToListAsync();
-
-            //    var books = new List<BookDatabaseModel>();
-
-            //    foreach (var bookAuthor in bookAuthors)
-            //    {
-            //        var book = await this.database.Table<BookDatabaseModel>()
-            //            .Where(x => x.BookGuid == bookAuthor.BookGuid)
-            //            .FirstOrDefaultAsync();
-
-            //        if (book != null)
-            //        {
-            //            books.Add(book);
-            //        }
-            //    }
-
-            //    var booksList = books
-            //            .Select(x => new BookModel(x))
-            //            .OrderBy(x => x.ParsedTitle)
-            //            .ToList();
-
-            //    if (!showHiddenBooks)
-            //    {
-            //        return [.. booksList.Where(x => !x.HideBook)];
-            //    }
-
-            //    return booksList;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-        }
-
+        /// <summary>
+        /// Get books that do not have the provided author as an author. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="reverseAuthorName">Author name to search for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books that aren't assigned to the provided author.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutAuthorAsync(string reverseAuthorName, bool showHiddenBooks)
         {
             try
@@ -1318,10 +877,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all authors in the this.database.
+        /// </summary>
+        /// <returns>A list of authors.</returns>
         public async Task<List<AuthorModel>> GetAllAuthorsAsync()
         {
             try
@@ -1341,38 +904,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<BookModel>> GetAllBooksWithoutAnAuthorAsync(bool showHiddenBooks)
-        {
-            try
-            {
-                await this.Init();
-
-                var books = await this.database.Table<BookDatabaseModel>()
-                    .Where(x => string.IsNullOrEmpty(x.AuthorListString))
-                    .ToListAsync();
-
-                var booksList = books
-                        .Select(x => new BookModel(x))
-                        .OrderBy(x => x.ParsedTitle)
-                        .ToList();
-
-                if (!showHiddenBooks)
-                {
-                    return [.. booksList.Where(x => !x.HideBook)];
-                }
-
-                return booksList;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <summary>
+        /// Add or update an author in the this.database.
+        /// </summary>
+        /// <param name="author">Author to save.</param>
+        /// <returns>Author that has been saved.</returns>
         public async Task<AuthorModel> SaveAuthorAsync(AuthorDatabaseModel author)
         {
             try
@@ -1400,14 +940,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(author);
                 }
 
-                return ConvertTo<AuthorModel>(author);
+                return BaseViewModel.ConvertTo<AuthorModel>(author);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove author from the this.database.
+        /// </summary>
+        /// <param name="author">Author to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteAuthorAsync(AuthorDatabaseModel author)
         {
             try
@@ -1417,10 +962,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add author to database and to book if book guid is provided.
+        /// </summary>
+        /// <param name="author">Author to add.</param>
+        /// <param name="bookGuid">Book guid to add author to.</param>
+        /// <returns>Author added.</returns>
         public async Task<AuthorModel> InsertAuthorAsync(AuthorDatabaseModel author, Guid? bookGuid)
         {
             try
@@ -1433,10 +984,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get author by author guid.
+        /// </summary>
+        /// <param name="authorGuid">Author guid to find.</param>
+        /// <returns>The found author, or null.</returns>
         public async Task<AuthorDatabaseModel?> GetAuthorByGuidAsync(Guid authorGuid)
         {
             try
@@ -1451,10 +1007,16 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get author by first and last name.
+        /// </summary>
+        /// <param name="authorFirstName">Author first name to find.</param>
+        /// <param name="authorLastName">Author last name to find.</param>
+        /// <returns>The found author, or null.</returns>
         public async Task<AuthorModel?> GetAuthorByNameAsync(string authorFirstName, string authorLastName)
         {
             try
@@ -1463,9 +1025,9 @@ namespace BookCollector.Data.Database
 
                 var filteredList = new ObservableCollection<AuthorModel>();
 
-                if (AuthorsViewModel.filteredAuthorList1 != null)
+                if (AuthorsViewModel.hiddenFilteredAuthorList != null)
                 {
-                    filteredList = AuthorsViewModel.filteredAuthorList1;
+                    filteredList = AuthorsViewModel.hiddenFilteredAuthorList;
                 }
                 else
                 {
@@ -1489,13 +1051,20 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Author Methods ***********************/
 
         /*********************** Collection Methods ***********************/
+
+        /// <summary>
+        /// Get all books in a collection based on the provided collection guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="collectionGuid">Collection guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the collection.</returns>
         public async Task<List<BookModel>> GetAllBooksInCollectionAsync(Guid collectionGuid, bool showHiddenBooks)
         {
             try
@@ -1520,10 +1089,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all books without a collection assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a collection assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutACollectionAsync(bool showHiddenBooks)
         {
             try
@@ -1548,10 +1122,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all collections in the this.database.
+        /// </summary>
+        /// <returns>A list of collections.</returns>
         public async Task<List<CollectionModel>> GetAllCollectionsAsync()
         {
             try
@@ -1570,10 +1148,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a collection in the this.database.
+        /// </summary>
+        /// <param name="collection">Collection to save.</param>
+        /// <returns>Collection that has been saved.</returns>
         public async Task<CollectionModel> SaveCollectionAsync(CollectionDatabaseModel collection)
         {
             try
@@ -1601,14 +1184,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(collection);
                 }
 
-                return ConvertTo<CollectionModel>(collection);
+                return BaseViewModel.ConvertTo<CollectionModel>(collection);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove collection from the this.database.
+        /// </summary>
+        /// <param name="collection">Collection to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteCollectionAsync(CollectionDatabaseModel collection)
         {
             try
@@ -1618,49 +1206,20 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<CollectionDatabaseModel?> GetCollectionByGuidAsync(Guid collectionGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var collection = await this.database.Table<CollectionDatabaseModel>()
-                    .Where(x => x.CollectionGuid == collectionGuid)
-                    .FirstOrDefaultAsync();
-
-                return collection;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<CollectionDatabaseModel?> GetCollectionByNameAsync(string collectionName)
-        {
-            try
-            {
-                await this.Init();
-
-                var collection = await this.database.Table<CollectionDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.CollectionName) && x.CollectionName.Equals(collectionName))
-                    .FirstOrDefaultAsync();
-
-                return collection;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Collection Methods ***********************/
 
         /*********************** Genre Methods ***********************/
+
+        /// <summary>
+        /// Get all books in a genre based on the provided genre guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="genreGuid">Genre guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the genre.</returns>
         public async Task<List<BookModel>> GetAllBooksInGenreAsync(Guid genreGuid, bool showHiddenBooks)
         {
             try
@@ -1685,10 +1244,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all books without a genre assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a genre assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutAGenreAsync(bool showHiddenBooks)
         {
             try
@@ -1713,10 +1277,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all genres in the this.database.
+        /// </summary>
+        /// <returns>A list of genres.</returns>
         public async Task<List<GenreModel>> GetAllGenresAsync()
         {
             try
@@ -1735,10 +1303,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a genre in the this.database.
+        /// </summary>
+        /// <param name="genre">Genre to save.</param>
+        /// <returns>Genre that has been saved.</returns>
         public async Task<GenreModel> SaveGenreAsync(GenreDatabaseModel genre)
         {
             try
@@ -1766,14 +1339,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(genre);
                 }
 
-                return ConvertTo<GenreModel>(genre);
+                return BaseViewModel.ConvertTo<GenreModel>(genre);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove genre from the this.database.
+        /// </summary>
+        /// <param name="genre">Genre to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteGenreAsync(GenreDatabaseModel genre)
         {
             try
@@ -1783,49 +1361,20 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<GenreDatabaseModel?> GetGenreByGuidAsync(Guid genreGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var genre = await this.database.Table<GenreDatabaseModel>()
-                    .Where(x => x.GenreGuid == genreGuid)
-                    .FirstOrDefaultAsync();
-
-                return genre;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<GenreDatabaseModel?> GetGenreByNameAsync(string genreName)
-        {
-            try
-            {
-                await this.Init();
-
-                var genre = await this.database.Table<GenreDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.GenreName) && x.GenreName.Equals(genreName))
-                    .FirstOrDefaultAsync();
-
-                return genre;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Genre Methods ***********************/
 
         /*********************** Series Methods ***********************/
+
+        /// <summary>
+        /// Get all books in a series based on the provided series guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="seriesGuid">Series guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the series.</returns>
         public async Task<List<BookModel>> GetAllBooksInSeriesAsync(Guid seriesGuid, bool showHiddenBooks)
         {
             try
@@ -1850,10 +1399,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all books without a series assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a series assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutASeriesAsync(bool showHiddenBooks)
         {
             try
@@ -1878,10 +1432,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all series in the this.database.
+        /// </summary>
+        /// <returns>A list of series.</returns>
         public async Task<List<SeriesModel>> GetAllSeriesAsync()
         {
             try
@@ -1900,10 +1458,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a series in the this.database.
+        /// </summary>
+        /// <param name="series">Series to save.</param>
+        /// <returns>Series that has been saved.</returns>
         public async Task<SeriesModel> SaveSeriesAsync(SeriesDatabaseModel series)
         {
             try
@@ -1931,14 +1494,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(series);
                 }
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove series from the this.database.
+        /// </summary>
+        /// <param name="series">Series to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteSeriesAsync(SeriesDatabaseModel series)
         {
             try
@@ -1948,28 +1516,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<SeriesDatabaseModel?> GetSeriesByGuidAsync(Guid seriesGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var series = await this.database.Table<SeriesDatabaseModel>()
-                    .Where(x => x.SeriesGuid == seriesGuid)
-                    .FirstOrDefaultAsync();
-
-                return series;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <summary>
+        /// Get a series based on the provided series name.
+        /// </summary>
+        /// <param name="seriesName">Series name to find.</param>
+        /// <returns>The found series, or null.</returns>
         public async Task<SeriesModel?> GetSeriesByNameAsync(string? seriesName)
         {
             try
@@ -1980,17 +1535,24 @@ namespace BookCollector.Data.Database
                     .Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(seriesName))
                     .FirstOrDefaultAsync();
 
-                return ConvertTo<SeriesModel>(series);
+                return BaseViewModel.ConvertTo<SeriesModel>(series);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
         /*********************** Series Methods ***********************/
 
         /*********************** Location Methods ***********************/
+
+        /// <summary>
+        /// Get all books in a location based on the provided location guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="locationGuid">Location guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the location.</returns>
         public async Task<List<BookModel>> GetAllBooksInLocationAsync(Guid locationGuid, bool showHiddenBooks)
         {
             try
@@ -2015,10 +1577,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all books without a location assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a location assigned.</returns>
         public async Task<List<BookModel>> GetAllBooksWithoutALocationAsync(bool showHiddenBooks)
         {
             try
@@ -2043,10 +1610,14 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Get all locations in the this.database.
+        /// </summary>
+        /// <returns>A list of locations.</returns>
         public async Task<List<LocationModel>> GetAllLocationsAsync()
         {
             try
@@ -2065,10 +1636,15 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Add or update a location in the this.database.
+        /// </summary>
+        /// <param name="location">Location to save.</param>
+        /// <returns>Location that has been saved.</returns>
         public async Task<LocationModel> SaveLocationAsync(LocationDatabaseModel location)
         {
             try
@@ -2096,14 +1672,19 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(location);
                 }
 
-                return ConvertTo<LocationModel>(location);
+                return BaseViewModel.ConvertTo<LocationModel>(location);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Remove location from the this.database.
+        /// </summary>
+        /// <param name="location">Location to remove.</param>
+        /// <returns>A task.</returns>
         public async Task DeleteLocationAsync(LocationDatabaseModel location)
         {
             try
@@ -2113,43 +1694,7 @@ namespace BookCollector.Data.Database
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-        public async Task<LocationDatabaseModel?> GetLocationByGuidAsync(Guid locationGuid)
-        {
-            try
-            {
-                await this.Init();
-
-                var location = await this.database.Table<LocationDatabaseModel>()
-                    .Where(x => x.LocationGuid == locationGuid)
-                    .FirstOrDefaultAsync();
-
-                return location;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<LocationDatabaseModel?> GetLocationByNameAsync(string locationName)
-        {
-            try
-            {
-                await this.Init();
-
-                var location = await this.database.Table<LocationDatabaseModel>()
-                    .Where(x => !string.IsNullOrEmpty(x.LocationName) && x.LocationName.Equals(locationName))
-                    .FirstOrDefaultAsync();
-
-                return location;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 

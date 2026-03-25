@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BookCollector.Views.Controls"
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Controls.FilterablePicker"
-             x:Name="this">
+             x:Name="this"
+             x:DataType="local:FilterablePicker">
     
     <VerticalStackLayout BindingContext="{x:Reference this}"
                          Margin="10">
@@ -28,7 +30,7 @@
                         x:Name="collectionView">
             
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="x:String">
                     <Grid x:Name="Root">
 
                         <VisualStateManager.VisualStateGroups>
@@ -47,7 +49,7 @@
                         </VisualStateManager.VisualStateGroups>
 
 
-                        <Label Text="{Binding .}"
+                        <Label Text="{Binding}"
                                HeightRequest="50"
                                HorizontalOptions="Fill"
                                HorizontalTextAlignment="Center"

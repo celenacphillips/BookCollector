@@ -2,61 +2,134 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BarcodeScanner.Mobile;
-using BookCollector.CustomPermissions;
-using BookCollector.Data.BookAPI;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.WishListBook;
-using BookCollector.Views.Book;
-using BookCollector.Views.Popups;
-using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Book
 {
+#if ANDROID
+    using BarcodeScanner.Mobile;
+#endif
+    using System.Collections.ObjectModel;
+    using BookCollector.CustomPermissions;
+    using BookCollector.Data.BookAPI;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Popups;
+    using BookCollector.ViewModels.WishListBook;
+    using BookCollector.Views.Book;
+    using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Maui.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// BookSearchViewModel class.
+    /// </summary>
     public partial class BookSearchViewModel : BookBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets the ISBN to search.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? isbnInput;
 
+        /// <summary>
+        /// Gets or sets the title to search.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? titleInput;
 
+        /// <summary>
+        /// Gets or sets the author name to search.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? authorInput;
 
+        /// <summary>
+        /// Gets or sets a string parse for total items found.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string totalItemsstring;
 
+        /// <summary>
+        /// Gets or sets the total items found.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public int totalItems;
 
+        /// <summary>
+        /// Gets or sets response items from the search.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public ObservableCollection<Item>? isbnItems;
 
+        /// <summary>
+        /// Gets or sets selected response item.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public Item? selectedISBNItem;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the ISBN button.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showAddISBN;
 
+        /// <summary>
+        /// Gets or sets the selected wishlist book.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public WishlistBookModel? selectedWishListBook;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the search form section is open or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool searchFormSectionValue;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the search form section is open or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool searchFormOpen;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the search form section is open or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool searchFormNotOpen;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookSearchViewModel"/> class.
+        /// </summary>
+        /// <param name="inputIsbn">Input ISBN to search.</param>
+        /// <param name="inputTitle">Input title to search.</param>
+        /// <param name="inputAuthorName">Input author name to search.</param>
+        /// <param name="view">View related to view model.</param>
         public BookSearchViewModel(string? inputIsbn, string? inputTitle, string? inputAuthorName, ContentPage view)
         {
             this.View = view;
@@ -64,30 +137,44 @@ namespace BookCollector.ViewModels.Book
             this.TitleInput = inputTitle;
             this.AuthorInput = inputAuthorName;
             this.TotalItemsstring = $"{AppStringResources.TotalItems}: ";
-            this.CollectionViewHeight = this.DeviceHeight;
+            this.CollectionViewHeight = DeviceHeight;
             this.ShowCollectionViewFooter = false;
 
             this.SearchFormSectionValue = false;
-            this.SearchFormChanged();
+            var result = this.SearchFormChanged();
         }
 
-        public object? PreviousViewModel { get; set; }
-
-        [RelayCommand]
-        public async Task Refresh()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async override Task SetViewModelData()
         {
-            this.SetRefreshTrue();
-            await this.Search();
-            this.SetRefreshFalse();
         }
 
+        /// <summary>
+        /// Set whether to refresh view or not.
+        /// </summary>
+        /// <param name="value">Value to change to.</param>
+        public override void SetRefreshView(bool value)
+        {
+        }
+
+        /// <summary>
+        /// Sets the expander arrow boolean values on change.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void SearchFormChanged()
+        public async Task SearchFormChanged()
         {
             this.SearchFormOpen = this.SearchFormSectionValue;
             this.SearchFormNotOpen = !this.SearchFormSectionValue;
         }
 
+        /// <summary>
+        /// Search api for books based on input search terms.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Search()
         {
@@ -109,11 +196,16 @@ namespace BookCollector.ViewModels.Book
             {
                 try
                 {
-                    List<Item>? items = new List<Item>();
+                    List<Item>? items = [];
                     int totalItems = 0;
 
                     var (combinedItems, totalCombinedItems) = await GoogleBooksAPI.CombinedSearch(this.IsbnInput, this.TitleInput, this.AuthorInput);
-                    items.AddRange(combinedItems);
+
+                    if (combinedItems != null)
+                    {
+                        items.AddRange(combinedItems);
+                    }
+
                     totalItems += totalCombinedItems;
 
                     this.SetIsBusyFalse();
@@ -122,7 +214,7 @@ namespace BookCollector.ViewModels.Book
                         items.Count == 0 ||
                         totalItems == 0)
                     {
-                        await DisplayMessage(AppStringResources.UnableToFindBook.Replace("api", "Google Books API"), null);
+                        await this.DisplayMessage(AppStringResources.UnableToFindBook.Replace("api", "Google Books API"), null);
                         this.SetIsBusyFalse();
                         this.ShowAddISBN = !string.IsNullOrEmpty(this.IsbnInput);
                     }
@@ -136,13 +228,13 @@ namespace BookCollector.ViewModels.Book
                 }
                 catch (Exception ex)
                 {
-                    await DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
+                    await this.DisplayMessage($"{AppStringResources.ErrorSearchingForBook}", null);
 #if DEBUG
-                    await DisplayMessage("Error!", ex.Message);
+                    await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                    await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                    await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
                     this.SetIsBusyFalse();
                     this.ShowAddISBN = true;
@@ -150,11 +242,15 @@ namespace BookCollector.ViewModels.Book
             }
             else
             {
-                await DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", null);
+                await this.DisplayMessage($"{AppStringResources.PleaseConnectToInternetToSearch}", null);
                 this.SetIsBusyFalse();
             }
         }
 
+        /// <summary>
+        /// Show popup to scan barcodes.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Scan()
         {
@@ -174,11 +270,22 @@ namespace BookCollector.ViewModels.Book
             }
             else
             {
-                await DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}");
+                await this.DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}");
             }
+#else
+            BookScanView view = new ()
+            {
+                ReturnViewModel = this,
+            };
+
+            await Shell.Current.Navigation.PushModalAsync(view);
 #endif
         }
 
+        /// <summary>
+        /// Save selected search result and return to the book edit view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task Save()
         {
@@ -186,36 +293,42 @@ namespace BookCollector.ViewModels.Book
             {
                 this.SetData();
 
-                if (this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
+                if (this.PreviousViewModel != null && this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (WishListBookEditViewModel)this.PreviousViewModel;
-                    previous.RefreshView = true;
+                    WishListBookEditViewModel.RefreshView = true;
                 }
 
-                if (this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
+                if (this.PreviousViewModel != null &&
+                    this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
                     !this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
                 {
                     var previous = (BookEditViewModel)this.PreviousViewModel;
-                    previous.RefreshView = true;
+                    BookEditViewModel.RefreshView = true;
                 }
 
                 await Shell.Current.Navigation.PopModalAsync();
             }
             catch (Exception ex)
             {
-                await DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
+                await this.DisplayMessage($"{AppStringResources.ErrorSavingBook}", null);
 #if DEBUG
-                await DisplayMessage("Error!", ex.Message);
+                await this.DisplayMessage("Error!", ex.Message);
 #endif
 
 #if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
+                await this.DisplayMessage(AppStringResources.AnErrorOccurred, null);
 #endif
             }
         }
 
+        /// <summary>
+        /// Show book cover popup.
+        /// </summary>
+        /// <returns>A task.</returns>
+        /// <param name="imageSource">The image to display.</param>
         [RelayCommand]
-        public void BookSearch_BookCoverPopup(ImageSource imageSource)
+        public async Task BookSearch_BookCoverPopup(ImageSource imageSource)
         {
             this.BookCover = imageSource;
             this.View.ShowPopup(new BookCoverPopup(this.BookCover));
@@ -312,7 +425,7 @@ namespace BookCollector.ViewModels.Book
 
                 if (this.SelectedBook.BookPageTotal <= 0 && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
                 {
-                    this.SelectedBook.BookPageTotal = (int)this.SelectedISBNItem.VolumeInfo?.PageCount;
+                    this.SelectedBook.BookPageTotal = this.SelectedISBNItem.VolumeInfo?.PageCount ?? 0;
                 }
 
                 if (string.IsNullOrEmpty(this.SelectedBook.BookSummary) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
@@ -374,7 +487,7 @@ namespace BookCollector.ViewModels.Book
                     foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                     {
                         string firstName = author[..author.LastIndexOf(' ')];
-                        string lastName = author[(author.LastIndexOf(' ') + 1)..];
+                        string lastName = author[(author.LastIndexOf(' ') + 1) ..];
 
                         authorList.Add(
                             new AuthorModel()
@@ -407,7 +520,7 @@ namespace BookCollector.ViewModels.Book
 
                 if (this.SelectedWishListBook.BookPageTotal <= 0 && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)
                 {
-                    this.SelectedWishListBook.BookPageTotal = (int)this.SelectedISBNItem.VolumeInfo?.PageCount;
+                    this.SelectedWishListBook.BookPageTotal = this.SelectedISBNItem.VolumeInfo?.PageCount ?? 0;
                 }
 
                 if (string.IsNullOrEmpty(this.SelectedWishListBook.BookSummary) && this.SelectedISBNItem != null && this.SelectedISBNItem.VolumeInfo != null)

@@ -4,18 +4,16 @@
 
 namespace BookCollector.Views.Controls.Series;
 
+/// <summary>
+/// SeriesCollectionList class.
+/// </summary>
 public partial class SeriesCollectionList : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SeriesCollectionList"/> class.
+    /// </summary>
     public SeriesCollectionList()
     {
         this.InitializeComponent();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-
-        // Reset visual state when the cell is reused
-        VisualStateManager.GoToState(this, "Normal");
     }
 }

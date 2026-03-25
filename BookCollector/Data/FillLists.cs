@@ -2,26 +2,38 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using CommunityToolkit.Maui.Core.Extensions;
-using System.Collections.ObjectModel;
-using System.Linq;
-
 namespace BookCollector.Data
 {
-    public partial class FillLists : BaseViewModel
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.Models;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using CommunityToolkit.Maui.Core.Extensions;
+    using CommunityToolkit.Mvvm.ComponentModel;
+
+    /// <summary>
+    /// FillLists class.
+    /// </summary>
+    public partial class FillLists : ObservableObject
     {
+        /// <summary>
+        /// Get a list of all books that are currently being read. A book is considered
+        /// to be currently being read if the number of pages read is not equal to the total
+        /// number of pages and the number of pages read is not equal to 0, or if the book
+        /// is marked as up next, or if the number of hours listened is not equal to the
+        /// total number of hours and the number of minutes listened is not equal to the
+        /// total number of minutes and the number of hours listened is not equal to 0 and
+        /// the number of minutes listened is not equal to 0.
+        /// </summary>
+        /// <returns>A list of all books that are currently being read.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetReadingBooksList()
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
                     x.UpNext ||
                     (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
@@ -29,20 +41,27 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllReadingBooksAsync();
+                var list = await BaseViewModel.Database.GetAllReadingBooksAsync();
                 filteredList = list.ToObservableCollection();
             }
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get a list of all books that are yet to be read. A book is considered to be yet
+        /// to be read if the number of pages read is equal to 0 and the number of hours
+        /// listened is equal to 0 and the number of minutes listened is equal to 0 and the
+        /// book is not marked as up next.
+        /// </summary>
+        /// <returns>A list of all books that are yet to be read.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetToBeReadBooksList()
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead == 0 &&
                     (x.BookHourListened == 0 && x.BookMinuteListened == 0))
                     && !x.UpNext)
@@ -50,76 +69,107 @@ namespace BookCollector.Data
             }
             else
             {
-                var list = await Database.GetAllToBeReadBooksAsync();
+                var list = await BaseViewModel.Database.GetAllToBeReadBooksAsync();
                 filteredList = list.ToObservableCollection();
             }
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get a list of all books that have been read. A book is considered to be read if
+        /// the number of pages read is equal to the total number of pages and the number of
+        /// pages read is not equal to 0, or if the number of hours listened is equal to the
+        /// total number of hours and the number of minutes listened is equal to the total
+        /// number of minutes and the number of hours listened is not equal to 0 and the number
+        /// of minutes listened is not equal to 0.
+        /// </summary>
+        /// <returns>A list of all books that have have been read.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetReadBooksList()
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            if (AllBooksViewModel.filteredBookList1 != null)
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
             {
-                filteredList = AllBooksViewModel.filteredBookList1
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
                     (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
                     .ToObservableCollection();
             }
             else
             {
-                var list = await Database.GetAllReadBooksAsync();
+                var list = await BaseViewModel.Database.GetAllReadBooksAsync();
                 filteredList = list.ToObservableCollection();
             }
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get a list of all books in the database, regardless of their reading status.
+        /// </summary>
+        /// <returns>A list of all books.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksList()
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksAsync();
+            var list = await BaseViewModel.Database.GetAllBooksAsync();
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all wishlist books.
+        /// </summary>
+        /// <returns>A list of wishlist books.</returns>
         public static async Task<ObservableCollection<WishlistBookModel>?> GetBookWishList()
         {
             ObservableCollection<WishlistBookModel>? filteredList = null;
 
-            var list = await Database.GetAllWishlistBooksAsync();
+            var list = await BaseViewModel.Database.GetAllWishlistBooksAsync();
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all chapters in a book based on the provided book guid.
+        /// </summary>
+        /// <param name="inputGuid">Book guid to get chapters for.</param>
+        /// <returns>A list of chapters in the given book.</returns>
         public static async Task<ObservableCollection<ChapterModel>?> GetAllChaptersInBook(Guid? inputGuid)
         {
             ObservableCollection<ChapterModel>? chapterList = null;
 
             if (inputGuid != null)
             {
-                var list = await Database.GetChaptersInBookAsync((Guid)inputGuid);
+                var list = await BaseViewModel.Database.GetChaptersInBookAsync((Guid)inputGuid);
                 chapterList = list.ToObservableCollection();
             }
 
             return chapterList;
         }
 
+        /// <summary>
+        /// Get all chapters in the database, regardless of the book they belong to.
+        /// </summary>
+        /// <returns>A list of all chapters added for every book.</returns>
         public static async Task<ObservableCollection<ChapterModel>?> GetAllChapters()
         {
             ObservableCollection<ChapterModel>? chapterList = null;
 
-            var list = await Database.GetAllChaptersAsync();
+            var list = await BaseViewModel.Database.GetAllChaptersAsync();
             chapterList = list.ToObservableCollection();
 
             return chapterList;
         }
 
+        /// <summary>
+        /// Get a list of publishers in the provided book list. The list of publishers is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of publishers, ordered alphabetically.</returns>
         public static async Task<ObservableCollection<string>> GetAllPublishersInBookList(ObservableCollection<BookModel> bookList)
         {
             var publisherList = new ObservableCollection<string>();
@@ -139,7 +189,12 @@ namespace BookCollector.Data
             return publisherList;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllPublishersInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        /// <summary>
+        /// Get a list of publishers in the provided wishlist book list. The list of publishers is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of publishers, ordered alphabetically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllPublishersInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var publisherList = new ObservableCollection<string>();
 
@@ -158,6 +213,11 @@ namespace BookCollector.Data
             return publisherList;
         }
 
+        /// <summary>
+        /// Get a list of authors in the provided book list. The list of authors is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of authors, ordered alphabetically.</returns>
         public static async Task<ObservableCollection<string>> GetAllAuthorsInBookList(ObservableCollection<BookModel> bookList)
         {
             var authorListNames = new ObservableCollection<string>();
@@ -167,7 +227,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var list = SplitStringIntoAuthorList(book.AuthorListString);
+                    var list = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in list)
                     {
@@ -191,7 +251,12 @@ namespace BookCollector.Data
             return authorListNames;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllAuthorsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        /// <summary>
+        /// Get a list of authors in the provided wishlist book list. The list of authors is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of authors, ordered alphabetically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllAuthorsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var authorListNames = new ObservableCollection<string>();
             var authorList = new ObservableCollection<AuthorModel>();
@@ -200,7 +265,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var list = SplitStringIntoAuthorList(book.AuthorListString);
+                    var list = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
                     foreach (var author in list)
                     {
@@ -224,7 +289,12 @@ namespace BookCollector.Data
             return authorListNames;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllLocationsInBookList(ObservableCollection<BookModel> bookList)
+        /// <summary>
+        /// Get a list of locations in the provided wishlist book list. The list of locations is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of locations, ordered alphabetically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllLocationsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var locationList = new ObservableCollection<string>();
 
@@ -232,22 +302,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.BookWhereToBuy) && !locationList.Any(x => x.Equals(book.BookWhereToBuy)))
                 {
-                    locationList.Add(book.BookWhereToBuy);
-                }
-            }
-
-            return locationList;
-        }
-
-        public static async Task<ObservableCollection<string>> GetAllLocationsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
-        {
-            var locationList = new ObservableCollection<string>();
-
-            foreach (var book in bookList)
-            {
-                if (!string.IsNullOrEmpty(book.BookWhereToBuy) && !locationList.Any(x => x.Equals(book.BookWhereToBuy)))
-                {
-                    locationList.Add(char.ToUpper(book.BookWhereToBuy[0]) + book.BookWhereToBuy.Substring(1).ToLower());
+                    locationList.Add(char.ToUpper(book.BookWhereToBuy[0]) + book.BookWhereToBuy[1..].ToLower());
                 }
             }
 
@@ -258,32 +313,12 @@ namespace BookCollector.Data
             return locationList;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllSeriesInBookList(ObservableCollection<BookModel> bookList)
-        {
-            var seriesListNames = new ObservableCollection<string>();
-            var seriesList = new ObservableCollection<SeriesModel>();
-
-            foreach (var book in bookList)
-            {
-                if (!string.IsNullOrEmpty(book.BookSeries) && !seriesList.Any(x => x.Equals(book.BookSeries)))
-                {
-                    seriesList.Add(new SeriesModel()
-                    {
-                        SeriesName = book.BookSeries,
-                    });
-                }
-            }
-
-            seriesList = seriesList.Distinct().ToObservableCollection();
-
-            seriesList = seriesList.OrderBy(x => x.ParsedSeriesName).ToObservableCollection();
-
-            seriesListNames = seriesList.Select(x => x.SeriesName).ToObservableCollection();
-
-            return seriesListNames;
-        }
-
-        public static async Task<ObservableCollection<string>> GetAllSeriesInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        /// <summary>
+        /// Get a list of series in the provided wishlist book list. The list of series is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of series, ordered alphabetically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllSeriesInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var seriesList = new ObservableCollection<string>();
 
@@ -302,6 +337,11 @@ namespace BookCollector.Data
             return seriesList;
         }
 
+        /// <summary>
+        /// Get a list of publish year ranges in the provided book list.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of publish year ranges, ordered numerically.</returns>
         public static async Task<ObservableCollection<string>> GetAllPublisherYearsInBookList(ObservableCollection<BookModel> bookList)
         {
             var publishYearList = new ObservableCollection<string>();
@@ -323,7 +363,12 @@ namespace BookCollector.Data
             return publishYearList;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllPublisherYearsInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        /// <summary>
+        /// Get a list of publish year ranges in the provided wishlist book list.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of publish year ranges, ordered numerically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllPublisherYearsInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var publishYearList = new ObservableCollection<string>();
 
@@ -346,6 +391,11 @@ namespace BookCollector.Data
             return publishYearList;
         }
 
+        /// <summary>
+        /// Get a list of languages in the provided book list. The list of languages is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of languages, ordered alphabetically.</returns>
         public static async Task<ObservableCollection<string>> GetAllLanguagesInBookList(ObservableCollection<BookModel> bookList)
         {
             var languageList = new ObservableCollection<string>();
@@ -354,7 +404,7 @@ namespace BookCollector.Data
             {
                 if (!string.IsNullOrEmpty(book.BookLanguage) && !languageList.Any(x => x.Equals(book.BookLanguage)))
                 {
-                    languageList.Add(char.ToUpper(book.BookLanguage[0]) + book.BookLanguage.Substring(1).ToLower());
+                    languageList.Add(char.ToUpper(book.BookLanguage[0]) + book.BookLanguage[1..].ToLower());
                 }
             }
 
@@ -365,7 +415,12 @@ namespace BookCollector.Data
             return languageList;
         }
 
-        public static async Task<ObservableCollection<string>> GetAllLanguagesInWishlistBookList(ObservableCollection<WishlistBookModel> bookList)
+        /// <summary>
+        /// Get a list of languages in the provided wishlist book list. The list of languages is distinct and ordered alphabetically.
+        /// </summary>
+        /// <param name="bookList">Book list to search.</param>
+        /// <returns>A list of languages, ordered alphabetically.</returns>
+        public static async Task<ObservableCollection<string>> GetAllLanguagesInBookList(ObservableCollection<WishlistBookModel> bookList)
         {
             var languageList = new ObservableCollection<string>();
 
@@ -382,47 +437,62 @@ namespace BookCollector.Data
             return languageList;
         }
 
+        /// <summary>
+        /// Get all book authors for a book based on the provided book guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of book authors for the book.</returns>
         public static async Task<ObservableCollection<BookAuthorModel>?> GetAllBookAuthorsForBook(Guid? inputGuid)
         {
             ObservableCollection<BookAuthorModel>? bookAuthorList = null;
 
             if (inputGuid != null)
             {
-                var list = await Database.GetAllBookAuthorsForBookAsync(inputGuid);
+                var list = await BaseViewModel.Database.GetAllBookAuthorsForBookAsync(inputGuid);
                 bookAuthorList = list.ToObservableCollection();
             }
 
             return bookAuthorList;
         }
 
+        /// <summary>
+        /// Get all author guids for a book based on the provided book guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of author guids for the book.</returns>
         public static async Task<ObservableCollection<Guid>?> GetAllAuthorGuidsForBook(Guid? inputGuid)
         {
             ObservableCollection<Guid>? authorGuidList = null;
 
             if (inputGuid != null)
             {
-                var list = await Database.GetAllAuthorGuidsForBookAsync((Guid)inputGuid);
+                var list = await BaseViewModel.Database.GetAllAuthorGuidsForBookAsync((Guid)inputGuid);
                 authorGuidList = list.ToObservableCollection();
             }
 
             return authorGuidList;
         }
 
-        public static async Task<ObservableCollection<AuthorModel>?> GetAllAuthorsForBook(Guid? inputGuid, bool showHiddenAuthors)
+        /// <summary>
+        /// Get all book authors for a book based on the provided book guid.
+        /// </summary>
+        /// <param name="inputGuid">The guid of the book to retrieve authors for.</param>
+        /// <returns>A list of book authors for the book.</returns>
+        public static async Task<ObservableCollection<AuthorModel>?> GetAllAuthorsForBook(Guid? inputGuid)
         {
             var authorList = new ObservableCollection<AuthorModel>();
 
             if (inputGuid != null)
             {
-                var bookAuthorList = await Database.GetAllBookAuthorsForBookAsync(inputGuid);
+                var bookAuthorList = await BaseViewModel.Database.GetAllBookAuthorsForBookAsync(inputGuid);
 
                 foreach (var bookAuthor in bookAuthorList)
                 {
-                    var author = await Database.GetAuthorByGuidAsync(bookAuthor.AuthorGuid);
+                    var author = await BaseViewModel.Database.GetAuthorByGuidAsync(bookAuthor.AuthorGuid);
 
                     if (author != null)
                     {
-                        authorList.Add(ConvertTo<AuthorModel>(author));
+                        authorList.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
                     }
                 }
             }
@@ -430,29 +500,44 @@ namespace BookCollector.Data
             return authorList;
         }
 
+        /// <summary>
+        /// Get all book authors in the database, regardless of the book they belong to.
+        /// </summary>
+        /// <returns>A list of all book authors added for every book.</returns>
         public static async Task<ObservableCollection<BookAuthorModel>?> GetAllBookAuthors()
         {
             ObservableCollection<BookAuthorModel>? bookAuthorList = null;
 
-            var list = await Database.GetAllBookAuthorsAsync();
+            var list = await BaseViewModel.Database.GetAllBookAuthorsAsync();
             bookAuthorList = list.ToObservableCollection();
 
             return bookAuthorList;
         }
 
+        /// <summary>
+        /// Get all book authors for an author based on the provided author guid.
+        /// </summary>
+        /// <param name="inputGuid">Author guid to get book authors for.</param>
+        /// <returns>A list of book authors.</returns>
         public static async Task<ObservableCollection<BookAuthorModel>?> GetAllBookAuthorsForAuthor(Guid? inputGuid)
         {
             ObservableCollection<BookAuthorModel>? bookAuthorList = null;
 
             if (inputGuid != null)
             {
-                var list = await Database.GetAllBookAuthorsForAuthorAsync((Guid)inputGuid);
+                var list = await BaseViewModel.Database.GetAllBookAuthorsForAuthorAsync((Guid)inputGuid);
                 bookAuthorList = list.ToObservableCollection();
             }
 
             return bookAuthorList;
         }
 
+        /// <summary>
+        /// Get all books in a collection based on the provided collection guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="inputGuid">Collection guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the collection.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksInCollectionList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -465,14 +550,11 @@ namespace BookCollector.Data
                         .Where(x => x.BookCollectionGuid == inputGuid)
                         .ToObservableCollection();
 
-                    if (!showHiddenBooks)
-                    {
-                        filteredList = new ObservableCollection<BookModel>(filteredList!.Where(x => !x.HideBook));
-                    }
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
             }
@@ -480,16 +562,27 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books without a collection assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a collection assigned.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutACollectionList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksWithoutACollectionAsync(showHiddenBooks);
+            var list = await BaseViewModel.Database.GetAllBooksWithoutACollectionAsync(showHiddenBooks);
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books in a genre based on the provided genre guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="inputGuid">Genre guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the genre.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksInGenreList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -502,14 +595,11 @@ namespace BookCollector.Data
                         .Where(x => x.BookGenreGuid == inputGuid)
                         .ToObservableCollection();
 
-                    if (!showHiddenBooks)
-                    {
-                        filteredList = new ObservableCollection<BookModel>(filteredList!.Where(x => !x.HideBook));
-                    }
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
             }
@@ -517,16 +607,27 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books without a genre assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a genre assigned.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAGenreList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksWithoutAGenreAsync(showHiddenBooks);
+            var list = await BaseViewModel.Database.GetAllBooksWithoutAGenreAsync(showHiddenBooks);
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books in a series based on the provided series guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="inputGuid">Series guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the series.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksInSeriesList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -539,14 +640,11 @@ namespace BookCollector.Data
                         .Where(x => x.BookSeriesGuid == inputGuid)
                         .ToObservableCollection();
 
-                    if (!showHiddenBooks)
-                    {
-                        filteredList = new ObservableCollection<BookModel>(filteredList!.Where(x => !x.HideBook));
-                    }
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
             }
@@ -554,16 +652,27 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books without a series assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a series assigned.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutASeriesList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksWithoutASeriesAsync(showHiddenBooks);
+            var list = await BaseViewModel.Database.GetAllBooksWithoutASeriesAsync(showHiddenBooks);
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books in a location based on the provided location guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="inputGuid">Location guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books assigned to the location.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksInLocationList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
@@ -576,14 +685,11 @@ namespace BookCollector.Data
                         .Where(x => x.BookLocationGuid == inputGuid)
                         .ToObservableCollection();
 
-                    if (!showHiddenBooks)
-                    {
-                        filteredList = new ObservableCollection<BookModel>(filteredList!.Where(x => !x.HideBook));
-                    }
+                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
                 }
                 else
                 {
-                    var list = await Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
+                    var list = await BaseViewModel.Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
             }
@@ -591,23 +697,32 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all books without a location assigned.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books without a location assigned.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutALocationList(bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksWithoutALocationAsync(showHiddenBooks);
+            var list = await BaseViewModel.Database.GetAllBooksWithoutALocationAsync(showHiddenBooks);
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all collections.
+        /// </summary>
+        /// <returns>A list of collections.</returns>
         public static async Task<ObservableCollection<CollectionModel>?> GetAllCollectionsList()
         {
             ObservableCollection<CollectionModel>? filteredList = null;
 
             if (CollectionsViewModel.fullCollectionList == null)
             {
-                var list = await Database.GetAllCollectionsAsync();
+                var list = await BaseViewModel.Database.GetAllCollectionsAsync();
                 filteredList = list.ToObservableCollection();
                 CollectionsViewModel.fullCollectionList = filteredList;
             }
@@ -619,13 +734,17 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all genres.
+        /// </summary>
+        /// <returns>A list of genres.</returns>
         public static async Task<ObservableCollection<GenreModel>?> GetAllGenresList()
         {
             ObservableCollection<GenreModel>? filteredList = null;
 
             if (GenresViewModel.fullGenreList == null)
             {
-                var list = await Database.GetAllGenresAsync();
+                var list = await BaseViewModel.Database.GetAllGenresAsync();
                 filteredList = list.ToObservableCollection();
                 GenresViewModel.fullGenreList = filteredList;
             }
@@ -637,13 +756,17 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all series.
+        /// </summary>
+        /// <returns>A list of series.</returns>
         public static async Task<ObservableCollection<SeriesModel>?> GetAllSeriesList()
         {
             ObservableCollection<SeriesModel>? filteredList = null;
 
             if (SeriesViewModel.fullSeriesList == null)
             {
-                var list = await Database.GetAllSeriesAsync();
+                var list = await BaseViewModel.Database.GetAllSeriesAsync();
                 filteredList = list.ToObservableCollection();
                 SeriesViewModel.fullSeriesList = filteredList;
             }
@@ -655,13 +778,17 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all locations.
+        /// </summary>
+        /// <returns>A list of locations.</returns>
         public static async Task<ObservableCollection<LocationModel>?> GetAllLocationsList()
         {
             ObservableCollection<LocationModel>? filteredList = null;
 
             if (LocationsViewModel.fullLocationList == null)
             {
-                var list = await Database.GetAllLocationsAsync();
+                var list = await BaseViewModel.Database.GetAllLocationsAsync();
                 filteredList = list.ToObservableCollection();
                 LocationsViewModel.fullLocationList = filteredList;
             }
@@ -673,36 +800,52 @@ namespace BookCollector.Data
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all the books for an author based on the provided author guid. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="inputGuid">Author guid to get books for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books for the provided author.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksInAuthorList(Guid? inputGuid, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = [];
 
             if (inputGuid != null)
             {
-                var list = await Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
+                var list = await BaseViewModel.Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
                 filteredList = list.ToObservableCollection();
             }
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get books that do not have the provided author as an author. If showHiddenBooks is false, then hidden books will be filtered out.
+        /// </summary>
+        /// <param name="reverseAuthorName">Author name to search for.</param>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books that aren't assigned to the provided author.</returns>
         public static async Task<ObservableCollection<BookModel>?> GetAllBooksWithoutAuthorList(string reverseAuthorName, bool showHiddenBooks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await Database.GetAllBooksWithoutAuthorAsync(reverseAuthorName, showHiddenBooks);
+            var list = await BaseViewModel.Database.GetAllBooksWithoutAuthorAsync(reverseAuthorName, showHiddenBooks);
             filteredList = list.ToObservableCollection();
 
             return filteredList;
         }
 
+        /// <summary>
+        /// Get all authors.
+        /// </summary>
+        /// <returns>A list of authors.</returns>
         public static async Task<ObservableCollection<AuthorModel>?> GetAllAuthorsList()
         {
             ObservableCollection<AuthorModel>? filteredList = null;
 
             if (AuthorsViewModel.fullAuthorList == null)
             {
-                var list = await Database.GetAllAuthorsAsync();
+                var list = await BaseViewModel.Database.GetAllAuthorsAsync();
                 filteredList = list.ToObservableCollection();
                 AuthorsViewModel.fullAuthorList = filteredList;
             }

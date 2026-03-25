@@ -4,8 +4,14 @@
 
 namespace BookCollector.Views.Controls.Location;
 
+/// <summary>
+/// LocationCollectionItem class.
+/// </summary>
 public partial class LocationCollectionItem : ContentView
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocationCollectionItem"/> class.
+    /// </summary>
     public LocationCollectionItem()
     {
         this.InitializeComponent();

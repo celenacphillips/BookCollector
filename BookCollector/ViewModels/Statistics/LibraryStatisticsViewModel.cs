@@ -2,50 +2,94 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.ViewModels.Library;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Vml;
-using System.Globalization;
-
 namespace BookCollector.ViewModels.Statistics
 {
+    using System.Globalization;
+    using BookCollector.Data;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// LibraryStatisticsViewModel class.
+    /// </summary>
     public partial class LibraryStatisticsViewModel : StatisticsBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the reading status chart or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showReadingStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the favorites chart or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showFavoritesStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the ratings chart or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showRatingStatus;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the collections chart or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showCollections;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the genres chart or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showGenres;
 
+        /// <summary>
+        /// Gets or sets the string for the top X collections, where X is a number defined by the max limit or the max number of collections.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? topXCollections;
 
+        /// <summary>
+        /// Gets or sets the string for the top X genres, where X is a number defined by the max limit or the max number of genres.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? topXGenres;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LibraryStatisticsViewModel"/> class.
+        /// </summary>
+        /// <param name="view">View related to view model.</param>
         public LibraryStatisticsViewModel(ContentPage view)
         {
             this.View = view;
             this.MaxListNumber = 5;
         }
 
-        public async Task SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async new Task SetViewModelData()
         {
             try
             {
@@ -60,65 +104,65 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                List<Task> taskList = new List<Task>();
-                List<Task<int>> dataTasks = new List<Task<int>>();
+                List<Task> taskList = [];
+                List<Task<int>> dataTasks = [];
 
-                if (ToBeReadViewModel.filteredBookList1 == null || ToBeReadViewModel.RefreshView)
+                if (ToBeReadViewModel.hiddenFilteredBookList == null || ToBeReadViewModel.RefreshView)
                 {
                     taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadViewModel.filteredBookList1 == null || ReadViewModel.RefreshView)
+                if (ReadViewModel.hiddenFilteredBookList == null || ReadViewModel.RefreshView)
                 {
                     taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (ReadingViewModel.filteredBookList1 == null || ReadingViewModel.RefreshView)
+                if (ReadingViewModel.hiddenFilteredBookList == null || ReadingViewModel.RefreshView)
                 {
                     taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks));
                 }
 
-                if (CollectionsViewModel.filteredCollectionList1 == null || CollectionsViewModel.RefreshView)
+                if (CollectionsViewModel.hiddenFilteredCollectionList == null || CollectionsViewModel.RefreshView)
                 {
                     taskList.Add(CollectionsViewModel.SetList(this.ShowHiddenCollections));
                 }
 
-                if (GenresViewModel.filteredGenreList1 == null || GenresViewModel.RefreshView)
+                if (GenresViewModel.hiddenFilteredGenreList == null || GenresViewModel.RefreshView)
                 {
                     taskList.Add(GenresViewModel.SetList(this.ShowHiddenGenres));
                 }
 
-                if (SeriesViewModel.filteredSeriesList1 == null || SeriesViewModel.RefreshView)
+                if (SeriesViewModel.hiddenFilteredSeriesList == null || SeriesViewModel.RefreshView)
                 {
                     taskList.Add(SeriesViewModel.SetList(this.ShowHiddenSeries));
                 }
 
-                if (AuthorsViewModel.filteredAuthorList1 == null || AuthorsViewModel.RefreshView)
+                if (AuthorsViewModel.hiddenFilteredAuthorList == null || AuthorsViewModel.RefreshView)
                 {
                     taskList.Add(AuthorsViewModel.SetList(this.ShowHiddenAuthors));
                 }
 
-                if (LocationsViewModel.filteredLocationList1 == null || LocationsViewModel.RefreshView)
+                if (LocationsViewModel.hiddenFilteredLocationList == null || LocationsViewModel.RefreshView)
                 {
                     taskList.Add(LocationsViewModel.SetList(this.ShowHiddenLocations));
                 }
 
-                if (AllBooksViewModel.filteredBookList1 == null || AllBooksViewModel.RefreshView)
+                if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
                     await AllBooksViewModel.SetList(this.ShowHiddenBooks);
                 }
 
-                var cost = GetCounts.GetPriceOfAllBooks(this.ShowHiddenBooks);
-                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.ShowHiddenBooks);
-                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.ShowHiddenBooks);
+                var cost = GetCounts.GetPriceOfAllBooks();
+                var formats = GetCounts.GetAllBooksAndBookFormatsList();
+                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList();
 
                 Task<int>? favoriteCount = null;
                 Task<int>? nonFavoriteCount = null;
 
                 if (this.ShowFavorites)
                 {
-                    favoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, true);
-                    nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(this.ShowHiddenBooks, false);
+                    favoriteCount = GetCounts.GetBooksListCountByFavorite(true);
+                    nonFavoriteCount = GetCounts.GetBooksListCountByFavorite(false);
 
                     dataTasks.Add(favoriteCount);
                     dataTasks.Add(nonFavoriteCount);
@@ -133,12 +177,12 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (this.ShowRatings)
                 {
-                    zeroCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 0);
-                    oneCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 1);
-                    twoCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 2);
-                    threeCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 3);
-                    fourCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 4);
-                    fiveCount = GetCounts.GetBooksListCountByRating(this.ShowHiddenBooks, 5);
+                    zeroCount = GetCounts.GetBooksListCountByRating(0);
+                    oneCount = GetCounts.GetBooksListCountByRating(1);
+                    twoCount = GetCounts.GetBooksListCountByRating(2);
+                    threeCount = GetCounts.GetBooksListCountByRating(3);
+                    fourCount = GetCounts.GetBooksListCountByRating(4);
+                    fiveCount = GetCounts.GetBooksListCountByRating(5);
 
                     dataTasks.Add(zeroCount);
                     dataTasks.Add(oneCount);
@@ -150,11 +194,11 @@ namespace BookCollector.ViewModels.Statistics
 
                 await Task.WhenAll(taskList);
 
-                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenCollections, this.ShowHiddenBooks, this.MaxListNumber);
-                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenGenres, this.ShowHiddenBooks, this.MaxListNumber);
-                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenSeries, this.ShowHiddenBooks, this.MaxListNumber);
-                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenAuthors, this.ShowHiddenBooks, this.MaxListNumber);
-                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenLocations, this.ShowHiddenBooks, this.MaxListNumber);
+                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenBooks, this.MaxListNumber);
+                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenBooks, this.MaxListNumber);
+                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenBooks, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenBooks, this.MaxListNumber);
+                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenBooks, this.MaxListNumber);
 
                 this.GetColors();
 
@@ -171,10 +215,10 @@ namespace BookCollector.ViewModels.Statistics
                 await Task.WhenAll(dataTasks);
 
                 this.CostBooks = cost.Result;
-                this.TotalBooks = AllBooksViewModel.filteredBookList1!.Count;
-                var toBeRead = ToBeReadViewModel.filteredBookList1!.Count;
-                var reading = ReadingViewModel.filteredBookList1!.Count;
-                var read = ReadViewModel.filteredBookList1!.Count;
+                this.TotalBooks = AllBooksViewModel.hiddenFilteredBookList!.Count;
+                var toBeRead = ToBeReadViewModel.hiddenFilteredBookList!.Count;
+                var reading = ReadingViewModel.hiddenFilteredBookList!.Count;
+                var read = ReadViewModel.hiddenFilteredBookList!.Count;
                 var favorite = favoriteCount != null ? favoriteCount.Result : 0;
                 var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
                 var zero = zeroCount != null ? zeroCount.Result : 0;
@@ -206,23 +250,8 @@ namespace BookCollector.ViewModels.Statistics
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
             }
-        }
-
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            this.SetRefreshTrue();
-            await this.SetViewModelData();
-            this.SetRefreshFalse();
         }
 
         /*********************** Reading Status Methods ***********************/
@@ -450,7 +479,7 @@ namespace BookCollector.ViewModels.Statistics
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            counts = counts.Where(x => x.Count > 0).ToList();
+            counts = [.. counts.Where(x => x.Count > 0)];
 
             if (this.ShowCollections)
             {
@@ -473,15 +502,15 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 for (int i = 0; i < max; i++)
-                    {
-                        values.Add(
-                            new ChartValues()
-                            {
-                                ColorValue = this.ColorList?[i],
-                                LabelValue = counts[i].Label,
-                                Value = counts[i].Count,
-                            });
-                    }
+                {
+                    values.Add(
+                        new ChartValues()
+                        {
+                            ColorValue = this.ColorList?[i],
+                            LabelValue = counts[i].Label,
+                            Value = counts[i].Count,
+                        });
+                }
 
                 this.SetUpBarChart(values, "collections");
             }
@@ -508,7 +537,7 @@ namespace BookCollector.ViewModels.Statistics
 
             counts = [.. counts.OrderByDescending(x => x.Count)];
 
-            counts = counts.Where(x => x.Count > 0).ToList();
+            counts = [.. counts.Where(x => x.Count > 0)];
 
             if (this.ShowGenres)
             {
@@ -531,15 +560,15 @@ namespace BookCollector.ViewModels.Statistics
                 }
 
                 for (int i = 0; i < max; i++)
-                    {
-                        values.Add(
-                            new ChartValues()
-                            {
-                                ColorValue = this.ColorList?[i],
-                                LabelValue = counts[i].Label,
-                                Value = counts[i].Count,
-                            });
-                    }
+                {
+                    values.Add(
+                        new ChartValues()
+                        {
+                            ColorValue = this.ColorList?[i],
+                            LabelValue = counts[i].Label,
+                            Value = counts[i].Count,
+                        });
+                }
 
                 this.SetUpBarChart(values, "genres");
             }

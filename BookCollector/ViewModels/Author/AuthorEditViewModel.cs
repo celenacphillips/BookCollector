@@ -2,47 +2,85 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using BookCollector.Data;
-using BookCollector.Data.DatabaseModels;
-using BookCollector.Data.Models;
-using BookCollector.Resources.Localization;
-using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Groupings;
-using BookCollector.Views.Author;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-
 namespace BookCollector.ViewModels.Author
 {
-    public partial class AuthorEditViewModel : AuthorBaseViewModel
+    using System.Collections.ObjectModel;
+    using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
+    using BookCollector.ViewModels.BaseViewModels;
+    using BookCollector.ViewModels.Groupings;
+    using BookCollector.Views.Author;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// AuthorEditViewModel class.
+    /// </summary>
+    public partial class AuthorEditViewModel : AuthorsViewModel
     {
+        /// <summary>
+        /// Gets or sets the author to edit.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public AuthorModel editedAuthor;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author first name is valid or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorFirstNameNotValid;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the author last name is valid or not.
+        /// </summary>
         [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool authorLastNameNotValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorEditViewModel"/> class.
+        /// </summary>
+        /// <param name="author">Author to edit.</param>
+        /// <param name="view">View related to view model.</param>
         public AuthorEditViewModel(AuthorModel author, ContentPage view)
+            : base(view)
         {
             this.View = view;
 
             this.EditedAuthor = (AuthorModel)author.Clone();
         }
 
-        public bool InsertMainViewBefore { get; set; }
+        /// <summary>
+        /// Add author to the static list in the list view model.
+        /// </summary>
+        /// <param name="author">Author to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(AuthorModel author)
+        {
+            if (AuthorsViewModel.fullAuthorList != null)
+            {
+                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
+            }
+        }
 
-        public void SetViewModelData()
+        /// <summary>
+        /// Set the view model data.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async new Task SetViewModelData()
         {
             try
             {
                 this.SetIsBusyTrue();
 
-                this.ValidateFirstName();
-                this.ValidateLastName();
+                await this.ValidateFirstName();
+                await this.ValidateLastName();
 
                 this.SetIsBusyFalse();
             }
@@ -52,6 +90,10 @@ namespace BookCollector.ViewModels.Author
             }
         }
 
+        /// <summary>
+        /// Save author to the database and returns to the previous view.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
         public async Task SaveAuthor()
         {
@@ -59,12 +101,12 @@ namespace BookCollector.ViewModels.Author
             {
                 this.SetIsBusyTrue();
 
-                this.ValidateFirstName();
-                this.ValidateLastName();
+                await this.ValidateFirstName();
+                await this.ValidateLastName();
 
                 if (this.AuthorFirstNameNotValid || this.AuthorLastNameNotValid)
                 {
-                    await DisplayMessage(AppStringResources.AuthorNameNotValid, null);
+                    await this.DisplayMessage(AppStringResources.AuthorNameNotValid, null);
                     this.SetIsBusyFalse();
                 }
                 else
@@ -76,8 +118,8 @@ namespace BookCollector.ViewModels.Author
                     }
 #endif
 
-                    this.EditedAuthor = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
-                    AddToStaticList(this.EditedAuthor);
+                    this.EditedAuthor = await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(this.EditedAuthor));
+                    await AddToStaticList(this.EditedAuthor);
 
                     if (this.InsertMainViewBefore)
                     {
@@ -90,54 +132,34 @@ namespace BookCollector.ViewModels.Author
             }
             catch (Exception ex)
             {
-#if DEBUG
-                await DisplayMessage("Error!", ex.Message);
-#endif
-
-#if RELEASE
-                await DisplayMessage(AppStringResources.AnErrorOccurred, null);
-#endif
-                this.SetIsBusyFalse();
+                await this.ViewModelCatch(ex);
+                this.SetRefreshView(false);
             }
         }
 
+        /// <summary>
+        /// Check if the author first name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void Refresh()
-        {
-            this.SetRefreshTrue();
-            this.SetViewModelData();
-            this.SetRefreshFalse();
-        }
-
-        [RelayCommand]
-        public void ValidateFirstName()
+        public async Task ValidateFirstName()
         {
             this.AuthorFirstNameNotValid = string.IsNullOrEmpty(this.EditedAuthor.FirstName);
         }
 
+        /// <summary>
+        /// Check if the author last name is valid and set the related value.
+        /// </summary>
+        /// <returns>A task.</returns>
         [RelayCommand]
-        public void ValidateLastName()
+        public async Task ValidateLastName()
         {
             this.AuthorLastNameNotValid = string.IsNullOrEmpty(this.EditedAuthor.LastName);
-        }
-
-        public static async Task AddToStaticList(AuthorModel author)
-        {
-            if (AuthorsViewModel.fullAuthorList != null)
-            {
-                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList2);
-            }
         }
 
         private static async Task<bool> AddAuthorToStaticList(AuthorModel author, ObservableCollection<AuthorModel> authorList, ObservableCollection<AuthorModel>? filteredAuthorList)
         {
             var refresh = false;
-
-            //await Task.WhenAll(new Task[]
-            //{
-            //    author.SetTotalBooks(Hi),
-            //    author.SetTotalCostOfBooks(true),
-            //});
 
             try
             {

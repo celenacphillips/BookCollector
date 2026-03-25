@@ -2,34 +2,31 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
 namespace BookCollector.Data
 {
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+
+    /// <summary>
+    /// ChangeLogModel class.
+    /// </summary>
     public partial class ChangeLogModel : ObservableObject
     {
-        public string Version { get; set; }
-
-        public string Changes { get; set; }
-
-        [ObservableProperty]
-        public bool versionOpen;
-
-        [ObservableProperty]
-        public bool versionNotOpen;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChangeLogModel"/> class.
+        /// </summary>
         public ChangeLogModel()
         {
-            this.VersionNotOpen = true;
-            this.VersionOpen = false;
         }
 
-        [RelayCommand]
-        public void VersionExpanderChanged(bool isExpanded)
-        {
-            this.VersionOpen = isExpanded;
-            this.VersionNotOpen = !isExpanded;
-        }
+        /// <summary>
+        /// Gets or sets the version number.
+        /// </summary>
+        public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the changes.
+        /// </summary>
+        public string Changes { get; set; }
     }
 }
