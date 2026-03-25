@@ -126,7 +126,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullSeriesList ??= await FillLists.GetAllSeriesList();
 
-            hiddenFilteredSeriesList = SetHiddenFilteredList<SeriesModel>(fullSeriesList!, showHiddenSeries).ToObservableCollection();
+            hiddenFilteredSeriesList = showHiddenSeries ? fullSeriesList : fullSeriesList!.Where(x => !x.HideSeries).ToObservableCollection();
         }
 
         /// <summary>

@@ -30,7 +30,6 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? fullBookList;
 
         /// <summary>
@@ -39,7 +38,6 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
@@ -48,7 +46,6 @@ namespace BookCollector.ViewModels.Series
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public new ObservableCollection<BookModel>? filteredBookList;
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace BookCollector.ViewModels.Series
         {
             this.FullBookList ??= await FillLists.GetAllBooksInSeriesList(this.SelectedSeries?.SeriesGuid, ShowHiddenBooks);
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /********************************************************/

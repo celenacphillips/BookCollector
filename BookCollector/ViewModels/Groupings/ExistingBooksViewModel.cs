@@ -383,7 +383,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /// <summary>
@@ -424,7 +424,7 @@ namespace BookCollector.ViewModels.Groupings
                 this.FullBookList = await FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, ShowHiddenBooks);
             }
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /// <summary>
@@ -436,7 +436,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = SetHiddenFilteredList<BookModel>(this.FullBookList!, showHiddenBooks).ToObservableCollection();
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         private async Task AddBookToGrouping()

@@ -214,63 +214,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
-        /// Set the hidden items list based on the full list and the show hidden preference.
-        /// </summary>
-        /// <param name="source">Full list to filter.</param>
-        /// <param name="showHidden">Show hidden.</param>
-        /// <typeparam name="T">Object to convert to.</typeparam>
-        /// <returns>A list filtered based on the hidden parameter.</returns>
-        public static List<T> SetHiddenFilteredList<T>(object source, bool showHidden)
-            where T : new()
-        {
-            var destination = new List<T>();
-            if (source != null)
-            {
-                var listType = source.GetType();
-                var elementType = listType.GetGenericArguments()[0];
-
-                var sourceProps = elementType.GetProperties();
-                var destProps = typeof(T).GetProperties();
-
-                var hideProp = elementType
-                        .GetProperties()
-                        .FirstOrDefault(p => p.Name.StartsWith("Hide", StringComparison.OrdinalIgnoreCase)
-                                             && p.PropertyType == typeof(bool));
-
-                foreach (var item in (IEnumerable)source)
-                {
-                    if (!showHidden && hideProp != null)
-                    {
-                        var isHidden = (bool)(hideProp.GetValue(item) ?? false);
-                        if (isHidden)
-                        {
-                            continue; // skip hidden items
-                        }
-                    }
-
-                    var dest = new T();
-
-                    foreach (var sourceProp in sourceProps)
-                    {
-                        var destProp = destProps.FirstOrDefault(p =>
-                            p.Name == sourceProp.Name &&
-                            p.PropertyType == sourceProp.PropertyType);
-
-                        if (destProp != null && destProp.SetMethod != null)
-                        {
-                            var value = sourceProp.GetValue(item);
-                            destProp.SetValue(dest, value);
-                        }
-                    }
-
-                    destination.Add(dest);
-                }
-            }
-
-            return destination;
-        }
-
-        /// <summary>
         /// Copy the tapped text.
         /// </summary>
         /// <param name="input">Text to copy to clipboard.</param>
