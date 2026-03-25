@@ -118,7 +118,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullLocationList ??= await FillLists.GetAllLocationsList();
 
-            hiddenFilteredLocationList = SetHiddenFilteredList<LocationModel>(fullLocationList!, showHiddenLocations).ToObservableCollection();
+            hiddenFilteredLocationList = showHiddenLocations ? fullLocationList : fullLocationList!.Where(x => !x.HideLocation).ToObservableCollection();
         }
 
         /// <summary>

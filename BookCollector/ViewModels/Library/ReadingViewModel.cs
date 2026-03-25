@@ -113,7 +113,7 @@ namespace BookCollector.ViewModels.Library
         {
             fullBookList ??= await FillLists.GetReadingBooksList();
 
-            hiddenFilteredBookList = SetHiddenFilteredList<BookModel>(fullBookList!, showHiddenBooks).ToObservableCollection();
+            hiddenFilteredBookList = showHiddenBooks ? fullBookList : fullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
 
         /********************************************************/

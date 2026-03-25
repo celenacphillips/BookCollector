@@ -118,7 +118,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullGenreList ??= await FillLists.GetAllGenresList();
 
-            hiddenFilteredGenreList = SetHiddenFilteredList<GenreModel>(fullGenreList!, showHiddenGenres).ToObservableCollection();
+            hiddenFilteredGenreList = showHiddenGenres ? fullGenreList : fullGenreList!.Where(x => !x.HideGenre).ToObservableCollection();
         }
 
         /// <summary>

@@ -121,7 +121,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             fullAuthorList ??= await FillLists.GetAllAuthorsList();
 
-            hiddenFilteredAuthorList = SetHiddenFilteredList<AuthorModel>(fullAuthorList!, showHiddenAuthors).ToObservableCollection();
+            hiddenFilteredAuthorList = showHiddenAuthors ? fullAuthorList : fullAuthorList!.Where(x => !x.HideAuthor).ToObservableCollection();
         }
 
         /// <summary>

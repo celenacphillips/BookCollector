@@ -550,7 +550,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookCollectionGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = showHiddenBooks ? filteredList : filteredList!.Where(x => !x.HideBook).ToObservableCollection();
                 }
                 else
                 {
@@ -595,7 +595,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookGenreGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = showHiddenBooks ? filteredList : filteredList!.Where(x => !x.HideBook).ToObservableCollection();
                 }
                 else
                 {
@@ -640,7 +640,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookSeriesGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = showHiddenBooks ? filteredList : filteredList!.Where(x => !x.HideBook).ToObservableCollection();
                 }
                 else
                 {
@@ -685,7 +685,7 @@ namespace BookCollector.Data
                         .Where(x => x.BookLocationGuid == inputGuid)
                         .ToObservableCollection();
 
-                    filteredList = BaseViewModel.SetHiddenFilteredList<BookModel>(filteredList!, showHiddenBooks).ToObservableCollection();
+                    filteredList = showHiddenBooks ? filteredList : filteredList!.Where(x => !x.HideBook).ToObservableCollection();
                 }
                 else
                 {
