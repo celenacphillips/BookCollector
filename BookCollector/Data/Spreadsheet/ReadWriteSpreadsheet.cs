@@ -5,7 +5,6 @@
 namespace BookCollector.Data.Spreadsheet
 {
     using System.Xml;
-    using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Mvvm.ComponentModel;
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;

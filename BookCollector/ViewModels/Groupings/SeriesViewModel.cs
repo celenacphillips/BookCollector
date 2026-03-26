@@ -12,10 +12,8 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
-    using BookCollector.Views.Popups;
     using BookCollector.Views.Series;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -202,7 +200,7 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task AddSeries()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new SeriesEditView(new SeriesModel(), $"{AppStringResources.AddNewSeries}", true);
 
@@ -219,25 +217,32 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await SetList(this.ShowHiddenSeries);
+            this.SetRefreshView(false);
 
-                    (this.TotalSeriesCount,
-                        this.FilteredSeriesCount,
-                        this.TotalSeriesString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredSeriesList) = await this.SetViewModelData(this.HiddenFilteredSeriesList, this.SeriesNameChecked);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await SetList(this.ShowHiddenSeries);
+
+                (this.TotalSeriesCount,
+                    this.FilteredSeriesCount,
+                    this.TotalSeriesString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredSeriesList) = await this.SetViewModelData(this.HiddenFilteredSeriesList, this.SeriesNameChecked);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -289,7 +294,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task Edit(object selected)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new SeriesEditView((SeriesModel)selected, $"{AppStringResources.EditSeries}", true);
 

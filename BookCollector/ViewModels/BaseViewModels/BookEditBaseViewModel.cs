@@ -112,36 +112,38 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public async override Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.SetIsBusyTrue();
+                return;
+            }
 
-                    this.GetPreferences();
+            this.SetRefreshView(false);
 
-                    await this.SetLists();
+            try
+            {
+                await this.SetIsBusyTrue();
 
-                    this.SetSectionValues();
+                this.GetPreferences();
 
-                    await this.CheckBookFormat();
+                await this.SetLists();
 
-                    List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
+                this.SetSectionValues();
 
-                    this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
+                await this.CheckBookFormat();
 
-                    await this.SetViewData();
+                List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
 
-                    await this.SetAuthorData();
+                this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
 
-                    this.SetIsBusyFalse();
-                    this.SetRefreshView(false);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+                await this.SetViewData();
+
+                await this.SetAuthorData();
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -172,7 +174,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 }
                 else
                 {
-                    this.SetIsBusyTrue();
+                    await this.SetIsBusyTrue();
 
                     await this.SetBookDataForSaving();
 
@@ -207,7 +209,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task BookSearch()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var book = this.GetBookData(null);
 
@@ -450,7 +452,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         private async Task UploadCover()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             PermissionStatus storageReadStatus = await Permissions.CheckStatusAsync<Permissions.Media>();
 
@@ -518,7 +520,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (!string.IsNullOrEmpty(bookCoverUrl))
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 PermissionStatus internetStatus = await Permissions.CheckStatusAsync<InternetPermission>();
 

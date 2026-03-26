@@ -13,9 +13,7 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Location;
-    using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -194,7 +192,7 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task AddLocation()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new LocationEditView(new LocationModel(), $"{AppStringResources.AddNewLocation}", true);
 
@@ -211,25 +209,32 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await SetList(this.ShowHiddenLocations);
+            this.SetRefreshView(false);
 
-                    (this.TotalLocationsCount,
-                        this.FilteredLocationsCount,
-                        this.TotalLocationsString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredLocationList) = await this.SetViewModelData(this.HiddenFilteredLocationList, this.LocationNameChecked);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await SetList(this.ShowHiddenLocations);
+
+                (this.TotalLocationsCount,
+                    this.FilteredLocationsCount,
+                    this.TotalLocationsString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredLocationList) = await this.SetViewModelData(this.HiddenFilteredLocationList, this.LocationNameChecked);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -281,7 +286,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task Edit(object selected)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new LocationEditView((LocationModel)selected, $"{AppStringResources.EditLocation}", true);
 

@@ -205,8 +205,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<string>?)>
             SetViewModelData(ObservableCollection<BookModel>? hiddenBookList)
         {
-            this.SetIsBusyTrue();
-
             int totalBooksCount = 0, filteredBooksCount = 0;
             var showCollectionViewFooter = false;
 
@@ -279,10 +277,15 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
 
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
-
-            return (totalBooksCount, filteredBooksCount, totalBooksString, showCollectionViewFooter, filteredBookList, bookPublisherList, bookLanguageList, bookPublishYearList, bookAuthorList);
+            return (totalBooksCount,
+                filteredBooksCount,
+                totalBooksString,
+                showCollectionViewFooter,
+                filteredBookList,
+                bookPublisherList,
+                bookLanguageList,
+                bookPublishYearList,
+                bookAuthorList);
         }
 
         /// <summary>
@@ -304,8 +307,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<string>?)>
             SetViewModelData(ObservableCollection<WishlistBookModel>? hiddenBookList)
         {
-            this.SetIsBusyTrue();
-
             int totalBooksCount = 0, filteredBooksCount = 0;
             var showCollectionViewFooter = false;
 
@@ -377,9 +378,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             var totalBooksString = StringManipulation.SetTotalBooksString(filteredBooksCount, totalBooksCount);
-
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
 
             return (totalBooksCount,
                 filteredBooksCount,

@@ -201,7 +201,7 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task AddCollection()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new CollectionEditView(new CollectionModel(), $"{AppStringResources.AddNewCollection}", true);
 
@@ -218,25 +218,32 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await SetList(this.ShowHiddenCollections);
+            this.SetRefreshView(false);
 
-                    (this.TotalCollectionsCount,
-                        this.FilteredCollectionsCount,
-                        this.TotalCollectionsString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredCollectionList) = await this.SetViewModelData(this.HiddenFilteredCollectionList, this.CollectionNameChecked);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await SetList(this.ShowHiddenCollections);
+
+                (this.TotalCollectionsCount,
+                    this.FilteredCollectionsCount,
+                    this.TotalCollectionsString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredCollectionList) = await this.SetViewModelData(this.HiddenFilteredCollectionList, this.CollectionNameChecked);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -288,7 +295,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task Edit(object selected)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new CollectionEditView((CollectionModel)selected, $"{AppStringResources.EditCollection}", true);
 

@@ -8,7 +8,6 @@ namespace BookCollector.ViewModels.Collection
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.Views.Collection;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -67,9 +66,16 @@ namespace BookCollector.ViewModels.Collection
         /// <returns>A task.</returns>
         public async new Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                return;
+            }
+
+            this.SetRefreshView(false);
+
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 this.ValidateEntry();
 
@@ -90,7 +96,7 @@ namespace BookCollector.ViewModels.Collection
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (this.CollectionNameNotValid)
                 {
@@ -121,7 +127,6 @@ namespace BookCollector.ViewModels.Collection
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                this.SetRefreshView(false);
             }
         }
 

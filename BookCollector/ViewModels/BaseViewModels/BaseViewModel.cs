@@ -8,17 +8,11 @@ namespace BookCollector.ViewModels.BaseViewModels
     using Android.OS;
     using AndroidX.Core.View;
 #endif
-    using System.Collections;
-    using System.Collections.ObjectModel;
-    using BookCollector.CustomPermissions;
     using BookCollector.Data.Database;
-    using BookCollector.Data.DatabaseModels;
-    using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Main;
-    using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Alerts;
     using CommunityToolkit.Maui.Extensions;
@@ -492,12 +486,19 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <summary>
         /// Set values when view is busy.
         /// </summary>
-        public void SetIsBusyTrue()
+        /// <param name="delay">Delay view value. Default to false.</param>
+        /// <returns>A task.</returns>
+        public async Task SetIsBusyTrue(bool delay = false)
         {
             this.IsBusy = true;
             this.IsVisible = true;
             this.IsEnabled = false;
             this.CollectionViewSelectionMode = SelectionMode.None;
+
+            if (delay)
+            {
+                await Task.Delay(1 * 1000);
+            }
         }
 
         /// <summary>

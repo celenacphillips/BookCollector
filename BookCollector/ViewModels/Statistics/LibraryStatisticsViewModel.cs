@@ -12,7 +12,6 @@ namespace BookCollector.ViewModels.Statistics
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
     using CommunityToolkit.Mvvm.ComponentModel;
-    using CommunityToolkit.Mvvm.Input;
 
     /// <summary>
     /// LibraryStatisticsViewModel class.
@@ -93,7 +92,7 @@ namespace BookCollector.ViewModels.Statistics
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (string.IsNullOrEmpty(this.CostBooks))
                 {

@@ -49,6 +49,7 @@ namespace BookCollector.ViewModels.Book
             this.SelectedBook = book;
             this.InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book", $"{this.SelectedBook.BookTitle}")}";
             this.PreviousViewModel = previousViewModel;
+            this.SetRefreshView(true);
         }
 
         /********************************************************/

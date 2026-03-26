@@ -12,9 +12,7 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
-    using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -209,29 +207,36 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await this.SetList(ShowHiddenBooks);
+            this.SetRefreshView(false);
 
-                    (this.TotalBooksCount,
-                        this.FilteredBooksCount,
-                        this.TotalBooksString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredBookList,
-                        this.BookPublisherList,
-                        this.BookLanguageList,
-                        this.BookPublishYearList,
-                        this.BookAuthorList) = await this.SetViewModelData(this.HiddenFilteredBookList);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await this.SetList(ShowHiddenBooks);
+
+                (this.TotalBooksCount,
+                    this.FilteredBooksCount,
+                    this.TotalBooksString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredBookList,
+                    this.BookPublisherList,
+                    this.BookLanguageList,
+                    this.BookPublishYearList,
+                    this.BookAuthorList) = await this.SetViewModelData(this.HiddenFilteredBookList);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -443,7 +448,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (this.SelectedBook != null)
                 {

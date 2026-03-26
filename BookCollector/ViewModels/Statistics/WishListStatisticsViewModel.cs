@@ -6,10 +6,8 @@ namespace BookCollector.ViewModels.Statistics
 {
     using System.Globalization;
     using BookCollector.Data;
-    using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Main;
-    using CommunityToolkit.Mvvm.Input;
 
     /// <summary>
     /// WishListStatisticsViewModel class.
@@ -34,7 +32,7 @@ namespace BookCollector.ViewModels.Statistics
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (string.IsNullOrEmpty(this.CostBooks))
                 {

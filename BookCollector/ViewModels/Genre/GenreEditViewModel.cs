@@ -67,9 +67,16 @@ namespace BookCollector.ViewModels.Genre
         /// <returns>A task.</returns>
         public async new Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                return;
+            }
+
+            this.SetRefreshView(false);
+
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 this.ValidateEntry();
 
@@ -90,7 +97,7 @@ namespace BookCollector.ViewModels.Genre
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (this.GenreNameNotValid)
                 {
@@ -121,7 +128,6 @@ namespace BookCollector.ViewModels.Genre
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                this.SetRefreshView(false);
             }
         }
 

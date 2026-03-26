@@ -13,7 +13,6 @@ namespace BookCollector.ViewModels.Book
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
-    using BookCollector.ViewModels.Popups;
     using BookCollector.ViewModels.WishListBook;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
@@ -178,7 +177,7 @@ namespace BookCollector.ViewModels.Book
         [RelayCommand]
         public async Task Search()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             this.SearchFormSectionValue = false;
 

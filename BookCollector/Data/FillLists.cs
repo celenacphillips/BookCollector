@@ -466,8 +466,7 @@ namespace BookCollector.Data
 
             if (inputGuid != null)
             {
-                var list = await BaseViewModel.Database.GetAllAuthorGuidsForBookAsync((Guid)inputGuid);
-                authorGuidList = list.ToObservableCollection();
+                authorGuidList = await BaseViewModel.Database.GetAllAuthorGuidsForBookAsync((Guid)inputGuid);
             }
 
             return authorGuidList;
@@ -486,11 +485,13 @@ namespace BookCollector.Data
             {
                 var bookAuthorList = await BaseViewModel.Database.GetAllBookAuthorsForBookAsync(inputGuid);
 
-                foreach (var bookAuthor in bookAuthorList)
+                if (bookAuthorList != null && bookAuthorList.Count > 0)
                 {
-                    var author = await BaseViewModel.Database.GetAuthorByGuidAsync(bookAuthor.AuthorGuid);
+                    // Batch load all authors at once instead of one-by-one
+                    var authorGuids = bookAuthorList.Select(x => x.AuthorGuid).ToList();
+                    var authors = await BaseViewModel.Database.GetAllAuthorsForBookAsync(authorGuids);
 
-                    if (author != null)
+                    foreach (var author in authors)
                     {
                         authorList.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
                     }
