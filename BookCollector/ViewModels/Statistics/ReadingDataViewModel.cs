@@ -57,7 +57,7 @@ namespace BookCollector.ViewModels.Statistics
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 this.GetPreferences();
 

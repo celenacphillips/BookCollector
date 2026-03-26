@@ -46,6 +46,7 @@ namespace BookCollector.ViewModels.WishListBook
             this.SelectedWishlistBook = book;
             this.InfoText = $"{AppStringResources.BookMainView_InfoText.Replace("book", $"{this.SelectedWishlistBook.BookTitle}")}";
             this.AuthorList = [];
+            this.SetRefreshView(true);
         }
 
         /********************************************************/
@@ -65,7 +66,7 @@ namespace BookCollector.ViewModels.WishListBook
                 {
                     try
                     {
-                        this.SetIsBusyTrue();
+                        await this.SetIsBusyTrue();
 
                         if (!string.IsNullOrEmpty(this.SelectedWishlistBook.BookSeries))
                         {

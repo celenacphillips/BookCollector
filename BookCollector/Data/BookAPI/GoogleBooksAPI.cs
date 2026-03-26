@@ -5,7 +5,6 @@
 namespace BookCollector.Data.BookAPI
 {
     using System.Collections.ObjectModel;
-    using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
@@ -206,6 +205,8 @@ namespace BookCollector.Data.BookAPI
                 {
                     if (ex.InnerException!.InnerException!.Message.Contains("Cleartext HTTP traffic"))
                     {
+                        throw;
+
                         // await DisplayMessage(AppStringResources.ErrorParsingDataFromBook, null);
                     }
 

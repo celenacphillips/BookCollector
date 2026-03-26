@@ -315,14 +315,7 @@ namespace BookCollector.Data.Models
         /// <returns>A task.</returns>
         public async Task SetAuthorListStringFromDatabase()
         {
-            ObservableCollection<AuthorModel>? authorList = [];
-            ObservableCollection<Guid>? authorGuidList = await FillLists.GetAllAuthorGuidsForBook(this.BookGuid);
-
-            if (authorGuidList != null && authorGuidList.Count > 0)
-            {
-                var list = await BaseViewModel.Database.GetAllAuthorsForBookAsync([.. authorGuidList]);
-                authorList = list.ToObservableCollection();
-            }
+            ObservableCollection<AuthorModel>? authorList = await FillLists.GetAllAuthorsForBook(this.BookGuid);
 
             if (authorList != null)
             {

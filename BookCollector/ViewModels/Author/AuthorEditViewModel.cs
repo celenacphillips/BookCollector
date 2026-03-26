@@ -75,9 +75,16 @@ namespace BookCollector.ViewModels.Author
         /// <returns>A task.</returns>
         public async new Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                return;
+            }
+
+            this.SetRefreshView(false);
+
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 await this.ValidateFirstName();
                 await this.ValidateLastName();
@@ -99,7 +106,7 @@ namespace BookCollector.ViewModels.Author
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 await this.ValidateFirstName();
                 await this.ValidateLastName();
@@ -133,7 +140,6 @@ namespace BookCollector.ViewModels.Author
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                this.SetRefreshView(false);
             }
         }
 

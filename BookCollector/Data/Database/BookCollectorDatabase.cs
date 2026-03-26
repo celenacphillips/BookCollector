@@ -25,6 +25,7 @@ namespace BookCollector.Data.Database
         /// </summary>
         public BookCollectorDatabase()
         {
+            var initialize = this.Init();
         }
 
         /// <summary>
@@ -94,8 +95,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
                     x.UpNext ||
@@ -126,8 +125,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead == 0 &&
                     (x.BookHourListened == 0 && x.BookMinuteListened == 0))
@@ -160,8 +157,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
                     (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
@@ -188,8 +183,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .ToListAsync();
 
@@ -215,8 +208,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var genre = await this.database.Table<GenreDatabaseModel>()
                     .Where(x => x.GenreGuid == inputGuid)
                     .FirstOrDefaultAsync();
@@ -238,8 +229,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var location = await this.database.Table<LocationDatabaseModel>()
                     .Where(x => x.LocationGuid == inputGuid)
                     .FirstOrDefaultAsync();
@@ -261,8 +250,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var series = await this.database.Table<SeriesDatabaseModel>()
                     .Where(x => x.SeriesGuid == inputGuid)
                     .FirstOrDefaultAsync();
@@ -284,8 +271,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var collection = await this.database.Table<CollectionDatabaseModel>()
                     .Where(x => x.CollectionGuid == inputGuid)
                     .FirstOrDefaultAsync();
@@ -307,8 +292,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var bookAuthors = await this.database.Table<BookAuthorModel>()
                     .Where(x => x.BookGuid == bookGuid)
                     .OrderBy(x => x.BookGuid)
@@ -327,12 +310,10 @@ namespace BookCollector.Data.Database
         /// </summary>
         /// <param name="bookGuid">The guid of the book to retrieve authors for.</param>
         /// <returns>A list of author guids for the book.</returns>
-        public async Task<List<Guid>> GetAllAuthorGuidsForBookAsync(Guid bookGuid)
+        public async Task<ObservableCollection<Guid>> GetAllAuthorGuidsForBookAsync(Guid bookGuid)
         {
             try
             {
-                await this.Init();
-
                 var bookAuthorGuids = await this.database.Table<BookAuthorModel>()
                     .Where(x => x.BookGuid == bookGuid)
                     .ToListAsync();
@@ -352,23 +333,43 @@ namespace BookCollector.Data.Database
         /// </summary>
         /// <param name="authorGuids">The guids to retrieve authors for.</param>
         /// <returns>A list of authors for the book.</returns>
-        public async Task<List<AuthorModel>> GetAllAuthorsForBookAsync(List<Guid> authorGuids)
+        public async Task<ObservableCollection<AuthorModel>> GetAllAuthorsForBookAsync(List<Guid> authorGuids)
         {
             try
             {
-                await this.Init();
+                ObservableCollection<AuthorModel> authors = [];
 
-                List<AuthorModel> authors = [];
-
-                foreach (var authorGuid in authorGuids)
+                if (authorGuids == null || authorGuids.Count <= 0)
                 {
-                    var author = await this.database.Table<AuthorDatabaseModel>()
-                        .Where(x => x.AuthorGuid == authorGuid)
-                        .FirstOrDefaultAsync();
+                    return authors;
+                }
 
-                    if (author != null)
+                if (AuthorsViewModel.fullAuthorList != null)
+                {
+                    foreach (var authorGuid in authorGuids)
                     {
-                        authors.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
+                        var author = AuthorsViewModel.fullAuthorList
+                            .Where(x => x.AuthorGuid == authorGuid)
+                            .FirstOrDefault();
+
+                        if (author != null)
+                        {
+                            authors.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var authorGuid in authorGuids)
+                    {
+                        var author = await this.database.Table<AuthorDatabaseModel>()
+                            .Where(x => x.AuthorGuid == authorGuid)
+                            .FirstOrDefaultAsync();
+
+                        if (author != null)
+                        {
+                            authors.Add(BaseViewModel.ConvertTo<AuthorModel>(author));
+                        }
                     }
                 }
 
@@ -389,8 +390,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (book.BookGuid != null)
                 {
                     var existingBook = await this.database.Table<BookDatabaseModel>()
@@ -429,7 +428,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(book);
             }
             catch (Exception ex)
@@ -450,8 +448,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<WishlistBookDatabaseModel>()
                     .ToListAsync();
 
@@ -477,8 +473,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (book.BookGuid != null)
                 {
                     var existingBook = await this.database.Table<WishlistBookDatabaseModel>()
@@ -517,7 +511,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(book);
             }
             catch (Exception ex)
@@ -539,8 +532,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var chapters = await this.database.Table<ChapterDatabaseModel>()
                     .Where(x => x.BookGuid == bookGuid)
                     .OrderBy(x => x.ChapterOrder)
@@ -566,8 +557,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var chapters = await this.database.Table<ChapterDatabaseModel>()
                     .OrderBy(x => x.ChapterOrder)
                     .OrderBy(x => x.BookGuid)
@@ -594,8 +583,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (chapter.ChapterGuid != null)
                 {
                     var existingChapter = await this.database.Table<ChapterDatabaseModel>()
@@ -632,7 +619,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(chapter);
             }
             catch (Exception ex)
@@ -653,8 +639,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var bookAuthors = await this.database.Table<BookAuthorModel>()
                     .OrderBy(x => x.BookGuid)
                     .ToListAsync();
@@ -676,8 +660,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (bookAuthor.BookAuthorGuid != null)
                 {
                     var existingBookAuthor = await this.database.Table<BookAuthorModel>()
@@ -715,8 +697,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var bookAuthor = await this.database.Table<BookAuthorModel>()
                     .Where(x => x.AuthorGuid == authorGuid && x.BookGuid == bookGuid)
                     .FirstOrDefaultAsync();
@@ -783,8 +763,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var bookAuthors = await this.database.Table<BookAuthorModel>()
                     .Where(x => x.AuthorGuid == authorGuid)
                     .OrderBy(x => x.BookGuid)
@@ -808,8 +786,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var bookAuthors = await this.database.Table<BookAuthorModel>()
                     .Where(x => x.AuthorGuid == authorGuid)
                     .OrderBy(x => x.BookGuid)
@@ -857,8 +833,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => string.IsNullOrEmpty(x.AuthorListString) || (!string.IsNullOrEmpty(x.AuthorListString) && !x.AuthorListString.Contains(reverseAuthorName)))
                     .ToListAsync();
@@ -889,8 +863,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var authors = await this.database.Table<AuthorDatabaseModel>()
                     .ToListAsync();
 
@@ -917,8 +889,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (author.AuthorGuid != null)
                 {
                     var existingAuthor = await this.database.Table<AuthorDatabaseModel>()
@@ -957,7 +927,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(author);
             }
             catch (Exception ex)
@@ -997,8 +966,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var author = await this.database.Table<AuthorDatabaseModel>()
                     .Where(x => x.AuthorGuid == authorGuid)
                     .FirstOrDefaultAsync();
@@ -1021,8 +988,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var filteredList = new ObservableCollection<AuthorModel>();
 
                 if (AuthorsViewModel.hiddenFilteredAuthorList != null)
@@ -1069,8 +1034,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookCollectionGuid == collectionGuid)
                     .ToListAsync();
@@ -1102,8 +1065,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookCollectionGuid == null)
                     .ToListAsync();
@@ -1134,8 +1095,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var collections = await this.database.Table<CollectionDatabaseModel>()
                     .ToListAsync();
 
@@ -1161,8 +1120,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (collection.CollectionGuid != null)
                 {
                     var existingCollection = await this.database.Table<CollectionDatabaseModel>()
@@ -1201,7 +1158,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(collection);
             }
             catch (Exception ex)
@@ -1224,8 +1180,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookGenreGuid == genreGuid)
                     .ToListAsync();
@@ -1257,8 +1211,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookGenreGuid == null)
                     .ToListAsync();
@@ -1289,8 +1241,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var genres = await this.database.Table<GenreDatabaseModel>()
                     .ToListAsync();
 
@@ -1316,8 +1266,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (genre.GenreGuid != null)
                 {
                     var existingGenre = await this.database.Table<GenreDatabaseModel>()
@@ -1356,7 +1304,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(genre);
             }
             catch (Exception ex)
@@ -1379,8 +1326,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookSeriesGuid == seriesGuid)
                     .ToListAsync();
@@ -1412,8 +1357,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookSeriesGuid == null)
                     .ToListAsync();
@@ -1444,8 +1387,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var series = await this.database.Table<SeriesDatabaseModel>()
                     .ToListAsync();
 
@@ -1471,8 +1412,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (series.SeriesGuid != null)
                 {
                     var existingSeries = await this.database.Table<SeriesDatabaseModel>()
@@ -1511,7 +1450,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(series);
             }
             catch (Exception ex)
@@ -1529,8 +1467,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var series = await this.database.Table<SeriesDatabaseModel>()
                     .Where(x => !string.IsNullOrEmpty(x.SeriesName) && x.SeriesName.Equals(seriesName))
                     .FirstOrDefaultAsync();
@@ -1557,8 +1493,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookLocationGuid == locationGuid)
                     .ToListAsync();
@@ -1590,8 +1524,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => x.BookLocationGuid == null)
                     .ToListAsync();
@@ -1622,8 +1554,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 var locations = await this.database.Table<LocationDatabaseModel>()
                     .ToListAsync();
 
@@ -1649,8 +1579,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
-
                 if (location.LocationGuid != null)
                 {
                     var existingLocation = await this.database.Table<LocationDatabaseModel>()
@@ -1689,7 +1617,6 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                await this.Init();
                 await this.database.DeleteAsync(location);
             }
             catch (Exception ex)

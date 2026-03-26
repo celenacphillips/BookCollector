@@ -286,29 +286,32 @@ namespace BookCollector.ViewModels.Main
         /// <returns>A task.</returns>
         public async override Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                this.SetIsBusyTrue();
-
-                this.ExportEnabled = true;
-                this.ImportEnabled = true;
-                this.RefreshEnabled = true;
-                this.CheckboxesVisible = true;
-                this.OutputVisible = false;
-                this.BooksChecked = true;
-                this.ChaptersChecked = true;
-                this.BookAuthorsChecked = true;
-                this.WishListChecked = true;
-                this.CollectionsChecked = true;
-                this.GenresChecked = true;
-                this.SeriesChecked = true;
-                this.AuthorsChecked = true;
-                this.LocationsChecked = true;
-                this.ImagesChecked = false;
-
-                this.SetIsBusyFalse();
-                this.SetRefreshView(false);
+                return;
             }
+
+            this.SetRefreshView(false);
+
+            await this.SetIsBusyTrue();
+
+            this.ExportEnabled = true;
+            this.ImportEnabled = true;
+            this.RefreshEnabled = true;
+            this.CheckboxesVisible = true;
+            this.OutputVisible = false;
+            this.BooksChecked = true;
+            this.ChaptersChecked = true;
+            this.BookAuthorsChecked = true;
+            this.WishListChecked = true;
+            this.CollectionsChecked = true;
+            this.GenresChecked = true;
+            this.SeriesChecked = true;
+            this.AuthorsChecked = true;
+            this.LocationsChecked = true;
+            this.ImagesChecked = false;
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>
@@ -369,7 +372,7 @@ namespace BookCollector.ViewModels.Main
 
                     await Task.Delay(1);
 
-                    this.SetIsBusyTrue();
+                    await this.SetIsBusyTrue();
 
                     this.ImportEnabled = false;
                     this.ExportEnabled = false;
@@ -492,7 +495,7 @@ namespace BookCollector.ViewModels.Main
 #endif
                         }
 
-                        this.SetIsBusyTrue();
+                        await this.SetIsBusyTrue();
 
                         this.mainFilePath = result.FullPath;
 

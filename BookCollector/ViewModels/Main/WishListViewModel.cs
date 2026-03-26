@@ -10,10 +10,8 @@ namespace BookCollector.ViewModels.Main
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Popups;
-    using BookCollector.Views.Popups;
     using BookCollector.Views.WishListBook;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -184,7 +182,7 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async Task AddWishListBook()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new WishListBookEditView(new WishlistBookModel(), $"{AppStringResources.AddNewBook}");
 
@@ -200,7 +198,7 @@ namespace BookCollector.ViewModels.Main
         [RelayCommand]
         public async Task ShareList()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var data = await this.CreateShareWishList();
             var filePath = $"{FileSystem.CacheDirectory}/{AppStringResources.Wishlist}.txt";
@@ -226,31 +224,38 @@ namespace BookCollector.ViewModels.Main
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await SetList(this.ShowHiddenWishlistBooks);
+            this.SetRefreshView(false);
 
-                    (this.TotalBooksCount,
-                        this.FilteredBooksCount,
-                        this.TotalBooksString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredWishlistBookList,
-                        this.BookPublisherList,
-                        this.BookLanguageList,
-                        this.BookPublishYearList,
-                        this.BookAuthorList,
-                        this.BookLocationList,
-                        this.BookSeriesList) = await this.SetViewModelData(this.HiddenFilteredWishlistBookList);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await SetList(this.ShowHiddenWishlistBooks);
+
+                (this.TotalBooksCount,
+                    this.FilteredBooksCount,
+                    this.TotalBooksString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredWishlistBookList,
+                    this.BookPublisherList,
+                    this.BookLanguageList,
+                    this.BookPublishYearList,
+                    this.BookAuthorList,
+                    this.BookLocationList,
+                    this.BookSeriesList) = await this.SetViewModelData(this.HiddenFilteredWishlistBookList);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 

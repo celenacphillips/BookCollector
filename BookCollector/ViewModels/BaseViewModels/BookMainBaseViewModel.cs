@@ -39,9 +39,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public async override Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                return;
+            }
+
+            this.SetRefreshView(false);
+
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 this.GetPreferences();
 
@@ -62,7 +69,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                this.SetRefreshView(false);
             }
         }
 
@@ -79,7 +85,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (book != null)
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 var view = this.SetEditView();
 
@@ -122,7 +128,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 {
                     try
                     {
-                        this.SetIsBusyTrue();
+                        await this.SetIsBusyTrue();
 
                         await this.DeleteData();
 

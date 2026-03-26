@@ -7,7 +7,6 @@ namespace BookCollector.Data
     using System.Collections.ObjectModel;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -554,7 +553,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.ToLower().Contains(authorOption.ToLower().Trim()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase))
                                      .ToObservableCollection();
             }
 
@@ -576,7 +575,7 @@ namespace BookCollector.Data
 
             if (!string.IsNullOrEmpty(authorOption) && !authorOption.Equals(AppStringResources.NoAuthor) && !authorOption.Equals(AppStringResources.AllAuthors))
             {
-                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.ToLower().Contains(authorOption.ToLower().Trim()))
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.AuthorListString) && x.AuthorListString.Contains(authorOption.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase))
                                      .ToObservableCollection();
             }
 

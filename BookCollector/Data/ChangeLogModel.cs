@@ -5,7 +5,6 @@
 namespace BookCollector.Data
 {
     using CommunityToolkit.Mvvm.ComponentModel;
-    using CommunityToolkit.Mvvm.Input;
 
     /// <summary>
     /// ChangeLogModel class.

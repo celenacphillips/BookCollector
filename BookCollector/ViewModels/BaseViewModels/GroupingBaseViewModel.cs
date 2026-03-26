@@ -167,7 +167,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public async Task ShowExistingBookView(object selected)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new ExistingBooksView(selected, this.ViewTitle!, this);
 
@@ -215,7 +215,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 try
                 {
-                    this.SetIsBusyTrue();
+                    await this.SetIsBusyTrue();
 
                     await this.DeleteGrouping(selected!);
 
@@ -425,8 +425,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<AuthorModel>?)>
             SetViewModelData(ObservableCollection<AuthorModel>? hiddenList, bool isNameChecked)
         {
-            this.SetIsBusyTrue();
-
             int totalCount = 0, filteredCount = 0;
             var showCollectionViewFooter = false;
 
@@ -465,9 +463,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var totalString = StringManipulation.SetTotalAuthorsString(filteredCount, totalCount);
 
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
-
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
 
@@ -485,8 +480,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<CollectionModel>?)>
             SetViewModelData(ObservableCollection<CollectionModel>? hiddenList, bool isNameChecked)
         {
-            this.SetIsBusyTrue();
-
             int totalCount = 0, filteredCount = 0;
             var showCollectionViewFooter = false;
 
@@ -525,9 +518,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var totalString = StringManipulation.SetTotalCollectionsString(filteredCount, totalCount);
 
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
-
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
 
@@ -545,8 +535,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<GenreModel>?)>
             SetViewModelData(ObservableCollection<GenreModel>? hiddenList, bool isNameChecked)
         {
-            this.SetIsBusyTrue();
-
             int totalCount = 0, filteredCount = 0;
             var showCollectionViewFooter = false;
 
@@ -585,9 +573,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var totalString = StringManipulation.SetTotalGenresString(filteredCount, totalCount);
 
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
-
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
 
@@ -605,8 +590,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<LocationModel>?)>
             SetViewModelData(ObservableCollection<LocationModel>? hiddenList, bool isNameChecked)
         {
-            this.SetIsBusyTrue();
-
             int totalCount = 0, filteredCount = 0;
             var showCollectionViewFooter = false;
 
@@ -645,9 +628,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var totalString = StringManipulation.SetTotalLocationsString(filteredCount, totalCount);
 
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
-
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }
 
@@ -665,8 +645,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             ObservableCollection<SeriesModel>?)>
             SetViewModelData(ObservableCollection<SeriesModel>? hiddenList, bool isNameChecked)
         {
-            this.SetIsBusyTrue();
-
             int totalCount = 0, filteredCount = 0;
             var showCollectionViewFooter = false;
 
@@ -704,9 +682,6 @@ namespace BookCollector.ViewModels.BaseViewModels
             }
 
             var totalString = StringManipulation.SetTotalSeriesString(filteredCount, totalCount);
-
-            this.SetIsBusyFalse();
-            this.SetRefreshView(false);
 
             return (totalCount, filteredCount, totalString, showCollectionViewFooter, filteredList);
         }

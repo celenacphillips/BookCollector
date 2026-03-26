@@ -7,7 +7,6 @@ namespace BookCollector.Data
     using System.Collections.ObjectModel;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
 

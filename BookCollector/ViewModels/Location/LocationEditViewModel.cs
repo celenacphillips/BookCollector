@@ -8,7 +8,6 @@ namespace BookCollector.ViewModels.Location
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.Views.Location;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -67,9 +66,16 @@ namespace BookCollector.ViewModels.Location
         /// <returns>A task.</returns>
         public async new Task SetViewModelData()
         {
+            if (!RefreshView)
+            {
+                return;
+            }
+
+            this.SetRefreshView(false);
+
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 this.ValidateEntry();
 
@@ -90,7 +96,7 @@ namespace BookCollector.ViewModels.Location
         {
             try
             {
-                this.SetIsBusyTrue();
+                await this.SetIsBusyTrue();
 
                 if (this.LocationNameNotValid)
                 {
@@ -121,7 +127,6 @@ namespace BookCollector.ViewModels.Location
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
-                this.SetRefreshView(false);
             }
         }
 

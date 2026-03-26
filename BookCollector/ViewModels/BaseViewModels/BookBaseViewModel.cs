@@ -19,7 +19,6 @@ namespace BookCollector.ViewModels.BaseViewModels
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
-    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -340,10 +339,10 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>Two booleans (has a book cover and not) and an image source of the book cover.</returns>
         public static async Task<(bool, bool, ImageSource?)> SetCoverDisplay(string? bookCoverFileName, string? bookCoverUrl, ImageSource? bookCover)
         {
-            var hasBookCover = !string.IsNullOrEmpty(bookCoverFileName) || !string.IsNullOrEmpty(bookCoverUrl) || bookCover != null;
-            var hasNoBookCover = string.IsNullOrEmpty(bookCoverFileName) && string.IsNullOrEmpty(bookCoverUrl) && bookCover == null;
-
             var bookCoverImageSource = await CheckBookCover(bookCoverFileName, bookCoverUrl);
+
+            var hasBookCover = bookCoverImageSource != null || bookCover != null;
+            var hasNoBookCover = !hasBookCover;
 
             return (hasBookCover, hasNoBookCover, bookCoverImageSource);
         }
@@ -359,25 +358,15 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (authorList != null)
             {
-                authorList = authorList.Where(x => !string.IsNullOrEmpty(x.FirstName) && !string.IsNullOrEmpty(x.LastName)).ToObservableCollection();
-
                 for (int i = 0; i < authorList.Count; i++)
                 {
-                    if (!string.IsNullOrEmpty(authorList[i].FirstName) &&
-                        !string.IsNullOrEmpty(authorList[i].LastName))
+                    var author = authorList[i];
+                    if (author != null && !string.IsNullOrEmpty(author.FirstName) && !string.IsNullOrEmpty(author.LastName))
                     {
-                        authorListString += authorList[i].ReverseFullName;
-
+                        authorListString += author.ReverseFullName;
                         if (i != authorList.Count - 1)
                         {
                             authorListString += "; ";
-                        }
-                    }
-                    else
-                    {
-                        if (authorList.Count > 1)
-                        {
-                            authorListString = authorListString[.. (authorListString.LastIndexOf("; ") - 1)];
                         }
                     }
                 }
@@ -601,7 +590,12 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 var directory = $"{FileSystem.AppDataDirectory}/{AppStringResources.BookCovers.Replace(" ", string.Empty)}";
 
-                imageSource = ImageSource.FromFile($"{directory}/{fileName}");
+                var file = $"{directory}/{fileName}";
+
+                if (File.Exists(file))
+                {
+                    imageSource = ImageSource.FromFile(file);
+                }
             }
 
             if (!string.IsNullOrEmpty(coverUrl))
@@ -636,7 +630,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public async Task ShowBookEditView(BookModel book)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new BookEditView(book, $"{AppStringResources.AddNewBook}", false, null, this);
 

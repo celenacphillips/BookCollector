@@ -16,8 +16,6 @@ using CommunityToolkit.Maui.Storage;
 /// </summary>
 public partial class MainSettingsView : ContentPage
 {
-    private static BookCollectorDatabase database;
-
     private string selectedAppThemeField;
 
     private string selectedColorField;
@@ -31,8 +29,6 @@ public partial class MainSettingsView : ContentPage
     /// </summary>
     public MainSettingsView()
     {
-        database = new BookCollectorDatabase();
-
         this.AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
         this.SelectedAppTheme = Application.Current?.UserAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
 
@@ -182,7 +178,7 @@ public partial class MainSettingsView : ContentPage
 
         if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
         {
-            await database.DropAllTables();
+            await BaseViewModel.Database.DropAllTables();
             BaseViewModel.ClearAllLists();
 
             await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, inputConfirm, null, "Commands"));

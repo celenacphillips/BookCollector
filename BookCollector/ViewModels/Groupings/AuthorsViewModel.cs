@@ -13,9 +13,7 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Author;
-    using BookCollector.Views.Popups;
     using CommunityToolkit.Maui.Core.Extensions;
-    using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
@@ -197,7 +195,7 @@ namespace BookCollector.ViewModels.Groupings
         [RelayCommand]
         public async Task AddAuthor()
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new AuthorEditView(new AuthorModel(), $"{AppStringResources.AddNewAuthor}", true);
 
@@ -214,25 +212,32 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task SetViewModelData()
         {
-            if (RefreshView)
+            if (!RefreshView)
             {
-                try
-                {
-                    this.GetPreferences();
+                return;
+            }
 
-                    await SetList(this.ShowHiddenAuthors);
+            this.SetRefreshView(false);
 
-                    (this.TotalAuthorsCount,
-                        this.FilteredAuthorsCount,
-                        this.TotalAuthorsString,
-                        this.ShowCollectionViewFooter,
-                        this.FilteredAuthorList) = await this.SetViewModelData(this.HiddenFilteredAuthorList, this.AuthorLastNameChecked);
-                }
-                catch (Exception ex)
-                {
-                    await this.ViewModelCatch(ex);
-                    this.SetRefreshView(false);
-                }
+            await this.SetIsBusyTrue(true);
+
+            try
+            {
+                this.GetPreferences();
+
+                await SetList(this.ShowHiddenAuthors);
+
+                (this.TotalAuthorsCount,
+                    this.FilteredAuthorsCount,
+                    this.TotalAuthorsString,
+                    this.ShowCollectionViewFooter,
+                    this.FilteredAuthorList) = await this.SetViewModelData(this.HiddenFilteredAuthorList, this.AuthorLastNameChecked);
+
+                this.SetIsBusyFalse();
+            }
+            catch (Exception ex)
+            {
+                await this.ViewModelCatch(ex);
             }
         }
 
@@ -284,7 +289,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>A task.</returns>
         public override async Task Edit(object selected)
         {
-            this.SetIsBusyTrue();
+            await this.SetIsBusyTrue();
 
             var view = new AuthorEditView((AuthorModel)selected, $"{AppStringResources.EditAuthor}", true);
 
