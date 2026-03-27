@@ -4,6 +4,11 @@
 
 namespace BookCollector
 {
+#if ANDROID
+    using AndroidX.Activity;
+    using Microsoft.Maui.LifecycleEvents;
+#endif
+    using System.Reflection;
     using BarcodeScanner.Mobile;
     using BookCollector.Data.BookAPI;
     using BookCollector.Data.Database;
@@ -13,7 +18,6 @@ namespace BookCollector
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using SkiaSharp.Views.Maui.Controls.Hosting;
-    using System.Reflection;
 
     /// <summary>
     /// MauiProgram class.
@@ -59,6 +63,20 @@ namespace BookCollector
                         .Build();
 
             builder.Configuration.AddConfiguration(config);
+
+#if ANDROID
+            builder.ConfigureLifecycleEvents(events =>
+            {
+                events.AddAndroid(android =>
+                    android.OnCreate((activity, bundle) =>
+                    {
+                        if (activity is ComponentActivity componentActivity)
+                        {
+                            EdgeToEdge.Enable(componentActivity);
+                        }
+                    }));
+            });
+#endif
 
             GoogleBooksAPI.Initialize(builder.Configuration);
 
