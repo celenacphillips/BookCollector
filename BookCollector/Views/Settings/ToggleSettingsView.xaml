@@ -33,6 +33,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <Label Text="{x:Static localization:AppStringResources.BookSettings}"
@@ -192,6 +193,23 @@
                         Toggled="OnHiddenWishlistBooksToggled"
                         Grid.Row="12" Grid.Column="1"/>
                 <!-- Hidden Wishlist Books -->
+
+                <!-- Reset -->
+                <ImageButton HeightRequest="50"
+                             WidthRequest="45"
+                             Padding="10"
+                             Clicked="OnResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             Grid.Row="13" Grid.Column="0"
+                             Grid.ColumnSpan="2">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="28"
+                                         Color="{DynamicResource TextDark}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
 
             </Grid>
 

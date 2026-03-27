@@ -4,10 +4,10 @@
 
 namespace BookCollector.Views.Settings;
 
-using BookCollector.Data.Database;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Popups;
+using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Storage;
 
@@ -16,6 +16,18 @@ using CommunityToolkit.Maui.Storage;
 /// </summary>
 public partial class MainSettingsView : ContentPage
 {
+    private readonly string appThemeDefault = Application.Current?.PlatformAppTheme == AppTheme.Dark ? AppStringResources.Dark : AppStringResources.Light;
+
+    private readonly string appColorDefault = AppStringResources.BlueGray;
+
+    private readonly string exportLocationDefault = AppStringResources.DefaultExportLocation;
+
+    private readonly string appLanguageDefault = AppStringResources.English;
+
+    private readonly string appCurrencyDefault = "$ USD";
+
+    private readonly string cultureCodeDefault = "en-US";
+
     private string selectedAppThemeField;
 
     private string selectedColorField;
@@ -43,16 +55,16 @@ public partial class MainSettingsView : ContentPage
             "#b36b00" => this.ColorList[4],
             "#248f8f" => this.ColorList[5],
             "#b300b3" => this.ColorList[6],
-            _ => this.ColorList[0],
+            _ => this.appColorDefault,
         };
 
         this.LanguageList = [AppStringResources.English];
-        this.SelectedLanguage = Preferences.Get("Language", AppStringResources.English /* Default */);
+        this.SelectedLanguage = Preferences.Get("Language", this.appLanguageDefault /* Default */);
 
         this.CurrencyList = ["$ USD"];
-        this.SelectedCurrency = Preferences.Get("Currency", "$ USD" /* Default */);
+        this.SelectedCurrency = Preferences.Get("Currency", this.appCurrencyDefault /* Default */);
 
-        var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
+        var exportLocation = Preferences.Get("ExportLocation", this.exportLocationDefault /* Default */);
         this.SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2) ..];
 
         this.InitializeComponent();
@@ -148,7 +160,7 @@ public partial class MainSettingsView : ContentPage
     /// </summary>
     public string SelectedExportLocation { get; set; }
 
-    private async void OnExportLocationButtonClicked(object sender, EventArgs e)
+    private async void OnExportLocationButton_Clicked(object sender, EventArgs e)
     {
         var result = await FolderPicker.Default.PickAsync(CancellationToken.None);
 
@@ -162,7 +174,7 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
-    private async void OnDeleteButtonClicked(object sender, EventArgs e)
+    private async void OnDeleteButton_Clicked(object sender, EventArgs e)
     {
         var deviceWidth = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
 
@@ -284,10 +296,10 @@ public partial class MainSettingsView : ContentPage
 
             if (!string.IsNullOrEmpty(result.Result))
             {
-                this.SelectedAppTheme = result.Result;
-                Preferences.Set("Currency", this.SelectedAppTheme);
+                this.SelectedCurrency = result.Result;
+                Preferences.Set("Currency", this.SelectedCurrency);
 
-                if (this.SelectedAppTheme.Equals("$ USD"))
+                if (this.SelectedCurrency.Equals("$ USD"))
                 {
                     Preferences.Set("CultureCode", "en-US");
                 }
@@ -296,5 +308,36 @@ public partial class MainSettingsView : ContentPage
         catch (Exception ex)
         {
         }
+    }
+
+    private void OnResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.SelectedAppTheme = this.appThemeDefault;
+        this.SelectedColor = this.appColorDefault;
+        this.SelectedExportLocation = this.exportLocationDefault;
+        this.SelectedExportLocationLabel.Text = this.exportLocationDefault;
+        this.SelectedLanguage = this.appLanguageDefault;
+        this.SelectedCurrency = this.appCurrencyDefault;
+
+        string hexCode = this.SelectedColor switch
+        {
+            "Red" => "ff0000",
+            "Purple" => "#751aff",
+            "Green" => "#2db300",
+            "Orange" => "#b36b00",
+            "Teal" => "#248f8f",
+            "Magenta" => "#b300b3",
+            _ => "#336699"
+        };
+
+        Data.Colors.SetColors(hexCode);
+
+        Application.Current?.UserAppTheme = this.appThemeDefault.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
+        Preferences.Set("AppTheme", this.appThemeDefault);
+        Preferences.Set("AppColor", hexCode);
+        Preferences.Set("ExportLocation", this.exportLocationDefault);
+        Preferences.Set("Language", this.appLanguageDefault);
+        Preferences.Set("Currency", this.appCurrencyDefault);
+        Preferences.Set("CultureCode", this.cultureCodeDefault);
     }
 }
