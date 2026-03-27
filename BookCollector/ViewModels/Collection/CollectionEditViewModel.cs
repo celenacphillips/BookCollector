@@ -117,7 +117,7 @@ namespace BookCollector.ViewModels.Collection
 
                     if (this.InsertMainViewBefore)
                     {
-                        CollectionMainView view = new(this.EditedCollection, $"{this.EditedCollection.CollectionName}");
+                        CollectionMainView view = new (this.EditedCollection, $"{this.EditedCollection.CollectionName}");
                         Shell.Current.Navigation.InsertPageBefore(view, this.View);
                     }
 

@@ -107,7 +107,7 @@ namespace BookCollector.Data.BookAPI
             var items = new ObservableCollection<Item>();
             var totalItemCount = 0;
 
-            HttpClient client = new();
+            HttpClient client = new ();
 
             var baseURI = configuration.GetRequiredSection("Settings").GetRequiredSection("BaseURI").Value;
             var apiKey = configuration.GetRequiredSection("Settings").GetRequiredSection("APIKey").Value;
@@ -116,7 +116,7 @@ namespace BookCollector.Data.BookAPI
 
             var response = client.GetAsync(endpoint).GetAwaiter().GetResult();
 
-            ISBNLookup? isbnResponse = new();
+            ISBNLookup? isbnResponse = new ();
 
             if (response.IsSuccessStatusCode)
             {

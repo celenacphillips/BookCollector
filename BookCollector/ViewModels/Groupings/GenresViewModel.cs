@@ -4,6 +4,7 @@
 
 namespace BookCollector.ViewModels.Groupings
 {
+    using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
@@ -11,12 +12,10 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
-    using BookCollector.Views.Collection;
     using BookCollector.Views.Genre;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using System.Collections.ObjectModel;
 
     /// <summary>
     /// GenresViewModel class.

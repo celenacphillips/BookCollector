@@ -462,7 +462,7 @@ namespace BookCollector.ViewModels.Main
                         { DevicePlatform.Android, acceptableFileTypes }, // MIME type
                     });
 
-                    PickOptions pickerOptions = new()
+                    PickOptions pickerOptions = new ()
                     {
                         FileTypes = customFileType,
                     };
@@ -814,7 +814,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -870,7 +870,7 @@ namespace BookCollector.ViewModels.Main
 
                 if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(AppStringResources.Yes))
                 {
-                    MediaPickerOptions pickerOptions = new();
+                    MediaPickerOptions pickerOptions = new ();
 
                     try
                     {
@@ -1178,7 +1178,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0])!.Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 BookSeriesGuid = ParseGuid(values[2]),
                                 BookNumberInSeries = values[3],
@@ -1454,7 +1454,7 @@ namespace BookCollector.ViewModels.Main
                         {
                             var book = new WishlistBookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0])!.Value : null,
+                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
                                 BookTitle = values[1],
                                 AuthorListString = values[2],
                                 BookSeries = values[3],
@@ -1641,7 +1641,7 @@ namespace BookCollector.ViewModels.Main
                                 ChapterName = values[1],
                                 PageRange = values[2],
                                 ChapterOrder = ParseInt(values[3]),
-                                BookGuid = ParseGuid(values[4])!.Value,
+                                BookGuid = ParseGuid(values[4]) !.Value,
                             };
 
                             await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
@@ -2189,8 +2189,8 @@ namespace BookCollector.ViewModels.Main
                             var bookAuthor = new BookAuthorModel()
                             {
                                 BookAuthorGuid = ParseGuid(values[0]),
-                                AuthorGuid = ParseGuid(values[1])!.Value,
-                                BookGuid = ParseGuid(values[2])!.Value,
+                                AuthorGuid = ParseGuid(values[1]) !.Value,
+                                BookGuid = ParseGuid(values[2]) !.Value,
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);

@@ -58,7 +58,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 await this.CheckBookFormat();
 
-                List<string?> bookStrings = (List<string?>)this.GetBookData("strings")!;
+                List<string?> bookStrings = (List<string?>)this.GetBookData("strings") !;
 
                 this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
 
