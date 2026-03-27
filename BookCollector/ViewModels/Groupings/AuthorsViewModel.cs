@@ -4,7 +4,6 @@
 
 namespace BookCollector.ViewModels.Groupings
 {
-    using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
@@ -13,9 +12,11 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Author;
+    using BookCollector.Views.Collection;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// AuthorsViewModel class.
@@ -308,6 +309,22 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteAuthorAsync(ConvertTo<AuthorDatabaseModel>(selected));
             RemoveFromStaticList((AuthorModel)selected);
             await RemoveBookFromGrouping((AuthorModel)selected);
+        }
+
+        /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task ViewMetrics(object selected)
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new AuthorMetricView((AuthorModel)selected, $"{AppStringResources.AuthorMetrics}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>

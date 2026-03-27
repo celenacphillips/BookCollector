@@ -1537,13 +1537,36 @@ Importing from and exporting to other sources is a feature that will be implemen
     <value>Time Range</value>
   </data>
   <data name="ChangeLogEntry" xml:space="preserve">
-    <value>• Minor code enhancements
-• UI bug fixes, enhancements, and clarity to verbiage
-• Added Book Cover filter to Wishlist
-• Added text editor to Pages Read Popup
-• Other bug fixes</value>
+    <value>• Added Metric page for groupings</value>
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">
     <value>There has been a major update and a breaking change made.</value>
+  </data>
+  <data name="ViewMetrics" xml:space="preserve">
+    <value>View Metrics</value>
+  </data>
+  <data name="CollectionMetrics" xml:space="preserve">
+    <value>Collection Metrics</value>
+  </data>
+  <data name="GenreMetrics" xml:space="preserve">
+    <value>Genre Metrics</value>
+  </data>
+  <data name="SeriesMetrics" xml:space="preserve">
+    <value>Series Metrics</value>
+  </data>
+  <data name="AuthorMetrics" xml:space="preserve">
+    <value>Author Metrics</value>
+  </data>
+  <data name="LocationMetrics" xml:space="preserve">
+    <value>Location Metrics</value>
+  </data>
+  <data name="TotalPriceOfBooks" xml:space="preserve">
+    <value>Total Price of Books</value>
+  </data>
+  <data name="BooksToBeRead" xml:space="preserve">
+    <value>Books To Be Read</value>
+  </data>
+  <data name="BooksReading" xml:space="preserve">
+    <value>Books Reading</value>
   </data>
 </root>

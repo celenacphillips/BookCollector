@@ -317,6 +317,22 @@ namespace BookCollector.ViewModels.Groupings
         }
 
         /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task ViewMetrics(object selected)
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new CollectionMetricView((CollectionModel)selected, $"{AppStringResources.CollectionMetrics}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
+        }
+
+        /// <summary>
         /// Set whether to refresh view or not.
         /// </summary>
         /// <param name="value">Value to change to.</param>

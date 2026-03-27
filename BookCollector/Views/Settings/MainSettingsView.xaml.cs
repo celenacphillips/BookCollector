@@ -53,7 +53,7 @@ public partial class MainSettingsView : ContentPage
         this.SelectedCurrency = Preferences.Get("Currency", "$ USD" /* Default */);
 
         var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
-        this.SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2) ..];
+        this.SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2)..];
 
         this.InitializeComponent();
         this.BindingContext = this;
@@ -156,8 +156,8 @@ public partial class MainSettingsView : ContentPage
 
         if (folder != null)
         {
-            this.SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
-            this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
+            this.SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2)..];
+            this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2)..];
             Preferences.Set("ExportLocation", folder.Path);
         }
     }

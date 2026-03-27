@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:local="clr-namespace:BookCollector.Views.Author"
+             x:Class="BookCollector.Views.Author.AuthorMetricView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="this"
+             x:DataType="local:AuthorMetricView"
+             Title="{Binding ViewTitle}">
+
+    <VerticalStackLayout BindingContext="{x:Reference this}">
+
+        <toolkit:Expander IsExpanded="true"
+                          Margin="20,0">
+
+            <toolkit:Expander.Header>
+                <Grid Style="{DynamicResource expanderHeader}">
+                    <Label Text="{Binding Author.AuthorName}"
+                           Style="{DynamicResource expanderHeaderLabel}"
+                           HorizontalTextAlignment="Center"/>
+                </Grid>
+            </toolkit:Expander.Header>
+
+            <Grid Padding="10"
+                  Margin="0,-10,0,10"
+                  BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Books -->
+                <Label Text="{x:Static localization:AppStringResources.TotalBooksOwned}" 
+                       Grid.Row="0" Grid.Column="0"
+                       HorizontalTextAlignment="End"
+                       Margin="10,5"/>
+
+                <Label Text="{Binding Author.AuthorTotalBooks}"
+                       Grid.Row="0" Grid.Column="1"
+                       Margin="10,5"/>
+                <!-- Total Books -->
+
+                <!-- Total Books Price -->
+                <Label Text="{x:Static localization:AppStringResources.TotalPriceOfBooksOwned}"
+                       Grid.Row="1" Grid.Column="0"
+                       HorizontalTextAlignment="End"
+                       Margin="10,5"/>
+
+                <Label Text="{Binding Author.TotalCostOfBooksString}"
+                       Grid.Row="1" Grid.Column="1"
+                       Margin="10,5"/>
+                <!-- Total Books Price -->
+
+                <!-- Books To Be Read -->
+                <Label Text="{x:Static localization:AppStringResources.BooksToBeRead}"
+                       Grid.Row="2" Grid.Column="0"
+                       HorizontalTextAlignment="End"
+                       Margin="10,5"/>
+
+                <Label Text="{Binding Author.ToBeReadCount}"
+                       Grid.Row="2" Grid.Column="1"
+                       Margin="10,5"/>
+                <!-- Books To Be Read -->
+
+                <!-- Books Reading -->
+                <Label Text="{x:Static localization:AppStringResources.BooksReading}"
+                       Grid.Row="3" Grid.Column="0"
+                       HorizontalTextAlignment="End"
+                       Margin="10,5"/>
+
+                <Label Text="{Binding Author.ReadingCount}"
+                       Grid.Row="3" Grid.Column="1"
+                       Margin="10,5"/>
+                <!-- Books Reading -->
+
+                <!-- Books Read -->
+                <Label Text="{x:Static localization:AppStringResources.BooksRead}"
+                       Grid.Row="4" Grid.Column="0"
+                       HorizontalTextAlignment="End"
+                       Margin="10,5"/>
+
+                <Label Text="{Binding Author.ReadCount}"
+                       Grid.Row="4" Grid.Column="1"
+                       Margin="10,5"/>
+                <!-- Books Read -->
+
+            </Grid>
+
+        </toolkit:Expander>
+
+    </VerticalStackLayout>
+</ContentPage>

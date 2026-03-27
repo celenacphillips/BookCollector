@@ -272,7 +272,7 @@ namespace BookCollector.ViewModels.Book
                 await this.DisplayMessage($"{AppStringResources.ActionCanceled}", $"{AppStringResources.PleaseAllowCameraPermissionToScanBarcodes}");
             }
 #else
-            BookScanView view = new ()
+            BookScanView view = new()
             {
                 ReturnViewModel = this,
             };
@@ -391,7 +391,7 @@ namespace BookCollector.ViewModels.Book
                     foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                     {
                         string firstName = author[..author.LastIndexOf(' ')];
-                        string lastName = author[(author.LastIndexOf(' ') + 1) ..];
+                        string lastName = author[(author.LastIndexOf(' ') + 1)..];
 
                         authorList.Add(
                             new AuthorModel()
@@ -486,7 +486,7 @@ namespace BookCollector.ViewModels.Book
                     foreach (var author in this.SelectedISBNItem.VolumeInfo.Authors)
                     {
                         string firstName = author[..author.LastIndexOf(' ')];
-                        string lastName = author[(author.LastIndexOf(' ') + 1) ..];
+                        string lastName = author[(author.LastIndexOf(' ') + 1)..];
 
                         authorList.Add(
                             new AuthorModel()

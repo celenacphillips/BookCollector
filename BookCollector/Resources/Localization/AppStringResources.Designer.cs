@@ -502,6 +502,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author Metrics.
+        /// </summary>
+        internal static string AuthorMetrics {
+            get {
+                return ResourceManager.GetString("AuthorMetrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Author Name.
         /// </summary>
         internal static string AuthorName {
@@ -1079,6 +1088,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Books Reading.
+        /// </summary>
+        internal static string BooksReading {
+            get {
+                return ResourceManager.GetString("BooksReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Books To Be Read.
+        /// </summary>
+        internal static string BooksToBeRead {
+            get {
+                return ResourceManager.GetString("BooksToBeRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Sub-Title.
         /// </summary>
         internal static string BookSubTitle {
@@ -1205,11 +1232,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to • Minor code enhancements
-        ///• UI bug fixes, enhancements, and clarity to verbiage
-        ///• Added Book Cover filter to Wishlist
-        ///• Added text editor to Pages Read Popup
-        ///• Other bug fixes.
+        ///   Looks up a localized string similar to • Added Metric page for groupings.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -1322,6 +1345,15 @@ namespace BookCollector.Resources.Localization {
         internal static string CollectionMainView_InfoText {
             get {
                 return ResourceManager.GetString("CollectionMainView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection Metrics.
+        /// </summary>
+        internal static string CollectionMetrics {
+            get {
+                return ResourceManager.GetString("CollectionMetrics", resourceCulture);
             }
         }
         
@@ -2247,6 +2279,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Genre Metrics.
+        /// </summary>
+        internal static string GenreMetrics {
+            get {
+                return ResourceManager.GetString("GenreMetrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genre Name.
         /// </summary>
         internal static string GenreName {
@@ -2621,6 +2662,15 @@ namespace BookCollector.Resources.Localization {
         internal static string LocationMainView_InfoText {
             get {
                 return ResourceManager.GetString("LocationMainView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Metrics.
+        /// </summary>
+        internal static string LocationMetrics {
+            get {
+                return ResourceManager.GetString("LocationMetrics", resourceCulture);
             }
         }
         
@@ -3446,6 +3496,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series Metrics.
+        /// </summary>
+        internal static string SeriesMetrics {
+            get {
+                return ResourceManager.GetString("SeriesMetrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Series Name.
         /// </summary>
         internal static string SeriesName {
@@ -3970,6 +4029,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Price of Books.
+        /// </summary>
+        internal static string TotalPriceOfBooks {
+            get {
+                return ResourceManager.GetString("TotalPriceOfBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Price of Books Owned.
         /// </summary>
         internal static string TotalPriceOfBooksOwned {
@@ -4065,6 +4133,15 @@ namespace BookCollector.Resources.Localization {
         internal static string UserSelectedImagesMessage {
             get {
                 return ResourceManager.GetString("UserSelectedImagesMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Metrics.
+        /// </summary>
+        internal static string ViewMetrics {
+            get {
+                return ResourceManager.GetString("ViewMetrics", resourceCulture);
             }
         }
         

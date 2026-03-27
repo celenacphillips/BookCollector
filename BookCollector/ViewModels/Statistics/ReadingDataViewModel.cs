@@ -102,7 +102,7 @@ namespace BookCollector.ViewModels.Statistics
         /// <returns>A task.</returns>
         [RelayCommand]
         public async Task UpdateMaxNumber()
-       {
+        {
             if (!string.IsNullOrEmpty(this.YearCount))
             {
                 var tryIntParse = int.TryParse(this.YearCount, out var year);

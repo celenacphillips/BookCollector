@@ -6,12 +6,37 @@ namespace BookCollector.Data.Models
 {
     using BookCollector.Data.DatabaseModels;
     using BookCollector.ViewModels.BaseViewModels;
+    using CommunityToolkit.Mvvm.ComponentModel;
 
     /// <summary>
     /// SeriesModel class.
     /// </summary>
     public partial class SeriesModel : SeriesDatabaseModel, ICloneable
     {
+        /// <summary>
+        /// Gets or sets the total count of books to be read.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int toBeReadCount;
+
+        /// <summary>
+        /// Gets or sets the total count of books reading.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int readingCount;
+
+        /// <summary>
+        /// Gets or sets the total count of books read.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public int readCount;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SeriesModel"/> class.
         /// </summary>
@@ -43,6 +68,14 @@ namespace BookCollector.Data.Models
         }
 
         /// <summary>
+        /// Gets the total price of books, formatted as a string.
+        /// </summary>
+        public string? TotalCostOfBooksString
+        {
+            get => StringManipulation.SetBookPrice(this.TotalCostOfBooks.ToString());
+        }
+
+        /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
         /// <returns>A new object that is a copy of this instance.</returns>
@@ -59,7 +92,11 @@ namespace BookCollector.Data.Models
         public async Task SetTotalBooks(bool showHiddenBooks)
         {
             var list = await FillLists.GetAllBooksInSeriesList(this.SeriesGuid, showHiddenBooks);
-            (this.TotalBooksString, this.SeriesTotalBooks) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list, this.TotalBooksInSeries);
+            (this.TotalBooksString,
+                this.SeriesTotalBooks,
+                this.ToBeReadCount,
+                this.ReadingCount,
+                this.ReadCount) = GroupingBaseViewModel.SetTotalBooksStringAndCounts(list, this.TotalBooksInSeries);
         }
 
         /// <summary>

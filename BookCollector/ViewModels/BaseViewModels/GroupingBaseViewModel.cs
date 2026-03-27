@@ -90,7 +90,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <param name="list">List of books.</param>
         /// <param name="totalBooks">Optional total books for series grouping.</param>
         /// <returns>A parsed string and counts.</returns>
-        public static (string?, int) SetTotalBooksStringAndCounts(ObservableCollection<BookModel>? list, string? totalBooks = null)
+        public static (string?, int, int, int, int) SetTotalBooksStringAndCounts(ObservableCollection<BookModel>? list, string? totalBooks = null)
         {
             int count = 0, unread = 0, read = 0, reading = 0;
 
@@ -106,7 +106,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                                     StringManipulation.SetTotalBooksAndReadingStatusString(count, int.Parse(totalBooks), unread, reading, read) :
                                     StringManipulation.SetTotalBooksAndReadingStatusString(count, unread, reading, read);
 
-            return (totalBooksString, count);
+            return (totalBooksString, count, unread, reading, read);
         }
 
         /********************************************************/
@@ -186,17 +186,25 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             if (selected != null && !string.IsNullOrEmpty(objectName))
             {
-                List<string> actions = [AppStringResources.Edit, AppStringResources.Delete];
+                List<string> actions = [AppStringResources.Edit, AppStringResources.Delete, AppStringResources.ViewMetrics];
                 var action = await this.PopupActionMenu(objectName, actions);
 
-                if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Edit))
+                if (!string.IsNullOrEmpty(action))
                 {
-                    await this.Edit(selected);
-                }
+                    if (action.Equals(AppStringResources.Edit))
+                    {
+                        await this.Edit(selected);
+                    }
 
-                if (!string.IsNullOrEmpty(action) && action.Equals(AppStringResources.Delete))
-                {
-                    await this.Delete(selected, objectName);
+                    if (action.Equals(AppStringResources.Delete))
+                    {
+                        await this.Delete(selected, objectName);
+                    }
+
+                    if (action.Equals(AppStringResources.ViewMetrics))
+                    {
+                        await this.ViewMetrics(selected);
+                    }
                 }
             }
         }
@@ -251,6 +259,13 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <param name="selected">Selected object.</param>
         /// <returns>A task.</returns>
         public abstract Task DeleteGrouping(object selected);
+
+        /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public abstract Task ViewMetrics(object selected);
 
         /********************************************************/
 

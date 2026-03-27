@@ -4,7 +4,6 @@
 
 namespace BookCollector.ViewModels.Groupings
 {
-    using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
     using BookCollector.Data.Models;
@@ -12,10 +11,12 @@ namespace BookCollector.ViewModels.Groupings
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Collection;
     using BookCollector.Views.Location;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// LocationsViewModel class.
@@ -305,6 +306,22 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
             RemoveFromStaticList((LocationModel)selected);
             await RemoveBookFromGrouping((LocationModel)selected);
+        }
+
+        /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task ViewMetrics(object selected)
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new LocationMetricView((LocationModel)selected, $"{AppStringResources.LocationMetrics}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>

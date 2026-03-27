@@ -141,7 +141,7 @@ namespace BookCollector.Data
                     (inputName.StartsWith("the ", StringComparison.CurrentCultureIgnoreCase) ||
                     inputName.StartsWith("a ", StringComparison.CurrentCultureIgnoreCase) ||
                     inputName.StartsWith("an ", StringComparison.CurrentCultureIgnoreCase)))
-                        ? inputName[(inputName.IndexOf(' ') + 1) ..]
+                        ? inputName[(inputName.IndexOf(' ') + 1)..]
                         : inputName;
         }
 

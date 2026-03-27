@@ -206,6 +206,9 @@
 		<Compile Update="Views\Controls\WishListBook\WishListBookCollectionItem.xaml.cs">
 			<DependentUpon>WishListBookCollectionItem.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\Genre\GenreMetricView.xaml.cs">
+		  <DependentUpon>GenreMetricView.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\Popups\ChoiceDialogPopup.xaml.cs">
 		  <DependentUpon>ChoiceDialogPopup.xaml</DependentUpon>
 		</Compile>
@@ -271,6 +274,9 @@
 		<MauiXaml Update="Views\Author\AuthorMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Author\AuthorMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookEditView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -282,6 +288,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Collection\CollectionMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Collection\CollectionMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Author\AuthorCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -349,6 +358,9 @@
 		<MauiXaml Update="Views\Genre\GenreMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\AuthorsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -385,6 +397,9 @@
 		<MauiXaml Update="Views\Location\LocationMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Main\ExportImportView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -401,6 +416,9 @@
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\TimePopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesMetricView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Support\ChangeLogView.xaml">

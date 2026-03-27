@@ -463,7 +463,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (storageReadStatus == PermissionStatus.Granted)
             {
-                MediaPickerOptions pickerOptions = new ();
+                MediaPickerOptions pickerOptions = new();
 
                 try
                 {
