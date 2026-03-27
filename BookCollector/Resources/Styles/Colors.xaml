@@ -35,8 +35,6 @@
     <Color x:Key="Gray950">#141414</Color>
 
     <!-- Light -->
-    <Color x:Key="SecondaryLight">#4080bf</Color>
-    <Color x:Key="TertiaryLight">#6699cc</Color>
     <Color x:Key="MenuLight">Black</Color>
     <Color x:Key="BackgroundLight">#f2f2f2</Color>
     <Color x:Key="SecondaryBackgroundLight">#e6e6e6</Color>
@@ -44,8 +42,6 @@
     <Color x:Key="SecondaryTextLight">White</Color>
 
     <!-- Dark -->
-    <Color x:Key="SecondaryDark">#538cc6</Color>
-    <Color x:Key="TertiaryDark">#8cb3d9</Color>
     <Color x:Key="MenuDark">#f2f2f2</Color>
     <Color x:Key="BackgroundDark">#1f1f1f</Color>
     <Color x:Key="SecondaryBackgroundDark">#333333</Color>
@@ -53,4 +49,14 @@
     <Color x:Key="SecondaryTextDark">Black</Color>
 
     <SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource Tertiary}" />
+
+    <Color x:Key="Primary_Preview">#336699</Color>
+    <Color x:Key="Secondary_Preview">#3F7FBF</Color>
+    <Color x:Key="Tertiary_Preview">#6599CC</Color>
+
+    <Color x:Key="Color2_Preview">#329951</Color>
+    <Color x:Key="Color3_Preview">#8E9932</Color>
+    <Color x:Key="Color4_Preview">#99323D</Color>
+    <Color x:Key="Color5_Preview">#7A3299</Color>
+    <Color x:Key="Color6_Preview">#7A3299</Color>
 </ResourceDictionary>

@@ -45,7 +45,8 @@
                 <Label Text="{x:Static localization:AppStringResources.TotalBooksOwned}" 
                        Grid.Row="0" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.SeriesTotalBooks}"
                        Grid.Row="0" Grid.Column="1"
@@ -56,7 +57,8 @@
                 <Label Text="{x:Static localization:AppStringResources.TotalBooksInSeries}" 
                        Grid.Row="1" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.TotalBooksInSeries}"
                        Grid.Row="1" Grid.Column="1"
@@ -67,7 +69,8 @@
                 <Label Text="{x:Static localization:AppStringResources.TotalPriceOfBooksOwned}"
                        Grid.Row="2" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.TotalCostOfBooksString}"
                        Grid.Row="2" Grid.Column="1"
@@ -78,7 +81,8 @@
                 <Label Text="{x:Static localization:AppStringResources.BooksToBeRead}"
                        Grid.Row="3" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.ToBeReadCount}"
                        Grid.Row="3" Grid.Column="1"
@@ -89,7 +93,8 @@
                 <Label Text="{x:Static localization:AppStringResources.BooksReading}"
                        Grid.Row="4" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.ReadingCount}"
                        Grid.Row="4" Grid.Column="1"
@@ -100,7 +105,8 @@
                 <Label Text="{x:Static localization:AppStringResources.BooksRead}"
                        Grid.Row="5" Grid.Column="0"
                        HorizontalTextAlignment="End"
-                       Margin="10,5"/>
+                       Margin="10,5"
+                       Style="{DynamicResource Header}"/>
 
                 <Label Text="{Binding Series.ReadCount}"
                        Grid.Row="5" Grid.Column="1"

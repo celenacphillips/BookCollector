@@ -4,7 +4,6 @@
 
 namespace BookCollector
 {
-    using System.Reflection;
     using BarcodeScanner.Mobile;
     using BookCollector.Data.BookAPI;
     using BookCollector.Data.Database;
@@ -13,6 +12,8 @@ namespace BookCollector
     using Microcharts.Maui;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using SkiaSharp.Views.Maui.Controls.Hosting;
+    using System.Reflection;
 
     /// <summary>
     /// MauiProgram class.
@@ -31,6 +32,7 @@ namespace BookCollector
                 .UseMauiCommunityToolkit()
                 .ConfigureNullableDateTimePicker()
                 .UseMicrocharts()
+                .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");

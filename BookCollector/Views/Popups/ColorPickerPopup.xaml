@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:controls="clr-namespace:Maui.ColorPicker;assembly=Maui.ColorPicker"
+               x:Class="BookCollector.Views.Popups.ColorPickerPopup"
+               xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+               HeightRequest="{Binding PopupHeight}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+               Margin="0"
+               x:TypeArguments="x:String">
+
+    <ScrollView>
+        <VerticalStackLayout>
+            <controls:ColorPicker ColorFlowDirection="Horizontal"
+                                  ColorSpectrumStyle="TintToHueToShadeStyle"
+                                  PickedColorChanged="ColorPicker_PickedColorChanged"
+                                  PointerRingBorderUnits="0.3"
+                                  PointerRingDiameterUnits="0.7"
+                                  HeightRequest="{Binding ColorPickerHeight}"
+                                  x:Name="ColorPicker">
+            </controls:ColorPicker>
+
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                     Padding="10"
+                                     Background="{StaticResource BackgroundLight}">
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Primary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           Background="{DynamicResource Primary_Preview}"
+                           TextColor="{StaticResource TextLight}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.SecondaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Secondary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Primary_Preview}"
+                           Background="{DynamicResource Tertiary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.TertiaryColor}"
+                           Padding="5"
+                           TextColor="{StaticResource TextLight}"
+                           Background="{DynamicResource Tertiary_Preview}"
+                           FontAttributes="Italic"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.ChartColors}"
+                           TextColor="{StaticResource TextLight}"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,0"/>
+
+                    <Label Background="{DynamicResource Primary_Preview}" />
+                    <Label Background="{DynamicResource Color2_Preview}" />
+                    <Label Background="{DynamicResource Color3_Preview}" />
+                    <Label Background="{DynamicResource Color4_Preview}" />
+                    <Label Background="{DynamicResource Color5_Preview}" />
+                    <Label Background="{DynamicResource Color6_Preview}" />
+
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                     Padding="10"
+                                     Background="{StaticResource BackgroundDark}">
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Primary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           Background="{DynamicResource Primary_Preview}"
+                           TextColor="{StaticResource TextDark}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.SecondaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Secondary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.PrimaryColor}"
+                           Padding="5"
+                           TextColor="{DynamicResource Primary_Preview}"
+                           Background="{DynamicResource Tertiary_Preview}"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.TertiaryColor}"
+                           Padding="5"
+                           TextColor="{StaticResource TextDark}"
+                           Background="{DynamicResource Tertiary_Preview}"
+                           FontAttributes="Italic"/>
+
+                    <Label Text="{x:Static localization:AppStringResources.ChartColors}"
+                           TextColor="{StaticResource TextDark}"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,0"/>
+
+                    <Label Background="{DynamicResource Primary_Preview}" />
+                    <Label Background="{DynamicResource Color2_Preview}" />
+                    <Label Background="{DynamicResource Color3_Preview}" />
+                    <Label Background="{DynamicResource Color4_Preview}" />
+                    <Label Background="{DynamicResource Color5_Preview}" />
+                    <Label Background="{DynamicResource Color6_Preview}" />
+
+                </VerticalStackLayout>
+            </Grid>
+
+            <ImageButton HorizontalOptions="Center"
+                         VerticalOptions="Center"
+                         Margin="10,10,15,0"
+                         Padding="10,5"
+                         Clicked="OnCloseButton_Clicked">
+                <ImageButton.Source>
+                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                     Glyph="&#xF0193;"
+                                     Size="28"
+                                     Color="{DynamicResource TextDark}" />
+                </ImageButton.Source>
+            </ImageButton>
+        </VerticalStackLayout>
+    </ScrollView>
+</toolkit:Popup>

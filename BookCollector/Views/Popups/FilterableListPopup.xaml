@@ -25,6 +25,7 @@
                                    ShowFilter="{Binding ShowFilter}"
                                    TotalItemsColor="{DynamicResource Tertiary}"
                                    MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
-                                   SelectedItemColor="{DynamicResource Primary}"/>
+                                   SelectedItemColor="{DynamicResource Tertiary}"
+                                   SelectedItemTextColor="{DynamicResource Primary}"/>
     </VerticalStackLayout>
 </toolkit:Popup>

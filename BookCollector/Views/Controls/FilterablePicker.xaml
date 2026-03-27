@@ -31,7 +31,14 @@
             
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <Grid x:Name="Root">
+                    <Label Text="{Binding}"
+                           HeightRequest="50"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{Binding MainTextColor, Source={x:Reference this}}"
+                           MaxLines="3">
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
@@ -43,22 +50,13 @@
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Property="BackgroundColor" Value="{Binding SelectedItemColor, Source={x:Reference this}}"/>
+                                        <Setter Property="TextColor" Value="{Binding SelectedItemTextColor, Source={x:Reference this}}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-
-                        <Label Text="{Binding}"
-                               HeightRequest="50"
-                               HorizontalOptions="Fill"
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               LineBreakMode="TailTruncation"
-                               TextColor="{Binding MainTextColor}"
-                               MaxLines="3"/>
-
-                    </Grid>
+                    </Label>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

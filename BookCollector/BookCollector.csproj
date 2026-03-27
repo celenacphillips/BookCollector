@@ -167,6 +167,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.41" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="nor0x.Maui.ColorPicker" Version="2.0.4" />
 		<PackageReference Include="Open-XML-SDK" Version="2.9.1" />
 		<PackageReference Include="SkiaSharp" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.2" />
@@ -404,6 +405,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\ChoiceDialogPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\ColorPickerPopup.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\MissingBookCoverPopup.xaml">

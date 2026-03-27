@@ -74,11 +74,21 @@ public partial class FilterablePicker : ContentView
                  propertyChanged: OnRefreshControl);
 
     /// <summary>
-    /// Gets or sets the selected item text color value.
+    /// Gets or sets the selected item color value.
     /// </summary>
     public static readonly BindableProperty SelectedItemColorProperty =
              BindableProperty.Create(
                  nameof(SelectedItemColor),
+                 typeof(Color),
+                 typeof(FilterablePicker),
+                 propertyChanged: OnRefreshControl);
+
+    /// <summary>
+    /// Gets or sets the selected item text color value.
+    /// </summary>
+    public static readonly BindableProperty SelectedItemTextColorProperty =
+             BindableProperty.Create(
+                 nameof(SelectedItemTextColor),
                  typeof(Color),
                  typeof(FilterablePicker),
                  propertyChanged: OnRefreshControl);
@@ -165,12 +175,21 @@ public partial class FilterablePicker : ContentView
     }
 
     /// <summary>
-    /// Gets or sets the selected item text color value.
+    /// Gets or sets the selected item color value.
     /// </summary>
     public Color SelectedItemColor
     {
         get => (Color)this.GetValue(SelectedItemColorProperty);
         set => this.SetValue(SelectedItemColorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the selected item text color value.
+    /// </summary>
+    public Color SelectedItemTextColor
+    {
+        get => (Color)this.GetValue(SelectedItemTextColorProperty);
+        set => this.SetValue(SelectedItemTextColorProperty, value);
     }
 
     /// <summary>

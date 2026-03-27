@@ -38,5 +38,34 @@ namespace BookCollector.Data
             Application.Current?.Resources["Color5"] = Color.FromArgb(color5.ToHex());
             Application.Current?.Resources["Color6"] = Color.FromArgb(color6.ToHex());
         }
+
+        /// <summary>
+        /// Calculates and sets the colors for the application based on the hexcode provided.
+        /// </summary>
+        /// <param name="hexcode">The primary hexcode value.</param>
+        public static void SetPreviewColors(string hexcode)
+        {
+            var color = Color.FromArgb(hexcode);
+            var secondary = color.AddLuminosity(0.1f);
+            var tertiary = color.AddLuminosity(0.2f);
+
+            var colorHue = color.GetHue();
+
+            var color2 = color.WithHue(colorHue - 0.2f);
+            var color3 = color.WithHue(colorHue - 0.4f);
+            var color4 = color.WithHue(colorHue - 0.6f);
+            var color5 = color.WithHue(colorHue - 0.8f);
+            var color6 = color.WithHue(colorHue - 0.5f);
+
+            Application.Current?.Resources["Primary_Preview"] = Color.FromArgb(hexcode);
+            Application.Current?.Resources["Secondary_Preview"] = Color.FromArgb(secondary.ToHex());
+            Application.Current?.Resources["Tertiary_Preview"] = Color.FromArgb(tertiary.ToHex());
+
+            Application.Current?.Resources["Color2_Preview"] = Color.FromArgb(color2.ToHex());
+            Application.Current?.Resources["Color3_Preview"] = Color.FromArgb(color3.ToHex());
+            Application.Current?.Resources["Color4_Preview"] = Color.FromArgb(color4.ToHex());
+            Application.Current?.Resources["Color5_Preview"] = Color.FromArgb(color5.ToHex());
+            Application.Current?.Resources["Color6_Preview"] = Color.FromArgb(color6.ToHex());
+        }
     }
 }

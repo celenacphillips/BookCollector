@@ -386,7 +386,7 @@
 
     <Style x:Key="Header" TargetType="Label">
         <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
     </Style>
 
     <Style x:Key="Explainer" TargetType="Label">
@@ -433,7 +433,7 @@
 
     <Style x:Key="expanderHeaderLabel" TargetType="Label">
         <Setter Property="Margin" Value="10" />
-        <Setter Property="TextColor" Value="White" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
