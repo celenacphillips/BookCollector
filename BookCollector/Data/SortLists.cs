@@ -157,12 +157,12 @@ namespace BookCollector.Data
             {
                 if (ascendingChecked)
                 {
-                    filteredList = filteredList.OrderBy(x => x.BookNumberInSeries).ThenBy(x => x.ParsedTitle).ToObservableCollection();
+                    filteredList = filteredList.OrderBy(x => x.BookNumberInSeriesValue).ThenBy(x => x.ParsedTitle).ToObservableCollection();
                 }
 
                 if (descendingChecked)
                 {
-                    filteredList = filteredList.OrderByDescending(x => x.BookNumberInSeries).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
+                    filteredList = filteredList.OrderByDescending(x => x.BookNumberInSeriesValue).ThenByDescending(x => x.ParsedTitle).ToObservableCollection();
                 }
             }
 
