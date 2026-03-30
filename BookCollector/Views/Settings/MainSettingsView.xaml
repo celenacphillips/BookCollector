@@ -74,9 +74,7 @@
                 <!-- Color -->
 
                 <!-- Export Location -->
-                <ImageButton HeightRequest="50"
-                             WidthRequest="45"
-                             Padding="10"
+                <ImageButton Padding="10"
                              Clicked="OnExportLocationButton_Clicked"
                              Grid.Row="2" Grid.Column="0">
                     <ImageButton.Source>
@@ -146,9 +144,7 @@
                 <!-- Currency -->
 
                 <!-- Delete -->
-                <ImageButton HeightRequest="50"
-                             WidthRequest="45"
-                             Padding="10"
+                <ImageButton Padding="10"
                              Clicked="OnDeleteButton_Clicked"
                              Grid.Row="5" Grid.Column="0">
                     <ImageButton.Source>
@@ -165,9 +161,7 @@
                 <!-- Delete -->
 
                 <!-- Reset -->
-                <ImageButton HeightRequest="50"
-                             WidthRequest="45"
-                             Padding="10"
+                <ImageButton Padding="10"
                              Clicked="OnResetButton_Clicked"
                              HorizontalOptions="Center"
                              Grid.Row="6" Grid.Column="0"

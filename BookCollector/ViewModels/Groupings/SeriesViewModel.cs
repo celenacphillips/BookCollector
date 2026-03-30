@@ -94,6 +94,8 @@ namespace BookCollector.ViewModels.Groupings
             this.InfoText = $"{AppStringResources.SeriesView_InfoText}";
             this.ViewTitle = AppStringResources.Series;
             this.SetRefreshView(true);
+
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -255,12 +257,12 @@ namespace BookCollector.ViewModels.Groupings
             this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            this.SeriesNameChecked = Preferences.Get($"{this.ViewTitle}_SeriesNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+            this.SeriesNameChecked = Preferences.Get($"{this.ViewTitle}_SeriesNameSelection", (bool)this.SeriesNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenSeries;
         }
@@ -395,6 +397,16 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.SeriesNameCheckedDefault = true;
+            this.TotalBooksCheckedDefault = false;
+            this.TotalPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

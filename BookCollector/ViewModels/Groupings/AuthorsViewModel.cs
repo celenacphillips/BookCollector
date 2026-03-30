@@ -94,6 +94,8 @@ namespace BookCollector.ViewModels.Groupings
             this.InfoText = $"{AppStringResources.AuthorView_InfoText}";
             this.ViewTitle = AppStringResources.Authors;
             this.SetRefreshView(true);
+
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -250,12 +252,12 @@ namespace BookCollector.ViewModels.Groupings
             this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenAuthors;
         }
@@ -397,6 +399,16 @@ namespace BookCollector.ViewModels.Groupings
                     }
                 }
             }
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.AuthorLastNameCheckedDefault = true;
+            this.TotalBooksCheckedDefault = false;
+            this.TotalPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

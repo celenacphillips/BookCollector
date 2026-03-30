@@ -3154,6 +3154,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Primary Color.
+        /// </summary>
+        internal static string PrimaryColor {
+            get {
+                return ResourceManager.GetString("PrimaryColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rating Status.
         /// </summary>
         internal static string RatingStatus {
@@ -3348,6 +3357,15 @@ namespace BookCollector.Resources.Localization {
         internal static string SearchSeries {
             get {
                 return ResourceManager.GetString("SearchSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secondary Color.
+        /// </summary>
+        internal static string SecondaryColor {
+            get {
+                return ResourceManager.GetString("SecondaryColor", resourceCulture);
             }
         }
         
@@ -3737,6 +3755,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Table_YExported {
             get {
                 return ResourceManager.GetString("Table_YExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tertiary Color.
+        /// </summary>
+        internal static string TertiaryColor {
+            get {
+                return ResourceManager.GetString("TertiaryColor", resourceCulture);
             }
         }
         

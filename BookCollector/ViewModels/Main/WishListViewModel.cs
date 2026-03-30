@@ -116,6 +116,9 @@ namespace BookCollector.ViewModels.Main
             this.InfoText = AppStringResources.WishListView_InfoText;
             this.ViewTitle = AppStringResources.Wishlist;
             this.SetRefreshView(true);
+
+            this.SetFilterPopupDefaults();
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -267,25 +270,25 @@ namespace BookCollector.ViewModels.Main
         {
             this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
 
-            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
-            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);
-            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
-            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
-            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
-            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_SeriesSelection", AppStringResources.AllSeries /* Default */);
-            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_LocationSelection", AppStringResources.AllLocations /* Default */);
-            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
+            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
+            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
+            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", this.BookPublishYearOptionDefault /* Default */);
+            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", this.BookAuthorOptionDefault /* Default */);
+            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_SeriesSelection", this.BookSeriesOptionDefault /* Default */);
+            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_LocationSelection", this.BookLocationOptionDefault /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
 
-            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", true /* Default */);
-            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", false /* Default */);
-            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
-            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
-            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
+            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
+            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", (bool)this.BookPublisherCheckedDefault! /* Default */);
+            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", (bool)this.BookPublishYearCheckedDefault! /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", (bool)this.BookFormatCheckedDefault! /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", (bool)this.PageCountBookTimeCheckedDefault! /* Default */);
+            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", (bool)this.BookPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenWishlistBooks;
         }
@@ -429,6 +432,32 @@ namespace BookCollector.ViewModels.Main
             }
 
             return wishList;
+        }
+
+        private void SetFilterPopupDefaults()
+        {
+            this.BookFormatOptionDefault = AppStringResources.AllFormats;
+            this.BookPublisherOptionDefault = AppStringResources.AllPublishers;
+            this.BookPublishYearOptionDefault = AppStringResources.AllPublishYears;
+            this.BookLanguageOptionDefault = AppStringResources.AllLanguages;
+            this.BookAuthorOptionDefault = AppStringResources.AllAuthors;
+            this.BookSeriesOptionDefault = AppStringResources.AllSeries;
+            this.BookLocationOptionDefault = AppStringResources.AllLocations;
+            this.BookCoverOptionDefault = AppStringResources.Both;
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.BookTitleCheckedDefault = true;
+            this.BookPublisherCheckedDefault = false;
+            this.BookPublishYearCheckedDefault = false;
+            this.AuthorLastNameCheckedDefault = false;
+            this.BookFormatCheckedDefault = false;
+            this.PageCountBookTimeCheckedDefault = false;
+            this.BookPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

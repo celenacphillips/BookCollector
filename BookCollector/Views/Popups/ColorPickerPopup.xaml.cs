@@ -15,6 +15,7 @@ public partial class ColorPickerPopup : Popup<string>
     /// <summary>
     /// Initializes a new instance of the <see cref="ColorPickerPopup"/> class.
     /// </summary>
+    /// <param name="selectedColor">The selected color.</param>
     public ColorPickerPopup(Color selectedColor)
     {
         var deviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
@@ -28,8 +29,14 @@ public partial class ColorPickerPopup : Popup<string>
         picker.PickedColor = selectedColor;
     }
 
+    /// <summary>
+    /// Gets or sets the popup height.
+    /// </summary>
     public double PopupHeight { get; set; }
 
+    /// <summary>
+    /// Gets or sets the color picker height.
+    /// </summary>
     public double ColorPickerHeight { get; set; }
 
     private Color SelectedColor { get; set; }

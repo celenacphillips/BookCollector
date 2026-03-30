@@ -90,6 +90,9 @@ namespace BookCollector.ViewModels.Series
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.SeriesMainView_InfoText.Replace("series", $"{this.SelectedSeries.SeriesName}")}";
             this.SetRefreshView(true);
+
+            this.SetFilterPopupDefaults();
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -204,28 +207,28 @@ namespace BookCollector.ViewModels.Series
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
-            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
-            this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", AppStringResources.Both /* Default */);
-            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
-            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);
-            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
-            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
-            this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", AppStringResources.AllRatings /* Default */);
-            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", this.BookAuthorOptionDefault /* Default */);
+            this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteBooksOptionDefault /* Default */);
+            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
+            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
+            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", this.BookPublishYearOptionDefault /* Default */);
+            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
+            this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", this.BookRatingOptionDefault /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
 
-            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", false /* Default */);
-            this.SeriesOrderChecked = Preferences.Get($"{this.ViewTitle}_SeriesOrderSelection", true /* Default */);
-            this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", false /* Default */);
-            this.BookReadPercentageChecked = Preferences.Get($"{this.ViewTitle}_BookReadPercentageSelection", false /* Default */);
-            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", false /* Default */);
-            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
-            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
-            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
+            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
+            this.SeriesOrderChecked = Preferences.Get($"{this.ViewTitle}_SeriesOrderSelection", (bool)this.SeriesOrderCheckedDefault! /* Default */);
+            this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", (bool)this.BookReadingDateCheckedDefault! /* Default */);
+            this.BookReadPercentageChecked = Preferences.Get($"{this.ViewTitle}_BookReadPercentageSelection", (bool)this.BookReadPercentageCheckedDefault! /* Default */);
+            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", (bool)this.BookPublisherCheckedDefault! /* Default */);
+            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", (bool)this.BookPublishYearCheckedDefault! /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", (bool)this.BookFormatCheckedDefault! /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", (bool)this.PageCountBookTimeCheckedDefault! /* Default */);
+            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", (bool)this.BookPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return ShowHiddenBooks;
         }
@@ -333,6 +336,37 @@ namespace BookCollector.ViewModels.Series
         public override void SetRefreshView(bool value)
         {
             RefreshView = value;
+        }
+
+        /********************************************************/
+
+        private void SetFilterPopupDefaults()
+        {
+            this.BookAuthorOptionDefault = AppStringResources.AllAuthors;
+            this.FavoriteBooksOptionDefault = AppStringResources.Both;
+            this.BookFormatOptionDefault = AppStringResources.AllFormats;
+            this.BookPublisherOptionDefault = AppStringResources.AllPublishers;
+            this.BookPublishYearOptionDefault = AppStringResources.AllPublishYears;
+            this.BookLanguageOptionDefault = AppStringResources.AllLanguages;
+            this.BookRatingOptionDefault = AppStringResources.AllRatings;
+            this.BookCoverOptionDefault = AppStringResources.Both;
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.BookTitleCheckedDefault = false;
+            this.SeriesOrderCheckedDefault = true;
+            this.BookReadingDateCheckedDefault = false;
+            this.BookReadPercentageCheckedDefault = false;
+            this.BookPublisherCheckedDefault = false;
+            this.BookPublishYearCheckedDefault = false;
+            this.AuthorLastNameCheckedDefault = false;
+            this.BookFormatCheckedDefault = false;
+            this.PageCountBookTimeCheckedDefault = false;
+            this.BookPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }
