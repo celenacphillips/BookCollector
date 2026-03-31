@@ -63,82 +63,9 @@
                          Command="{Binding RefreshCommand}">
 
                 <ScrollView>
-                    <VerticalStackLayout IsVisible="{Binding IsVisible}">
-                        <Grid Margin="20,20,20,0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Label Text="{x:Static localization:AppStringResources.Year}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="End"
-                                   Grid.Row="0" Grid.Column="0"/>
-
-                            <Label Text="{x:Static localization:AppStringResources.BooksRead}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="End"
-                                   Grid.Row="0" Grid.Column="1"/>
-
-                            <Label Text="{x:Static localization:AppStringResources.PagesRead}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="End"
-                                   Grid.Row="0" Grid.Column="2"/>
-
-                            <Label Text="{x:Static localization:AppStringResources.AudiobookHours}"
-                                   Style="{StaticResource Header}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="End"
-                                   Grid.Row="0" Grid.Column="3"/>
-                        </Grid>
-                        <CollectionView ItemsSource="{Binding ReadingDataList}">
-                            
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="dataModels:ReadingData">
-                                    <Grid Margin="20,20,20,10">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label Text="{Binding Year}"
-                                               Style="{StaticResource Header}"
-                                               HorizontalTextAlignment="Center"
-                                               Grid.Row="0" Grid.Column="0"/>
-
-                                        <Label Text="{Binding BooksReadCount, StringFormat='{0:N0}'}"
-                                               HorizontalTextAlignment="Center"
-                                               Grid.Row="1" Grid.Column="1"/>
-
-                                        <Label Text="{Binding PagesReadCount, StringFormat='{0:N0}'}"
-                                               HorizontalTextAlignment="Center"
-                                               Grid.Row="1" Grid.Column="2"/>
-
-                                        <Label Text="{Binding AudiobookTime, StringFormat='{}{0:#,##0.00}'}"
-                                               HorizontalTextAlignment="Center"
-                                               Grid.Row="1" Grid.Column="3"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                            
-                        </CollectionView>
+                    <VerticalStackLayout IsVisible="{Binding IsVisible}"
+                                         x:Name="readingDataStack">
+                        
                     </VerticalStackLayout>
                 </ScrollView>
             </RefreshView>

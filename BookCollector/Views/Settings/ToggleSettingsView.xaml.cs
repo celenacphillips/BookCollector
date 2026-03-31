@@ -4,6 +4,7 @@
 
 namespace BookCollector.Views.Settings;
 
+using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Main;
@@ -13,6 +14,34 @@ using BookCollector.ViewModels.Main;
 /// </summary>
 public partial class ToggleSettingsView : ContentPage
 {
+    private readonly bool commentsDefault = true;
+
+    private readonly bool chaptersDefault = true;
+
+    private readonly bool favoritesDefault = true;
+
+    private readonly bool ratingsDefault = true;
+
+    private readonly bool hiddenDefault = true;
+
+    private readonly bool audiobookDefault = true;
+
+    private readonly bool eBookDefault = true;
+
+    private readonly bool hardcoverDefault = true;
+
+    private readonly bool paperbackDefault = true;
+
+    /********************************************************/
+
+    private bool commentsOnField;
+
+    private bool chaptersOnField;
+
+    private bool favoritesOnField;
+
+    private bool ratingsOnField;
+
     private bool hiddenBooksOnField;
 
     private bool hiddenCollectionsOnField;
@@ -25,47 +54,110 @@ public partial class ToggleSettingsView : ContentPage
 
     private bool hiddenLocationsOnField;
 
+    private bool hiddenWishlistBooksOnField;
+
+    private bool audiobookOnField;
+
+    private bool eBookOnField;
+
+    private bool hardcoverOnField;
+
+    private bool paperbackOnField;
+
+    /********************************************************/
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ToggleSettingsView"/> class.
     /// </summary>
     public ToggleSettingsView()
     {
-        this.CommentsOn = Preferences.Get("CommentsOn", true /* Default */);
-        this.ChaptersOn = Preferences.Get("ChaptersOn", true /* Default */);
-        this.FavoritesOn = Preferences.Get("FavoritesOn", true /* Default */);
-        this.RatingsOn = Preferences.Get("RatingsOn", true /* Default */);
+        this.CommentsOn = Preferences.Get("CommentsOn", this.commentsDefault /* Default */);
+        this.ChaptersOn = Preferences.Get("ChaptersOn", this.chaptersDefault /* Default */);
+        this.FavoritesOn = Preferences.Get("FavoritesOn", this.favoritesDefault /* Default */);
+        this.RatingsOn = Preferences.Get("RatingsOn", this.ratingsDefault /* Default */);
 
-        this.HiddenBooksOn = Preferences.Get("HiddenBooksOn", true /* Default */);
-        this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-        this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
-        this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
-        this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-        this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
-        this.HiddenWishlistBooksOn = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
+        this.HiddenBooksOn = Preferences.Get("HiddenBooksOn", this.hiddenDefault /* Default */);
+        this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", this.hiddenDefault /* Default */);
+        this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", this.hiddenDefault /* Default */);
+        this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", this.hiddenDefault /* Default */);
+        this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", this.hiddenDefault /* Default */);
+        this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", this.hiddenDefault /* Default */);
+        this.HiddenWishlistBooksOn = Preferences.Get("HiddenWishlistBooksOn", this.hiddenDefault /* Default */);
+
+        this.AudiobookOn = Preferences.Get("AudiobookOn", this.audiobookDefault /* Default */);
+        this.eBookOn = Preferences.Get("eBookOn", this.eBookDefault /* Default */);
+        this.HardcoverOn = Preferences.Get("HardcoverOn", this.hardcoverDefault /* Default */);
+        this.PaperbackOn = Preferences.Get("PaperbackOn", this.paperbackDefault /* Default */);
 
         this.InitializeComponent();
         this.BindingContext = this;
     }
 
+    /********************************************************/
+
     /// <summary>
     /// Gets or sets a value indicating whether the comments toggle is on.
     /// </summary>
-    public bool CommentsOn { get; set; }
+    public bool CommentsOn
+    {
+        get => this.commentsOnField;
+        set
+        {
+            if (this.commentsOnField != value)
+            {
+                this.commentsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether the chapters toggle is on.
     /// </summary>
-    public bool ChaptersOn { get; set; }
+    public bool ChaptersOn
+    {
+        get => this.chaptersOnField;
+        set
+        {
+            if (this.chaptersOnField != value)
+            {
+                this.chaptersOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether the favorites toggle is on.
     /// </summary>
-    public bool FavoritesOn { get; set; }
+    public bool FavoritesOn
+    {
+        get => this.favoritesOnField;
+        set
+        {
+            if (this.favoritesOnField != value)
+            {
+                this.favoritesOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether the ratings toggle is on.
     /// </summary>
-    public bool RatingsOn { get; set; }
+    public bool RatingsOn
+    {
+        get => this.ratingsOnField;
+        set
+        {
+            if (this.ratingsOnField != value)
+            {
+                this.ratingsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether the hidden books toggle is on.
@@ -166,7 +258,84 @@ public partial class ToggleSettingsView : ContentPage
     /// <summary>
     /// Gets or sets a value indicating whether the hidden wishlist books toggle is on.
     /// </summary>
-    public bool HiddenWishlistBooksOn { get; set; }
+    public bool HiddenWishlistBooksOn
+    {
+        get => this.hiddenWishlistBooksOnField;
+        set
+        {
+            if (this.hiddenWishlistBooksOnField != value)
+            {
+                this.hiddenWishlistBooksOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the Audiobook toggle is on.
+    /// </summary>
+    public bool AudiobookOn
+    {
+        get => this.audiobookOnField;
+        set
+        {
+            if (this.audiobookOnField != value)
+            {
+                this.audiobookOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the eBook toggle is on.
+    /// </summary>
+    public bool eBookOn
+    {
+        get => this.eBookOnField;
+        set
+        {
+            if (this.eBookOnField != value)
+            {
+                this.eBookOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the Hardcover toggle is on.
+    /// </summary>
+    public bool HardcoverOn
+    {
+        get => this.hardcoverOnField;
+        set
+        {
+            if (this.hardcoverOnField != value)
+            {
+                this.hardcoverOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the Paperback toggle is on.
+    /// </summary>
+    public bool PaperbackOn
+    {
+        get => this.paperbackOnField;
+        set
+        {
+            if (this.paperbackOnField != value)
+            {
+                this.paperbackOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /********************************************************/
 
     /// <summary>
     /// Saves the value of the toggle to preferences.
@@ -335,7 +504,7 @@ public partial class ToggleSettingsView : ContentPage
 
         AuthorsViewModel.filteredAuthorList = null;
 
-        var variable = AuthorsViewModel.HideBooks(e.Value);
+        var variable = AuthorsViewModel.HideBooks(e.Value, this.AudiobookOn, this.eBookOn, this.HardcoverOn, this.PaperbackOn);
 
         if (!e.Value)
         {
@@ -378,5 +547,176 @@ public partial class ToggleSettingsView : ContentPage
         WishListViewModel.filteredWishlistBookList = null;
 
         Preferences.Set("HiddenWishlistBooksOn", e.Value);
+    }
+
+    /// <summary>
+    /// Resets the toggles values.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.CommentsOn = this.commentsDefault;
+        Preferences.Set("CommentsOn", this.commentsDefault);
+        this.ChaptersOn = this.chaptersDefault;
+        Preferences.Set("ChaptersOn", this.chaptersDefault);
+        this.FavoritesOn = this.favoritesDefault;
+        Preferences.Set("FavoritesOn", this.favoritesDefault);
+        this.RatingsOn = this.favoritesDefault;
+        Preferences.Set("RatingsOn", this.favoritesDefault);
+
+        this.HiddenBooksOn = this.hiddenDefault;
+        Preferences.Set("HiddenBooksOn", this.hiddenDefault);
+        this.HiddenCollectionsOn = this.hiddenDefault;
+        Preferences.Set("HiddenCollectionsOn", this.hiddenDefault);
+        this.HiddenGenresOn = this.hiddenDefault;
+        Preferences.Set("HiddenGenresOn", this.hiddenDefault);
+        this.HiddenSeriesOn = this.hiddenDefault;
+        Preferences.Set("HiddenSeriesOn", this.hiddenDefault);
+        this.HiddenAuthorsOn = this.hiddenDefault;
+        Preferences.Set("HiddenAuthorsOn", this.hiddenDefault);
+        this.HiddenLocationsOn = this.hiddenDefault;
+        Preferences.Set("HiddenLocationsOn", this.hiddenDefault);
+        this.HiddenWishlistBooksOn = this.hiddenDefault;
+        Preferences.Set("HiddenWishlistBooksOn", this.hiddenDefault);
+
+        this.AudiobookOn = this.audiobookDefault;
+        Preferences.Set("AudiobookOn", this.audiobookDefault);
+        this.eBookOn = this.eBookDefault;
+        Preferences.Set("eBookOn", this.eBookDefault);
+        this.HardcoverOn = this.hardcoverDefault;
+        Preferences.Set("HardcoverOn", this.hardcoverDefault);
+        this.PaperbackOn = this.paperbackDefault;
+        Preferences.Set("PaperbackOn", this.paperbackDefault);
+
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
+        WishListViewModel.RefreshView = true;
+
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
+        CollectionsViewModel.filteredCollectionList = null;
+        GenresViewModel.filteredGenreList = null;
+        SeriesViewModel.filteredSeriesList = null;
+        AuthorsViewModel.filteredAuthorList = null;
+        LocationsViewModel.filteredLocationList = null;
+        WishListViewModel.filteredWishlistBookList = null;
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnAudiobookToggled(object sender, ToggledEventArgs e)
+    {
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
+        WishListViewModel.RefreshView = true;
+
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
+        WishListViewModel.filteredWishlistBookList = null;
+
+        Preferences.Set("AudiobookOn", e.Value);
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnEBookToggled(object sender, ToggledEventArgs e)
+    {
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
+        WishListViewModel.RefreshView = true;
+
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
+        WishListViewModel.filteredWishlistBookList = null;
+
+        Preferences.Set("eBookOn", e.Value);
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnHardcoverToggled(object sender, ToggledEventArgs e)
+    {
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
+        WishListViewModel.RefreshView = true;
+
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
+        WishListViewModel.filteredWishlistBookList = null;
+
+        Preferences.Set("HardcoverOn", e.Value);
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnPaperbackToggled(object sender, ToggledEventArgs e)
+    {
+        ReadingViewModel.RefreshView = true;
+        ToBeReadViewModel.RefreshView = true;
+        ReadViewModel.RefreshView = true;
+        AllBooksViewModel.RefreshView = true;
+        CollectionsViewModel.RefreshView = true;
+        GenresViewModel.RefreshView = true;
+        SeriesViewModel.RefreshView = true;
+        AuthorsViewModel.RefreshView = true;
+        LocationsViewModel.RefreshView = true;
+        WishListViewModel.RefreshView = true;
+
+        ReadingViewModel.filteredBookList = null;
+        ToBeReadViewModel.filteredBookList = null;
+        ReadViewModel.filteredBookList = null;
+        AllBooksViewModel.filteredBookList = null;
+        WishListViewModel.filteredWishlistBookList = null;
+
+        Preferences.Set("PaperbackOn", e.Value);
     }
 }

@@ -189,6 +189,150 @@ namespace BookCollector.ViewModels.BaseViewModels
         /********************************************************/
 
         /// <summary>
+        /// Gets or sets the default saved book author filter option.
+        /// </summary>
+        internal string? BookAuthorOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default favorite books option.
+        /// </summary>
+        internal string? FavoriteBooksOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book format option.
+        /// </summary>
+        internal string? BookFormatOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book publisher option.
+        /// </summary>
+        internal string? BookPublisherOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book publisher year range option.
+        /// </summary>
+        internal string? BookPublishYearOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book language option.
+        /// </summary>
+        internal string? BookLanguageOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book rating option.
+        /// </summary>
+        internal string? BookRatingOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book cover option.
+        /// </summary>
+        internal string? BookCoverOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved book location filter option.
+        /// </summary>
+        internal string? BookLocationOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved book series filter option.
+        /// </summary>
+        internal string? BookSeriesOptionDefault { get; set; }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book title option is checked or not, default.
+        /// </summary>
+        internal bool? BookTitleCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether collection name is checked or not, default.
+        /// </summary>
+        internal bool? CollectionNameCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether genre named is checked or not, default.
+        /// </summary>
+        internal bool? GenreNameCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether location name is checked or not, default.
+        /// </summary>
+        internal bool? LocationNameCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether series name is checked or not, default.
+        /// </summary>
+        internal bool? SeriesNameCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book reading date option is checked or not, default.
+        /// </summary>
+        internal bool? BookReadingDateCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book read percentage option is checked or not, default.
+        /// </summary>
+        internal bool? BookReadPercentageCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book publisher option is checked or not, default.
+        /// </summary>
+        internal bool? BookPublisherCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book publish year option is checked or not, default.
+        /// </summary>
+        internal bool? BookPublishYearCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the author last name option is checked or not, default.
+        /// </summary>
+        internal bool? AuthorLastNameCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book format option is checked or not, default.
+        /// </summary>
+        internal bool? BookFormatCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the page count/book time option is checked or not, default.
+        /// </summary>
+        internal bool? PageCountBookTimeCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the book price option is checked or not, default.
+        /// </summary>
+        internal bool? BookPriceCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series or is checked or not, default.
+        /// </summary>
+        internal bool? SeriesOrderCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether total books is checked or not, default.
+        /// </summary>
+        internal bool? TotalBooksCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether total price is checked or not, default.
+        /// </summary>
+        internal bool? TotalPriceCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ascending is checked or not, default.
+        /// </summary>
+        internal bool AscendingCheckedDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether descending is checked or not, default.
+        /// </summary>
+        internal bool DescendingCheckedDefault { get; set; }
+
+        /********************************************************/
+
+        /// <summary>
         /// Set the view model data.
         /// </summary>
         /// <param name="hiddenBookList">Book list.</param>
@@ -525,6 +669,17 @@ namespace BookCollector.ViewModels.BaseViewModels
                 var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View);
                 viewModel = this.SetFilterPopupValues(viewModel);
                 viewModel = this.SetFilterPopupLists(viewModel);
+                viewModel.SetDefaults(
+                    this.FavoriteBooksOptionDefault,
+                    this.BookFormatOptionDefault,
+                    this.BookAuthorOptionDefault,
+                    this.BookPublisherOptionDefault,
+                    this.BookPublishYearOptionDefault,
+                    this.BookLanguageOptionDefault,
+                    this.BookRatingOptionDefault,
+                    this.BookLocationOptionDefault,
+                    this.BookSeriesOptionDefault,
+                    this.BookCoverOptionDefault);
 
                 popup.BindingContext = viewModel;
 
@@ -549,6 +704,25 @@ namespace BookCollector.ViewModels.BaseViewModels
                 var popup = new SortPopup();
                 var viewModel = new SortPopupViewModel(popup, this.ViewTitle);
                 viewModel = this.SetSortPopupValues(viewModel);
+                viewModel.SetDefaults(
+                    this.BookTitleCheckedDefault,
+                    this.CollectionNameCheckedDefault,
+                    this.GenreNameCheckedDefault,
+                    this.SeriesNameCheckedDefault,
+                    this.AuthorLastNameCheckedDefault,
+                    this.LocationNameCheckedDefault,
+                    this.BookReadingDateCheckedDefault,
+                    this.TotalBooksCheckedDefault,
+                    this.BookReadPercentageCheckedDefault,
+                    this.BookPublisherCheckedDefault,
+                    this.BookPublishYearCheckedDefault,
+                    this.BookFormatCheckedDefault,
+                    this.PageCountBookTimeCheckedDefault,
+                    this.TotalPriceCheckedDefault,
+                    this.BookPriceCheckedDefault,
+                    this.SeriesOrderChecked,
+                    this.AscendingCheckedDefault,
+                    this.DescendingCheckedDefault);
 
                 popup.BindingContext = viewModel;
 

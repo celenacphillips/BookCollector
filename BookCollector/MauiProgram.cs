@@ -4,6 +4,10 @@
 
 namespace BookCollector
 {
+#if ANDROID
+    using AndroidX.Activity;
+    using Microsoft.Maui.LifecycleEvents;
+#endif
     using System.Reflection;
     using BarcodeScanner.Mobile;
     using BookCollector.Data.BookAPI;
@@ -13,6 +17,7 @@ namespace BookCollector
     using Microcharts.Maui;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using SkiaSharp.Views.Maui.Controls.Hosting;
 
     /// <summary>
     /// MauiProgram class.
@@ -31,6 +36,7 @@ namespace BookCollector
                 .UseMauiCommunityToolkit()
                 .ConfigureNullableDateTimePicker()
                 .UseMicrocharts()
+                .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
@@ -57,6 +63,20 @@ namespace BookCollector
                         .Build();
 
             builder.Configuration.AddConfiguration(config);
+
+#if ANDROID
+            builder.ConfigureLifecycleEvents(events =>
+            {
+                events.AddAndroid(android =>
+                    android.OnCreate((activity, bundle) =>
+                    {
+                        if (activity is ComponentActivity componentActivity)
+                        {
+                            EdgeToEdge.Enable(componentActivity);
+                        }
+                    }));
+            });
+#endif
 
             GoogleBooksAPI.Initialize(builder.Configuration);
 

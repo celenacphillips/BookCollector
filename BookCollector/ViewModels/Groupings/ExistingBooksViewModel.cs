@@ -99,6 +99,9 @@ namespace BookCollector.ViewModels.Groupings
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
             this.SetRefreshView(true);
+
+            this.SetFilterPopupDefaults();
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -169,29 +172,38 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async Task SetList(bool showHiddenBooks)
+        public async Task SetList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             switch (this.SelectedObjectType)
             {
                 case "Collection":
-                    await this.SetCollectionList(showHiddenBooks);
+                    await this.SetCollectionList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Genre":
-                    await this.SetGenreList(showHiddenBooks);
+                    await this.SetGenreList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Series":
-                    await this.SetSeriesList(showHiddenBooks);
+                    await this.SetSeriesList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Author":
-                    await this.SetAuthorList(showHiddenBooks);
+                    await this.SetAuthorList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Location":
-                    await this.SetLocationList(showHiddenBooks);
+                    await this.SetLocationList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 default:
@@ -220,7 +232,7 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.GetPreferences();
 
-                await this.SetList(ShowHiddenBooks);
+                await this.SetList(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
 
                 (this.TotalBooksCount,
                     this.FilteredBooksCount,
@@ -247,30 +259,36 @@ namespace BookCollector.ViewModels.Groupings
         public override bool GetPreferences()
         {
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
-            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", AppStringResources.AllAuthors /* Default */);
-            this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", AppStringResources.Both /* Default */);
-            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", AppStringResources.AllFormats /* Default */);
-            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", AppStringResources.AllPublishers /* Default */);
-            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", AppStringResources.AllPublishYears /* Default */);
-            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", AppStringResources.AllLanguages /* Default */);
-            this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", AppStringResources.AllRatings /* Default */);
-            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", AppStringResources.Both /* Default */);
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", this.BookAuthorOptionDefault /* Default */);
+            this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteBooksOptionDefault /* Default */);
+            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
+            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
+            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", this.BookPublishYearOptionDefault /* Default */);
+            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
+            this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", this.BookRatingOptionDefault /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
 
-            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", true /* Default */);
-            this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", false /* Default */);
-            this.BookReadPercentageChecked = Preferences.Get($"{this.ViewTitle}_BookReadPercentageSelection", false /* Default */);
-            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", false /* Default */);
-            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", false /* Default */);
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", false /* Default */);
-            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", false /* Default */);
-            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", false /* Default */);
-            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", false /* Default */);
+            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
+            this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", (bool)this.BookReadingDateCheckedDefault! /* Default */);
+            this.BookReadPercentageChecked = Preferences.Get($"{this.ViewTitle}_BookReadPercentageSelection", (bool)this.BookReadPercentageCheckedDefault! /* Default */);
+            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", (bool)this.BookPublisherCheckedDefault! /* Default */);
+            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", (bool)this.BookPublishYearCheckedDefault! /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", (bool)this.BookFormatCheckedDefault! /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", (bool)this.PageCountBookTimeCheckedDefault! /* Default */);
+            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", (bool)this.BookPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return ShowHiddenBooks;
         }
@@ -318,7 +336,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             viewModel.SetAuthorPicker(this.BookAuthorList);
             viewModel.SetFavoritePicker();
-            viewModel.SetFormatPicker(this.BookFormats);
+            viewModel.SetFormatPicker(this.BookFormats, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
             viewModel.SetPublisherPicker(this.BookPublisherList);
             viewModel.SetPublishYearPicker(this.BookPublishYearList);
             viewModel.SetLanguagePicker(this.BookLanguageList);
@@ -383,44 +401,104 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetCollectionList(bool showHiddenBooks)
+        private async Task SetCollectionList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetGenreList(bool showHiddenBooks)
+        private async Task SetGenreList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetSeriesList(bool showHiddenBooks)
+        private async Task SetSeriesList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetAuthorList(bool showHiddenBooks)
+        private async Task SetAuthorList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             var author = (AuthorModel?)this.SelectedObject;
 
@@ -430,18 +508,43 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetLocationList(bool showHiddenBooks)
+        private async Task SetLocationList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         private async Task AddBookToGrouping()
@@ -581,6 +684,34 @@ namespace BookCollector.ViewModels.Groupings
             {
                 RefreshView = RemoveBookFromStaticList(book, this.FullBookList, this.FilteredBookList);
             }
+        }
+
+        private void SetFilterPopupDefaults()
+        {
+            this.BookAuthorOptionDefault = AppStringResources.AllAuthors;
+            this.FavoriteBooksOptionDefault = AppStringResources.Both;
+            this.BookFormatOptionDefault = AppStringResources.AllFormats;
+            this.BookPublisherOptionDefault = AppStringResources.AllPublishers;
+            this.BookPublishYearOptionDefault = AppStringResources.AllPublishYears;
+            this.BookLanguageOptionDefault = AppStringResources.AllLanguages;
+            this.BookRatingOptionDefault = AppStringResources.AllRatings;
+            this.BookCoverOptionDefault = AppStringResources.Both;
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.BookTitleCheckedDefault = true;
+            this.BookReadingDateCheckedDefault = false;
+            this.BookReadPercentageCheckedDefault = false;
+            this.BookPublisherCheckedDefault = false;
+            this.BookPublishYearCheckedDefault = false;
+            this.AuthorLastNameCheckedDefault = false;
+            this.BookFormatCheckedDefault = false;
+            this.PageCountBookTimeCheckedDefault = false;
+            this.BookPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace BookCollector.Data.DatabaseModels
         public string? bookTitle;
 
         /// <summary>
-        /// Gets or sets the book number in the selected series.
+        /// Gets or sets the book number in the selected series, as a string.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]

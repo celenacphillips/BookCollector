@@ -102,6 +102,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         internal SelectionMode collectionViewSelectionMode;
 
+        /********************************************************/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseViewModel"/> class.
         /// </summary>
@@ -113,6 +115,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.View = new ContentPage();
             MaxViewWidth = DeviceWidth - 20;
         }
+
+        /********************************************************/
 
         /// <summary>
         /// Gets or sets the device height.
@@ -163,6 +167,28 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the popup height.
         /// </summary>
         public double PopupHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show audiobooks or not.
+        /// </summary>
+        public bool AudiobookShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show eBooks or not.
+        /// </summary>
+        public bool eBookShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hardcovers or not.
+        /// </summary>
+        public bool HardcoverShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show paperbacks or not.
+        /// </summary>
+        public bool PaperbackShow { get; set; }
+
+        /********************************************************/
 
         /// <summary>
         /// Download an image from a URL and return byte array.
@@ -348,6 +374,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             return new TimeSpan(hour, minute, 0);
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Set refreshing values and reset the view model data.
         /// </summary>
@@ -497,7 +525,8 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             if (delay)
             {
-                await Task.Delay(1 * 1000);
+                var seconds = 0.5;
+                await Task.Delay((int)(seconds * 1000));
             }
         }
 

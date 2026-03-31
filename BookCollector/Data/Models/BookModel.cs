@@ -201,6 +201,14 @@ namespace BookCollector.Data.Models
         }
 
         /// <summary>
+        /// Gets the book number in the selected series, as an integer.
+        /// </summary>
+        public int? BookNumberInSeriesValue
+        {
+            get => this.BookNumberInSeries != null ? int.Parse(this.BookNumberInSeries) : null;
+        }
+
+        /// <summary>
         /// Formats the input date string to "MM/dd/yyyy" format if it's not null or empty.
         /// </summary>
         /// <param name="input">Date to format.</param>

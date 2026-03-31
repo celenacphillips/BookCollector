@@ -7,6 +7,7 @@ namespace BookCollector.Data
     using System.Collections.ObjectModel;
     using System.Globalization;
     using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
@@ -60,8 +61,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Collection guid.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>Total price of books in selected collection.</returns>
-        public static async Task<double> GetAllBookPricesInCollectionList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<double> GetAllBookPricesInCollectionList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
@@ -80,6 +91,14 @@ namespace BookCollector.Data
                     filteredList = list.ToObservableCollection();
                 }
 
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+
                 if (filteredList != null)
                 {
                     price = filteredList.Sum(x => x.BookPriceValue);
@@ -94,8 +113,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Genre guid.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>Total price of books in selected genre.</returns>
-        public static async Task<double> GetAllBookPricesInGenreList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<double> GetAllBookPricesInGenreList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
@@ -114,6 +143,14 @@ namespace BookCollector.Data
                     filteredList = list.ToObservableCollection();
                 }
 
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+
                 if (filteredList != null)
                 {
                     price = filteredList.Sum(x => x.BookPriceValue);
@@ -128,8 +165,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Series guid.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>Total price of books in selected series.</returns>
-        public static async Task<double> GetAllBookPricesInSeriesList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<double> GetAllBookPricesInSeriesList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
@@ -148,6 +195,14 @@ namespace BookCollector.Data
                     filteredList = list.ToObservableCollection();
                 }
 
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+
                 if (filteredList != null)
                 {
                     price = filteredList.Sum(x => x.BookPriceValue);
@@ -162,8 +217,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Location guid.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>Total price of books in selected location.</returns>
-        public static async Task<double> GetAllBookPricesInLocationList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<double> GetAllBookPricesInLocationList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
             var price = 0.0;
@@ -181,6 +246,14 @@ namespace BookCollector.Data
                     filteredList = list.ToObservableCollection();
                 }
 
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+
                 if (filteredList != null)
                 {
                     price = filteredList.Sum(x => x.BookPriceValue);
@@ -193,8 +266,16 @@ namespace BookCollector.Data
         /// <summary>
         /// Get the count of books in the list based on the book format value.
         /// </summary>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksAndBookFormatsList()
+        public static async Task<List<CountModel>> GetAllBooksAndBookFormatsList(
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? bookList = null;
 
@@ -203,7 +284,29 @@ namespace BookCollector.Data
 
             var counts = new List<CountModel>();
 
-            var formatList = BookBaseViewModel.bookFormats;
+            List<string>? formatList = [];
+
+            formatList.AddRange(BookBaseViewModel.bookFormats!);
+
+            if (!showAudiobooks)
+            {
+                formatList?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                formatList?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                formatList?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                formatList?.Remove(AppStringResources.Paperback);
+            }
 
             if (formatList != null && bookList != null)
             {
@@ -228,8 +331,16 @@ namespace BookCollector.Data
         /// <summary>
         /// Get the total price of books in the list based on the book format value.
         /// </summary>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetPriceOfBooksAndBookFormatsList()
+        public static async Task<List<CountModel>> GetPriceOfBooksAndBookFormatsList(
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? bookList = null;
 
@@ -238,7 +349,29 @@ namespace BookCollector.Data
 
             var counts = new List<CountModel>();
 
-            var formatList = BookBaseViewModel.bookFormats;
+            List<string>? formatList = [];
+
+            formatList.AddRange(BookBaseViewModel.bookFormats!);
+
+            if (!showAudiobooks)
+            {
+                formatList?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                formatList?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                formatList?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                formatList?.Remove(AppStringResources.Paperback);
+            }
 
             if (formatList != null && bookList != null)
             {
@@ -263,8 +396,16 @@ namespace BookCollector.Data
         /// <summary>
         /// Get the count of books in the wishlist based on the book format value.
         /// </summary>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllWishListBooksAndBookFormatsList()
+        public static async Task<List<CountModel>> GetAllWishListBooksAndBookFormatsList(
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
@@ -273,7 +414,29 @@ namespace BookCollector.Data
 
             var counts = new List<CountModel>();
 
-            var formatList = BookBaseViewModel.bookFormats;
+            List<string>? formatList = [];
+
+            formatList.AddRange(BookBaseViewModel.bookFormats!);
+
+            if (!showAudiobooks)
+            {
+                formatList?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                formatList?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                formatList?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                formatList?.Remove(AppStringResources.Paperback);
+            }
 
             if (formatList != null && bookList != null)
             {
@@ -298,8 +461,16 @@ namespace BookCollector.Data
         /// <summary>
         /// Get the total price of books in the wishlist based on the book format value.
         /// </summary>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetPriceOfWishListBooksAndBookFormatsList()
+        public static async Task<List<CountModel>> GetPriceOfWishListBooksAndBookFormatsList(
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<WishlistBookModel>? bookList = null;
 
@@ -309,7 +480,29 @@ namespace BookCollector.Data
 
             var counts = new List<CountModel>();
 
-            var formatList = BookBaseViewModel.bookFormats;
+            List<string>? formatList = [];
+
+            formatList.AddRange(BookBaseViewModel.bookFormats!);
+
+            if (!showAudiobooks)
+            {
+                formatList?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                formatList?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                formatList?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                formatList?.Remove(AppStringResources.Paperback);
+            }
 
             if (formatList != null && bookList != null)
             {
@@ -449,8 +642,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Author guid.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>Total price for books for selected author.</returns>
-        public static async Task<double> GetAllBookPricesInAuthorList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<double> GetAllBookPricesInAuthorList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
             var cultureInfo = new CultureInfo(cultureCode);
@@ -462,6 +665,14 @@ namespace BookCollector.Data
             {
                 var list = await BaseViewModel.Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
                 filteredList = list.ToObservableCollection();
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
 
                 if (filteredList != null)
                 {
@@ -477,13 +688,23 @@ namespace BookCollector.Data
         /// then by author name, and limited to the max limit value.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <param name="maxLimit">Max number to limit to.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllAuthorsList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks,
+            int maxLimit)
         {
             ObservableCollection<AuthorModel>? filteredList = null;
 
-            await Task.WhenAll(AuthorsViewModel.hiddenFilteredAuthorList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(AuthorsViewModel.hiddenFilteredAuthorList!.Select(x => x.SetTotalBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks)));
 
             filteredList = AuthorsViewModel.hiddenFilteredAuthorList?.OrderByDescending(x => x.FirstName)?.OrderByDescending(x => x.LastName).ToObservableCollection();
 
@@ -518,13 +739,23 @@ namespace BookCollector.Data
         /// then by collection name, and limited to the max limit value.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <param name="maxLimit">Max number to limit to.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllCollectionsList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks,
+            int maxLimit)
         {
             ObservableCollection<CollectionModel>? filteredList = null;
 
-            await Task.WhenAll(CollectionsViewModel.hiddenFilteredCollectionList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(CollectionsViewModel.hiddenFilteredCollectionList!.Select(x => x.SetTotalBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks)));
 
             filteredList = CollectionsViewModel.hiddenFilteredCollectionList?.OrderByDescending(x => x.ParsedCollectionName).ToObservableCollection();
 
@@ -559,13 +790,23 @@ namespace BookCollector.Data
         /// then by collection name, and limited to the max limit value.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <param name="maxLimit">Max number to limit to.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllGenresList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks,
+            int maxLimit)
         {
             ObservableCollection<GenreModel>? filteredList = null;
 
-            await Task.WhenAll(GenresViewModel.hiddenFilteredGenreList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(GenresViewModel.hiddenFilteredGenreList!.Select(x => x.SetTotalBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks)));
 
             filteredList = GenresViewModel.hiddenFilteredGenreList?.OrderByDescending(x => x.ParsedGenreName).ToObservableCollection();
 
@@ -600,13 +841,23 @@ namespace BookCollector.Data
         /// then by series name, and limited to the max limit value.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <param name="maxLimit">Max number to limit to.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllSeriesList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks,
+            int maxLimit)
         {
             ObservableCollection<SeriesModel>? filteredList = null;
 
-            await Task.WhenAll(SeriesViewModel.hiddenFilteredSeriesList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(SeriesViewModel.hiddenFilteredSeriesList!.Select(x => x.SetTotalBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks)));
 
             filteredList = SeriesViewModel.hiddenFilteredSeriesList?.OrderByDescending(x => x.ParsedSeriesName).ToObservableCollection();
 
@@ -641,13 +892,23 @@ namespace BookCollector.Data
         /// then by location name, and limited to the max limit value.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <param name="maxLimit">Max number to limit to.</param>
         /// <returns>A list formatted with label and value.</returns>
-        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(bool showHiddenBooks, int maxLimit)
+        public static async Task<List<CountModel>> GetAllBooksInAllLocationsList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks,
+            int maxLimit)
         {
             ObservableCollection<LocationModel>? filteredList = null;
 
-            await Task.WhenAll(LocationsViewModel.hiddenFilteredLocationList!.Select(x => x.SetTotalBooks(showHiddenBooks)));
+            await Task.WhenAll(LocationsViewModel.hiddenFilteredLocationList!.Select(x => x.SetTotalBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks)));
 
             filteredList = LocationsViewModel.hiddenFilteredLocationList?.OrderByDescending(x => x.ParsedLocationName).ToObservableCollection();
 

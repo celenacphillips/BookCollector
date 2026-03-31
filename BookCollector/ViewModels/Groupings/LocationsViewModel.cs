@@ -86,6 +86,8 @@ namespace BookCollector.ViewModels.Groupings
             this.InfoText = $"{AppStringResources.LocationView_InfoText}";
             this.ViewTitle = AppStringResources.Locations;
             this.SetRefreshView(true);
+
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -247,12 +249,17 @@ namespace BookCollector.ViewModels.Groupings
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", (bool)this.LocationNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenLocations;
         }
@@ -305,6 +312,22 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteLocationAsync(ConvertTo<LocationDatabaseModel>(selected));
             RemoveFromStaticList((LocationModel)selected);
             await RemoveBookFromGrouping((LocationModel)selected);
+        }
+
+        /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task ViewMetrics(object selected)
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new LocationMetricView((LocationModel)selected, $"{AppStringResources.LocationMetrics}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>
@@ -371,6 +394,16 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.LocationNameCheckedDefault = true;
+            this.TotalBooksCheckedDefault = false;
+            this.TotalPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

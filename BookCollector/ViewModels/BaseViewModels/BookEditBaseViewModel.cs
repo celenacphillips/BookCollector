@@ -240,9 +240,33 @@ namespace BookCollector.ViewModels.BaseViewModels
                     format = ((BookModel)book).BookFormat;
                 }
 
+                List<string>? bookFormats = [];
+
+                bookFormats.AddRange(this.BookFormats!);
+
+                if (!this.AudiobookShow)
+                {
+                    bookFormats?.Remove(AppStringResources.Audiobook);
+                }
+
+                if (!this.eBookShow)
+                {
+                    bookFormats?.Remove(AppStringResources.eBook);
+                }
+
+                if (!this.HardcoverShow)
+                {
+                    bookFormats?.Remove(AppStringResources.Hardcover);
+                }
+
+                if (!this.PaperbackShow)
+                {
+                    bookFormats?.Remove(AppStringResources.Paperback);
+                }
+
                 var filterablePopup = new FilterableListPopup(
                     AppStringResources.SelectABookFormat,
-                    [.. this.BookFormats!],
+                    [.. bookFormats!],
                     format,
                     false);
                 var result = await this.View.ShowPopupAsync<string?>(filterablePopup);

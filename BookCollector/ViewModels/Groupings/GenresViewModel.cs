@@ -86,6 +86,8 @@ namespace BookCollector.ViewModels.Groupings
             this.InfoText = $"{AppStringResources.GenreView_InfoText}";
             this.ViewTitle = AppStringResources.Genres;
             this.SetRefreshView(true);
+
+            this.SetSortPopupDefaults();
         }
 
         /********************************************************/
@@ -247,12 +249,17 @@ namespace BookCollector.ViewModels.Groupings
             this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
 
-            this.GenreNameChecked = Preferences.Get($"{this.ViewTitle}_GenreNameSelection", true /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", false /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", false /* Default */);
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", true /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", false /* Default */);
+            this.GenreNameChecked = Preferences.Get($"{this.ViewTitle}_GenreNameSelection", (bool)this.GenreNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
+
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenGenres;
         }
@@ -305,6 +312,22 @@ namespace BookCollector.ViewModels.Groupings
             await Database.DeleteGenreAsync(ConvertTo<GenreDatabaseModel>(selected));
             RemoveFromStaticList((GenreModel)selected);
             await RemoveBookFromGrouping((GenreModel)selected);
+        }
+
+        /// <summary>
+        /// Show metric view.
+        /// </summary>
+        /// <param name="selected">Selected object.</param>
+        /// <returns>A task.</returns>
+        public override async Task ViewMetrics(object selected)
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new GenreMetricView((GenreModel)selected, $"{AppStringResources.GenreMetrics}");
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
         }
 
         /// <summary>
@@ -371,6 +394,16 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
+        }
+
+        private void SetSortPopupDefaults()
+        {
+            this.GenreNameCheckedDefault = true;
+            this.TotalBooksCheckedDefault = false;
+            this.TotalPriceCheckedDefault = false;
+
+            this.AscendingCheckedDefault = true;
+            this.DescendingCheckedDefault = false;
         }
     }
 }

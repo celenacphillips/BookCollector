@@ -5,8 +5,6 @@
 namespace BookCollector.Views.Popups;
 
 using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
 
 /// <summary>
 /// ChoiceDialogPopup class.

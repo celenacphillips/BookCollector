@@ -294,15 +294,73 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Gets or sets the popup overlay.
         /// </summary>
         public Grid OverlaySection { get; set; }
 
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets the default saved book author filter option.
+        /// </summary>
+        internal string BookAuthorOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default favorite books option.
+        /// </summary>
+        internal string FavoriteBooksOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book format option.
+        /// </summary>
+        internal string BookFormatOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book publisher option.
+        /// </summary>
+        internal string BookPublisherOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book publisher year range option.
+        /// </summary>
+        internal string BookPublishYearOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book language option.
+        /// </summary>
+        internal string BookLanguageOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book rating option.
+        /// </summary>
+        internal string BookRatingOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default book cover option.
+        /// </summary>
+        internal string BookCoverOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved book location filter option.
+        /// </summary>
+        internal string BookLocationOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved book series filter option.
+        /// </summary>
+        internal string BookSeriesOptionDefault { get; set; }
+
+        /********************************************************/
+
         /// <summary>
         /// Gets or sets the popup.
         /// </summary>
         private Popup Popup { get; set; }
+
+        /********************************************************/
 
         /// <summary>
         /// Set the view model data.
@@ -320,6 +378,8 @@ namespace BookCollector.ViewModels.Popups
         {
         }
 
+        /********************************************************/
+
         /// <summary>
         /// Set the selected values as preferences and close popup.
         /// </summary>
@@ -335,122 +395,13 @@ namespace BookCollector.ViewModels.Popups
         }
 
         /// <summary>
-        /// Set values of favorite picker.
+        /// Set the selected values as preferences and close popup.
         /// </summary>
-        public void SetFavoritePicker()
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task Reset()
         {
-            this.FavoritePicker =
-            [
-                AppStringResources.Both,
-                AppStringResources.Favorites,
-                AppStringResources.NonFavorites,
-            ];
-        }
-
-        /// <summary>
-        /// Set values of format picker.
-        /// </summary>
-        /// <param name="formats">Formats list for the picker.</param>
-        public void SetFormatPicker(ObservableCollection<string>? formats)
-        {
-            this.FormatPicker = formats != null ? [.. formats] : null;
-            this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
-        }
-
-        /// <summary>
-        /// Set values of author picker.
-        /// </summary>
-        /// <param name="authorNames">Author names list for the picker.</param>
-        public void SetAuthorPicker(ObservableCollection<string>? authorNames)
-        {
-            this.AuthorPicker = authorNames != null ? [.. authorNames] : null;
-            this.AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
-            this.AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
-        }
-
-        /// <summary>
-        /// Set values of publisher picker.
-        /// </summary>
-        /// <param name="publisherNames">Publisher names list for the picker.</param>
-        public void SetPublisherPicker(ObservableCollection<string>? publisherNames)
-        {
-            this.PublisherPicker = publisherNames != null ? [.. publisherNames] : null;
-            this.PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
-            this.PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
-        }
-
-        /// <summary>
-        /// Set values of publish year picker.
-        /// </summary>
-        /// <param name="publishYears">Publish year ranges list for the picker.</param>
-        public void SetPublishYearPicker(ObservableCollection<string>? publishYears)
-        {
-            this.PublishYearPicker = publishYears != null ? [.. publishYears] : null;
-            this.PublishYearPicker?.Insert(0, AppStringResources.AllPublishYears);
-            this.PublishYearPicker?.Insert(1, AppStringResources.NoPublishYear);
-        }
-
-        /// <summary>
-        /// Set values of language picker.
-        /// </summary>
-        /// <param name="languages">Languages list for the picker.</param>
-        public void SetLanguagePicker(ObservableCollection<string>? languages)
-        {
-            this.LanguagePicker = languages != null ? [.. languages] : null;
-            this.LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
-            this.LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
-        }
-
-        /// <summary>
-        /// Set values of rating picker.
-        /// </summary>
-        public void SetRatingPicker()
-        {
-            this.RatingPicker =
-            [
-                AppStringResources.AllRatings,
-                AppStringResources.ZeroStars,
-                AppStringResources.OneStar,
-                AppStringResources.TwoStars,
-                AppStringResources.ThreeStars,
-                AppStringResources.FourStars,
-                AppStringResources.FiveStars,
-            ];
-        }
-
-        /// <summary>
-        /// Set values of location picker.
-        /// </summary>
-        /// <param name="locations">Locations list for the picker.</param>
-        public void SetLocationPicker(ObservableCollection<string>? locations)
-        {
-            this.LocationPicker = locations != null ? [.. locations] : null;
-            this.LocationPicker?.Insert(0, AppStringResources.AllLocations);
-            this.LocationPicker?.Insert(1, AppStringResources.NoLocation);
-        }
-
-        /// <summary>
-        /// Set values of series picker.
-        /// </summary>
-        /// <param name="series">Series list for the picker.</param>
-        public void SetSeriesPicker(ObservableCollection<string>? series)
-        {
-            this.SeriesPicker = series != null ? [.. series] : null;
-            this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
-            this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
-        }
-
-        /// <summary>
-        /// Set values of book cover picker.
-        /// </summary>
-        public void SetBookCoverPicker()
-        {
-            this.BookCoverPicker =
-            [
-                AppStringResources.Both,
-                AppStringResources.HasABookCover,
-                AppStringResources.HasNoBookCover,
-            ];
+            this.ResetDefaults();
         }
 
         /// <summary>
@@ -631,6 +582,260 @@ namespace BookCollector.ViewModels.Popups
                 true);
 
             this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        /********************************************************/
+
+        /// <summary>
+        /// Set defaults for each picker.
+        /// </summary>
+        /// <param name="favoriteOptionDefault">Favorite option default.</param>
+        /// <param name="bookFormatOptionDefault">Book format option default.</param>
+        /// <param name="bookAuthorOptionDefault">Book author option default.</param>
+        /// <param name="bookPublisherOptionDefault">Book publisher option default.</param>
+        /// <param name="bookPublisherYearOptionDefault">Book publish year option default.</param>
+        /// <param name="bookLanguageOptionDefault">Book language option default.</param>
+        /// <param name="bookRatingOptionDefault">Book rating option default.</param>
+        /// <param name="bookLocationOptionDefault">Book location option default.</param>
+        /// <param name="bookSeriesOptionDefault">Book series option default.</param>
+        /// <param name="bookCoverOptionDefault">Book cover option default.</param>
+        public void SetDefaults(
+            string? favoriteOptionDefault,
+            string? bookFormatOptionDefault,
+            string? bookAuthorOptionDefault,
+            string? bookPublisherOptionDefault,
+            string? bookPublisherYearOptionDefault,
+            string? bookLanguageOptionDefault,
+            string? bookRatingOptionDefault,
+            string? bookLocationOptionDefault,
+            string? bookSeriesOptionDefault,
+            string? bookCoverOptionDefault)
+        {
+            if (!string.IsNullOrEmpty(favoriteOptionDefault))
+            {
+                this.FavoriteBooksOptionDefault = favoriteOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookFormatOptionDefault))
+            {
+                this.BookFormatOptionDefault = bookFormatOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookAuthorOptionDefault))
+            {
+                this.BookAuthorOptionDefault = bookAuthorOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookPublisherOptionDefault))
+            {
+                this.BookPublisherOptionDefault = bookPublisherOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookPublisherYearOptionDefault))
+            {
+                this.BookPublishYearOptionDefault = bookPublisherYearOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookLanguageOptionDefault))
+            {
+                this.BookLanguageOptionDefault = bookLanguageOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookRatingOptionDefault))
+            {
+                this.BookRatingOptionDefault = bookRatingOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookLocationOptionDefault))
+            {
+                this.BookLocationOptionDefault = bookLocationOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookSeriesOptionDefault))
+            {
+                this.BookSeriesOptionDefault = bookSeriesOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(bookCoverOptionDefault))
+            {
+                this.BookCoverOptionDefault = bookCoverOptionDefault;
+            }
+        }
+
+        /// <summary>
+        /// Set values of favorite picker.
+        /// </summary>
+        public void SetFavoritePicker()
+        {
+            this.FavoritePicker =
+            [
+                AppStringResources.Both,
+                AppStringResources.Favorites,
+                AppStringResources.NonFavorites,
+            ];
+        }
+
+        /// <summary>
+        /// Set values of format picker.
+        /// </summary>
+        /// <param name="formats">Formats list for the picker.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
+        public void SetFormatPicker(
+            ObservableCollection<string>? formats,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
+        {
+            this.FormatPicker = formats != null ? [.. formats] : null;
+
+            if (!showAudiobooks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Paperback);
+            }
+
+            if (this.FormatPicker == null || this.FormatPicker.Count == 0)
+            {
+                this.FormatOption = AppStringResources.None;
+            }
+            else if (this.FormatPicker.Count == 1)
+            {
+                this.FormatOption = this.FormatPicker[0];
+            }
+            else
+            {
+                this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
+            }
+        }
+
+        /// <summary>
+        /// Set values of author picker.
+        /// </summary>
+        /// <param name="authorNames">Author names list for the picker.</param>
+        public void SetAuthorPicker(ObservableCollection<string>? authorNames)
+        {
+            this.AuthorPicker = authorNames != null ? [.. authorNames] : null;
+            this.AuthorPicker?.Insert(0, AppStringResources.AllAuthors);
+            this.AuthorPicker?.Insert(1, AppStringResources.NoAuthor);
+        }
+
+        /// <summary>
+        /// Set values of publisher picker.
+        /// </summary>
+        /// <param name="publisherNames">Publisher names list for the picker.</param>
+        public void SetPublisherPicker(ObservableCollection<string>? publisherNames)
+        {
+            this.PublisherPicker = publisherNames != null ? [.. publisherNames] : null;
+            this.PublisherPicker?.Insert(0, AppStringResources.AllPublishers);
+            this.PublisherPicker?.Insert(1, AppStringResources.NoPublisher);
+        }
+
+        /// <summary>
+        /// Set values of publish year picker.
+        /// </summary>
+        /// <param name="publishYears">Publish year ranges list for the picker.</param>
+        public void SetPublishYearPicker(ObservableCollection<string>? publishYears)
+        {
+            this.PublishYearPicker = publishYears != null ? [.. publishYears] : null;
+            this.PublishYearPicker?.Insert(0, AppStringResources.AllPublishYears);
+            this.PublishYearPicker?.Insert(1, AppStringResources.NoPublishYear);
+        }
+
+        /// <summary>
+        /// Set values of language picker.
+        /// </summary>
+        /// <param name="languages">Languages list for the picker.</param>
+        public void SetLanguagePicker(ObservableCollection<string>? languages)
+        {
+            this.LanguagePicker = languages != null ? [.. languages] : null;
+            this.LanguagePicker?.Insert(0, AppStringResources.AllLanguages);
+            this.LanguagePicker?.Insert(1, AppStringResources.NoLanguage);
+        }
+
+        /// <summary>
+        /// Set values of rating picker.
+        /// </summary>
+        public void SetRatingPicker()
+        {
+            this.RatingPicker =
+            [
+                AppStringResources.AllRatings,
+                AppStringResources.ZeroStars,
+                AppStringResources.OneStar,
+                AppStringResources.TwoStars,
+                AppStringResources.ThreeStars,
+                AppStringResources.FourStars,
+                AppStringResources.FiveStars,
+            ];
+        }
+
+        /// <summary>
+        /// Set values of location picker.
+        /// </summary>
+        /// <param name="locations">Locations list for the picker.</param>
+        public void SetLocationPicker(ObservableCollection<string>? locations)
+        {
+            this.LocationPicker = locations != null ? [.. locations] : null;
+            this.LocationPicker?.Insert(0, AppStringResources.AllLocations);
+            this.LocationPicker?.Insert(1, AppStringResources.NoLocation);
+        }
+
+        /// <summary>
+        /// Set values of series picker.
+        /// </summary>
+        /// <param name="series">Series list for the picker.</param>
+        public void SetSeriesPicker(ObservableCollection<string>? series)
+        {
+            this.SeriesPicker = series != null ? [.. series] : null;
+            this.SeriesPicker?.Insert(0, AppStringResources.AllSeries);
+            this.SeriesPicker?.Insert(1, AppStringResources.NoSeries);
+        }
+
+        /// <summary>
+        /// Set values of book cover picker.
+        /// </summary>
+        public void SetBookCoverPicker()
+        {
+            this.BookCoverPicker =
+            [
+                AppStringResources.Both,
+                AppStringResources.HasABookCover,
+                AppStringResources.HasNoBookCover,
+            ];
+        }
+
+        /********************************************************/
+
+        private void ResetDefaults()
+        {
+            this.FavoriteOption = this.FavoriteBooksOptionDefault;
+            this.FormatOption = this.BookFormatOptionDefault;
+            this.AuthorOption = this.BookAuthorOptionDefault;
+            this.PublisherOption = this.BookPublisherOptionDefault;
+            this.PublishYearOption = this.BookPublishYearOptionDefault;
+            this.LanguageOption = this.BookLanguageOptionDefault;
+            this.RatingOption = this.BookRatingOptionDefault;
+            this.LocationOption = this.BookLocationOptionDefault;
+            this.SeriesOption = this.BookSeriesOptionDefault;
+            this.BookCoverOption = this.BookCoverOptionDefault;
         }
 
         private void SetPreferences()

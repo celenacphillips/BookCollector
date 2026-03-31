@@ -101,6 +101,10 @@ namespace BookCollector.ViewModels.WishListBook
         /// </summary>
         public override void GetPreferences()
         {
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
         }
 
         /// <summary>

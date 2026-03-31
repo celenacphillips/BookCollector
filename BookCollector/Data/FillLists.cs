@@ -6,6 +6,7 @@ namespace BookCollector.Data
 {
     using System.Collections.ObjectModel;
     using BookCollector.Data.Models;
+    using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
@@ -538,8 +539,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Collection guid to get books for.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list of books assigned to the collection.</returns>
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInCollectionList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInCollectionList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
@@ -558,6 +569,14 @@ namespace BookCollector.Data
                     var list = await BaseViewModel.Database.GetAllBooksInCollectionAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
             }
 
             return filteredList;
@@ -583,8 +602,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Genre guid to get books for.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list of books assigned to the genre.</returns>
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInGenreList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInGenreList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
@@ -603,6 +632,14 @@ namespace BookCollector.Data
                     var list = await BaseViewModel.Database.GetAllBooksInGenreAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
             }
 
             return filteredList;
@@ -628,8 +665,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Series guid to get books for.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list of books assigned to the series.</returns>
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInSeriesList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInSeriesList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
@@ -648,6 +695,14 @@ namespace BookCollector.Data
                     var list = await BaseViewModel.Database.GetAllBooksInSeriesAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
             }
 
             return filteredList;
@@ -673,8 +728,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Location guid to get books for.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list of books assigned to the location.</returns>
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInLocationList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInLocationList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = null;
 
@@ -693,6 +758,14 @@ namespace BookCollector.Data
                     var list = await BaseViewModel.Database.GetAllBooksInLocationAsync((Guid)inputGuid, showHiddenBooks);
                     filteredList = list.ToObservableCollection();
                 }
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
             }
 
             return filteredList;
@@ -806,8 +879,18 @@ namespace BookCollector.Data
         /// </summary>
         /// <param name="inputGuid">Author guid to get books for.</param>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A list of books for the provided author.</returns>
-        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInAuthorList(Guid? inputGuid, bool showHiddenBooks)
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksInAuthorList(
+            Guid? inputGuid,
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             ObservableCollection<BookModel>? filteredList = [];
 
@@ -815,6 +898,14 @@ namespace BookCollector.Data
             {
                 var list = await BaseViewModel.Database.GetAllBooksForAuthorAsync((Guid)inputGuid, showHiddenBooks);
                 filteredList = list.ToObservableCollection();
+
+                filteredList = showAudiobooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+                filteredList = showEbooks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+                filteredList = showHardcovers ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+                filteredList = showPaperbacks ? filteredList : filteredList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
             }
 
             return filteredList;

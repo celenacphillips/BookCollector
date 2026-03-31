@@ -61,48 +61,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
-	  <ApplicationVersion>25</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
-	  <ApplicationVersion>25</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
-	  <ApplicationVersion>25</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
-	  <ApplicationVersion>25</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
 	  <AndroidKeyStore>True</AndroidKeyStore>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
 		<AndroidSigningKeyStore>X:\Storage\Celena_Files\Keystores\bookcollector.keystore</AndroidSigningKeyStore>
 		<AndroidSigningStorePass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>bookcollector_key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>r5NQ#tDD2XS!f@GVdyAx</AndroidSigningKeyPass>
-		<ApplicationVersion>25</ApplicationVersion>
+		<ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <ApplicationId>com.castlesoftware.bookcollector</ApplicationId>
 	  <NoWarn>1701;1702;CS8618;CS0186;CS2200;XC0025;IDE0059;CS0168;SA1300;IDE1006;XC0024;XC0045;CS1591</NoWarn>
-	  <ApplicationDisplayVersion>1.0.24</ApplicationDisplayVersion>
-	  <ApplicationVersion>25</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>26</ApplicationVersion>
 	</PropertyGroup>
 
 
@@ -167,6 +167,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.41" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="nor0x.Maui.ColorPicker" Version="2.0.4" />
 		<PackageReference Include="Open-XML-SDK" Version="2.9.1" />
 		<PackageReference Include="SkiaSharp" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.2" />
@@ -205,6 +206,9 @@
 		</Compile>
 		<Compile Update="Views\Controls\WishListBook\WishListBookCollectionItem.xaml.cs">
 			<DependentUpon>WishListBookCollectionItem.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Genre\GenreMetricView.xaml.cs">
+		  <DependentUpon>GenreMetricView.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\Popups\ChoiceDialogPopup.xaml.cs">
 		  <DependentUpon>ChoiceDialogPopup.xaml</DependentUpon>
@@ -271,6 +275,9 @@
 		<MauiXaml Update="Views\Author\AuthorMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Author\AuthorMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Book\BookEditView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -282,6 +289,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\Collection\CollectionMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Collection\CollectionMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Author\AuthorCollectionItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -349,6 +359,9 @@
 		<MauiXaml Update="Views\Genre\GenreMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Genre\GenreMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Groupings\AuthorsView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -385,10 +398,16 @@
 		<MauiXaml Update="Views\Location\LocationMainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Location\LocationMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Main\ExportImportView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\ChoiceDialogPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Popups\ColorPickerPopup.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\MissingBookCoverPopup.xaml">
@@ -401,6 +420,9 @@
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Popups\TimePopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Series\SeriesMetricView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Support\ChangeLogView.xaml">
@@ -490,6 +512,10 @@
 		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core">
 			<Version>2.8.4</Version>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Data\Converters\" />
 	</ItemGroup>
 
 </Project>
