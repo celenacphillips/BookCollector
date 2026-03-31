@@ -642,6 +642,11 @@ namespace BookCollector.ViewModels.Book
             this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
             this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
             this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
         }
 
         /// <summary>

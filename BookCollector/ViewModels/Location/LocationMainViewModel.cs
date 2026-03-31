@@ -108,10 +108,19 @@ namespace BookCollector.ViewModels.Location
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async new Task SetList(bool showHiddenBooks)
+        public async Task SetList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
-            this.FullBookList ??= await FillLists.GetAllBooksInLocationList(this.SelectedLocation?.LocationGuid, ShowHiddenBooks);
+            this.FullBookList ??= await FillLists.GetAllBooksInLocationList(this.SelectedLocation?.LocationGuid, ShowHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
         }
@@ -177,7 +186,7 @@ namespace BookCollector.ViewModels.Location
             {
                 this.GetPreferences();
 
-                await this.SetList(ShowHiddenBooks);
+                await this.SetList(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
 
                 (this.TotalBooksCount,
                     this.FilteredBooksCount,
@@ -204,6 +213,12 @@ namespace BookCollector.ViewModels.Location
         public override bool GetPreferences()
         {
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
@@ -275,7 +290,7 @@ namespace BookCollector.ViewModels.Location
         {
             viewModel.SetAuthorPicker(this.BookAuthorList);
             viewModel.SetFavoritePicker();
-            viewModel.SetFormatPicker(this.BookFormats);
+            viewModel.SetFormatPicker(this.BookFormats, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
             viewModel.SetPublisherPicker(this.BookPublisherList);
             viewModel.SetPublishYearPicker(this.BookPublishYearList);
             viewModel.SetLanguagePicker(this.BookLanguageList);

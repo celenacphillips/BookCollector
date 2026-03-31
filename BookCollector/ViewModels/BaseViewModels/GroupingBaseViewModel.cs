@@ -450,8 +450,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -505,8 +505,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -560,8 +560,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -615,8 +615,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -670,8 +670,8 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(

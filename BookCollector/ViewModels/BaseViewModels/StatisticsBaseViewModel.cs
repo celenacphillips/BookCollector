@@ -295,6 +295,11 @@ namespace BookCollector.ViewModels.BaseViewModels
             this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
 
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
             return true;
         }
 

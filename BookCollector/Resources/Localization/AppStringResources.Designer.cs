@@ -827,6 +827,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Format Settings.
+        /// </summary>
+        internal static string BookFormatSettings {
+            get {
+                return ResourceManager.GetString("BookFormatSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Genre.
         /// </summary>
         internal static string BookGenre {
@@ -1232,7 +1241,12 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to • Added Metric page for groupings.
+        ///   Looks up a localized string similar to • NEW FEATURE: Added Metric page for groupings
+        ///• NEW FEATURE: Added reset on Settings pages
+        ///• NEW FEATURE: Added reset to Filter and Sort popups
+        ///• NEW FEATURE: Added ability to hide book formats
+        ///• ENHANCED FEATURE: Add color picker for App Color
+        ///• BUG FIX: Fixed sort Series Order Sort on Series pages.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -1291,6 +1305,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Chapters_Slash {
             get {
                 return ResourceManager.GetString("Chapters_Slash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart Colors.
+        /// </summary>
+        internal static string ChartColors {
+            get {
+                return ResourceManager.GetString("ChartColors", resourceCulture);
             }
         }
         
@@ -2873,6 +2896,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string None {
+            get {
+                return ResourceManager.GetString("None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Non-Favorite.
         /// </summary>
         internal static string NonFavorite {
@@ -3568,6 +3600,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Audiobooks.
+        /// </summary>
+        internal static string ShowAudiobook {
+            get {
+                return ResourceManager.GetString("ShowAudiobook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Chapters in books.
         /// </summary>
         internal static string ShowChapters {
@@ -3586,11 +3627,29 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show eBooks.
+        /// </summary>
+        internal static string ShowEBook {
+            get {
+                return ResourceManager.GetString("ShowEBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Favorite option in books, statistics, and filters.
         /// </summary>
         internal static string ShowFavorites {
             get {
                 return ResourceManager.GetString("ShowFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hardcover Books.
+        /// </summary>
+        internal static string ShowHardcover {
+            get {
+                return ResourceManager.GetString("ShowHardcover", resourceCulture);
             }
         }
         
@@ -3654,6 +3713,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ShowHiddenWishlistBooks {
             get {
                 return ResourceManager.GetString("ShowHiddenWishlistBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Paperback Books.
+        /// </summary>
+        internal static string ShowPaperback {
+            get {
+                return ResourceManager.GetString("ShowPaperback", resourceCulture);
             }
         }
         

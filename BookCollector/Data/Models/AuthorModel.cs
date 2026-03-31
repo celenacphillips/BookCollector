@@ -96,10 +96,20 @@ namespace BookCollector.Data.Models
         /// Sets the total books and unread books for the author, and updates the TotalBooksString property accordingly.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async Task SetTotalBooks(bool showHiddenBooks)
+        public async Task SetTotalBooks(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
-            var list = await FillLists.GetAllBooksInAuthorList(this.AuthorGuid, showHiddenBooks);
+            var list = await FillLists.GetAllBooksInAuthorList(this.AuthorGuid, showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+
             (this.TotalBooksString,
                 this.AuthorTotalBooks,
                 this.ToBeReadCount,
@@ -111,10 +121,19 @@ namespace BookCollector.Data.Models
         /// Sets the total cost of books for the author, and updates the TotalCostOfBooks property accordingly.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async Task SetTotalCostOfBooks(bool showHiddenBooks)
+        public async Task SetTotalCostOfBooks(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
-            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInAuthorList(this.AuthorGuid, showHiddenBooks);
+            this.TotalCostOfBooks = await GetCounts.GetAllBookPricesInAuthorList(this.AuthorGuid, showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
     }
 }

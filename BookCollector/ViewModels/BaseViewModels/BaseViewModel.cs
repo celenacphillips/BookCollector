@@ -168,6 +168,26 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public double PopupHeight { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show audiobooks or not.
+        /// </summary>
+        public bool AudiobookShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show eBooks or not.
+        /// </summary>
+        public bool eBookShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show hardcovers or not.
+        /// </summary>
+        public bool HardcoverShow { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show paperbacks or not.
+        /// </summary>
+        public bool PaperbackShow { get; set; }
+
         /********************************************************/
 
         /// <summary>

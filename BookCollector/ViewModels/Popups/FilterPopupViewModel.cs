@@ -679,10 +679,51 @@ namespace BookCollector.ViewModels.Popups
         /// Set values of format picker.
         /// </summary>
         /// <param name="formats">Formats list for the picker.</param>
-        public void SetFormatPicker(ObservableCollection<string>? formats)
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
+        public void SetFormatPicker(
+            ObservableCollection<string>? formats,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FormatPicker = formats != null ? [.. formats] : null;
-            this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
+
+            if (!showAudiobooks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Audiobook);
+            }
+
+            if (!showEbooks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.eBook);
+            }
+
+            if (!showHardcovers)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Hardcover);
+            }
+
+            if (!showPaperbacks)
+            {
+                this.FormatPicker?.Remove(AppStringResources.Paperback);
+            }
+
+            if (this.FormatPicker == null || this.FormatPicker.Count == 0)
+            {
+                this.FormatOption = AppStringResources.None;
+            }
+            else if (this.FormatPicker.Count == 1)
+            {
+                this.FormatOption = this.FormatPicker[0];
+            }
+            else
+            {
+                this.FormatPicker?.Insert(0, AppStringResources.AllFormats);
+            }
         }
 
         /// <summary>

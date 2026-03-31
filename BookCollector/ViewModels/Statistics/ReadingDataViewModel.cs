@@ -34,6 +34,22 @@ namespace BookCollector.ViewModels.Statistics
         public bool yearCountNotValid;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show books with pages.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool pageBooksShow;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show audiobooks.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool showAudiobooks;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ReadingDataViewModel"/> class.
         /// </summary>
         /// <param name="view">View related to view model.</param>
@@ -53,7 +69,7 @@ namespace BookCollector.ViewModels.Statistics
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -61,11 +77,15 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
+                this.PageBooksShow = this.eBookShow || this.HardcoverShow || this.PaperbackShow;
+
+                this.ShowAudiobooks = this.AudiobookShow;
+
                 this.ReadingDataList = [];
 
                 if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
-                    await AllBooksViewModel.SetList(this.ShowHiddenBooks);
+                    await AllBooksViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
                 }
 
                 for (int i = 0; i < int.Parse(this.YearCount); i++)

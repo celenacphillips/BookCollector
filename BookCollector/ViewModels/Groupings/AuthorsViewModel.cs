@@ -128,8 +128,17 @@ namespace BookCollector.ViewModels.Groupings
         /// Set books to hide books that are related to the author.
         /// </summary>
         /// <param name="showHiddenAuthors">Show hidden authors.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public static async Task HideBooks(bool showHiddenAuthors)
+        public static async Task HideBooks(
+            bool showHiddenAuthors,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             if (!showHiddenAuthors)
             {
@@ -137,7 +146,7 @@ namespace BookCollector.ViewModels.Groupings
 
                 foreach (var item in hideList)
                 {
-                    var books = await FillLists.GetAllBooksInAuthorList(item.AuthorGuid, true);
+                    var books = await FillLists.GetAllBooksInAuthorList(item.AuthorGuid, true, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
 
                     books = books?.Where(x => !x.HideBook).ToObservableCollection();
 
@@ -251,6 +260,11 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
 
             this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);

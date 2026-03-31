@@ -139,12 +139,29 @@ namespace BookCollector.ViewModels.Main
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public static async Task SetList(bool showHiddenBooks)
+        public static async Task SetList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             fullWishlistBookList ??= await FillLists.GetBookWishList();
 
             hiddenFilteredWishlistBookList = showHiddenBooks ? fullWishlistBookList : fullWishlistBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            hiddenFilteredWishlistBookList = showAudiobooks ? hiddenFilteredWishlistBookList : hiddenFilteredWishlistBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            hiddenFilteredWishlistBookList = showEbooks ? hiddenFilteredWishlistBookList : hiddenFilteredWishlistBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            hiddenFilteredWishlistBookList = showHardcovers ? hiddenFilteredWishlistBookList : hiddenFilteredWishlistBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            hiddenFilteredWishlistBookList = showPaperbacks ? hiddenFilteredWishlistBookList : hiddenFilteredWishlistBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /********************************************************/
@@ -240,7 +257,7 @@ namespace BookCollector.ViewModels.Main
             {
                 this.GetPreferences();
 
-                await SetList(this.ShowHiddenWishlistBooks);
+                await SetList(this.ShowHiddenWishlistBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
 
                 (this.TotalBooksCount,
                     this.FilteredBooksCount,
@@ -269,6 +286,11 @@ namespace BookCollector.ViewModels.Main
         public override bool GetPreferences()
         {
             this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
 
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
             this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
@@ -335,7 +357,7 @@ namespace BookCollector.ViewModels.Main
         public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
         {
             viewModel.SetFavoritePicker();
-            viewModel.SetFormatPicker(this.BookFormats);
+            viewModel.SetFormatPicker(this.BookFormats, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
             viewModel.SetPublisherPicker(this.BookPublisherList);
             viewModel.SetPublishYearPicker(this.BookPublishYearList);
             viewModel.SetLanguagePicker(this.BookLanguageList);

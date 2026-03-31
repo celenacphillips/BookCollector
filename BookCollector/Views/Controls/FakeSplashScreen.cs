@@ -11,6 +11,7 @@ namespace BookCollector.Views.Controls
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Main;
     using BookCollector.Views.Popups;
+    using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Maui.Extensions;
 
     /// <summary>
@@ -105,7 +106,14 @@ namespace BookCollector.Views.Controls
 
         private static async Task PreLoadData()
         {
-            BookBaseViewModel.bookFormats ??= [$"{AppStringResources.eBook}", $"{AppStringResources.Paperback}", $"{AppStringResources.Hardcover}", $"{AppStringResources.Audiobook}"];
+            BookBaseViewModel.bookFormats ??= [
+                $"{AppStringResources.eBook}",
+                $"{AppStringResources.Paperback}",
+                $"{AppStringResources.Hardcover}",
+                $"{AppStringResources.Audiobook}"
+            ];
+
+            BookBaseViewModel.bookFormats = BookBaseViewModel.bookFormats.Order().ToObservableCollection();
 
             BaseViewModel.Database ??= new BookCollectorDatabase();
 
@@ -120,7 +128,12 @@ namespace BookCollector.Views.Controls
             var showHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
             var showHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
 
-            await AllBooksViewModel.SetList(showHiddenBooks);
+            var audiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            var eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            var hardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            var paperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
+            await AllBooksViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow);
 
             List<Task> taskList =
             [
@@ -129,10 +142,10 @@ namespace BookCollector.Views.Controls
                 SeriesViewModel.SetList(showHiddenSeries),
                 AuthorsViewModel.SetList(showHiddenAuthors),
                 LocationsViewModel.SetList(showHiddenLocations),
-                ToBeReadViewModel.SetList(showHiddenBooks),
-                ReadViewModel.SetList(showHiddenBooks),
-                ReadingViewModel.SetList(showHiddenBooks),
-                WishListViewModel.SetList(showHiddenWishlistBooks),
+                ToBeReadViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
+                ReadViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
+                ReadingViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
+                WishListViewModel.SetList(showHiddenWishlistBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
             ];
 
             await Task.WhenAll(taskList);

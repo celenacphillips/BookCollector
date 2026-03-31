@@ -28,7 +28,7 @@ namespace BookCollector.ViewModels.Statistics
         /// Set the view model data.
         /// </summary>
         /// <returns>A task.</returns>
-        public async new Task SetViewModelData()
+        public async override Task SetViewModelData()
         {
             try
             {
@@ -45,15 +45,15 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (WishListViewModel.hiddenFilteredWishlistBookList == null || WishListViewModel.RefreshView)
                 {
-                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks);
+                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
                 }
 
                 var cost = GetCounts.GetPriceOfAllWishListBooks();
                 var series = GetCounts.GetAllWishListBooksAndSeriesList(this.MaxListNumber);
                 var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.MaxListNumber);
                 var locations = GetCounts.GetAllWishListBooksAndLocationList(this.MaxListNumber);
-                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList();
-                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList();
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
 
                 this.GetColors();
 

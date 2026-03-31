@@ -172,29 +172,38 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async Task SetList(bool showHiddenBooks)
+        public async Task SetList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             switch (this.SelectedObjectType)
             {
                 case "Collection":
-                    await this.SetCollectionList(showHiddenBooks);
+                    await this.SetCollectionList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Genre":
-                    await this.SetGenreList(showHiddenBooks);
+                    await this.SetGenreList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Series":
-                    await this.SetSeriesList(showHiddenBooks);
+                    await this.SetSeriesList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Author":
-                    await this.SetAuthorList(showHiddenBooks);
+                    await this.SetAuthorList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 case "Location":
-                    await this.SetLocationList(showHiddenBooks);
+                    await this.SetLocationList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
                     break;
 
                 default:
@@ -223,7 +232,7 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.GetPreferences();
 
-                await this.SetList(ShowHiddenBooks);
+                await this.SetList(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
 
                 (this.TotalBooksCount,
                     this.FilteredBooksCount,
@@ -250,6 +259,12 @@ namespace BookCollector.ViewModels.Groupings
         public override bool GetPreferences()
         {
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+
+            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
+            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
+            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
+            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
 
@@ -321,7 +336,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             viewModel.SetAuthorPicker(this.BookAuthorList);
             viewModel.SetFavoritePicker();
-            viewModel.SetFormatPicker(this.BookFormats);
+            viewModel.SetFormatPicker(this.BookFormats, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
             viewModel.SetPublisherPicker(this.BookPublisherList);
             viewModel.SetPublishYearPicker(this.BookPublishYearList);
             viewModel.SetLanguagePicker(this.BookLanguageList);
@@ -386,44 +401,104 @@ namespace BookCollector.ViewModels.Groupings
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetCollectionList(bool showHiddenBooks)
+        private async Task SetCollectionList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetGenreList(bool showHiddenBooks)
+        private async Task SetGenreList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetSeriesList(bool showHiddenBooks)
+        private async Task SetSeriesList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetAuthorList(bool showHiddenBooks)
+        private async Task SetAuthorList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             var author = (AuthorModel?)this.SelectedObject;
 
@@ -433,18 +508,43 @@ namespace BookCollector.ViewModels.Groupings
             }
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /// <summary>
         /// Set the first filtered list based on the full book list and the show hidden books preference.
         /// </summary>
         /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        private async Task SetLocationList(bool showHiddenBooks)
+        private async Task SetLocationList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
             this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         private async Task AddBookToGrouping()
