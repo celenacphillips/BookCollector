@@ -1246,7 +1246,8 @@ namespace BookCollector.Resources.Localization {
         ///• NEW FEATURE: Added reset to Filter and Sort popups
         ///• NEW FEATURE: Added ability to hide book formats
         ///• ENHANCED FEATURE: Add color picker for App Color
-        ///• BUG FIX: Fixed sort Series Order Sort on Series pages.
+        ///• BUG FIX: Fixed sort Series Order Sort on Series pages
+        ///• BUG FIX: Fixed broken book search for Wishlist books.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -3191,6 +3192,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PrimaryColor {
             get {
                 return ResourceManager.GetString("PrimaryColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primary Color on Tertiary Color.
+        /// </summary>
+        internal static string PrimaryColorOnTertiaryColor {
+            get {
+                return ResourceManager.GetString("PrimaryColorOnTertiaryColor", resourceCulture);
             }
         }
         

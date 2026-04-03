@@ -301,7 +301,7 @@
                             <FontImageSource FontFamily="MaterialDesignIcons"
                                          Glyph="&#xF099B;"
                                          Size="28"
-                                         Color="{DynamicResource TextDark}" />
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
                         </ImageButton.Source>
                     </ImageButton>
                     <!-- Reset -->

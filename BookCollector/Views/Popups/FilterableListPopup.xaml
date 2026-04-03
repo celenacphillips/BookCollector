@@ -26,6 +26,6 @@
                                    TotalItemsColor="{DynamicResource Tertiary}"
                                    MainTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
                                    SelectedItemColor="{DynamicResource Tertiary}"
-                                   SelectedItemTextColor="{DynamicResource Primary}"/>
+                                   SelectedItemTextColor="{DynamicResource TextOnPrimaryColor}"/>
     </VerticalStackLayout>
 </toolkit:Popup>

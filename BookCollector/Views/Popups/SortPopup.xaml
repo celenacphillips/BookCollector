@@ -49,7 +49,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF099B;"
                                                      Size="28"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </ImageButton.Source>
                             </ImageButton>
 
@@ -61,7 +61,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF0193;"
                                                      Size="28"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </ImageButton.Source>
                             </ImageButton>
                         </HorizontalStackLayout>

@@ -12,6 +12,8 @@ using Maui.ColorPicker;
 /// </summary>
 public partial class ColorPickerPopup : Popup<string>
 {
+    private string selectedColorHexCodeField;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ColorPickerPopup"/> class.
     /// </summary>
@@ -27,6 +29,8 @@ public partial class ColorPickerPopup : Popup<string>
 
         var picker = this.FindByName<ColorPicker>("ColorPicker");
         picker.PickedColor = selectedColor;
+
+        this.SelectedColorHexCode = selectedColor.ToHex();
     }
 
     /// <summary>
@@ -39,6 +43,22 @@ public partial class ColorPickerPopup : Popup<string>
     /// </summary>
     public double ColorPickerHeight { get; set; }
 
+    /// <summary>
+    /// Gets or sets the selected color hex code.
+    /// </summary>
+    public string SelectedColorHexCode
+    {
+        get => this.selectedColorHexCodeField;
+        set
+        {
+            if (this.selectedColorHexCodeField != value)
+            {
+                this.selectedColorHexCodeField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
     private Color SelectedColor { get; set; }
 
     private void ColorPicker_PickedColorChanged(object sender, PickedColorChangedEventArgs e)
@@ -50,6 +70,7 @@ public partial class ColorPickerPopup : Popup<string>
             var hexCode = newColor.ToHex();
             Data.Colors.SetPreviewColors(hexCode);
             this.SelectedColor = newColor;
+            this.SelectedColorHexCode = newColor.ToHex();
         }
     }
 

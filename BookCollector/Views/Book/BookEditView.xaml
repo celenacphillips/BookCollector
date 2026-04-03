@@ -158,7 +158,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF087C;"
                                                      Size="28"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </ImageButton.Source>
                             </ImageButton>
                             <ImageButton HeightRequest="50"
@@ -169,7 +169,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF1419;"
                                                      Size="28"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </ImageButton.Source>
                             </ImageButton>
                         </HorizontalStackLayout>
@@ -212,7 +212,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -224,7 +224,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
@@ -366,7 +366,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -378,7 +378,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -524,7 +524,8 @@
                                         <Label Text="{x:Static localization:AppStringResources.PagesRead}"
                                                Style="{DynamicResource Header}"/>
                                         <Button Text="{Binding EditedBook.BookPageRead}"
-                                                Style="{DynamicResource AddButton}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{DynamicResource Primary}"
                                                 FontSize="14"
                                                 Command="{Binding PagesReadPopupCommand}"
                                                 IsEnabled="{Binding PagesReadStepperEnabled}"/>
@@ -662,7 +663,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -674,7 +675,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
@@ -789,7 +790,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -801,7 +802,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
@@ -892,7 +893,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -904,7 +905,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
@@ -1208,7 +1209,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -1220,7 +1221,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
@@ -1273,7 +1274,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0140;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
 
@@ -1285,7 +1286,7 @@
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF0143;"
                                                              Size="24"
-                                                             Color="{DynamicResource TextDark}" />
+                                                             Color="{DynamicResource TextOnPrimaryColor}" />
                                         </Image.Source>
                                     </Image>
                                 </Grid>
