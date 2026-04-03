@@ -429,7 +429,7 @@
 
     <Style x:Key="expanderHeaderLabel" TargetType="Label">
         <Setter Property="Margin" Value="10" />
-        <Setter Property="TextColor" Value="{StaticResource TextOnPrimaryColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextOnPrimaryColor}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
