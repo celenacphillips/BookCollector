@@ -1542,7 +1542,8 @@ Importing from and exporting to other sources is a feature that will be implemen
 • NEW FEATURE: Added reset to Filter and Sort popups
 • NEW FEATURE: Added ability to hide book formats
 • ENHANCED FEATURE: Add color picker for App Color
-• BUG FIX: Fixed sort Series Order Sort on Series pages</value>
+• BUG FIX: Fixed sort Series Order Sort on Series pages
+• BUG FIX: Fixed broken book search for Wishlist books</value>
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">
     <value>There has been a major update and a breaking change made.</value>
@@ -1603,5 +1604,8 @@ Importing from and exporting to other sources is a feature that will be implemen
   </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
+  </data>
+  <data name="PrimaryColorOnTertiaryColor" xml:space="preserve">
+    <value>Primary Color on Tertiary Color</value>
   </data>
 </root>

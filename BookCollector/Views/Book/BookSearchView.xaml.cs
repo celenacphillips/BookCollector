@@ -32,7 +32,7 @@ public partial class BookSearchView : ContentPage
 
         if (book != null)
         {
-            if (book.GetType().ToString().Contains("WishListBookEditViewModel"))
+            if (book.GetType().ToString().Contains("WishlistBookModel"))
             {
                 viewModel.SelectedWishListBook = (WishlistBookModel)book;
             }

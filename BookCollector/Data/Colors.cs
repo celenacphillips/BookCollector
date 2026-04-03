@@ -20,6 +20,9 @@ namespace BookCollector.Data
             var tertiary = color.AddLuminosity(0.2f);
 
             var colorHue = color.GetHue();
+            var colorLuminosity = color.GetLuminosity();
+
+            Application.Current?.Resources["TextOnPrimaryColor"] = colorLuminosity < 0.5f ? Application.Current?.Resources["TextDark"] : Application.Current?.Resources["TextLight"];
 
             var color2 = color.WithHue(colorHue - 0.2f);
             var color3 = color.WithHue(colorHue - 0.4f);
@@ -50,6 +53,9 @@ namespace BookCollector.Data
             var tertiary = color.AddLuminosity(0.2f);
 
             var colorHue = color.GetHue();
+            var colorLuminosity = color.GetLuminosity();
+
+            Application.Current?.Resources["TextOnPrimaryColor_Preview"] = colorLuminosity < 0.5f ? Application.Current?.Resources["TextDark"] : Application.Current?.Resources["TextLight"];
 
             var color2 = color.WithHue(colorHue - 0.2f);
             var color3 = color.WithHue(colorHue - 0.4f);

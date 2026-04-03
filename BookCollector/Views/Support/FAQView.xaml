@@ -38,7 +38,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF0140;"
                                                      Size="24"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </Image.Source>
                             </Image>
 
@@ -50,7 +50,7 @@
                                     <FontImageSource FontFamily="MaterialDesignIcons"
                                                      Glyph="&#xF0143;"
                                                      Size="24"
-                                                     Color="{DynamicResource TextDark}" />
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
                                 </Image.Source>
                             </Image>
                         </Grid>

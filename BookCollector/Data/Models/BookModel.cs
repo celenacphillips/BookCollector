@@ -205,7 +205,7 @@ namespace BookCollector.Data.Models
         /// </summary>
         public int? BookNumberInSeriesValue
         {
-            get => this.BookNumberInSeries != null ? int.Parse(this.BookNumberInSeries) : null;
+            get => !string.IsNullOrEmpty(this.BookNumberInSeries) ? int.Parse(this.BookNumberInSeries) : null;
         }
 
         /// <summary>

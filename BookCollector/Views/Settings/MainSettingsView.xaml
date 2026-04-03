@@ -81,7 +81,7 @@
                         <FontImageSource FontFamily="MaterialDesignIcons"
                                          Glyph="&#xF0B93;"
                                          Size="28"
-                                         Color="{DynamicResource TextDark}" />
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
                     </ImageButton.Source>
                 </ImageButton>
                 <Label Text="{x:Static localization:AppStringResources.ExportLocation}"
@@ -151,7 +151,7 @@
                         <FontImageSource FontFamily="MaterialDesignIcons"
                                          Glyph="&#xF05E8;"
                                          Size="28"
-                                         Color="{DynamicResource TextDark}" />
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
                     </ImageButton.Source>
                 </ImageButton>
                 <Label Text="{x:Static localization:AppStringResources.DeleteAllData_Question}"
@@ -168,9 +168,9 @@
                              Grid.ColumnSpan="3">
                     <ImageButton.Source>
                         <FontImageSource FontFamily="MaterialDesignIcons"
-                         Glyph="&#xF099B;"
-                         Size="28"
-                         Color="{DynamicResource TextDark}" />
+                                         Glyph="&#xF099B;"
+                                         Size="28"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
                     </ImageButton.Source>
                 </ImageButton>
                 <!-- Reset -->
