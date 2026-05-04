@@ -4,6 +4,7 @@
 
 namespace BookCollector.Views.Settings;
 
+using BookCollector.Data.Enums;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
 using BookCollector.Views.Popups;
@@ -168,18 +169,18 @@ public partial class MainSettingsView : ContentPage
 
         var inputMessage = AppStringResources.WarningThisActionCannotBeUndone;
 
-        var answer = await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
+        var answer = await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, DialogState.Choice));
 
         if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
         {
             await BaseViewModel.Database.DropAllTables();
             BaseViewModel.ClearAllLists();
 
-            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, inputConfirm, null, "Commands"));
+            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.AllDataHasBeenDeleted, AppStringResources.AllDataHasBeenDeleted, inputConfirm, null, DialogState.Choice));
         }
         else
         {
-            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, inputConfirm, null, "Commands"));
+            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, inputConfirm, null, DialogState.Choice));
         }
     }
 

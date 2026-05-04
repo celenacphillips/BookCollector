@@ -58,7 +58,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 await this.CheckBookFormat();
 
-                List<string?> bookStrings = (List<string?>)this.GetBookData("strings") !;
+                List<string?> bookStrings = (List<string?>)this.GetBookData(Data.Enums.ReturnType.String) !;
 
                 this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
 
@@ -81,7 +81,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task EditBook()
         {
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
 
             if (book != null)
             {
@@ -102,21 +102,22 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task DeleteBook()
         {
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
             var bookTitle = string.Empty;
             var bookUrl = string.Empty;
 
             if (book != null)
             {
-                if (book.GetType().ToString().Contains("WishlistBookModel"))
+                if (book is WishlistBookModel wishlistBookModel)
                 {
-                    bookTitle = ((WishlistBookModel)book).BookTitle;
-                    bookUrl = ((WishlistBookModel)book).BookURL;
+                    bookTitle = wishlistBookModel.BookTitle;
+                    bookUrl = wishlistBookModel.BookURL;
                 }
-                else
+
+                if (book is BookModel bookModel)
                 {
-                    bookTitle = ((BookModel)book).BookTitle;
-                    bookUrl = ((BookModel)book).BookURL;
+                    bookTitle = bookModel.BookTitle;
+                    bookUrl = bookModel.BookURL;
                 }
             }
 
@@ -157,24 +158,25 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task ShareBook()
         {
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
             var bookTitle = string.Empty;
             var bookUrl = string.Empty;
             var authorList = new List<AuthorModel>();
 
             if (book != null)
             {
-                if (book.GetType().ToString().Contains("WishlistBookModel"))
+                if (book is WishlistBookModel wishlistBookModel)
                 {
-                    bookTitle = ((WishlistBookModel)book).BookTitle;
-                    bookUrl = ((WishlistBookModel)book).BookURL;
-                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(((WishlistBookModel)book).AuthorListString);
+                    bookTitle = wishlistBookModel.BookTitle;
+                    bookUrl = wishlistBookModel.BookURL;
+                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(wishlistBookModel.AuthorListString);
                 }
-                else
+
+                if (book is BookModel bookModel)
                 {
-                    bookTitle = ((BookModel)book).BookTitle;
-                    bookUrl = ((BookModel)book).BookURL;
-                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(((BookModel)book).AuthorListString);
+                    bookTitle = bookModel.BookTitle;
+                    bookUrl = bookModel.BookURL;
+                    authorList = await StringManipulation.SplitAuthorListStringIntoAuthorList(bookModel.AuthorListString);
                 }
             }
 
@@ -233,7 +235,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         /// <param name="returnData">Return type.</param>
         /// <returns>An object of book data.</returns>
-        public abstract object? GetBookData(string? returnData);
+        public abstract object? GetBookData(Data.Enums.ReturnType returnData);
 
         /// <summary>
         /// Check book format and set values.

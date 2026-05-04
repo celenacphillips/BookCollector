@@ -8,6 +8,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     using System.Globalization;
     using BookCollector.CustomPermissions;
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Author;
@@ -316,7 +317,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>The formatted total time, or null.</returns>
         public static double? SetBookTotalTime(string? format, int hourTotal, int minuteTotal)
         {
-            return format!.Equals(AppStringResources.Audiobook) ? (double)hourTotal + ((double)minuteTotal / 60) : null;
+            return
+                !string.IsNullOrEmpty(format) && format.Equals(AppStringResources.Audiobook) ? (double)hourTotal + ((double)minuteTotal / 60) : null;
         }
 
         /// <summary>
@@ -326,8 +328,24 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>Parsed string.</returns>
         public static double SetBookPriceValue(string? bookPrice)
         {
-            return !string.IsNullOrEmpty(bookPrice) ? (bookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol)
-                ? double.Parse(bookPrice[1..]) : double.Parse(bookPrice)) : 0;
+            if (string.IsNullOrEmpty(bookPrice))
+            {
+                return 0;
+            }
+
+            if (bookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol))
+            {
+                bookPrice = bookPrice[1..];
+            }
+
+            if (bookPrice.Contains(' '))
+            {
+                bookPrice = bookPrice.Split(' ')[0];
+            }
+
+            double.TryParse(bookPrice, out double price);
+
+            return price;
         }
 
         /// <summary>
@@ -383,23 +401,23 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public static async Task AddToStaticList(BookModel book, object? previousViewModel = null)
         {
-            await SetAllBooksViewModelList(book);
+            await SetAllBooksViewModelList(book, ActionState.Add);
 
-            await SetReadingViewModelList(book);
+            await SetReadingViewModelList(book, ActionState.Add);
 
-            await SetToBeReadViewModelList(book);
+            await SetToBeReadViewModelList(book, ActionState.Add);
 
-            await SetReadViewModelList(book);
+            await SetReadViewModelList(book, ActionState.Add);
 
-            await SetCollectionsViewModelBookList(book, previousViewModel);
+            await SetCollectionsViewModelBookList(book, ActionState.Add, previousViewModel);
 
-            await SetGenresViewModelBookList(book, previousViewModel);
+            await SetGenresViewModelBookList(book, ActionState.Add, previousViewModel);
 
-            await SetSeriesViewModelBookList(book, previousViewModel);
+            await SetSeriesViewModelBookList(book, ActionState.Add, previousViewModel);
 
-            await SetAuthorsViewModelBookList(book, previousViewModel);
+            await SetAuthorsViewModelBookList(book, ActionState.Add, previousViewModel);
 
-            await SetLocationsViewModelBookList(book, previousViewModel);
+            await SetLocationsViewModelBookList(book, ActionState.Add, previousViewModel);
 
             CollectionsViewModel.RefreshView = true;
             GenresViewModel.RefreshView = true;
@@ -412,36 +430,33 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Remove book from static lists.
         /// </summary>
         /// <param name="book">Book to remove.</param>
+        /// <param name="previousViewModel">Previous model to return to.</param>
         /// <returns>A task.</returns>
-        public static async Task RemoveFromStaticList(BookModel book)
+        public static async Task RemoveFromStaticList(BookModel book, object? previousViewModel = null)
         {
-            if (AllBooksViewModel.fullBookList != null)
-            {
-                AllBooksViewModel.RefreshView = RemoveBookFromStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
-            }
+            await SetAllBooksViewModelList(book, ActionState.Remove);
 
-            if (((book.BookPageRead != book.BookPageTotal && book.BookPageRead != 0) ||
-                book.UpNext) ||
-                ((book.BookHourListened != book.BookHoursTotal && book.BookMinuteListened != book.BookMinutesTotal) &&
-                ReadingViewModel.fullBookList != null))
-            {
-                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
-            }
+            await SetReadingViewModelList(book, ActionState.Remove);
 
-            if (book.BookPageRead == 0 &&
-                !book.UpNext &&
-                (book.BookHourListened == 0 && book.BookMinuteListened == 0) &&
-                ToBeReadViewModel.fullBookList != null)
-            {
-                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
-            }
+            await SetToBeReadViewModelList(book, ActionState.Remove);
 
-            if ((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
-                ((book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0) &&
-                ReadViewModel.fullBookList != null))
-            {
-                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
-            }
+            await SetReadViewModelList(book, ActionState.Remove);
+
+            await SetCollectionsViewModelBookList(book, ActionState.Remove, previousViewModel);
+
+            await SetGenresViewModelBookList(book, ActionState.Remove, previousViewModel);
+
+            await SetSeriesViewModelBookList(book, ActionState.Remove, previousViewModel);
+
+            await SetAuthorsViewModelBookList(book, ActionState.Remove, previousViewModel);
+
+            await SetLocationsViewModelBookList(book, ActionState.Remove, previousViewModel);
+
+            CollectionsViewModel.RefreshView = true;
+            GenresViewModel.RefreshView = true;
+            SeriesViewModel.RefreshView = true;
+            AuthorsViewModel.RefreshView = true;
+            LocationsViewModel.RefreshView = true;
         }
 
         /// <summary>
@@ -451,7 +466,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <param name="bookList">Main book list to remove book from.</param>
         /// <param name="filteredBookList">Filtered book list to remove book from.</param>
         /// <returns>Refresh view value.</returns>
-        public static bool RemoveBookFromStaticList(BookModel book, ObservableCollection<BookModel>? bookList, ObservableCollection<BookModel>? filteredBookList)
+        public static async Task<bool> RemoveBookFromStaticList(BookModel book, ObservableCollection<BookModel>? bookList, ObservableCollection<BookModel>? filteredBookList)
         {
             var refresh = false;
 
@@ -685,79 +700,120 @@ namespace BookCollector.ViewModels.BaseViewModels
             return refresh;
         }
 
-        private static async Task SetAllBooksViewModelList(BookModel book)
+        private static async Task SetAllBooksViewModelList(BookModel book, ActionState action)
         {
             if (AllBooksViewModel.fullBookList != null)
             {
-                AllBooksViewModel.RefreshView = await AddBookToStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
+                if (action == ActionState.Add)
+                {
+                    AllBooksViewModel.RefreshView = await AddBookToStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
+                }
+
+                if (action == ActionState.Remove)
+                {
+                    AllBooksViewModel.RefreshView = await RemoveBookFromStaticList(book, AllBooksViewModel.fullBookList, AllBooksViewModel.filteredBookList);
+                }
             }
         }
 
-        private static async Task SetReadingViewModelList(BookModel book)
+        private static async Task SetReadingViewModelList(BookModel book, ActionState action)
         {
-            if ((((book.BookPageRead != book.BookPageTotal && book.BookPageRead != 0) ||
-                book.UpNext) ||
-                (book.BookHourListened != book.BookHoursTotal && book.BookMinuteListened != book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0)) &&
-                ReadingViewModel.fullBookList != null)
+            if (ReadingViewModel.fullBookList != null)
             {
-                ReadingViewModel.RefreshView = await AddBookToStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
-                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
-                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                if (action == ActionState.Add)
+                {
+                    if (((book.BookPageRead != book.BookPageTotal && book.BookPageRead != 0) ||
+                        book.UpNext) ||
+                        (book.BookHourListened != book.BookHoursTotal && book.BookMinuteListened != book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0) ||
+                        (!string.IsNullOrEmpty(book.BookStartDate) && string.IsNullOrEmpty(book.BookEndDate)))
+                    {
+                        ReadingViewModel.RefreshView = await AddBookToStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                        ToBeReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                        ReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                    }
+                }
+
+                if (action == ActionState.Remove)
+                {
+                    if ((book.BookPageRead != book.BookPageTotal && book.BookPageRead != 0) ||
+                        book.UpNext ||
+                        (book.BookHourListened != book.BookHoursTotal && book.BookMinuteListened != book.BookMinutesTotal))
+                    {
+                        ReadingViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                    }
+                }
             }
         }
 
-        private static async Task SetToBeReadViewModelList(BookModel book)
+        private static async Task SetToBeReadViewModelList(BookModel book, ActionState action)
         {
-            if (book.BookPageRead == 0 &&
-                !book.UpNext &&
-                (book.BookHourListened == 0 && book.BookMinuteListened == 0) &&
-                ToBeReadViewModel.fullBookList != null)
+            if (ToBeReadViewModel.fullBookList != null)
             {
-                ToBeReadViewModel.RefreshView = await AddBookToStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
-                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
-                ReadViewModel.RefreshView = RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                if (action == ActionState.Add)
+                {
+                    if (book.BookPageRead == 0 &&
+                        !book.UpNext &&
+                        (book.BookHourListened == 0 && book.BookMinuteListened == 0) &&
+                        string.IsNullOrEmpty(book.BookStartDate) && string.IsNullOrEmpty(book.BookEndDate))
+                    {
+                        ToBeReadViewModel.RefreshView = await AddBookToStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                        ReadingViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                        ReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                    }
+                }
+
+                if (action == ActionState.Remove)
+                {
+                    if (book.BookPageRead == 0 &&
+                        !book.UpNext &&
+                        book.BookHourListened == 0 && book.BookMinuteListened == 0)
+                    {
+                        ToBeReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                    }
+                }
             }
         }
 
-        private static async Task SetReadViewModelList(BookModel book)
+        private static async Task SetReadViewModelList(BookModel book, ActionState action)
         {
-            if (((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
-                (book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0)) &&
-                ReadViewModel.fullBookList != null)
+            if (ReadViewModel.fullBookList != null)
             {
-                ReadViewModel.RefreshView = await AddBookToStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
-                ToBeReadViewModel.RefreshView = RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
-                ReadingViewModel.RefreshView = RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                if (action == ActionState.Add)
+                {
+                    if ((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
+                        (book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0) ||
+                        (!string.IsNullOrEmpty(book.BookStartDate) && !string.IsNullOrEmpty(book.BookEndDate)))
+                    {
+                        ReadViewModel.RefreshView = await AddBookToStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                        ToBeReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ToBeReadViewModel.fullBookList, ToBeReadViewModel.filteredBookList);
+                        ReadingViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadingViewModel.fullBookList, ReadingViewModel.filteredBookList);
+                    }
+                }
+
+                if (action == ActionState.Remove)
+                {
+                    if ((book.BookPageRead == book.BookPageTotal && book.BookPageRead != 0) ||
+                        (book.BookHourListened == book.BookHoursTotal && book.BookMinuteListened == book.BookMinutesTotal && book.BookHourListened != 0 && book.BookMinuteListened != 0))
+                    {
+                        ReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
+                    }
+                }
             }
         }
 
-        private static async Task SetCollectionsViewModelBookList(BookModel book, object? previousViewModel = null)
+        private static async Task SetCollectionsViewModelBookList(BookModel book, ActionState action, object? previousViewModel = null)
         {
-            if (CollectionsViewModel.fullCollectionList != null)
+            if (CollectionsViewModel.fullCollectionList != null &&
+                previousViewModel != null &&
+                previousViewModel is CollectionMainViewModel collectionViewModel)
             {
-                if (book.BookCollectionGuid != null)
+                if (action == ActionState.Add &&
+                    book.BookCollectionGuid != null)
                 {
                     var selected = CollectionsViewModel.fullCollectionList.FirstOrDefault(x => x.CollectionGuid == book.BookCollectionGuid);
 
                     if (selected != null)
                     {
-                        CollectionMainViewModel collectionViewModel;
-
-                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Collection"))
-                        {
-                            collectionViewModel = (CollectionMainViewModel)previousViewModel;
-
-                            if (!collectionViewModel.SelectedCollection!.ParsedCollectionName!.Equals(selected.ParsedCollectionName))
-                            {
-                                CollectionMainViewModel.RefreshView = RemoveBookFromStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
-                                collectionViewModel = new CollectionMainViewModel(selected, new ContentPage());
-                            }
-                        }
-                        else
-                        {
-                            collectionViewModel = new CollectionMainViewModel(selected, new ContentPage());
-                        }
-
                         if (collectionViewModel.FullBookList != null)
                         {
                             CollectionMainViewModel.RefreshView = await AddBookToStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
@@ -765,48 +821,27 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookCollectionGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Collection"))
+                if (action == ActionState.Remove ||
+                    book.BookCollectionGuid == null)
                 {
-                    var collectionViewModel = (CollectionMainViewModel)previousViewModel;
-                    CollectionMainViewModel.RefreshView = RemoveBookFromStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
-
-                    var existingBooksViewModel = new ExistingBooksViewModel(new CollectionModel(), new ContentPage(), previousViewModel);
-
-                    if (existingBooksViewModel.FullBookList != null)
-                    {
-                        ExistingBooksViewModel.RefreshView = await AddBookToStaticList(book, existingBooksViewModel.FullBookList, existingBooksViewModel.FilteredBookList);
-                    }
+                    CollectionMainViewModel.RefreshView = await RemoveBookFromStaticList(book, collectionViewModel.FullBookList, collectionViewModel.FilteredBookList);
                 }
             }
         }
 
-        private static async Task SetGenresViewModelBookList(BookModel book, object? previousViewModel = null)
+        private static async Task SetGenresViewModelBookList(BookModel book, ActionState action, object? previousViewModel = null)
         {
-            if (GenresViewModel.fullGenreList != null)
+            if (GenresViewModel.fullGenreList != null &&
+                previousViewModel != null &&
+                previousViewModel is GenreMainViewModel genreViewModel)
             {
-                if (book.BookGenreGuid != null)
+                if (action == ActionState.Add &&
+                    book.BookGenreGuid != null)
                 {
                     var selected = GenresViewModel.fullGenreList.FirstOrDefault(x => x.GenreGuid == book.BookGenreGuid);
 
                     if (selected != null)
                     {
-                        GenreMainViewModel genreViewModel;
-
-                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Genre"))
-                        {
-                            genreViewModel = (GenreMainViewModel)previousViewModel;
-
-                            if (!genreViewModel.SelectedGenre!.ParsedGenreName!.Equals(selected.ParsedGenreName))
-                            {
-                                GenreMainViewModel.RefreshView = RemoveBookFromStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
-                                genreViewModel = new GenreMainViewModel(selected, new ContentPage());
-                            }
-                        }
-                        else
-                        {
-                            genreViewModel = new GenreMainViewModel(selected, new ContentPage());
-                        }
-
                         if (genreViewModel.FullBookList != null)
                         {
                             GenreMainViewModel.RefreshView = await AddBookToStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
@@ -814,48 +849,27 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookGenreGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Genre"))
+                if (action == ActionState.Remove ||
+                    book.BookGenreGuid == null)
                 {
-                    var genreViewModel = (GenreMainViewModel)previousViewModel;
-                    GenreMainViewModel.RefreshView = RemoveBookFromStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
-
-                    var existingBooksViewModel = new ExistingBooksViewModel(new GenreModel(), new ContentPage(), previousViewModel);
-
-                    if (existingBooksViewModel.FullBookList != null)
-                    {
-                        ExistingBooksViewModel.RefreshView = await AddBookToStaticList(book, existingBooksViewModel.FullBookList, existingBooksViewModel.FilteredBookList);
-                    }
+                    GenreMainViewModel.RefreshView = await RemoveBookFromStaticList(book, genreViewModel.FullBookList, genreViewModel.FilteredBookList);
                 }
             }
         }
 
-        private static async Task SetSeriesViewModelBookList(BookModel book, object? previousViewModel = null)
+        private static async Task SetSeriesViewModelBookList(BookModel book, ActionState action, object? previousViewModel = null)
         {
-            if (SeriesViewModel.fullSeriesList != null)
+            if (SeriesViewModel.fullSeriesList != null &&
+                previousViewModel != null &&
+                previousViewModel is SeriesMainViewModel seriesViewModel)
             {
-                if (book.BookSeriesGuid != null)
+                if (action == ActionState.Add &&
+                    book.BookSeriesGuid != null)
                 {
                     var selected = SeriesViewModel.fullSeriesList.FirstOrDefault(x => x.SeriesGuid == book.BookSeriesGuid);
 
                     if (selected != null)
                     {
-                        SeriesMainViewModel seriesViewModel;
-
-                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Series"))
-                        {
-                            seriesViewModel = (SeriesMainViewModel)previousViewModel;
-
-                            if (!seriesViewModel.SelectedSeries!.ParsedSeriesName!.Equals(selected.ParsedSeriesName))
-                            {
-                                SeriesMainViewModel.RefreshView = RemoveBookFromStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
-                                seriesViewModel = new SeriesMainViewModel(selected, new ContentPage());
-                            }
-                        }
-                        else
-                        {
-                            seriesViewModel = new SeriesMainViewModel(selected, new ContentPage());
-                        }
-
                         if (seriesViewModel.FullBookList != null)
                         {
                             SeriesMainViewModel.RefreshView = await AddBookToStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
@@ -863,26 +877,22 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookSeriesGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Series"))
+                if (action == ActionState.Remove ||
+                    book.BookSeriesGuid == null)
                 {
-                    var seriesViewModel = (SeriesMainViewModel)previousViewModel;
-                    SeriesMainViewModel.RefreshView = RemoveBookFromStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
-
-                    var existingBooksViewModel = new ExistingBooksViewModel(new SeriesModel(), new ContentPage(), previousViewModel);
-
-                    if (existingBooksViewModel.FullBookList != null)
-                    {
-                        ExistingBooksViewModel.RefreshView = await AddBookToStaticList(book, existingBooksViewModel.FullBookList, existingBooksViewModel.FilteredBookList);
-                    }
+                    SeriesMainViewModel.RefreshView = await RemoveBookFromStaticList(book, seriesViewModel.FullBookList, seriesViewModel.FilteredBookList);
                 }
             }
         }
 
-        private static async Task SetAuthorsViewModelBookList(BookModel book, object? previousViewModel = null)
+        private static async Task SetAuthorsViewModelBookList(BookModel book, ActionState action, object? previousViewModel = null)
         {
-            if (AuthorsViewModel.fullAuthorList != null)
+            if (AuthorsViewModel.fullAuthorList != null &&
+                previousViewModel != null &&
+                previousViewModel is AuthorMainViewModel authorViewModel)
             {
-                if (!string.IsNullOrEmpty(book.AuthorListString))
+                if (action == ActionState.Add &&
+                    !string.IsNullOrEmpty(book.AuthorListString))
                 {
                     var authors = await StringManipulation.SplitAuthorListStringIntoAuthorList(book.AuthorListString);
 
@@ -892,23 +902,6 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                         if (selected != null)
                         {
-                            AuthorMainViewModel authorViewModel;
-
-                            if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Author"))
-                            {
-                                authorViewModel = (AuthorMainViewModel)previousViewModel;
-
-                                if (!authorViewModel.SelectedAuthor!.FullName.Equals(selected.FullName))
-                                {
-                                    AuthorMainViewModel.RefreshView = RemoveBookFromStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
-                                    authorViewModel = new AuthorMainViewModel(selected, new ContentPage());
-                                }
-                            }
-                            else
-                            {
-                                authorViewModel = new AuthorMainViewModel(selected, new ContentPage());
-                            }
-
                             if (authorViewModel.FullBookList != null)
                             {
                                 AuthorMainViewModel.RefreshView = await AddBookToStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
@@ -917,48 +910,27 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (string.IsNullOrEmpty(book.AuthorListString) && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Author"))
+                if (action == ActionState.Remove ||
+                    string.IsNullOrEmpty(book.AuthorListString))
                 {
-                    var authorViewModel = (AuthorMainViewModel)previousViewModel;
-                    AuthorMainViewModel.RefreshView = RemoveBookFromStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
-
-                    var existingBooksViewModel = new ExistingBooksViewModel(new AuthorModel(), new ContentPage(), previousViewModel);
-
-                    if (existingBooksViewModel.FullBookList != null)
-                    {
-                        ExistingBooksViewModel.RefreshView = await AddBookToStaticList(book, existingBooksViewModel.FullBookList, existingBooksViewModel.FilteredBookList);
-                    }
+                    AuthorMainViewModel.RefreshView = await RemoveBookFromStaticList(book, authorViewModel.FullBookList, authorViewModel.FilteredBookList);
                 }
             }
         }
 
-        private static async Task SetLocationsViewModelBookList(BookModel book, object? previousViewModel = null)
+        private static async Task SetLocationsViewModelBookList(BookModel book, ActionState action, object? previousViewModel = null)
         {
-            if (LocationsViewModel.fullLocationList != null)
+            if (LocationsViewModel.fullLocationList != null &&
+                previousViewModel != null &&
+                previousViewModel is LocationMainViewModel locationViewModel)
             {
-                if (book.BookLocationGuid != null)
+                if (action == ActionState.Add &&
+                    book.BookLocationGuid != null)
                 {
                     var selected = LocationsViewModel.fullLocationList.FirstOrDefault(x => x.LocationGuid == book.BookLocationGuid);
 
                     if (selected != null)
                     {
-                        LocationMainViewModel locationViewModel;
-
-                        if (previousViewModel != null && previousViewModel.GetType().ToString().Contains("Location"))
-                        {
-                            locationViewModel = (LocationMainViewModel)previousViewModel;
-
-                            if (!locationViewModel.SelectedLocation!.ParsedLocationName!.Equals(selected.ParsedLocationName))
-                            {
-                                LocationMainViewModel.RefreshView = RemoveBookFromStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
-                                locationViewModel = new LocationMainViewModel(selected, new ContentPage());
-                            }
-                        }
-                        else
-                        {
-                            locationViewModel = new LocationMainViewModel(selected, new ContentPage());
-                        }
-
                         if (locationViewModel.FullBookList != null)
                         {
                             LocationMainViewModel.RefreshView = await AddBookToStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
@@ -966,17 +938,10 @@ namespace BookCollector.ViewModels.BaseViewModels
                     }
                 }
 
-                if (book.BookLocationGuid == null && previousViewModel != null && previousViewModel.GetType().ToString().Contains("Location"))
+                if (action == ActionState.Remove ||
+                    book.BookLocationGuid == null)
                 {
-                    var locationViewModel = (LocationMainViewModel)previousViewModel;
-                    LocationMainViewModel.RefreshView = RemoveBookFromStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
-
-                    var existingBooksViewModel = new ExistingBooksViewModel(new LocationModel(), new ContentPage(), previousViewModel);
-
-                    if (existingBooksViewModel.FullBookList != null)
-                    {
-                        ExistingBooksViewModel.RefreshView = await AddBookToStaticList(book, existingBooksViewModel.FullBookList, existingBooksViewModel.FilteredBookList);
-                    }
+                    LocationMainViewModel.RefreshView = await RemoveBookFromStaticList(book, locationViewModel.FullBookList, locationViewModel.FilteredBookList);
                 }
             }
         }

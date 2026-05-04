@@ -99,14 +99,19 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <param name="returnData">Return type.</param>
         /// <returns>An object of book data.</returns>
-        public override object? GetBookData(string? returnData)
+        public override object? GetBookData(Data.Enums.ReturnType returnData)
         {
-            if (returnData != null && returnData.Equals("strings"))
+            if (returnData == Data.Enums.ReturnType.String)
             {
                 return (List<string?>)[this.SelectedBook!.BookCoverFileName, this.SelectedBook!.BookCoverUrl];
             }
 
-            return this.SelectedBook;
+            if (returnData == Data.Enums.ReturnType.Book)
+            {
+                return this.SelectedBook;
+            }
+
+            return returnData;
         }
 
         /// <summary>
@@ -177,8 +182,8 @@ namespace BookCollector.ViewModels.Book
         /// <returns>An task.</returns>
         public override async Task DeleteData()
         {
-            await BaseViewModel.Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook!));
-            await RemoveFromStaticList(this.SelectedBook!);
+            await Database.DeleteBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook!));
+            await RemoveFromStaticList(this.SelectedBook!, this.PreviousViewModel);
         }
 
         /// <summary>

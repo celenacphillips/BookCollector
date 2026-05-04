@@ -665,6 +665,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             if (!string.IsNullOrEmpty(this.ViewTitle))
             {
+                await this.SetIsBusyTrue();
+
                 var popup = new FilterPopup();
                 var viewModel = new FilterPopupViewModel(popup, this.ViewTitle, this.View);
                 viewModel = this.SetFilterPopupValues(viewModel);
@@ -689,6 +691,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                     this.SetRefreshView(true);
                     await this.SetViewModelData();
                 }
+
+                this.SetIsBusyFalse();
             }
         }
 
@@ -701,6 +705,8 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             if (!string.IsNullOrEmpty(this.ViewTitle))
             {
+                await this.SetIsBusyTrue();
+
                 var popup = new SortPopup();
                 var viewModel = new SortPopupViewModel(popup, this.ViewTitle);
                 viewModel = this.SetSortPopupValues(viewModel);
@@ -732,6 +738,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                     this.SetRefreshView(true);
                     await this.SetViewModelData();
                 }
+
+                this.SetIsBusyFalse();
             }
         }
 

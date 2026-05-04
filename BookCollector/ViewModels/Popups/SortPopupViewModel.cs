@@ -330,7 +330,7 @@ namespace BookCollector.ViewModels.Popups
             this.Popup = popup;
             this.ViewTitle = viewTitle;
             this.PopupWidth = DeviceWidth - 30;
-            this.PopupHeight = DeviceHeight - 200;
+            this.PopupHeight = DeviceHeight - 400;
         }
 
         /********************************************************/

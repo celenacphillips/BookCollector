@@ -2,9 +2,10 @@
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-namespace BookCollector.Views.Controls
+namespace BookCollector
 {
     using BookCollector.Data.Database;
+    using BookCollector.Data.Enums;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
@@ -172,7 +173,7 @@ namespace BookCollector.Views.Controls
 
                 var popupWidth = (DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density) - 50;
                 Application.Current?.Windows[0]?.Page?.
-                    ShowPopupAsync<string>(new ChoiceDialogPopup(popupWidth, AppStringResources.ChangeLog, AppStringResources.ChangeLogEntry, AppStringResources.OK, null, "Commands"));
+                    ShowPopupAsync<string>(new ChoiceDialogPopup(popupWidth, AppStringResources.ChangeLog, AppStringResources.ChangeLogEntry, AppStringResources.OK, null, DialogState.Choice));
 
                 Preferences.Set($"ShowChangeLogDialog{AppInfo.VersionString}", false);
             }
@@ -188,7 +189,7 @@ namespace BookCollector.Views.Controls
 
                 var popupWidth = (DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density) - 50;
                 Application.Current?.Windows[0]?.Page?.
-                    ShowPopupAsync<string>(new ChoiceDialogPopup(popupWidth, AppStringResources.Warning_, AppStringResources.MajorChangeMessage, AppStringResources.OK, null, "Commands"));
+                    ShowPopupAsync<string>(new ChoiceDialogPopup(popupWidth, AppStringResources.Warning_, AppStringResources.MajorChangeMessage, AppStringResources.OK, null, DialogState.Choice));
 
                 Preferences.Set($"ShowMajorChangeLogDialog{AppInfo.Version.Major}", false);
             }

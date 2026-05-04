@@ -9,6 +9,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     using AndroidX.Core.View;
 #endif
     using BookCollector.Data.Database;
+    using BookCollector.Data.Enums;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
@@ -396,7 +397,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>A task.</returns>
         public async Task<string?> PopupActionMenu(string title, List<string> actions)
         {
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, actions, "Options"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, title, string.Empty, actions, DialogState.Options));
 
             return answer.Result;
         }
@@ -449,7 +450,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             inputMessage ??= $"{AppStringResources.AreYouSure_Question}";
 
-            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, "Commands"));
+            var answer = await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, inputDeny, DialogState.Choice));
 
             if (!string.IsNullOrEmpty(answer.Result) && answer.Result.Equals(inputConfirm))
             {
@@ -473,7 +474,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var inputConfirm = $"{AppStringResources.OK}";
 
-            await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, null, "Commands"));
+            await this.View.ShowPopupAsync<string>(new ChoiceDialogPopup(DeviceWidth - 50, inputTitle, inputMessage, inputConfirm, null, DialogState.Choice));
         }
 
         /// <summary>

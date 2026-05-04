@@ -46,7 +46,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 foreach (var book in books)
                 {
                     book.HideBook = true;
-                    await BaseViewModel.Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                 }
             }
         }

@@ -66,6 +66,8 @@ namespace BookCollector.Data.Database
         {
             this.database ??= new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
+            try
+            {
             await this.database.DropTableAsync<AuthorDatabaseModel>();
             await this.database.DropTableAsync<BookAuthorModel>();
             await this.database.DropTableAsync<BookDatabaseModel>();
@@ -75,6 +77,12 @@ namespace BookCollector.Data.Database
             await this.database.DropTableAsync<GenreDatabaseModel>();
             await this.database.DropTableAsync<LocationDatabaseModel>();
             await this.database.DropTableAsync<SeriesDatabaseModel>();
+            }
+            catch(Exception ex)
+            {
+            }
+
+            await this.Init();
 
             await this.database.CloseAsync();
         }
@@ -386,7 +394,7 @@ namespace BookCollector.Data.Database
         /// </summary>
         /// <param name="book">Book to save.</param>
         /// <returns>Book that has been saved.</returns>
-        public async Task<BookDatabaseModel> SaveBookAsync(BookDatabaseModel book)
+        public async Task<BookModel> SaveBookAsync(BookDatabaseModel book)
         {
             try
             {
@@ -411,7 +419,7 @@ namespace BookCollector.Data.Database
                     await this.database.InsertAsync(book);
                 }
 
-                return book;
+                return BaseViewModel.ConvertTo<BookModel>(book);
             }
             catch (Exception ex)
             {

@@ -5,11 +5,11 @@
 namespace BookCollector.Views.Controls;
 
 using BookCollector.Data.Enums;
-using DocumentFormat.OpenXml.Drawing;
-using Colors = Microsoft.Maui.Graphics.Colors;
 
 /// <summary>
 /// Rating class.
+/// Based on: ".NET MAUI: Create a simple rating control" by Sebastian Jensen
+/// Original Source: https://medium.com/@tsjdevapps/net-maui-create-a-simple-rating-control-560566fa5014 .
 /// </summary>
 public partial class Rating : ContentView
 {

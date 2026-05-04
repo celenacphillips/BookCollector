@@ -292,19 +292,7 @@ namespace BookCollector.ViewModels.Book
             {
                 this.SetData();
 
-                if (this.PreviousViewModel != null && this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
-                {
-                    var previous = (WishListBookEditViewModel)this.PreviousViewModel;
-                    WishListBookEditViewModel.RefreshView = true;
-                }
-
-                if (this.PreviousViewModel != null &&
-                    this.PreviousViewModel.GetType().ToString().Contains("BookEditViewModel") &&
-                    !this.PreviousViewModel.GetType().ToString().Contains("WishListBookEditViewModel"))
-                {
-                    var previous = (BookEditViewModel)this.PreviousViewModel;
-                    BookEditViewModel.RefreshView = true;
-                }
+                BookEditViewModel.RefreshView = true;
 
                 await Shell.Current.Navigation.PopModalAsync();
             }

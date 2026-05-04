@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.Groupings
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -93,7 +94,6 @@ namespace BookCollector.ViewModels.Groupings
             this.View = view;
             this.SelectedObject = selected;
             this.PreviousViewModel = previousViewModel;
-            this.SetSelectedObjectType();
             this.SetSelectedObjectName();
             this.CollectionViewHeight = DeviceHeight;
             this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
@@ -115,11 +115,6 @@ namespace BookCollector.ViewModels.Groupings
         /// Gets or sets the selected grouping object.
         /// </summary>
         private object? SelectedObject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected grouping object type.
-        /// </summary>
-        private string? SelectedObjectType { get; set; }
 
         /// <summary>
         /// Gets or sets the selected grouping object name.
@@ -184,30 +179,29 @@ namespace BookCollector.ViewModels.Groupings
             bool showHardcovers,
             bool showPaperbacks)
         {
-            switch (this.SelectedObjectType)
+            if (this.SelectedObject is CollectionModel)
             {
-                case "Collection":
-                    await this.SetCollectionList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
-                    break;
+                await this.SetCollectionList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            }
 
-                case "Genre":
-                    await this.SetGenreList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
-                    break;
+            if (this.SelectedObject is GenreModel)
+            {
+                await this.SetGenreList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            }
 
-                case "Series":
-                    await this.SetSeriesList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
-                    break;
+            if (this.SelectedObject is SeriesModel)
+            {
+                await this.SetSeriesList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            }
 
-                case "Author":
-                    await this.SetAuthorList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
-                    break;
+            if (this.SelectedObject is AuthorModel)
+            {
+                await this.SetAuthorList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            }
 
-                case "Location":
-                    await this.SetLocationList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
-                    break;
-
-                default:
-                    break;
+            if (this.SelectedObject is LocationModel)
+            {
+                await this.SetLocationList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
             }
         }
 
@@ -555,47 +549,29 @@ namespace BookCollector.ViewModels.Groupings
 
                 if (this.SelectedBook != null)
                 {
-                    switch (this.SelectedObjectType)
+                    this.SelectedBook.BookCollectionGuid = this.SelectedObject is CollectionModel ? ((CollectionModel?)this.SelectedObject)?.CollectionGuid : this.SelectedBook.BookCollectionGuid;
+
+                    this.SelectedBook.BookGenreGuid = this.SelectedObject is GenreModel ? ((GenreModel?)this.SelectedObject)?.GenreGuid : this.SelectedBook.BookGenreGuid;
+
+                    this.SelectedBook.BookSeriesGuid = this.SelectedObject is SeriesModel ? ((SeriesModel?)this.SelectedObject)?.SeriesGuid : this.SelectedBook.BookSeriesGuid;
+
+                    if (this.SelectedObject is AuthorModel)
                     {
-                        case "Collection":
-                            var collection = (CollectionModel?)this.SelectedObject;
-                            this.SelectedBook.BookCollectionGuid = collection?.CollectionGuid;
-                            break;
+                        var author = (AuthorModel?)this.SelectedObject;
 
-                        case "Genre":
-                            var genre = (GenreModel?)this.SelectedObject;
-                            this.SelectedBook.BookGenreGuid = genre?.GenreGuid;
-                            break;
+                        this.SelectedBook.SelectedAuthors ??= [];
+                        this.SelectedBook.SelectedAuthors.Add(author);
 
-                        case "Series":
-                            var series = (SeriesModel?)this.SelectedObject;
-                            this.SelectedBook.BookSeriesGuid = series?.SeriesGuid;
-                            break;
+                        await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
 
-                        case "Author":
-                            var author = (AuthorModel?)this.SelectedObject;
-
-                            this.SelectedBook.SelectedAuthors ??= [];
-                            this.SelectedBook.SelectedAuthors.Add(author);
-
-                            await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
-
-                            await this.SelectedBook.SetAuthorListStringFromDatabase();
-
-                            break;
-
-                        case "Location":
-                            var location = (LocationModel?)this.SelectedObject;
-                            this.SelectedBook.BookLocationGuid = location?.LocationGuid;
-                            break;
-
-                        default:
-                            break;
+                        await this.SelectedBook.SetAuthorListStringFromDatabase();
                     }
+
+                    this.SelectedBook.BookLocationGuid = this.SelectedObject is LocationModel ? ((LocationModel?)this.SelectedObject)?.LocationGuid : this.SelectedBook.BookLocationGuid;
 
                     await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
 
-                    this.RemoveFromStaticList(this.SelectedBook);
+                    await this.RemoveFromStaticList(this.SelectedBook);
                     await AddToStaticList(this.SelectedBook, this.PreviousViewModel);
 
                     var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
@@ -613,76 +589,24 @@ namespace BookCollector.ViewModels.Groupings
             }
         }
 
-        private void SetSelectedObjectType()
-        {
-            if (this.SelectedObject != null)
-            {
-                if (this.SelectedObject.GetType().ToString().Contains("Collection"))
-                {
-                    this.SelectedObjectType = "Collection";
-                }
-
-                if (this.SelectedObject.GetType().ToString().Contains("Genre"))
-                {
-                    this.SelectedObjectType = "Genre";
-                }
-
-                if (this.SelectedObject.GetType().ToString().Contains("Series"))
-                {
-                    this.SelectedObjectType = "Series";
-                }
-
-                if (this.SelectedObject.GetType().ToString().Contains("Author"))
-                {
-                    this.SelectedObjectType = "Author";
-                }
-
-                if (this.SelectedObject.GetType().ToString().Contains("Location"))
-                {
-                    this.SelectedObjectType = "Location";
-                }
-            }
-        }
-
         private void SetSelectedObjectName()
         {
-            switch (this.SelectedObjectType)
-            {
-                case "Collection":
-                    var collection = (CollectionModel?)this.SelectedObject;
-                    this.SelectedObjectName = collection?.CollectionName;
-                    break;
+            this.SelectedObjectName = this.SelectedObject is CollectionModel ? ((CollectionModel?)this.SelectedObject)?.CollectionName : this.SelectedObjectName;
 
-                case "Genre":
-                    var genre = (GenreModel?)this.SelectedObject;
-                    this.SelectedObjectName = genre?.GenreName;
-                    break;
+            this.SelectedObjectName = this.SelectedObject is GenreModel ? ((GenreModel?)this.SelectedObject)?.GenreName : this.SelectedObjectName;
 
-                case "Series":
-                    var series = (SeriesModel?)this.SelectedObject;
-                    this.SelectedObjectName = series?.SeriesName;
-                    break;
+            this.SelectedObjectName = this.SelectedObject is SeriesModel ? ((SeriesModel?)this.SelectedObject)?.SeriesName : this.SelectedObjectName;
 
-                case "Author":
-                    var author = (AuthorModel?)this.SelectedObject;
-                    this.SelectedObjectName = author?.FullName;
-                    break;
+            this.SelectedObjectName = this.SelectedObject is AuthorModel ? ((AuthorModel?)this.SelectedObject)?.FullName : this.SelectedObjectName;
 
-                case "Location":
-                    var location = (LocationModel?)this.SelectedObject;
-                    this.SelectedObjectName = location?.LocationName;
-                    break;
-
-                default:
-                    break;
-            }
+            this.SelectedObjectName = this.SelectedObject is LocationModel ? ((LocationModel?)this.SelectedObject)?.LocationName : this.SelectedObjectName;
         }
 
-        private new void RemoveFromStaticList(BookModel book)
+        private async Task RemoveFromStaticList(BookModel book)
         {
             if (this.FullBookList != null)
             {
-                RefreshView = RemoveBookFromStaticList(book, this.FullBookList, this.FilteredBookList);
+                RefreshView = await RemoveBookFromStaticList(book, this.FullBookList, this.FilteredBookList);
             }
         }
 

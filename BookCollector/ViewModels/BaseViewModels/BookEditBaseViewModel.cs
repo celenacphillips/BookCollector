@@ -131,7 +131,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 await this.CheckBookFormat();
 
-                List<string?> bookStrings = (List<string?>)this.GetBookData("strings");
+                List<string?> bookStrings = (List<string?>)this.GetBookData(Data.Enums.ReturnType.String);
 
                 this.BookCover = await CheckBookCover(bookStrings[0], bookStrings[1]);
 
@@ -211,7 +211,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             await this.SetIsBusyTrue();
 
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
 
             var view = new BookSearchView(null, null, null, book, this);
 
@@ -228,16 +228,17 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             try
             {
-                var book = this.GetBookData(null);
+                var book = this.GetBookData(Data.Enums.ReturnType.Book);
                 string? format = string.Empty;
 
-                if (book.GetType().ToString().Contains("WishlistBookModel"))
+                if (book is WishlistBookModel wishlistBookModel)
                 {
-                    format = ((WishlistBookModel)book).BookFormat;
+                    format = wishlistBookModel.BookFormat;
                 }
-                else
+
+                if (book is BookModel bookModel)
                 {
-                    format = ((BookModel)book).BookFormat;
+                    format = bookModel.BookFormat;
                 }
 
                 List<string>? bookFormats = [];
@@ -293,19 +294,20 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public async Task TotalTimePopup()
         {
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
             int hours = 0;
             int minutes = 0;
 
-            if (book.GetType().ToString().Contains("WishlistBookModel"))
+            if (book is WishlistBookModel wishlistBookModel)
             {
-                hours = ((WishlistBookModel)book).BookHoursTotal;
-                minutes = ((WishlistBookModel)book).BookMinutesTotal;
+                hours = wishlistBookModel.BookHoursTotal;
+                minutes = wishlistBookModel.BookMinutesTotal;
             }
-            else
+
+            if (book is BookModel bookModel)
             {
-                hours = ((BookModel)book).BookHoursTotal;
-                minutes = ((BookModel)book).BookMinutesTotal;
+                hours = bookModel.BookHoursTotal;
+                minutes = bookModel.BookMinutesTotal;
             }
 
             var totalTimePopup = new TimePopup(
@@ -413,7 +415,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         /// <param name="returnData">Return type.</param>
         /// <returns>An object of book data.</returns>
-        public abstract object GetBookData(string? returnData);
+        public abstract object GetBookData(Data.Enums.ReturnType returnData);
 
         /// <summary>
         /// Check book format and set values.
@@ -527,16 +529,17 @@ namespace BookCollector.ViewModels.BaseViewModels
 
         private async Task DownloadCover()
         {
-            var book = this.GetBookData(null);
+            var book = this.GetBookData(Data.Enums.ReturnType.Book);
             string? bookCoverUrlInput = string.Empty;
 
-            if (book.GetType().ToString().Contains("WishlistBookModel"))
+            if (book is WishlistBookModel wishlistBookModel)
             {
-                bookCoverUrlInput = ((WishlistBookModel)book).BookCoverUrl;
+                bookCoverUrlInput = wishlistBookModel.BookCoverUrl;
             }
-            else
+
+            if (book is BookModel bookModel)
             {
-                bookCoverUrlInput = ((BookModel)book).BookCoverUrl;
+                bookCoverUrlInput = bookModel.BookCoverUrl;
             }
 
             var result = await this.View.ShowPopupAsync<string>(new BookCoverUrlPopup(this.PopupWidth, bookCoverUrlInput));

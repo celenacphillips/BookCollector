@@ -712,14 +712,19 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         /// <param name="returnData">Return type.</param>
         /// <returns>An object of book data.</returns>
-        public override object GetBookData(string? returnData)
+        public override object GetBookData(Data.Enums.ReturnType returnData)
         {
-            if (returnData != null && returnData.Equals("strings"))
+            if (returnData == Data.Enums.ReturnType.String)
             {
                 return (List<string?>)[this.EditedBook.BookCoverFileName, this.EditedBook.BookCoverUrl];
             }
 
+            if (returnData == Data.Enums.ReturnType.Book)
+            {
             return this.EditedBook;
+        }
+
+            return returnData;
         }
 
         /// <summary>
@@ -985,12 +990,12 @@ namespace BookCollector.ViewModels.Book
         /// <returns>A task.</returns>
         public override async Task SaveData()
         {
-            this.EditedBook = ConvertTo<BookModel>(await BaseViewModel.Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.EditedBook)));
+            this.EditedBook = ConvertTo<BookModel>(await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.EditedBook)));
 
             foreach (var author in this.AuthorList!)
             {
-                var author1 = await BaseViewModel.Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(author), this.EditedBook.BookGuid);
-                await BaseViewModel.Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author1));
+                var author1 = await Database.InsertAuthorAsync(ConvertTo<AuthorDatabaseModel>(author), this.EditedBook.BookGuid);
+                await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author1));
             }
 
             var dataTasks = new Task[]

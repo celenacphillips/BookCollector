@@ -137,14 +137,19 @@ namespace BookCollector.ViewModels.WishListBook
         /// </summary>
         /// <param name="returnData">Return type.</param>
         /// <returns>An object of book data.</returns>
-        public override object GetBookData(string? returnData)
+        public override object GetBookData(Data.Enums.ReturnType returnData)
         {
-            if (returnData != null && returnData.Equals("strings"))
+            if (returnData == Data.Enums.ReturnType.String)
             {
                 return (List<string?>)[this.EditedWishlistBook.BookCoverFileName, this.EditedWishlistBook.BookCoverUrl];
             }
 
-            return this.EditedWishlistBook;
+            if (returnData == Data.Enums.ReturnType.Book)
+            {
+                return this.EditedWishlistBook;
+            }
+
+            return returnData;
         }
 
         /// <summary>
