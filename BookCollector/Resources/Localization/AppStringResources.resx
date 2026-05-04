@@ -1537,10 +1537,9 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   <data name="ChangeLogEntry" xml:space="preserve">
     <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
 • MODIFIED FEATURE: Changed what qualifies a book as "Reading," "To Be Read," and "Read."
-• MODIFIED FEATURE: Updated Favorites and Rating charts to only display Reading and Read counts.
 • NEW FEATURE: Added Reading Status filter for certain book list pages
 • NEW FEATURE: Added Loaned Out filter for all book list pages
-• BUG FIX: Fixed sort Series Order Sort on Series pages
+• BUG FIX: Add Up Next value to Export for books.
 • BUG FIX: Fixed broken book search for Wishlist books</value>
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">

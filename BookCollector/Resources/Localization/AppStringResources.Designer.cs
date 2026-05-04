@@ -1252,10 +1252,9 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to • MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
         ///• MODIFIED FEATURE: Changed what qualifies a book as &quot;Reading,&quot; &quot;To Be Read,&quot; and &quot;Read.&quot;
-        ///• MODIFIED FEATURE: Updated Favorites and Rating charts to only display Reading and Read counts.
         ///• NEW FEATURE: Added Reading Status filter for certain book list pages
         ///• NEW FEATURE: Added Loaned Out filter for all book list pages
-        ///• BUG FIX: Fixed sort Series Order Sort on Series pages
+        ///• BUG FIX: Add Up Next value to Export for books.
         /// </summary>
         internal static string ChangeLogEntry {
             get {

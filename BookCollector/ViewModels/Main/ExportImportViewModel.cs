@@ -1369,6 +1369,7 @@ namespace BookCollector.ViewModels.Main
                             book.BookURL,
                             book.Rating.ToString(),
                             book.IsFavorite.ToString(),
+                            book.UpNext.ToString(),
                             book.LoanedTo,
                             book.BookLoanedOutOn,
                             book.HideBook.ToString(),
