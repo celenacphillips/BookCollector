@@ -3,4 +3,4 @@
 ################################################################################
 
 /BookCollector/appsettings.json
-/BookCollector/*.xlsx
+/BookCollector/*.xls*

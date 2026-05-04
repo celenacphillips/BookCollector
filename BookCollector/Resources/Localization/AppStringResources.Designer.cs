@@ -2148,9 +2148,9 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At this time, the Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
+        ///   Looks up a localized string similar to The Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
         ///
-        ///Currently, the Import feature only works with a spreadsheet workbook specifically formatted for this app. Assuming you have all checkboxes checked, your workbook needs to have 9 spreadsheets in it: WishlistBooks, Books, Chapters, Collections, Genres, Series, Locations, BookAuthor [rest of string was truncated]&quot;;.
+        ///The Import feature works best with a spreadsheet workbook specifically formatted for this app. There is some support for spreadsheets from other applications. Please use caution when importing from another app, as data points may not import correctly. If that happens, you can email us with wha [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string FAQ_Answer3 {
             get {

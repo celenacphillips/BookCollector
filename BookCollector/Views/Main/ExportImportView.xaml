@@ -64,7 +64,8 @@
                         </Grid>
 
                         <Grid HorizontalOptions="Center"
-                              IsVisible="{Binding OutputVisible}">
+                              IsVisible="{Binding OutputVisible}"
+                              Margin="-15">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -141,7 +142,8 @@
                         </Grid>
 
                         <Grid HorizontalOptions="Center"
-                              IsVisible="{Binding CheckboxesVisible}">
+                              IsVisible="{Binding CheckboxesVisible}"
+                              Margin="-15">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

@@ -155,7 +155,7 @@ namespace BookCollector.Data
         /// <returns>Parsed string.</returns>
         public static string? SetBookDurationTotal(string? format, int pageTotal, int hourTotal, int minuteTotal)
         {
-            return !format!.Equals(AppStringResources.Audiobook) ?
+            return format != null && !format.Equals(AppStringResources.Audiobook) ?
                 AppStringResources.BlankPages.Replace("Blank", pageTotal.ToString()) :
                 AppStringResources.Blank1HoursBlank2Minutes.Replace("Blank1", hourTotal.ToString().PadLeft(2, '0')).Replace("Blank2", minuteTotal.ToString().PadLeft(2, '0'));
         }

@@ -280,6 +280,8 @@ namespace BookCollector.ViewModels.Main
         /// </summary>
         public static bool ManuallyUploadWishlistCovers { get; set; }
 
+        private static List<Dictionary<string, string>> singleSpreadsheetValues { get; set; }
+
         /// <summary>
         /// Set the view model data.
         /// </summary>
@@ -310,6 +312,8 @@ namespace BookCollector.ViewModels.Main
             this.AuthorsChecked = true;
             this.LocationsChecked = true;
             this.ImagesChecked = false;
+
+            singleSpreadsheetValues = [];
 
             this.SetIsBusyFalse();
         }
@@ -455,7 +459,10 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
-                    string[] acceptableFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+                    string[] acceptableFileTypes = [
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "application/vnd.ms-excel",
+                        ];
                     var customFileType = new FilePickerFileType(
                     new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
@@ -533,7 +540,7 @@ namespace BookCollector.ViewModels.Main
 
                         if (errors > 0)
                         {
-                            await this.DisplayMessage(AppStringResources.ImportErrorsTitle, AppStringResources.ImportErrors);
+                            await this.DisplayMessage(AppStringResources.Caution_, AppStringResources.ImportErrors);
                         }
 
                         this.SetIsBusyFalse();
@@ -556,7 +563,7 @@ namespace BookCollector.ViewModels.Main
             }
         }
 
-        private static Guid? ParseGuid(string input)
+        private static Guid? ParseGuid(string? input)
         {
             Guid? guid;
             var parsed = Guid.TryParse(input, out Guid guidParse);
@@ -573,7 +580,7 @@ namespace BookCollector.ViewModels.Main
             return guid;
         }
 
-        private static int ParseInt(string input)
+        private static int ParseInt(string? input)
         {
             var parsed = int.TryParse(input, out int intParse);
 
@@ -586,9 +593,10 @@ namespace BookCollector.ViewModels.Main
             return intParse;
         }
 
-        private static double ParseDouble(string input)
+        private static double ParseDouble(string? input)
         {
-            if (input.StartsWith('$'))
+            if (!string.IsNullOrEmpty(input) &&
+                input.StartsWith('$'))
             {
                 input = input[1..];
             }
@@ -603,7 +611,7 @@ namespace BookCollector.ViewModels.Main
             return doubleParse;
         }
 
-        private static bool ParseBool(string input)
+        private static bool ParseBool(string? input)
         {
             var parsed = bool.TryParse(input, out bool boolParse);
 
@@ -613,18 +621,6 @@ namespace BookCollector.ViewModels.Main
             }
 
             return boolParse;
-        }
-
-        private static string? ParseString(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return null;
-            }
-            else
-            {
-                return input;
-            }
         }
 
         private static async Task DataCleanup(bool booksChecked, bool authorsChecked, bool bookAuthorsChecked)
@@ -643,6 +639,325 @@ namespace BookCollector.ViewModels.Main
             SeriesViewModel.RefreshView = true;
             AuthorsViewModel.RefreshView = true;
             LocationsViewModel.RefreshView = true;
+        }
+
+        private static List<string?> GetValues(List<string?> columnNames, Dictionary<string, string>? values)
+        {
+            var stringValues = new List<string?>();
+
+            if (values != null)
+            {
+                for (int i = 0; i < columnNames.Count; i++)
+                {
+                    values.TryGetValue(columnNames[i]!.ToLower().Replace(" ", string.Empty), out var stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        stringValue = CheckOtherAppColumns(columnNames[i]!, values);
+                    }
+
+                    stringValues.Add(stringValue?.Trim());
+                }
+            }
+
+            return stringValues;
+        }
+
+        private static string? CheckOtherAppColumns(string columnName, Dictionary<string, string>? values)
+        {
+            var stringValue = string.Empty;
+
+            if (values != null)
+            {
+                // Try to get the book title
+                if (columnName.Equals($"{AppStringResources.BookTitle.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("title", out stringValue);
+                }
+
+                // Try to get the book publisher
+                if (columnName.Equals($"{AppStringResources.BookPublisher.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("publication", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("publisher", out stringValue);
+                    }
+                }
+
+                // Try to get the book publish year
+                if (columnName.Equals($"{AppStringResources.BookPublishYear.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("date", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("publisheddate", out stringValue);
+                    }
+                }
+
+                // Try to get the book format
+                if (columnName.Equals($"{AppStringResources.BookFormat.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("media", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("format", out stringValue);
+                    }
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        if (stringValue.ToLower().Replace(" ", string.Empty).Equals("paperbook") ||
+                            stringValue.ToLower().Replace(" ", string.Empty).Equals("book") ||
+                            stringValue.ToLower().Replace(" ", string.Empty).Equals("boardbook"))
+                        {
+                            stringValue = AppStringResources.Paperback;
+                        }
+
+                        if (stringValue.ToLower().Replace(" ", string.Empty).Equals("digitalaudiobook"))
+                        {
+                            stringValue = AppStringResources.Audiobook;
+                        }
+
+                        if (stringValue.ToLower().Replace(" ", string.Empty).Equals("ebook"))
+                        {
+                            stringValue = AppStringResources.eBook;
+                        }
+                    }
+                }
+
+                // Try to get the book comments
+                if (columnName.Equals($"{AppStringResources.BookComments.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("comment", out stringValue);
+                }
+
+                // Try to get the book summary
+                if (columnName.Equals($"{AppStringResources.BookSummary.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("summary", out stringValue);
+                }
+
+                // Try to get the book page count
+                if (columnName.Equals($"{AppStringResources.TotalPages.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("pagecount", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("pages", out stringValue);
+                    }
+                }
+
+                // Try to get the book page count read
+                if (columnName.Equals($"{AppStringResources.PagesRead.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("pageread", out stringValue);
+                }
+
+                // Try to get the book number
+                if (columnName.Equals($"{AppStringResources.BookNumber.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("volume", out stringValue);
+                }
+
+                // Try to get the book start date
+                if (columnName.Equals($"{AppStringResources.ReadingStartDate.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("datestarted", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("startedreadingdate", out stringValue);
+                    }
+                }
+
+                // Try to get the book end date
+                if (columnName.Equals($"{AppStringResources.ReadingEndDate.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("dateread", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("finishedreadingdate", out stringValue);
+                    }
+                }
+
+                // Try to get the book identifier / isbn
+                if (columnName.Equals($"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("isbn", out stringValue);
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        stringValue = stringValue.Replace("[", string.Empty).Replace("]", string.Empty);
+                    }
+                }
+
+                // Try to get the book price
+                if (columnName.Equals($"{AppStringResources.BookPrice.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("listprice", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("price", out stringValue);
+                    }
+                }
+
+                // Try to get the book language
+                if (columnName.Equals($"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("languages", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("language", out stringValue);
+                    }
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        var languages = stringValue.Split(',');
+                        stringValue = languages[0];
+                    }
+                }
+
+                // Try to get the book rating
+                if (columnName.Equals($"{AppStringResources.BookRating.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("rating", out stringValue);
+                }
+
+                // Try to get the book url
+                if (columnName.Equals($"{AppStringResources.BookURL.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("itemurl", out stringValue);
+                }
+
+                // Try to get the book cover url
+                if (columnName.Equals($"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("imageurl", out stringValue);
+                }
+
+                // Try to get the book location
+                if (columnName.Equals($"{AppStringResources.LocationName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("location", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("bookshelf", out stringValue);
+                    }
+                }
+
+                // TO DO:
+                // Figure out how to get multiple collections, genres, series, and authors of book.
+                // Needs to be pulled from one book record and made into multiple object records.
+
+                // Try to get the book collection
+                if (columnName.Equals($"{AppStringResources.CollectionName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("collections", out stringValue);
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        var collections = stringValue.Split(',');
+                        stringValue = collections[0];
+                    }
+                }
+
+                // Try to get the book genre
+                if (columnName.Equals($"{AppStringResources.GenreName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("tags", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("genres", out stringValue);
+                    }
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        var genres = stringValue.Split(',');
+                        stringValue = genres[0];
+                    }
+                }
+
+                // Try to get the book series
+                if (columnName.Equals($"{AppStringResources.SeriesName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("series", out stringValue);
+                }
+
+                // Try to get the first book author's first name
+                if (columnName.Equals($"{AppStringResources.FirstName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("primaryauthor", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("author", out stringValue);
+                    }
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        if (stringValue.Contains('|'))
+                        {
+                            var authorList = stringValue.Split('|');
+                            var authorName = authorList[0].Split(',');
+                            stringValue = authorName[1];
+                        }
+                        else if (stringValue.Contains(';'))
+                        {
+                            var authorList = stringValue.Split(';');
+                            var authorName = authorList[0].Split(',');
+                            stringValue = authorName[1];
+                        }
+                        else
+                        {
+                            var authorName = stringValue.Split(',');
+                            stringValue = authorName[1];
+                        }
+                    }
+                }
+
+                // Try to get the first book author's last name
+                if (columnName.Equals($"{AppStringResources.LastName.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("primaryauthor", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("author", out stringValue);
+                    }
+
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        if (stringValue.Contains('|'))
+                        {
+                            var authorList = stringValue.Split('|');
+                            var authorName = authorList[0].Split(',');
+                            stringValue = authorName[0];
+                        }
+                        else if (stringValue.Contains(';'))
+                        {
+                            var authorList = stringValue.Split(';');
+                            var authorName = authorList[0].Split(',');
+                            stringValue = authorName[0];
+                        }
+                        else
+                        {
+                            var authorName = stringValue.Split(',');
+                            stringValue = authorName[0];
+                        }
+                    }
+                }
+            }
+
+            return stringValue;
         }
 
         private static List<string?> SetBookColumns()
@@ -1146,9 +1461,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetBookColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -1157,59 +1485,119 @@ namespace BookCollector.ViewModels.Main
                     this.BooksOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.BooksOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetBookColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((AllBooksViewModel.fullBookList != null &&
+                            !AllBooksViewModel.fullBookList.Any(b => b.BookTitle!.Equals(parsedValues[1]))) ||
+                            AllBooksViewModel.fullBookList == null))
                         {
                             var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
-                                BookTitle = values[1],
-                                BookSeriesGuid = ParseGuid(values[2]),
-                                BookNumberInSeries = values[3],
-                                BookPublisher = values[4],
-                                BookPublishYear = values[5],
-                                BookIdentifier = values[6],
-                                BookFormat = values[7],
-                                BookLanguage = values[8],
-                                BookPrice = values[9],
-                                BookSummary = values[10],
-                                BookPageRead = ParseInt(values[11]),
-                                BookPageTotal = ParseInt(values[12]),
-                                BookHourListened = ParseInt(values[13]),
-                                BookMinuteListened = ParseInt(values[14]),
-                                BookHoursTotal = ParseInt(values[15]),
-                                BookMinutesTotal = ParseInt(values[16]),
-                                BookStartDate = ParseString(values[17]),
-                                BookEndDate = ParseString(values[18]),
-                                BookLocationGuid = ParseGuid(values[19]),
-                                BookComments = values[20],
-                                BookCollectionGuid = ParseGuid(values[21]),
-                                BookGenreGuid = ParseGuid(values[22]),
-                                BookURL = values[23],
-                                Rating = ParseInt(values[24]),
-                                IsFavorite = ParseBool(values[25]),
-                                LoanedTo = values[26],
-                                BookLoanedOutOn = ParseString(values[27]),
-                                HideBook = ParseBool(values[28]),
-                                BookCoverUrl = values[29],
-                                BookCoverFileName = values[30],
+                                BookGuid = ParseGuid(parsedValues[0]),
+                                BookTitle = parsedValues[1],
+                                BookSeriesGuid = ParseGuid(parsedValues[2]),
+                                BookNumberInSeries = parsedValues[3],
+                                BookPublisher = parsedValues[4],
+                                BookPublishYear = parsedValues[5],
+                                BookIdentifier = parsedValues[6],
+                                BookFormat = parsedValues[7],
+                                BookLanguage = parsedValues[8],
+                                BookPrice = parsedValues[9],
+                                BookSummary = parsedValues[10],
+                                BookPageRead = ParseInt(parsedValues[11]),
+                                BookPageTotal = ParseInt(parsedValues[12]),
+                                BookHourListened = ParseInt(parsedValues[13]),
+                                BookMinuteListened = ParseInt(parsedValues[14]),
+                                BookHoursTotal = ParseInt(parsedValues[15]),
+                                BookMinutesTotal = ParseInt(parsedValues[16]),
+                                BookStartDate = parsedValues[17],
+                                BookEndDate = parsedValues[18],
+                                BookLocationGuid = ParseGuid(parsedValues[19]),
+                                BookComments = parsedValues[20],
+                                BookCollectionGuid = ParseGuid(parsedValues[21]),
+                                BookGenreGuid = ParseGuid(parsedValues[22]),
+                                BookURL = parsedValues[23],
+                                Rating = ParseInt(parsedValues[24]),
+                                IsFavorite = ParseBool(parsedValues[25]),
+                                LoanedTo = parsedValues[26],
+                                BookLoanedOutOn = parsedValues[27],
+                                HideBook = ParseBool(parsedValues[28]),
+                                BookCoverUrl = parsedValues[29],
+                                BookCoverFileName = parsedValues[30],
                             };
+
+                            if (singleSpreadsheetValues != null)
+                            {
+                                var newValues = GetValues(
+                                    [AppStringResources.CollectionName.Replace(" ", string.Empty),
+                                    AppStringResources.LocationName.Replace(" ", string.Empty),
+                                    AppStringResources.GenreName.Replace(" ", string.Empty),
+                                    AppStringResources.SeriesName.Replace(" ", string.Empty),
+                                    ], values);
+
+                                if (!string.IsNullOrEmpty(newValues[0]))
+                                {
+                                    var collection = CollectionsViewModel.fullCollectionList?.FirstOrDefault(c => c.CollectionName!.Equals(newValues[0]));
+                                    book.BookCollectionGuid = collection?.CollectionGuid;
+                                }
+
+                                if (!string.IsNullOrEmpty(newValues[1]))
+                                {
+                                    var location = LocationsViewModel.fullLocationList?.FirstOrDefault(l => l.LocationName!.Equals(newValues[1]));
+                                    book.BookLocationGuid = location?.LocationGuid;
+                                }
+
+                                if (!string.IsNullOrEmpty(newValues[2]))
+                                {
+                                    var genre = GenresViewModel.fullGenreList?.FirstOrDefault(g => g.GenreName!.Equals(newValues[2]));
+                                    book.BookGenreGuid = genre?.GenreGuid;
+                                }
+
+                                if (!string.IsNullOrEmpty(newValues[3]))
+                                {
+                                    var series = SeriesViewModel.fullSeriesList?.FirstOrDefault(s => s.SeriesName!.Equals(newValues[3]));
+                                    book.BookSeriesGuid = series?.SeriesGuid;
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(book.BookStartDate) &&
+                                !DateTime.TryParse(book.BookStartDate, out var startDate))
+                            {
+                                book.BookStartDate = book.BookStartDate.Trim()[..4];
+
+                                DateTime.TryParse($"{book.BookStartDate}-01", out startDate);
+
+                                book.BookStartDate = startDate.ToShortDateString();
+                            }
+
+                            if (!string.IsNullOrEmpty(book.BookEndDate) &&
+                                !DateTime.TryParse(book.BookEndDate, out var endDate))
+                            {
+                                book.BookEndDate = book.BookEndDate.Trim()[..4];
+
+                                DateTime.TryParse($"{book.BookEndDate}-01", out endDate);
+
+                                book.BookEndDate = endDate.ToShortDateString();
+                            }
+
+                            if (book.BookPageRead > 0 && book.BookPageTotal <= 0)
+                            {
+                                book.BookPageRead = 0;
+                            }
 
                             if (!string.IsNullOrEmpty(book.BookCoverUrl))
                             {
@@ -1243,7 +1631,12 @@ namespace BookCollector.ViewModels.Main
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 
-                            await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
+                            if (book.BookPublishYear != null && book.BookPublishYear.Trim().Length > 4)
+                            {
+                                book.BookPublishYear = book.BookPublishYear.Trim()[.. 4];
+                            }
+
+                            book = await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(book));
                             await BookEditViewModel.AddToStaticList(book);
 
                             importCount++;
@@ -1412,7 +1805,7 @@ namespace BookCollector.ViewModels.Main
 
         private async Task<int> ReadWishListBooksFromSpreadsheet()
         {
-            var tableName = AppStringResources.WishlistBooks.Replace(" ", string.Empty);
+            var tableName = AppStringResources.Wishlist.Replace(" ", string.Empty);
             var label = (Label)this.View.FindByName("wishListOutput");
 
             if (this.WishListChecked)
@@ -1422,9 +1815,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetWishlistBookColumns();
-
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (var valuesList, var message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, true);
 
                 var importCount = 0;
 
@@ -1433,48 +1824,49 @@ namespace BookCollector.ViewModels.Main
                     this.WishListOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.WishListOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetWishlistBookColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((WishListViewModel.fullWishlistBookList != null &&
+                            !WishListViewModel.fullWishlistBookList.Any(b => b.BookTitle!.Equals(parsedValues[1]))) ||
+                            WishListViewModel.fullWishlistBookList == null))
                         {
                             var book = new WishlistBookModel()
                             {
-                                BookGuid = ParseGuid(values[0]).HasValue ? ParseGuid(values[0]) !.Value : null,
-                                BookTitle = values[1],
-                                AuthorListString = values[2],
-                                BookSeries = values[3],
-                                BookNumberInSeries = values[4],
-                                BookPublisher = values[5],
-                                BookPublishYear = values[6],
-                                BookIdentifier = values[7],
-                                BookFormat = values[8],
-                                BookLanguage = values[9],
-                                BookPrice = values[10],
-                                BookSummary = values[11],
-                                BookPageTotal = ParseInt(values[12]),
-                                BookHoursTotal = ParseInt(values[13]),
-                                BookMinutesTotal = ParseInt(values[14]),
-                                BookComments = values[15],
-                                BookWhereToBuy = values[16],
-                                HideBook = ParseBool(values[17]),
-                                BookURL = values[18],
-                                BookCoverUrl = values[19],
-                                BookCoverFileName = values[20],
+                                BookGuid = ParseGuid(parsedValues[0]),
+                                BookTitle = parsedValues[1],
+                                AuthorListString = parsedValues[2],
+                                BookSeries = parsedValues[3],
+                                BookNumberInSeries = parsedValues[4],
+                                BookPublisher = parsedValues[5],
+                                BookPublishYear = parsedValues[6],
+                                BookIdentifier = parsedValues[7],
+                                BookFormat = parsedValues[8],
+                                BookLanguage = parsedValues[9],
+                                BookPrice = parsedValues[10],
+                                BookSummary = parsedValues[11],
+                                BookPageTotal = ParseInt(parsedValues[12]),
+                                BookHoursTotal = ParseInt(parsedValues[13]),
+                                BookMinutesTotal = ParseInt(parsedValues[14]),
+                                BookComments = parsedValues[15],
+                                BookWhereToBuy = parsedValues[16],
+                                HideBook = ParseBool(parsedValues[17]),
+                                BookURL = parsedValues[18],
+                                BookCoverUrl = parsedValues[19],
+                                BookCoverFileName = parsedValues[20],
                             };
 
                             if (!string.IsNullOrEmpty(book.BookCoverUrl))
@@ -1503,7 +1895,7 @@ namespace BookCollector.ViewModels.Main
                                 book.HasNoBookCover = !book.HasBookCover;
                             }
 
-                            await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
+                            book = await Database.SaveWishlistBookAsync(ConvertTo<WishlistBookDatabaseModel>(book));
                             await WishListBookEditViewModel.AddToStaticList(book);
 
                             importCount++;
@@ -1605,9 +1997,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetChapterColumns();
-
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                (var valuesList, var message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, true);
 
                 var importCount = 0;
 
@@ -1616,32 +2006,29 @@ namespace BookCollector.ViewModels.Main
                     this.ChaptersOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.ChaptersOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetChapterColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0)
                         {
                             var chapter = new ChapterModel()
                             {
-                                ChapterGuid = ParseGuid(values[0]),
-                                ChapterName = values[1],
-                                PageRange = values[2],
-                                ChapterOrder = ParseInt(values[3]),
-                                BookGuid = ParseGuid(values[4]) !.Value,
+                                ChapterGuid = ParseGuid(parsedValues[0]),
+                                ChapterName = parsedValues[1],
+                                PageRange = parsedValues[2],
+                                ChapterOrder = ParseInt(parsedValues[3]),
+                                BookGuid = ParseGuid(parsedValues[4]) !.Value,
                             };
 
                             await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
@@ -1743,9 +2130,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetCollectionColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -1754,33 +2154,34 @@ namespace BookCollector.ViewModels.Main
                     this.CollectionsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.CollectionsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetCollectionColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((CollectionsViewModel.fullCollectionList != null &&
+                            !CollectionsViewModel.fullCollectionList.Any(c => c.CollectionName!.Equals(parsedValues[1]))) ||
+                            CollectionsViewModel.fullCollectionList == null))
                         {
                             var collection = new CollectionModel()
                             {
-                                CollectionGuid = ParseGuid(values[0]),
-                                CollectionName = values[1],
-                                HideCollection = ParseBool(values[2]),
+                                CollectionGuid = ParseGuid(parsedValues[0]),
+                                CollectionName = parsedValues[1],
+                                HideCollection = ParseBool(parsedValues[2]),
                             };
 
-                            await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
+                            collection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
                             await CollectionEditViewModel.AddToStaticList(collection);
 
                             importCount++;
@@ -1880,9 +2281,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetGenreColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -1891,33 +2305,34 @@ namespace BookCollector.ViewModels.Main
                     this.GenresOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.GenresOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetGenreColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((GenresViewModel.fullGenreList != null &&
+                            !GenresViewModel.fullGenreList.Any(g => g.GenreName!.Equals(parsedValues[1]))) ||
+                            GenresViewModel.fullGenreList == null))
                         {
                             var genre = new GenreModel()
                             {
-                                GenreGuid = ParseGuid(values[0]),
-                                GenreName = values[1],
-                                HideGenre = ParseBool(values[2]),
+                                GenreGuid = ParseGuid(parsedValues[0]),
+                                GenreName = parsedValues[1],
+                                HideGenre = ParseBool(parsedValues[2]),
                             };
 
-                            await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
+                            genre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
                             await GenreEditViewModel.AddToStaticList(genre);
 
                             importCount++;
@@ -2018,9 +2433,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetSeriesColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -2029,34 +2457,35 @@ namespace BookCollector.ViewModels.Main
                     this.SeriesOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.SeriesOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetSeriesColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((SeriesViewModel.fullSeriesList != null &&
+                            !SeriesViewModel.fullSeriesList.Any(s => s.SeriesName!.Equals(parsedValues[1]))) ||
+                            SeriesViewModel.fullSeriesList == null))
                         {
                             var series = new SeriesModel()
                             {
-                                SeriesGuid = ParseGuid(values[0]),
-                                SeriesName = values[1],
-                                TotalBooksInSeries = values[2],
-                                HideSeries = ParseBool(values[3]),
+                                SeriesGuid = ParseGuid(parsedValues[0]),
+                                SeriesName = parsedValues[1],
+                                TotalBooksInSeries = parsedValues[2],
+                                HideSeries = ParseBool(parsedValues[3]),
                             };
 
-                            await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
+                            series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
                             await SeriesEditViewModel.AddToStaticList(series);
 
                             importCount++;
@@ -2156,9 +2585,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetBookAuthorColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -2167,30 +2609,48 @@ namespace BookCollector.ViewModels.Main
                     this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.BookAuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetBookAuthorColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (singleSpreadsheetValues != null)
+                        {
+                            var newValues = GetValues(
+                                [AppStringResources.BookTitle.Replace(" ", string.Empty),
+                                AppStringResources.FirstName.Replace(" ", string.Empty),
+                                AppStringResources.LastName.Replace(" ", string.Empty)
+                                ], values);
+
+                            if (newValues != null &&
+                                parsedValues.Any(n => n != null && n.Equals(string.Empty)))
+                            {
+                                var book = AllBooksViewModel.fullBookList?.FirstOrDefault(b => b.BookTitle!.Equals(newValues[0]));
+                                var author = AuthorsViewModel.fullAuthorList?.FirstOrDefault(a => a.FirstName!.Equals(newValues[1]) && a.LastName!.Equals(newValues[2]));
+
+                                parsedValues[1] = author?.AuthorGuid.ToString();
+                                parsedValues[2] = book?.BookGuid.ToString();
+                            }
+                        }
+
+                        if (parsedValues.Count > 0 &&
+                            parsedValues[1] != null &&
+                            parsedValues[2] != null)
                         {
                             var bookAuthor = new BookAuthorModel()
                             {
-                                BookAuthorGuid = ParseGuid(values[0]),
-                                AuthorGuid = ParseGuid(values[1]) !.Value,
-                                BookGuid = ParseGuid(values[2]) !.Value,
+                                BookAuthorGuid = ParseGuid(parsedValues[0]),
+                                AuthorGuid = ParseGuid(parsedValues[1]) !.Value,
+                                BookGuid = ParseGuid(parsedValues[2]) !.Value,
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);
@@ -2293,9 +2753,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetAuthorColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -2304,34 +2777,36 @@ namespace BookCollector.ViewModels.Main
                     this.AuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.AuthorsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetAuthorColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            !string.IsNullOrEmpty(parsedValues[2]) &&
+                            ((AuthorsViewModel.fullAuthorList != null &&
+                            !AuthorsViewModel.fullAuthorList.Any(a => a.FirstName!.Equals(parsedValues[1]) && a.LastName!.Equals(parsedValues[2]))) ||
+                            AuthorsViewModel.fullAuthorList == null))
                         {
                             var author = new AuthorModel()
                             {
-                                AuthorGuid = ParseGuid(values[0]),
-                                FirstName = values[1],
-                                LastName = values[2],
-                                HideAuthor = ParseBool(values[3]),
+                                AuthorGuid = ParseGuid(parsedValues[0]),
+                                FirstName = parsedValues[1]!,
+                                LastName = parsedValues[2]!,
+                                HideAuthor = ParseBool(parsedValues[3]),
                             };
 
-                            await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
+                            author = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
                             await AuthorEditViewModel.AddToStaticList(author);
 
                             importCount++;
@@ -2431,9 +2906,22 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                var columnNames = SetLocationColumns();
+                var valuesList = new List<Dictionary<string, string>>();
+                var message = string.Empty;
 
-                (List<List<string>> valuesList, string message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, columnNames);
+                if (singleSpreadsheetValues == null || singleSpreadsheetValues.Count == 0)
+                {
+                    (valuesList, message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName);
+
+                    if (!message.Contains(tableName))
+                    {
+                        singleSpreadsheetValues = valuesList;
+                    }
+                }
+                else
+                {
+                    valuesList = singleSpreadsheetValues;
+                }
 
                 var importCount = 0;
 
@@ -2442,33 +2930,34 @@ namespace BookCollector.ViewModels.Main
                     this.LocationsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList?.Count}");
                     label.TextColor = Application.Current?.UserAppTheme == AppTheme.Dark ? (Color?)Application.Current?.Resources["TextDark"] : (Color?)Application.Current?.Resources["TextLight"];
                     await Task.Delay(1);
-
-                    if (message.StartsWith("There is no spreadsheet named") ||
-                        message.StartsWith("The column count is not right for") ||
-                        message.StartsWith("The columns are not in the right order for"))
-                    {
-                        return 1;
-                    }
                 }
 
                 this.LocationsOutput = AppStringResources.Table_XRetrieved.Replace("Table", tableName).Replace("x", $"{valuesList!.Count}");
 
                 await Task.Delay(1);
 
+                var columnNames = SetLocationColumns();
+
                 foreach (var values in valuesList)
                 {
                     try
                     {
-                        if (values.Count > 0)
+                        var parsedValues = GetValues(columnNames, values);
+
+                        if (parsedValues.Count > 0 &&
+                            !string.IsNullOrEmpty(parsedValues[1]) &&
+                            ((LocationsViewModel.fullLocationList != null &&
+                            !LocationsViewModel.fullLocationList.Any(l => l.LocationName!.Equals(parsedValues[1]))) ||
+                            LocationsViewModel.fullLocationList == null))
                         {
                             var location = new LocationModel()
                             {
-                                LocationGuid = ParseGuid(values[0]),
-                                LocationName = values[1],
-                                HideLocation = ParseBool(values[2]),
+                                LocationGuid = ParseGuid(parsedValues[0]),
+                                LocationName = parsedValues[1],
+                                HideLocation = ParseBool(parsedValues[2]),
                             };
 
-                            await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
+                            location = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));
                             await LocationEditViewModel.AddToStaticList(location);
 
                             importCount++;

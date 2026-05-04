@@ -928,7 +928,7 @@
     <value>Import</value>
   </data>
   <data name="Export_Import_Question" xml:space="preserve">
-    <value>Would you like to import your data from or export your data to a spreadsheet specifically formatted for this app?
+    <value>Would you like to import your data from or export your data to a spreadsheet?
 If you don't have an existing spreadsheet, you can export to generate an acceptable spreadsheet for importing into this app.
 
 Make sure to check/uncheck checkboxes before importing or exporting.</value>
@@ -1512,11 +1512,9 @@ From the Groupings tab, you can add new or existing books directly to the group.
     <value>How does the Export/Import feature work?</value>
   </data>
   <data name="FAQ_Answer3" xml:space="preserve">
-    <value>At this time, the Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
+    <value>The Export feature will export all the data in your library and wishlist (depending on which checkboxes you have checked) to a spreadsheet workbook, where each checkbox item has its own spreadsheet for ease of use.
 
-Currently, the Import feature only works with a spreadsheet workbook specifically formatted for this app. Assuming you have all checkboxes checked, your workbook needs to have 9 spreadsheets in it: WishlistBooks, Books, Chapters, Collections, Genres, Series, Locations, BookAuthors, and Authors. Each of those spreadsheets needs to have the correct columns, in the correct order, for the import to work.
-
-Importing from and exporting to other sources is a feature that will be implemented at a later time.</value>
+The Import feature works best with a spreadsheet workbook specifically formatted for this app. There is some support for spreadsheets from other applications. Please use caution when importing from another app, as data points may not import correctly. If that happens, you can email us with what is wrong and we will work to add support for it. Please make sure to include your spreadsheet you are importing.</value>
   </data>
   <data name="Blank1UnreadBlank2ReadingBlank3Read" xml:space="preserve">
     <value>(Blank1 unread, Blank2 reading, Blank3 read)</value>
@@ -1537,7 +1535,7 @@ Importing from and exporting to other sources is a feature that will be implemen
     <value>Time Range</value>
   </data>
   <data name="ChangeLogEntry" xml:space="preserve">
-    <value>• NEW FEATURE: Added Metric page for groupings
+    <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
 • NEW FEATURE: Added reset on Settings pages
 • NEW FEATURE: Added reset to Filter and Sort popups
 • NEW FEATURE: Added ability to hide book formats
