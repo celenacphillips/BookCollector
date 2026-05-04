@@ -68,15 +68,15 @@ namespace BookCollector.Data.Database
 
             try
             {
-            await this.database.DropTableAsync<AuthorDatabaseModel>();
-            await this.database.DropTableAsync<BookAuthorModel>();
-            await this.database.DropTableAsync<BookDatabaseModel>();
-            await this.database.DropTableAsync<WishlistBookDatabaseModel>();
-            await this.database.DropTableAsync<ChapterDatabaseModel>();
-            await this.database.DropTableAsync<CollectionDatabaseModel>();
-            await this.database.DropTableAsync<GenreDatabaseModel>();
-            await this.database.DropTableAsync<LocationDatabaseModel>();
-            await this.database.DropTableAsync<SeriesDatabaseModel>();
+                await this.database.DropTableAsync<AuthorDatabaseModel>();
+                await this.database.DropTableAsync<BookAuthorModel>();
+                await this.database.DropTableAsync<BookDatabaseModel>();
+                await this.database.DropTableAsync<WishlistBookDatabaseModel>();
+                await this.database.DropTableAsync<ChapterDatabaseModel>();
+                await this.database.DropTableAsync<CollectionDatabaseModel>();
+                await this.database.DropTableAsync<GenreDatabaseModel>();
+                await this.database.DropTableAsync<LocationDatabaseModel>();
+                await this.database.DropTableAsync<SeriesDatabaseModel>();
             }
             catch(Exception ex)
             {
@@ -106,7 +106,8 @@ namespace BookCollector.Data.Database
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
                     x.UpNext ||
-                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
+                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)))
                     .ToListAsync();
 
                 var booksList = books
@@ -135,8 +136,9 @@ namespace BookCollector.Data.Database
             {
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead == 0 &&
-                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
-                    && !x.UpNext)
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0)) &&
+                    (string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)) &&
+                    !x.UpNext)
                     .ToListAsync();
 
                 var booksList = books
@@ -167,7 +169,8 @@ namespace BookCollector.Data.Database
             {
                 var books = await this.database.Table<BookDatabaseModel>()
                     .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
-                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
+                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate)))
                     .ToListAsync();
 
                 var booksList = books

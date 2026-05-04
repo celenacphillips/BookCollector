@@ -1241,8 +1241,8 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to • NEW FEATURE: Added Metric page for groupings
-        ///• NEW FEATURE: Added reset on Settings pages
+        ///   Looks up a localized string similar to • MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
+        ///• MODIFIED FEATURE: Changed what qualifies a book as &quot;Reading,&quot; &quot;To Be Read,&quot; and &quot;Read.&quot;
         ///• NEW FEATURE: Added reset to Filter and Sort popups
         ///• NEW FEATURE: Added ability to hide book formats
         ///• ENHANCED FEATURE: Add color picker for App Color
@@ -2053,7 +2053,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet specifically formatted for this app?
+        ///   Looks up a localized string similar to Would you like to import your data from or export your data to a spreadsheet?
         ///If you don&apos;t have an existing spreadsheet, you can export to generate an acceptable spreadsheet for importing into this app.
         ///
         ///Make sure to check/uncheck checkboxes before importing or exporting..
@@ -3286,7 +3286,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next..
+        ///   Looks up a localized string similar to This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, if you have set the Reading Start Date of the book, or if you have queued the book up to read next..
         /// </summary>
         internal static string ReadingView_InfoText {
             get {
@@ -3295,7 +3295,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of all the books you have read. Books will show up here if you have marked it as 100% read..
+        ///   Looks up a localized string similar to This is a list of all the books you have read. Books will show up here if you have marked it as 100% read or if you have set both the Reading Start and End Dates of the book..
         /// </summary>
         internal static string ReadView_InfoText {
             get {
@@ -3945,7 +3945,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven&apos;t queued the book up to read next..
+        ///   Looks up a localized string similar to This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, have not set the Reading Dates of the book, or if you haven&apos;t queued the book up to read next..
         /// </summary>
         internal static string ToBeReadView_InfoText {
             get {

@@ -37,7 +37,8 @@ namespace BookCollector.Data
                 filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
                     x.UpNext ||
-                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
+                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)))
                     .ToObservableCollection();
             }
             else
@@ -64,8 +65,9 @@ namespace BookCollector.Data
             {
                 filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead == 0 &&
-                    (x.BookHourListened == 0 && x.BookMinuteListened == 0))
-                    && !x.UpNext)
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0)) &&
+                    (string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)) &&
+                    !x.UpNext)
                     .ToObservableCollection();
             }
             else
@@ -94,7 +96,8 @@ namespace BookCollector.Data
             {
                 filteredList = AllBooksViewModel.hiddenFilteredBookList
                     .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
-                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0))
+                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate)))
                     .ToObservableCollection();
             }
             else

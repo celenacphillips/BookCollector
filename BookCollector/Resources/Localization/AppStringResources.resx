@@ -480,13 +480,13 @@
     <comment>book should not be translated.</comment>
   </data>
   <data name="ToBeReadView_InfoText" xml:space="preserve">
-    <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, or if you haven't queued the book up to read next.</value>
+    <value>This is a list of all the books you have yet to read. Books will show up here if you have read no pages yet, have not set the Reading Dates of the book, or if you haven't queued the book up to read next.</value>
   </data>
   <data name="ReadView_InfoText" xml:space="preserve">
-    <value>This is a list of all the books you have read. Books will show up here if you have marked it as 100% read.</value>
+    <value>This is a list of all the books you have read. Books will show up here if you have marked it as 100% read or if you have set both the Reading Start and End Dates of the book.</value>
   </data>
   <data name="ReadingView_InfoText" xml:space="preserve">
-    <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, or if you have queued the book up to read next.</value>
+    <value>This is a list of all the books you are actively reading. Books will show up here if you have read at least one page, if you have set the Reading Start Date of the book, or if you have queued the book up to read next.</value>
   </data>
   <data name="BookEditView_InfoText" xml:space="preserve">
     <value>This is where you can add or edit data for 'book'.</value>
