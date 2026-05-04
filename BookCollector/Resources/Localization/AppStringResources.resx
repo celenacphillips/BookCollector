@@ -1538,8 +1538,8 @@ The Import feature works best with a spreadsheet workbook specifically formatted
     <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
 • MODIFIED FEATURE: Changed what qualifies a book as "Reading," "To Be Read," and "Read."
 • MODIFIED FEATURE: Updated Favorites and Rating charts to only display Reading and Read counts.
-• NEW FEATURE: Added ability to hide book formats
-• ENHANCED FEATURE: Add color picker for App Color
+• NEW FEATURE: Added Reading Status filter for certain book list pages
+• NEW FEATURE: Added Loaned Out filter for all book list pages
 • BUG FIX: Fixed sort Series Order Sort on Series pages
 • BUG FIX: Fixed broken book search for Wishlist books</value>
   </data>
@@ -1605,6 +1605,9 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   </data>
   <data name="PrimaryColorOnTertiaryColor" xml:space="preserve">
     <value>Primary Color on Tertiary Color</value>
+  </data>
+  <data name="AllReadingStatuses" xml:space="preserve">
+    <value>All Reading Statuses</value>
   </data>
   <data name="ChartSubtitle" xml:space="preserve">
     <value>Based only on books with Reading or Read status</value>

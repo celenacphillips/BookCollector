@@ -205,6 +205,7 @@ namespace BookCollector.ViewModels.Library
 
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
+            this.ShowLoanedOutBooks = Preferences.Get("LoanedOutBooksOn", true /* Default */);
 
             this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", this.BookAuthorOptionDefault /* Default */);
             this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteBooksOptionDefault /* Default */);
@@ -214,6 +215,7 @@ namespace BookCollector.ViewModels.Library
             this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
             this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", this.BookRatingOptionDefault /* Default */);
             this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
+            this.LoanedOutBooksOption = Preferences.Get($"{this.ViewTitle}_LoanedOutBooksSelection", this.LoanedOutBooksOptionDefault /* Default */);
 
             this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
             this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", (bool)this.BookReadingDateCheckedDefault! /* Default */);
@@ -261,6 +263,9 @@ namespace BookCollector.ViewModels.Library
             /******************************/
             viewModel.BookCoverVisible = true;
             viewModel.BookCoverOption = this.BookCoverOption;
+            /******************************/
+            viewModel.LoanedOutBooksVisible = this.ShowLoanedOutBooks;
+            viewModel.LoanedOutBooksOption = this.LoanedOutBooksOption;
 
             return viewModel;
         }
@@ -280,6 +285,7 @@ namespace BookCollector.ViewModels.Library
             viewModel.SetLanguagePicker(this.BookLanguageList);
             viewModel.SetRatingPicker();
             viewModel.SetBookCoverPicker();
+            viewModel.SetLoanedOutBooksPicker();
 
             return viewModel;
         }
@@ -345,6 +351,7 @@ namespace BookCollector.ViewModels.Library
             this.BookLanguageOptionDefault = AppStringResources.AllLanguages;
             this.BookRatingOptionDefault = AppStringResources.AllRatings;
             this.BookCoverOptionDefault = AppStringResources.Both;
+            this.LoanedOutBooksOptionDefault = AppStringResources.AllBooks;
         }
 
         private void SetSortPopupDefaults()

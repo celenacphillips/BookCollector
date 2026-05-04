@@ -278,6 +278,58 @@ namespace BookCollector.ViewModels.Popups
         /********************************************************/
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show reading status or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool readingStatusVisible;
+
+        /// <summary>
+        /// Gets or sets the reading status list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public List<string>? readingStatusPicker;
+
+        /// <summary>
+        /// Gets or sets the reading status option.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? readingStatusOption;
+
+        /********************************************************/
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show loaned out books or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool loanedOutBooksVisible;
+
+        /// <summary>
+        /// Gets or sets the loaned out books list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public List<string>? loanedOutBooksPicker;
+
+        /// <summary>
+        /// Gets or sets the loaned out books option.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? loanedOutBooksOption;
+
+        /********************************************************/
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FilterPopupViewModel"/> class.
         /// </summary>
         /// <param name="popup">Popup related to the view model.</param>
@@ -289,7 +341,7 @@ namespace BookCollector.ViewModels.Popups
             this.ViewTitle = viewTitle;
             this.View = view;
             this.PopupWidth = DeviceWidth - 30;
-            this.PopupHeight = DeviceHeight - 200;
+            this.PopupHeight = DeviceHeight - 300;
 
             this.OverlaySection = (Grid)this.Popup.FindByName("overlaySection");
         }
@@ -352,6 +404,16 @@ namespace BookCollector.ViewModels.Popups
         /// Gets or sets the default saved book series filter option.
         /// </summary>
         internal string BookSeriesOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default reading status option.
+        /// </summary>
+        internal string ReadingStatusOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default loaned out books option.
+        /// </summary>
+        internal string LoanedOutBooksOptionDefault { get; set; }
 
         /********************************************************/
 
@@ -584,6 +646,42 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ReadingStatusChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.ReadingStatus,
+                this.ReadingStatusPicker,
+                this.ReadingStatusOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task LoanedOutBooksChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BooksLoanedOut,
+                this.LoanedOutBooksPicker,
+                this.LoanedOutBooksOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
         /********************************************************/
 
         /// <summary>
@@ -599,6 +697,8 @@ namespace BookCollector.ViewModels.Popups
         /// <param name="bookLocationOptionDefault">Book location option default.</param>
         /// <param name="bookSeriesOptionDefault">Book series option default.</param>
         /// <param name="bookCoverOptionDefault">Book cover option default.</param>
+        /// <param name="readingStatusOptionDefault">Reading status option default.</param>
+        /// <param name="loanedOutBooksOptionDefault">Loaned out books option default.</param>
         public void SetDefaults(
             string? favoriteOptionDefault,
             string? bookFormatOptionDefault,
@@ -609,7 +709,9 @@ namespace BookCollector.ViewModels.Popups
             string? bookRatingOptionDefault,
             string? bookLocationOptionDefault,
             string? bookSeriesOptionDefault,
-            string? bookCoverOptionDefault)
+            string? bookCoverOptionDefault,
+            string? readingStatusOptionDefault,
+            string? loanedOutBooksOptionDefault)
         {
             if (!string.IsNullOrEmpty(favoriteOptionDefault))
             {
@@ -659,6 +761,16 @@ namespace BookCollector.ViewModels.Popups
             if (!string.IsNullOrEmpty(bookCoverOptionDefault))
             {
                 this.BookCoverOptionDefault = bookCoverOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(readingStatusOptionDefault))
+            {
+                this.ReadingStatusOptionDefault = readingStatusOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(loanedOutBooksOptionDefault))
+            {
+                this.LoanedOutBooksOptionDefault = loanedOutBooksOptionDefault;
             }
         }
 
@@ -822,6 +934,33 @@ namespace BookCollector.ViewModels.Popups
             ];
         }
 
+        /// <summary>
+        /// Set values of reading status picker.
+        /// </summary>
+        public void SetReadingStatusPicker()
+        {
+            this.ReadingStatusPicker =
+            [
+                AppStringResources.AllReadingStatuses,
+                AppStringResources.ToBeRead,
+                AppStringResources.Reading,
+                AppStringResources.Read,
+            ];
+        }
+
+        /// <summary>
+        /// Set values of loaned out books picker.
+        /// </summary>
+        public void SetLoanedOutBooksPicker()
+        {
+            this.LoanedOutBooksPicker =
+            [
+                AppStringResources.AllBooks,
+                AppStringResources.LoanedOut,
+                AppStringResources.NotLoanedOut,
+            ];
+        }
+
         /********************************************************/
 
         private void ResetDefaults()
@@ -836,6 +975,8 @@ namespace BookCollector.ViewModels.Popups
             this.LocationOption = this.BookLocationOptionDefault;
             this.SeriesOption = this.BookSeriesOptionDefault;
             this.BookCoverOption = this.BookCoverOptionDefault;
+            this.ReadingStatusOption = this.ReadingStatusOptionDefault;
+            this.LoanedOutBooksOption = this.LoanedOutBooksOptionDefault;
         }
 
         private void SetPreferences()
@@ -888,6 +1029,16 @@ namespace BookCollector.ViewModels.Popups
             if (this.BookCoverVisible)
             {
                 Preferences.Set($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOption);
+            }
+
+            if (this.ReadingStatusVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_ReadingStatusSelection", this.ReadingStatusOption);
+            }
+
+            if (this.LoanedOutBooksVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_LoanedOutBooksSelection", this.LoanedOutBooksOption);
             }
         }
     }

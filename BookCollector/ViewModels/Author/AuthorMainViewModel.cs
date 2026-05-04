@@ -222,6 +222,7 @@ namespace BookCollector.ViewModels.Author
 
             this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
+            this.ShowLoanedOutBooks = Preferences.Get("LoanedOutBooksOn", true /* Default */);
 
             this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteBooksOptionDefault /* Default */);
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
@@ -230,6 +231,8 @@ namespace BookCollector.ViewModels.Author
             this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
             this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_RatingSelection", this.BookRatingOptionDefault /* Default */);
             this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
+            this.ReadingStatusOption = Preferences.Get($"{this.ViewTitle}_ReadingStatusSelection", this.ReadingStatusOptionDefault /* Default */);
+            this.LoanedOutBooksOption = Preferences.Get($"{this.ViewTitle}_LoanedOutBooksSelection", this.LoanedOutBooksOptionDefault /* Default */);
 
             this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
             this.BookReadingDateChecked = Preferences.Get($"{this.ViewTitle}_BookReadingDateSelection", (bool)this.BookReadingDateCheckedDefault! /* Default */);
@@ -274,6 +277,12 @@ namespace BookCollector.ViewModels.Author
             /******************************/
             viewModel.BookCoverVisible = true;
             viewModel.BookCoverOption = this.BookCoverOption;
+            /******************************/
+            viewModel.ReadingStatusVisible = true;
+            viewModel.ReadingStatusOption = this.ReadingStatusOption;
+            /******************************/
+            viewModel.LoanedOutBooksVisible = this.ShowLoanedOutBooks;
+            viewModel.LoanedOutBooksOption = this.LoanedOutBooksOption;
 
             return viewModel;
         }
@@ -292,6 +301,8 @@ namespace BookCollector.ViewModels.Author
             viewModel.SetLanguagePicker(this.BookLanguageList);
             viewModel.SetRatingPicker();
             viewModel.SetBookCoverPicker();
+            viewModel.SetReadingStatusPicker();
+            viewModel.SetLoanedOutBooksPicker();
 
             return viewModel;
         }
@@ -356,6 +367,8 @@ namespace BookCollector.ViewModels.Author
             this.BookLanguageOptionDefault = AppStringResources.AllLanguages;
             this.BookRatingOptionDefault = AppStringResources.AllRatings;
             this.BookCoverOptionDefault = AppStringResources.Both;
+            this.ReadingStatusOptionDefault = AppStringResources.AllReadingStatuses;
+            this.LoanedOutBooksOptionDefault = AppStringResources.AllBooks;
         }
 
         private void SetSortPopupDefaults()

@@ -27,6 +27,8 @@ namespace BookCollector.Data
         /// <param name="publishYearOption">Publish year option to find.</param>
         /// <param name="authorOption">Author option to find.</param>
         /// <param name="bookCoverOption">Book cover option to find.</param>
+        /// <param name="readingStatusOption">Reading status option to find.</param>
+        /// <param name="loanedOutOption">Loaned out option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
         public static async Task<ObservableCollection<BookModel>?> FilterList(
@@ -39,6 +41,8 @@ namespace BookCollector.Data
             string? publishYearOption,
             string? authorOption,
             string? bookCoverOption,
+            string? readingStatusOption,
+            string? loanedOutOption,
             string? searchString)
         {
             var filteredList = bookList;
@@ -71,6 +75,16 @@ namespace BookCollector.Data
             if (!string.IsNullOrEmpty(bookCoverOption))
             {
                 filteredList = FilterBooksOnBookCovers(filteredList, bookCoverOption);
+            }
+
+            if (!string.IsNullOrEmpty(readingStatusOption))
+            {
+                filteredList = FilterBooksOnReadingStatus(filteredList, readingStatusOption);
+            }
+
+            if (!string.IsNullOrEmpty(loanedOutOption))
+            {
+                filteredList = FilterBooksOnLoanedOutStatus(filteredList, loanedOutOption);
             }
 
             return filteredList;
@@ -655,6 +669,61 @@ namespace BookCollector.Data
             if (bookCoverOption.Equals(AppStringResources.HasNoBookCover))
             {
                 filterList = bookList?.Where(x => x.HasNoBookCover).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBooksOnReadingStatus(ObservableCollection<BookModel>? bookList, string readingStatusOption)
+        {
+            var filterList = bookList;
+
+            if (readingStatusOption.Equals(AppStringResources.ToBeRead))
+            {
+                filterList = bookList?
+                    .Where(x => (x.BookPageRead == 0 &&
+                    (x.BookHourListened == 0 && x.BookMinuteListened == 0)) &&
+                    (string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)))
+                    .ToObservableCollection();
+            }
+
+            if (readingStatusOption.Equals(AppStringResources.Reading))
+            {
+                filterList = bookList?
+                    .Where(x => (x.BookPageRead != x.BookPageTotal && x.BookPageRead != 0) ||
+                    (x.BookHourListened != x.BookHoursTotal && x.BookMinuteListened != x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && string.IsNullOrEmpty(x.BookEndDate)))
+                    .ToObservableCollection();
+            }
+
+            if (readingStatusOption.Equals(AppStringResources.Read))
+            {
+                filterList = bookList?
+                    .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
+                    (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
+                    (!string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate)))
+                    .ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        /********************************************************/
+
+        private static ObservableCollection<BookModel>? FilterBooksOnLoanedOutStatus(ObservableCollection<BookModel>? bookList, string loanedOutStatus)
+        {
+            var filterList = bookList;
+
+            if (loanedOutStatus.Equals(AppStringResources.LoanedOut))
+            {
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookLoanedOutOn) || !string.IsNullOrEmpty(x.LoanedTo)).ToObservableCollection();
+            }
+
+            if (loanedOutStatus.Equals(AppStringResources.NotLoanedOut))
+            {
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookLoanedOutOn) && string.IsNullOrEmpty(x.LoanedTo)).ToObservableCollection();
             }
 
             return filterList;

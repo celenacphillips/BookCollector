@@ -82,6 +82,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public bool ShowBookRatings { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show loaned out books or not.
+        /// </summary>
+        public bool ShowLoanedOutBooks { get; set; }
+
         /********************************************************/
 
         /// <summary>
@@ -133,6 +138,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the saved book author filter option.
         /// </summary>
         public string? BookAuthorOption { get; set; }
+
+        /// <summary>
+        /// Gets or sets the saved reading status filter option.
+        /// </summary>
+        public string? ReadingStatusOption { get; set; }
+
+        /// <summary>
+        /// Gets or sets the saved loaned out books filter option.
+        /// </summary>
+        public string? LoanedOutBooksOption { get; set; }
 
         /********************************************************/
 
@@ -237,6 +252,16 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the default saved book series filter option.
         /// </summary>
         internal string? BookSeriesOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved loaned out books filter option.
+        /// </summary>
+        internal string? ReadingStatusOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved loaned out books filter option.
+        /// </summary>
+        internal string? LoanedOutBooksOptionDefault { get; set; }
 
         /********************************************************/
 
@@ -380,6 +405,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                         this.BookPublishYearOption,
                         this.BookAuthorOption,
                         this.BookCoverOption,
+                        this.ReadingStatusOption,
+                        this.LoanedOutBooksOption,
                         this.SearchString);
 
                 await Task.WhenAll(filteredList);
@@ -559,6 +586,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                             this.BookPublishYearOption,
                             this.BookAuthorOption,
                             this.BookCoverOption,
+                            this.ReadingStatusOption,
+                            this.LoanedOutBooksOption,
                             this.SearchString);
 
             var filteredBooksCount = filteredBookList?.Count ?? 0;
@@ -681,7 +710,9 @@ namespace BookCollector.ViewModels.BaseViewModels
                     this.BookRatingOptionDefault,
                     this.BookLocationOptionDefault,
                     this.BookSeriesOptionDefault,
-                    this.BookCoverOptionDefault);
+                    this.BookCoverOptionDefault,
+                    this.ReadingStatusOptionDefault,
+                    this.LoanedOutBooksOptionDefault);
 
                 popup.BindingContext = viewModel;
 
