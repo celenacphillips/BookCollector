@@ -87,6 +87,7 @@ namespace BookCollector.ViewModels.Groupings
             this.ViewTitle = AppStringResources.Locations;
             this.SetRefreshView(true);
 
+            this.SetFilterPopupDefaults();
             this.SetSortPopupDefaults();
         }
 
@@ -248,11 +249,14 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
             ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
+            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
 
             this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
             this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
             this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
             this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+
+            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOptionDefault /* Default */);
 
             this.LocationNameChecked = Preferences.Get($"{this.ViewTitle}_LocationNameSelection", (bool)this.LocationNameCheckedDefault! /* Default */);
             this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
@@ -262,6 +266,32 @@ namespace BookCollector.ViewModels.Groupings
             this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenLocations;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
+        {
+            viewModel.FavoriteVisible = this.ShowFavorites;
+            viewModel.FavoriteOption = this.FavoritesOption;
+            /******************************/
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Set data for filter popup.
+        /// </summary>
+        /// <param name="viewModel">Filter popup viewmodel.</param>
+        /// <returns>The updated viewmodel.</returns>
+        public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
+        {
+            viewModel.SetFavoritePicker();
+
+            return viewModel;
         }
 
         /// <summary>
@@ -394,6 +424,11 @@ namespace BookCollector.ViewModels.Groupings
                     await BookBaseViewModel.AddToStaticList(book);
                 }
             }
+        }
+
+        private void SetFilterPopupDefaults()
+        {
+            this.FavoriteOptionDefault = AppStringResources.Both;
         }
 
         private void SetSortPopupDefaults()

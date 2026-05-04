@@ -146,13 +146,20 @@ namespace BookCollector.Data
         /// Apply filters to author list based on the given filter options and search string.
         /// </summary>
         /// <param name="authorList">Author list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
         /// <param name="searchString">Author name search string to find.</param>
         /// <returns>A filtered author list.</returns>
         public static async Task<ObservableCollection<AuthorModel>?> FilterList(
             ObservableCollection<AuthorModel>? authorList,
+            string? favoritesOption,
             string? searchString)
         {
             var filteredList = authorList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteAuthors(filteredList, favoritesOption);
+            }
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
@@ -163,13 +170,20 @@ namespace BookCollector.Data
         /// Apply filters to collection list based on the given filter options and search string.
         /// </summary>
         /// <param name="collectionList">Collection list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
         /// <param name="searchString">Collection name search string to find.</param>
         /// <returns>A filtered collection list.</returns>
         public static async Task<ObservableCollection<CollectionModel>?> FilterList(
             ObservableCollection<CollectionModel>? collectionList,
+            string? favoritesOption,
             string? searchString)
         {
             var filteredList = collectionList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteCollections(filteredList, favoritesOption);
+            }
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
@@ -180,13 +194,20 @@ namespace BookCollector.Data
         /// Apply filters to genre list based on the given filter options and search string.
         /// </summary>
         /// <param name="genreList">Genre list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
         /// <param name="searchString">Genre name search string to find.</param>
         /// <returns>A filtered genre list.</returns>
         public static async Task<ObservableCollection<GenreModel>?> FilterList(
             ObservableCollection<GenreModel>? genreList,
+            string? favoritesOption,
             string? searchString)
         {
             var filteredList = genreList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteGenres(filteredList, favoritesOption);
+            }
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
@@ -197,13 +218,20 @@ namespace BookCollector.Data
         /// Apply filters to location list based on the given filter options and search string.
         /// </summary>
         /// <param name="locationList">Location list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
         /// <param name="searchString">Location name search string to find.</param>
         /// <returns>A filtered location list.</returns>
         public static async Task<ObservableCollection<LocationModel>?> FilterList(
             ObservableCollection<LocationModel>? locationList,
+            string? favoritesOption,
             string? searchString)
         {
             var filteredList = locationList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteLocations(filteredList, favoritesOption);
+            }
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
@@ -214,13 +242,20 @@ namespace BookCollector.Data
         /// Apply filters to series list based on the given filter options and search string.
         /// </summary>
         /// <param name="seriesList">Series list to filter.</param>
+        /// <param name="favoritesOption">Favorite option to find.</param>
         /// <param name="searchString">Series name search string to find.</param>
         /// <returns>A filtered series list.</returns>
         public static async Task<ObservableCollection<SeriesModel>?> FilterList(
             ObservableCollection<SeriesModel>? seriesList,
+            string? favoritesOption,
             string? searchString)
         {
             var filteredList = seriesList;
+
+            if (!string.IsNullOrEmpty(favoritesOption))
+            {
+                filteredList = FilterFavoriteSeries(filteredList, favoritesOption);
+            }
 
             filteredList = FilterOnSearchString(filteredList, searchString);
 
@@ -369,6 +404,91 @@ namespace BookCollector.Data
             if (favoritesOption.Equals(AppStringResources.NonFavorites))
             {
                 filterList = bookList?.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<AuthorModel>? FilterFavoriteAuthors(ObservableCollection<AuthorModel>? authorList, string favoritesOption)
+        {
+            var filterList = authorList;
+
+            if (favoritesOption.Equals(AppStringResources.Favorites))
+            {
+                filterList = authorList?.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = authorList?.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<CollectionModel>? FilterFavoriteCollections(ObservableCollection<CollectionModel>? collectionList, string favoritesOption)
+        {
+            var filterList = collectionList;
+
+            if (favoritesOption.Equals(AppStringResources.Favorites))
+            {
+                filterList = collectionList?.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = collectionList?.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<GenreModel>? FilterFavoriteGenres(ObservableCollection<GenreModel>? genreList, string favoritesOption)
+        {
+            var filterList = genreList;
+
+            if (favoritesOption.Equals(AppStringResources.Favorites))
+            {
+                filterList = genreList?.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = genreList?.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<LocationModel>? FilterFavoriteLocations(ObservableCollection<LocationModel>? locationList, string favoritesOption)
+        {
+            var filterList = locationList;
+
+            if (favoritesOption.Equals(AppStringResources.Favorites))
+            {
+                filterList = locationList?.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = locationList?.Where(x => !x.IsFavorite).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<SeriesModel>? FilterFavoriteSeries(ObservableCollection<SeriesModel>? seriesList, string favoritesOption)
+        {
+            var filterList = seriesList;
+
+            if (favoritesOption.Equals(AppStringResources.Favorites))
+            {
+                filterList = seriesList?.Where(x => x.IsFavorite).ToObservableCollection();
+            }
+
+            if (favoritesOption.Equals(AppStringResources.NonFavorites))
+            {
+                filterList = seriesList?.Where(x => !x.IsFavorite).ToObservableCollection();
             }
 
             return filterList;

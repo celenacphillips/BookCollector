@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Series.SeriesEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Series"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:SeriesEditViewModel"
              x:Name="SeriesEditPage"
@@ -33,6 +34,13 @@
                 <VerticalStackLayout Padding="10"
                                      IsEnabled="{Binding IsEnabled}"
                                      IsVisible="{Binding IsVisible}">
+
+                    <!-- Favorite -->
+                    <controls:Favorite CurrentValue="{Binding EditedSeries.IsFavorite, Mode=TwoWay}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,7"
+                                       IsVisible="{Binding ShowFavorites}"/>
+                    <!-- Favorite -->
 
                     <!-- Series Name -->
                     <Grid>

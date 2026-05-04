@@ -56,5 +56,10 @@ namespace BookCollector.Data.DatabaseModels
         /// Gets or sets a value indicating whether the author is selected to hide.
         /// </summary>
         public bool HideAuthor { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the author is a favorite.
+        /// </summary>
+        public bool IsFavorite { get; set; }
     }
 }

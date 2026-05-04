@@ -62,7 +62,8 @@
         </Grid>
 
         <ScrollView Grid.Row="1" Grid.Column="0"
-                    Margin="10,20,10,0">
+                    Margin="10,20,10,0"
+                    VerticalOptions="Start">
 
             <Grid>
                 <Grid.ColumnDefinitions>

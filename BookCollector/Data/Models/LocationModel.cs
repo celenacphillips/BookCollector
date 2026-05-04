@@ -56,6 +56,7 @@ namespace BookCollector.Data.Models
             this.TotalCostOfBooks = dbModel.TotalCostOfBooks;
             this.HideLocation = dbModel.HideLocation;
             this.TotalCostOfBooks = dbModel.LocationTotalBooks;
+            this.IsFavorite = dbModel.IsFavorite;
         }
 
         /// <summary>

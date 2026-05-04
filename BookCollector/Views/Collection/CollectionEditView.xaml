@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Collection.CollectionEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Collection"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:CollectionEditViewModel"
              x:Name="CollectionEditPage"
@@ -33,7 +34,14 @@
                 <VerticalStackLayout Padding="10"
                                      IsEnabled="{Binding IsEnabled}"
                                      IsVisible="{Binding IsVisible}">
-                    
+
+                    <!-- Favorite -->
+                    <controls:Favorite CurrentValue="{Binding EditedCollection.IsFavorite, Mode=TwoWay}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,7"
+                                       IsVisible="{Binding ShowFavorites}"/>
+                    <!-- Favorite -->
+
                     <!-- Collection Name -->
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -76,7 +84,7 @@
 
                     </Editor>
                     <!-- Collection Name -->
-
+                    
                     <!-- Hide Collection -->
                     <VerticalStackLayout Margin="10">
                         <Label Text="{x:Static localization:AppStringResources.HideCollection_Question}"

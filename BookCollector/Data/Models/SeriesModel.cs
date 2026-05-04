@@ -57,6 +57,7 @@ namespace BookCollector.Data.Models
             this.HideSeries = dbModel.HideSeries;
             this.SeriesTotalBooks = dbModel.SeriesTotalBooks;
             this.TotalBooksInSeries = dbModel.TotalBooksInSeries;
+            this.IsFavorite = dbModel.IsFavorite;
         }
 
         /// <summary>

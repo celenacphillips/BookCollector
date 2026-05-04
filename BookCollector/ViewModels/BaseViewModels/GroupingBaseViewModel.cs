@@ -283,6 +283,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
             var filteredCount = filteredList?.Count ?? 0;
@@ -314,6 +315,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
             var filteredCount = filteredList?.Count ?? 0;
@@ -345,6 +347,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
             var filteredCount = filteredList?.Count ?? 0;
@@ -376,6 +379,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
             var filteredCount = filteredList?.Count ?? 0;
@@ -407,6 +411,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
             var filteredCount = filteredList?.Count ?? 0;
@@ -456,6 +461,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
                 if (filteredList != null)
@@ -511,6 +517,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
                 if (filteredList != null)
@@ -566,6 +573,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
                 if (filteredList != null)
@@ -621,6 +629,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
                 if (filteredList != null)
@@ -676,6 +685,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
                                  hiddenList!,
+                                 this.FavoritesOption,
                                  this.SearchString);
 
                 if (filteredList != null)

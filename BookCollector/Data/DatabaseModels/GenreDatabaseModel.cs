@@ -51,5 +51,10 @@ namespace BookCollector.Data.DatabaseModels
         /// Gets or sets the total cost of books assigned to the genre.
         /// </summary>
         public double TotalCostOfBooks { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the genre is a favorite.
+        /// </summary>
+        public bool IsFavorite { get; set; }
     }
 }

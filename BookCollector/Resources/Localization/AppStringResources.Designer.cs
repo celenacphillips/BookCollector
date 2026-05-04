@@ -1255,6 +1255,8 @@ namespace BookCollector.Resources.Localization {
         ///• NEW FEATURE: Added Reading Status filter for certain book list pages
         ///• NEW FEATURE: Added Loaned Out filter for all book list pages
         ///• BUG FIX: Add Up Next value to Export for books.
+        ///• NEW FEATURE: Add ability to Favorite groupings.
+        ///• NEW FEATURE: Add Filter for groupings.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -3662,7 +3664,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Favorite option in books, statistics, and filters.
+        ///   Looks up a localized string similar to Show Favorite option in books/groupings, statistics, and book/grouping filters.
         /// </summary>
         internal static string ShowFavorites {
             get {
@@ -4227,6 +4229,24 @@ namespace BookCollector.Resources.Localization {
         internal static string UploadExistingFile {
             get {
                 return ResourceManager.GetString("UploadExistingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Up Next.
+        /// </summary>
+        internal static string UpNext {
+            get {
+                return ResourceManager.GetString("UpNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Up Next.
+        /// </summary>
+        internal static string UpNext {
+            get {
+                return ResourceManager.GetString("UpNext", resourceCulture);
             }
         }
         

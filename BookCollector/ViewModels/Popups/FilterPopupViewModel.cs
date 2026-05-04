@@ -363,7 +363,7 @@ namespace BookCollector.ViewModels.Popups
         /// <summary>
         /// Gets or sets the default favorite books option.
         /// </summary>
-        internal string FavoriteBooksOptionDefault { get; set; }
+        internal string FavoriteOptionDefault { get; set; }
 
         /// <summary>
         /// Gets or sets the default book format option.
@@ -715,7 +715,7 @@ namespace BookCollector.ViewModels.Popups
         {
             if (!string.IsNullOrEmpty(favoriteOptionDefault))
             {
-                this.FavoriteBooksOptionDefault = favoriteOptionDefault;
+                this.FavoriteOptionDefault = favoriteOptionDefault;
             }
 
             if (!string.IsNullOrEmpty(bookFormatOptionDefault))
@@ -965,7 +965,7 @@ namespace BookCollector.ViewModels.Popups
 
         private void ResetDefaults()
         {
-            this.FavoriteOption = this.FavoriteBooksOptionDefault;
+            this.FavoriteOption = this.FavoriteOptionDefault;
             this.FormatOption = this.BookFormatOptionDefault;
             this.AuthorOption = this.BookAuthorOptionDefault;
             this.PublisherOption = this.BookPublisherOptionDefault;

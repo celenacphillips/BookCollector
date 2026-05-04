@@ -90,9 +90,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         /********************************************************/
 
         /// <summary>
-        /// Gets or sets the favorite books option.
+        /// Gets or sets the favorites option.
         /// </summary>
-        public string? FavoriteBooksOption { get; set; }
+        public string? FavoritesOption { get; set; }
 
         /// <summary>
         /// Gets or sets the book format option.
@@ -209,9 +209,9 @@ namespace BookCollector.ViewModels.BaseViewModels
         internal string? BookAuthorOptionDefault { get; set; }
 
         /// <summary>
-        /// Gets or sets the default favorite books option.
+        /// Gets or sets the default favorite option.
         /// </summary>
-        internal string? FavoriteBooksOptionDefault { get; set; }
+        internal string? FavoriteOptionDefault { get; set; }
 
         /// <summary>
         /// Gets or sets the default book format option.
@@ -397,7 +397,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 var filteredList = FilterLists.FilterList(
                         hiddenBookList,
-                        this.FavoriteBooksOption,
+                        this.FavoritesOption,
                         this.BookFormatOption,
                         this.BookPublisherOption,
                         this.BookLanguageOption,
@@ -578,7 +578,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredBookList = await FilterLists.FilterList(
                             hiddenFilteredBookList,
-                            this.FavoriteBooksOption,
+                            this.FavoritesOption,
                             this.BookFormatOption,
                             this.BookPublisherOption,
                             this.BookLanguageOption,
@@ -625,7 +625,7 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredBookList = await FilterLists.FilterList(
                             hiddenFilteredBookList,
-                            this.FavoriteBooksOption,
+                            this.FavoritesOption,
                             this.BookFormatOption,
                             this.BookPublisherOption,
                             this.BookLanguageOption,
@@ -701,7 +701,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                 viewModel = this.SetFilterPopupValues(viewModel);
                 viewModel = this.SetFilterPopupLists(viewModel);
                 viewModel.SetDefaults(
-                    this.FavoriteBooksOptionDefault,
+                    this.FavoriteOptionDefault,
                     this.BookFormatOptionDefault,
                     this.BookAuthorOptionDefault,
                     this.BookPublisherOptionDefault,

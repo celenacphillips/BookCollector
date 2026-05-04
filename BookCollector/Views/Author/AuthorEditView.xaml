@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Author.AuthorEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Author"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:AuthorEditViewModel"
              x:Name="AuthorEditPage"
@@ -33,6 +34,13 @@
                 <VerticalStackLayout Padding="10"
                                      IsEnabled="{Binding IsEnabled}"
                                      IsVisible="{Binding IsVisible}">
+
+                    <!-- Favorite -->
+                    <controls:Favorite CurrentValue="{Binding EditedAuthor.IsFavorite, Mode=TwoWay}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,7"
+                                       IsVisible="{Binding ShowFavorites}"/>
+                    <!-- Favorite -->
 
                     <!-- Author First Name -->
                     <Grid>

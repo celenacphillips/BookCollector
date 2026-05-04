@@ -12,6 +12,16 @@
              Title="{x:Static localization:AppStringResources.Authors}">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding FilterPopupCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0236;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
         <ToolbarItem Command="{Binding SortPopupCommand}"
                      IsEnabled="{Binding IsEnabled}">
             <ToolbarItem.IconImageSource>

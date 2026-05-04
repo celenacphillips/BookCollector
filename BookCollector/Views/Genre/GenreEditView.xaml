@@ -5,6 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              x:Class="BookCollector.Views.Genre.GenreEditView"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Genre"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls"
              xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
              x:DataType="viewModel:GenreEditViewModel"
              x:Name="GenreEditPage"
@@ -33,6 +34,13 @@
                 <VerticalStackLayout Padding="10"
                                      IsEnabled="{Binding IsEnabled}"
                                      IsVisible="{Binding IsVisible}">
+
+                    <!-- Favorite -->
+                    <controls:Favorite CurrentValue="{Binding EditedGenre.IsFavorite, Mode=TwoWay}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,7"
+                                       IsVisible="{Binding ShowFavorites}"/>
+                    <!-- Favorite -->
 
                     <!-- Genre Name -->
                     <Grid>

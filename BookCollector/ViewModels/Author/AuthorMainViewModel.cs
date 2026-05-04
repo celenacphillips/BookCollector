@@ -220,11 +220,11 @@ namespace BookCollector.ViewModels.Author
             this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
             this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
 
-            this.ShowFavoriteBooks = Preferences.Get("FavoritesOn", true /* Default */);
+            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
             this.ShowBookRatings = Preferences.Get("RatingsOn", true /* Default */);
             this.ShowLoanedOutBooks = Preferences.Get("LoanedOutBooksOn", true /* Default */);
 
-            this.FavoriteBooksOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteBooksOptionDefault /* Default */);
+            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOptionDefault /* Default */);
             this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
             this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
             this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", this.BookPublishYearOptionDefault /* Default */);
@@ -257,8 +257,8 @@ namespace BookCollector.ViewModels.Author
         /// <returns>The updated viewmodel.</returns>
         public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
         {
-            viewModel.FavoriteVisible = this.ShowFavoriteBooks;
-            viewModel.FavoriteOption = this.FavoriteBooksOption;
+            viewModel.FavoriteVisible = this.ShowFavorites;
+            viewModel.FavoriteOption = this.FavoritesOption;
             /******************************/
             viewModel.FormatVisible = true;
             viewModel.FormatOption = this.BookFormatOption;
@@ -360,7 +360,7 @@ namespace BookCollector.ViewModels.Author
 
         private void SetFilterPopupDefaults()
         {
-            this.FavoriteBooksOptionDefault = AppStringResources.Both;
+            this.FavoriteOptionDefault = AppStringResources.Both;
             this.BookFormatOptionDefault = AppStringResources.AllFormats;
             this.BookPublisherOptionDefault = AppStringResources.AllPublishers;
             this.BookPublishYearOptionDefault = AppStringResources.AllPublishYears;

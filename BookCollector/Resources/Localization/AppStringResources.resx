@@ -145,7 +145,7 @@
     <value>Show Chapters in books</value>
   </data>
   <data name="ShowFavorites" xml:space="preserve">
-    <value>Show Favorite option in books, statistics, and filters</value>
+    <value>Show Favorite option in books/groupings, statistics, and book/grouping filters</value>
   </data>
   <data name="ShowRatings" xml:space="preserve">
     <value>Show Rating option in books, statistics, and filters</value>
@@ -1540,7 +1540,8 @@ The Import feature works best with a spreadsheet workbook specifically formatted
 • NEW FEATURE: Added Reading Status filter for certain book list pages
 • NEW FEATURE: Added Loaned Out filter for all book list pages
 • BUG FIX: Add Up Next value to Export for books.
-• BUG FIX: Fixed broken book search for Wishlist books</value>
+• NEW FEATURE: Add ability to Favorite groupings.
+• NEW FEATURE: Add Filter for groupings.
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">
     <value>There has been a major update and a breaking change made.</value>
@@ -1610,5 +1611,8 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   </data>
   <data name="ChartSubtitle" xml:space="preserve">
     <value>Based only on books with Reading or Read status</value>
+  </data>
+  <data name="UpNext" xml:space="preserve">
+    <value>Up Next</value>
   </data>
 </root>

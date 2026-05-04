@@ -990,6 +990,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.BookURL.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookRating.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
+                $"{AppStringResources.UpNext.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLoanedTo.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLoanedOutOn.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
@@ -1045,6 +1046,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.CollectionGuid}",
                 $"{AppStringResources.CollectionName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
             ];
         }
 
@@ -1055,6 +1057,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.GenreGuid}",
                 $"{AppStringResources.GenreName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
             ];
         }
 
@@ -1066,6 +1069,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.SeriesName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.TotalBooksInSeries.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
             ];
         }
 
@@ -1087,6 +1091,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.FirstName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.LastName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
             ];
         }
 
@@ -1097,6 +1102,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.LocationGuid}",
                 $"{AppStringResources.LocationName.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
+                $"{AppStringResources.Favorite.Replace(" ", string.Empty)}",
             ];
         }
 
@@ -2096,6 +2102,7 @@ namespace BookCollector.ViewModels.Main
                             collection.CollectionGuid.ToString(),
                             collection.CollectionName,
                             collection.HideCollection.ToString(),
+                            collection.IsFavorite.ToString(),
                         };
 
                         stringItems.Add(stringItem);
@@ -2247,6 +2254,7 @@ namespace BookCollector.ViewModels.Main
                             genre.GenreGuid.ToString(),
                             genre.GenreName,
                             genre.HideGenre.ToString(),
+                            genre.IsFavorite.ToString(),
                         };
 
                         stringItems.Add(stringItem);
@@ -2399,6 +2407,7 @@ namespace BookCollector.ViewModels.Main
                             series.SeriesName,
                             series.TotalBooksInSeries,
                             series.HideSeries.ToString(),
+                            series.IsFavorite.ToString(),
                         };
 
                         stringItems.Add(stringItem);
@@ -2719,6 +2728,7 @@ namespace BookCollector.ViewModels.Main
                             author.FirstName,
                             author.LastName,
                             author.HideAuthor.ToString(),
+                            author.IsFavorite.ToString(),
                         };
 
                         stringItems.Add(stringItem);
@@ -2872,6 +2882,7 @@ namespace BookCollector.ViewModels.Main
                             location.LocationGuid.ToString(),
                             location.LocationName,
                             location.HideLocation.ToString(),
+                            location.IsFavorite.ToString(),
                         };
 
                         stringItems.Add(stringItem);
