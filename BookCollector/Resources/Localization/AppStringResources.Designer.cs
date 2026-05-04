@@ -1243,7 +1243,7 @@ namespace BookCollector.Resources.Localization {
         /// <summary>
         ///   Looks up a localized string similar to • MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
         ///• MODIFIED FEATURE: Changed what qualifies a book as &quot;Reading,&quot; &quot;To Be Read,&quot; and &quot;Read.&quot;
-        ///• NEW FEATURE: Added reset to Filter and Sort popups
+        ///• MODIFIED FEATURE: Updated Favorites and Rating charts to only display Reading and Read counts.
         ///• NEW FEATURE: Added ability to hide book formats
         ///• ENHANCED FEATURE: Add color picker for App Color
         ///• BUG FIX: Fixed sort Series Order Sort on Series pages
@@ -1315,6 +1315,15 @@ namespace BookCollector.Resources.Localization {
         internal static string ChartColors {
             get {
                 return ResourceManager.GetString("ChartColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Based only on books with Reading or Read status.
+        /// </summary>
+        internal static string ChartSubtitle {
+            get {
+                return ResourceManager.GetString("ChartSubtitle", resourceCulture);
             }
         }
         

@@ -4,6 +4,7 @@
 
 namespace BookCollector.Views.Popups;
 
+using BookCollector.Data.Enums;
 using CommunityToolkit.Maui.Views;
 
 /// <summary>
@@ -19,8 +20,8 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// <param name="dialogMessage">Popup message.</param>
     /// <param name="confirm">Confirm button text.</param>
     /// <param name="deny">Deny button text.</param>
-    /// <param name="type">Type of popup to display: Commands or Options.</param>
-    public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, string confirm, string? deny, string type)
+    /// <param name="state">Type of popup to display: Commands or Options.</param>
+    public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, string confirm, string? deny, DialogState state)
     {
         this.PopupWidth = popupWidth;
         this.Title = dialogTitle;
@@ -29,8 +30,8 @@ public partial class ChoiceDialogPopup : Popup<string>
         this.Deny = !string.IsNullOrEmpty(deny) ? deny : string.Empty;
         this.DenyVisible = !string.IsNullOrEmpty(deny);
 
-        this.OptionsVisible = type.Equals("Options");
-        this.CommandsVisible = type.Equals("Commands");
+        this.OptionsVisible = state == DialogState.Options;
+        this.CommandsVisible = state == DialogState.Choice;
 
         this.BindingContext = this;
 
@@ -44,16 +45,16 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// <param name="dialogTitle">Title of popup.</param>
     /// <param name="dialogMessage">Popup message.</param>
     /// <param name="actions">List of actions that can be performed.</param>
-    /// <param name="type">Type of popup to display: Commands or Options.</param>
-    public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, List<string> actions, string type)
+    /// <param name="state">Type of popup to display: Commands or Options.</param>
+    public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, List<string> actions, DialogState state)
     {
         this.PopupWidth = popupWidth;
         this.Title = dialogTitle;
         this.Message = dialogMessage;
         this.Choices = actions;
 
-        this.OptionsVisible = type.Equals("Options");
-        this.CommandsVisible = type.Equals("Commands");
+        this.OptionsVisible = state == DialogState.Options;
+        this.CommandsVisible = state == DialogState.Choice;
 
         this.BindingContext = this;
 

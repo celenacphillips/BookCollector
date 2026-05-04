@@ -1536,8 +1536,8 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   </data>
   <data name="ChangeLogEntry" xml:space="preserve">
     <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
-• NEW FEATURE: Added reset on Settings pages
-• NEW FEATURE: Added reset to Filter and Sort popups
+• MODIFIED FEATURE: Changed what qualifies a book as "Reading," "To Be Read," and "Read."
+• MODIFIED FEATURE: Updated Favorites and Rating charts to only display Reading and Read counts.
 • NEW FEATURE: Added ability to hide book formats
 • ENHANCED FEATURE: Add color picker for App Color
 • BUG FIX: Fixed sort Series Order Sort on Series pages
@@ -1605,5 +1605,8 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   </data>
   <data name="PrimaryColorOnTertiaryColor" xml:space="preserve">
     <value>Primary Color on Tertiary Color</value>
+  </data>
+  <data name="ChartSubtitle" xml:space="preserve">
+    <value>Based only on books with Reading or Read status</value>
   </data>
 </root>

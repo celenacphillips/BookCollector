@@ -82,6 +82,11 @@
                                    HorizontalOptions="Center"
                                    FontSize="18"/>
 
+                            <Label Text="{x:Static localization:AppStringResources.ChartSubtitle}"
+                                   Style="{StaticResource Subtitle}"
+                                   HorizontalOptions="Center"
+                                   FontSize="14"/>
+
                             <charts:ChartView x:Name="favorites" 
                                               HeightRequest="350"
                                               Margin="20"
@@ -98,6 +103,11 @@
                                    Style="{StaticResource Header}"
                                    HorizontalOptions="Center"
                                    FontSize="18"/>
+
+                            <Label Text="{x:Static localization:AppStringResources.ChartSubtitle}"
+                                   Style="{StaticResource Subtitle}"
+                                   HorizontalOptions="Center"
+                                   FontSize="14"/>
 
                             <charts:ChartView x:Name="ratings" 
                                               HeightRequest="350"

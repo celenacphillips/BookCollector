@@ -216,7 +216,8 @@ namespace BookCollector.ViewModels.Statistics
                 this.CostBooks = cost.Result;
                 this.TotalBooks = AllBooksViewModel.hiddenFilteredBookList!.Count;
                 var toBeRead = ToBeReadViewModel.hiddenFilteredBookList!.Count;
-                var reading = ReadingViewModel.hiddenFilteredBookList!.Count;
+                var reading = ReadingViewModel.hiddenFilteredBookList!.Count(x => !x.UpNext);
+                toBeRead += ReadingViewModel.hiddenFilteredBookList!.Count(x => x.UpNext);
                 var read = ReadViewModel.hiddenFilteredBookList!.Count;
                 var favorite = favoriteCount != null ? favoriteCount.Result : 0;
                 var nonFavorite = nonFavoriteCount != null ? nonFavoriteCount.Result : 0;
@@ -330,6 +331,7 @@ namespace BookCollector.ViewModels.Statistics
                         Count = favorite,
                         Label = AppStringResources.Favorite,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = nonFavorite,
@@ -395,26 +397,31 @@ namespace BookCollector.ViewModels.Statistics
                         Count = zero,
                         Label = AppStringResources.ZeroStars,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = one,
                         Label = AppStringResources.OneStar,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = two,
                         Label = AppStringResources.TwoStars,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = three,
                         Label = AppStringResources.ThreeStars,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = four,
                         Label = AppStringResources.FourStars,
                     });
+
                     counts.Add(new CountModel()
                     {
                         Count = five,

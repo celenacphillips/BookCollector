@@ -27,11 +27,16 @@ namespace BookCollector.Data
         /// <returns>The count of books based on the filter.</returns>
         public static async Task<int> GetBooksListCountByFavorite(bool favoriteValue)
         {
-            ObservableCollection<BookModel>? filteredList;
+            List<BookModel>? filteredList = [];
 
-            filteredList = AllBooksViewModel.hiddenFilteredBookList?
-                .Where(x => x.IsFavorite == favoriteValue)
-                .ToObservableCollection();
+            var readingList = ReadingViewModel.hiddenFilteredBookList?
+                .Where(x => x.IsFavorite == favoriteValue) ?? [];
+
+            var readList = ReadViewModel.hiddenFilteredBookList?
+                .Where(x => x.IsFavorite == favoriteValue) ?? [];
+
+            filteredList.AddRange(readingList);
+            filteredList.AddRange(readList);
 
             var count = filteredList != null ? filteredList.Count : 0;
 
@@ -45,11 +50,16 @@ namespace BookCollector.Data
         /// <returns>The count of books based on the filter.</returns>
         public static async Task<int> GetBooksListCountByRating(int starRating)
         {
-            ObservableCollection<BookModel>? filteredList;
+            List<BookModel>? filteredList = [];
 
-            filteredList = AllBooksViewModel.hiddenFilteredBookList?
-                .Where(x => x.Rating == starRating)
-                .ToObservableCollection();
+            var readingList = ReadingViewModel.hiddenFilteredBookList?
+                .Where(x => x.Rating == starRating) ?? [];
+
+            var readList = ReadViewModel.hiddenFilteredBookList?
+                .Where(x => x.Rating == starRating) ?? [];
+
+            filteredList.AddRange(readingList);
+            filteredList.AddRange(readList);
 
             var count = filteredList != null ? filteredList.Count : 0;
 

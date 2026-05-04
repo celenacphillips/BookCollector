@@ -29,6 +29,7 @@ namespace BookCollector.Data
             var color4 = color.WithHue(colorHue - 0.6f);
             var color5 = color.WithHue(colorHue - 0.8f);
             var color6 = color.WithHue(colorHue - 0.5f);
+            var color7 = color.WithHue(colorHue - 0.9f);
 
             Application.Current?.Resources["Primary"] = Color.FromArgb(hexcode);
             Application.Current?.Resources["Secondary"] = Color.FromArgb(secondary.ToHex());
@@ -40,6 +41,7 @@ namespace BookCollector.Data
             Application.Current?.Resources["Color4"] = Color.FromArgb(color4.ToHex());
             Application.Current?.Resources["Color5"] = Color.FromArgb(color5.ToHex());
             Application.Current?.Resources["Color6"] = Color.FromArgb(color6.ToHex());
+            Application.Current?.Resources["Color7"] = Color.FromArgb(color7.ToHex());
         }
 
         /// <summary>
@@ -62,6 +64,7 @@ namespace BookCollector.Data
             var color4 = color.WithHue(colorHue - 0.6f);
             var color5 = color.WithHue(colorHue - 0.8f);
             var color6 = color.WithHue(colorHue - 0.5f);
+            var color7 = color.WithHue(colorHue - 0.9f);
 
             Application.Current?.Resources["Primary_Preview"] = Color.FromArgb(hexcode);
             Application.Current?.Resources["Secondary_Preview"] = Color.FromArgb(secondary.ToHex());
@@ -72,6 +75,7 @@ namespace BookCollector.Data
             Application.Current?.Resources["Color4_Preview"] = Color.FromArgb(color4.ToHex());
             Application.Current?.Resources["Color5_Preview"] = Color.FromArgb(color5.ToHex());
             Application.Current?.Resources["Color6_Preview"] = Color.FromArgb(color6.ToHex());
+            Application.Current?.Resources["Color7_Preview"] = Color.FromArgb(color7.ToHex());
         }
     }
 }

@@ -15,7 +15,8 @@
     <Color x:Key="Color3">#8E9932</Color>
     <Color x:Key="Color4">#99323D</Color>
     <Color x:Key="Color5">#7A3299</Color>
-    <Color x:Key="Color6">#7A3299</Color>
+    <Color x:Key="Color6">#996532</Color>
+    <Color x:Key="Color7">#3D3299</Color>
 
     <Color x:Key="Warning">Red</Color>
     <Color x:Key="UnselectedText">#ACACAC</Color>
@@ -48,5 +49,6 @@
     <Color x:Key="Color3_Preview">#8E9932</Color>
     <Color x:Key="Color4_Preview">#99323D</Color>
     <Color x:Key="Color5_Preview">#7A3299</Color>
-    <Color x:Key="Color6_Preview">#7A3299</Color>
+    <Color x:Key="Color6_Preview">#996532</Color>
+    <Color x:Key="Color7_Preview">#3D3299</Color>
 </ResourceDictionary>
