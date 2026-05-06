@@ -1542,6 +1542,7 @@ The Import feature works best with a spreadsheet workbook specifically formatted
 • BUG FIX: Add Up Next value to Export for books.
 • NEW FEATURE: Add ability to Favorite groupings.
 • NEW FEATURE: Add Filter for groupings.
+• NEW FEATURE: Added ability to show/hide and reorganize pages on Library and Groupings tabs.
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">
     <value>There has been a major update and a breaking change made.</value>
@@ -1608,6 +1609,15 @@ The Import feature works best with a spreadsheet workbook specifically formatted
   </data>
   <data name="AllReadingStatuses" xml:space="preserve">
     <value>All Reading Statuses</value>
+  </data>
+  <data name="PageSettings" xml:space="preserve">
+    <value>Page Settings</value>
+  </data>
+  <data name="LibraryTab" xml:space="preserve">
+    <value>Library Tab</value>
+  </data>
+  <data name="GroupingTab" xml:space="preserve">
+    <value>Grouping Tab</value>
   </data>
   <data name="ChartSubtitle" xml:space="preserve">
     <value>Based only on books with Reading or Read status</value>

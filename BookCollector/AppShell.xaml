@@ -59,55 +59,55 @@
     </Shell.ItemTemplate>-->
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
-        <Tab Title="{x:Static localization:AppStringResources.Library}">
+        <Tab Title="{x:Static localization:AppStringResources.Library}"
+             x:Name="libraryTab">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialDesignIcons"
                                  Glyph="&#xF125F;"
                                  Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"/>
             </Tab.Icon>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Reading}"
-                          ContentTemplate="{DataTemplate libraryViews:ReadingView}"/>
-
-            <ShellContent Title="{x:Static localization:AppStringResources.ToBeRead}"
-                          ContentTemplate="{DataTemplate libraryViews:ToBeReadView}"/>
-
-            <ShellContent Title="{x:Static localization:AppStringResources.Read}"
-                          ContentTemplate="{DataTemplate libraryViews:ReadView}"/>
-
-            <ShellContent Title="{x:Static localization:AppStringResources.AllBooks}"
-                          ContentTemplate="{DataTemplate libraryViews:AllBooksView}"/>
         </Tab>
     </FlyoutItem>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
-        <Tab Title="{x:Static localization:AppStringResources.Groupings}">
+        <Tab Title="{x:Static localization:AppStringResources.Groupings}"
+             x:Name="groupingsTab">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialDesignIcons"
                                  Glyph="&#xF196C;"
                                  Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
             </Tab.Icon>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Collections}"
-                          ContentTemplate="{DataTemplate groupingsViews:CollectionsView}"/>
+        </Tab>
+    </FlyoutItem>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Genres}"
-                          ContentTemplate="{DataTemplate groupingsViews:GenresView}"/>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems"
+                IsVisible="False">
+        <Tab Title="{x:Static localization:AppStringResources.BooksLoanedOut}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF00BB;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Series}"
-                          ContentTemplate="{DataTemplate groupingsViews:SeriesView}"/>
+            <ShellContent Title="{x:Static localization:AppStringResources.BooksLoanedOut}"
+                          ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Authors}"
-                          ContentTemplate="{DataTemplate groupingsViews:AuthorsView}"/>
+        </Tab>
+    </FlyoutItem>
 
-            <ShellContent Title="{x:Static localization:AppStringResources.Locations}"
-                          ContentTemplate="{DataTemplate groupingsViews:LocationsView}"/>
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems"
+                IsVisible="False">
+        <Tab Title="{x:Static localization:AppStringResources.BorrowedBooks}">
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialDesignIcons"
+                                 Glyph="&#xF00BB;"
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </Tab.Icon>
 
-            <!-- Added to fix bug with MAUI where it selects the wrong item -->
-            <!--<ShellContent Title=""
-                          Route="Spacer"
-                          ContentTemplate="{DataTemplate ContentPage}"
-                          IsVisible="False" />-->
+            <ShellContent Title="{x:Static localization:AppStringResources.BorrowedBooks}"
+                          ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
 
         </Tab>
     </FlyoutItem>
@@ -144,8 +144,6 @@
         </Tab>
     </FlyoutItem>
 
-    
-
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Export_Import}">
             <Tab.Icon>
@@ -172,6 +170,9 @@
 
             <ShellContent Title="{x:Static localization:AppStringResources.ToggleSettings}"
                           ContentTemplate="{DataTemplate settingsViews:ToggleSettingsView}"/>
+
+            <ShellContent Title="{x:Static localization:AppStringResources.PageSettings}"
+                          ContentTemplate="{DataTemplate settingsViews:PageSettingsView}"/>
         </Tab>
     </FlyoutItem>
 

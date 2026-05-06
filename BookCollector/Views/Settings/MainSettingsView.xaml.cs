@@ -275,23 +275,38 @@ public partial class MainSettingsView : ContentPage
         }
     }
 
-    private void OnResetButton_Clicked(object sender, EventArgs e)
+    private void OnAppThemeResetButton_Clicked(object sender, EventArgs e)
     {
         this.SelectedAppTheme = this.appThemeDefault;
-        this.SelectedColor = this.appColorDefault;
-        this.SelectedExportLocation = this.exportLocationDefault;
-        this.SelectedExportLocationLabel.Text = this.exportLocationDefault;
-        this.SelectedLanguage = this.appLanguageDefault;
-        this.SelectedCurrency = this.appCurrencyDefault;
-
-        Data.Colors.SetColors(this.appColorDefault);
-        Data.Colors.SetPreviewColors(this.appColorDefault);
-
         Application.Current?.UserAppTheme = this.appThemeDefault.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
         Preferences.Set("AppTheme", this.appThemeDefault);
+    }
+
+    private void OnColorResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.SelectedColor = this.appColorDefault;
+        Data.Colors.SetColors(this.appColorDefault);
+        Data.Colors.SetPreviewColors(this.appColorDefault);
         Preferences.Set("AppColor", this.appColorDefault);
+    }
+
+    private void OnExportLocationResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.SelectedExportLocation = this.exportLocationDefault;
+        this.SelectedExportLocationLabel.Text = this.exportLocationDefault;
         Preferences.Set("ExportLocation", this.exportLocationDefault);
+    }
+
+    private void OnLanguageResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.SelectedLanguage = this.appLanguageDefault;
+        this.SelectedCurrency = this.appCurrencyDefault;
         Preferences.Set("Language", this.appLanguageDefault);
+    }
+
+    private void OnCurrencyResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.SelectedCurrency = this.appCurrencyDefault;
         Preferences.Set("Currency", this.appCurrencyDefault);
         Preferences.Set("CultureCode", this.cultureCodeDefault);
     }

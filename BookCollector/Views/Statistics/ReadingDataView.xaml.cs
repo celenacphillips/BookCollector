@@ -6,7 +6,6 @@ namespace BookCollector.Views.Statistics;
 
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Statistics;
-using Microsoft.Maui.Controls.Internals;
 
 /// <summary>
 /// ReadingDataView class.
@@ -14,7 +13,6 @@ using Microsoft.Maui.Controls.Internals;
 public partial class ReadingDataView : ContentPage
 {
     private readonly ReadingDataViewModel viewModel;
-
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReadingDataView"/> class.

@@ -4,12 +4,11 @@
 
 namespace BookCollector.Data.Spreadsheet
 {
+    using System.Xml;
     using CommunityToolkit.Mvvm.ComponentModel;
     using DocumentFormat.OpenXml;
-    using DocumentFormat.OpenXml.Math;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
-    using System.Xml;
     using Cell = DocumentFormat.OpenXml.Spreadsheet.Cell;
 
     /// <summary>
@@ -62,7 +61,6 @@ namespace BookCollector.Data.Spreadsheet
                 if (ex.Message.Equals($"Access to the path '{filepath}' is denied."))
                 {
                     await CreateSpreadsheet(folderPath, $"{filename}-new");
-                    // await DisplayMessage(AppStringResources.UnableToOverwriteFile, AppStringResources.UnableToOverwriteFile_PleaseDelete.Replace("filePath", filepath));
                 }
 
                 throw;

@@ -12,13 +12,14 @@
     <ScrollView BindingContext="{x:Reference this}">
         <VerticalStackLayout>
 
-            <Grid Margin="10"
+            <Grid Margin="10,10,0,10"
                   HorizontalOptions="Center">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -50,6 +51,22 @@
                         Margin="0,10"
                         Clicked="AppThemePickerButton_Clicked"
                         Grid.Row="0" Grid.Column="2"/>
+
+                <!-- Reset -->
+                <ImageButton Padding="10"
+                             Clicked="OnAppThemeResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Margin="2,0,0,0"
+                             Grid.Row="0" Grid.Column="3">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="20"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
                 <!-- App Theme -->
 
                 <!-- Color -->
@@ -71,6 +88,22 @@
                         Margin="0,10"
                         Clicked="ColorPickerButton_Clicked"
                         Grid.Row="1" Grid.Column="2"/>
+
+                <!-- Reset -->
+                <ImageButton Padding="10"
+                             Clicked="OnColorResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Margin="2,0,0,0"
+                             Grid.Row="1" Grid.Column="3">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="20"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
                 <!-- Color -->
 
                 <!-- Export Location -->
@@ -97,6 +130,22 @@
                        MaxLines="2"
                        x:Name="SelectedExportLocationLabel"
                        Grid.Row="2" Grid.Column="2"/>
+
+                <!-- Reset -->
+                <ImageButton Padding="10"
+                             Clicked="OnExportLocationResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Margin="2,0,0,0"
+                             Grid.Row="2" Grid.Column="3">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="20"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
                 <!-- Export Location -->
 
                 <!-- Language -->
@@ -119,6 +168,23 @@
                         IsEnabled="False"
                         Clicked="LanguagePickerButton_Clicked"
                         Grid.Row="3" Grid.Column="2"/>
+
+                <!-- Reset -->
+                <ImageButton Padding="10"
+                             Clicked="OnLanguageResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Margin="2,0,0,0"
+                             Grid.Row="3" Grid.Column="3"
+                             IsEnabled="False">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="20"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
                 <!-- Language -->
 
                 <!-- Currency -->
@@ -141,6 +207,23 @@
                         IsEnabled="False"
                         Clicked="CurrencyPickerButton_Clicked"
                         Grid.Row="4" Grid.Column="2"/>
+
+                <!-- Reset -->
+                <ImageButton Padding="10"
+                             Clicked="OnCurrencyResetButton_Clicked"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Margin="2,0,0,0"
+                             Grid.Row="4" Grid.Column="3"
+                             IsEnabled="False">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialDesignIcons"
+                                         Glyph="&#xF099B;"
+                                         Size="20"
+                                         Color="{DynamicResource TextOnPrimaryColor}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <!-- Reset -->
                 <!-- Currency -->
 
                 <!-- Delete -->
@@ -159,22 +242,6 @@
                        Margin="10,0"
                        Grid.Row="5" Grid.Column="1"/>
                 <!-- Delete -->
-
-                <!-- Reset -->
-                <ImageButton Padding="10"
-                             Clicked="OnResetButton_Clicked"
-                             HorizontalOptions="Center"
-                             Grid.Row="6" Grid.Column="0"
-                             Grid.ColumnSpan="3">
-                    <ImageButton.Source>
-                        <FontImageSource FontFamily="MaterialDesignIcons"
-                                         Glyph="&#xF099B;"
-                                         Size="28"
-                                         Color="{DynamicResource TextOnPrimaryColor}" />
-                    </ImageButton.Source>
-                </ImageButton>
-                <!-- Reset -->
-                
             </Grid>
 
             <Label Background="{DynamicResource Primary}"/>

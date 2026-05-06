@@ -649,11 +649,11 @@ namespace BookCollector.ViewModels.Main
             {
                 for (int i = 0; i < columnNames.Count; i++)
                 {
-                    values.TryGetValue(columnNames[i]!.ToLower().Replace(" ", string.Empty), out var stringValue);
+                    values.TryGetValue(columnNames[i] !.ToLower().Replace(" ", string.Empty), out var stringValue);
 
                     if (string.IsNullOrEmpty(stringValue))
                     {
-                        stringValue = CheckOtherAppColumns(columnNames[i]!, values);
+                        stringValue = CheckOtherAppColumns(columnNames[i] !, values);
                     }
 
                     stringValues.Add(stringValue?.Trim());
@@ -1586,7 +1586,7 @@ namespace BookCollector.ViewModels.Main
                             {
                                 book.BookStartDate = book.BookStartDate.Trim()[..4];
 
-                                DateTime.TryParse($"{book.BookStartDate}-01", out startDate);
+                                var parsed = DateTime.TryParse($"{book.BookStartDate}-01", out startDate);
 
                                 book.BookStartDate = startDate.ToShortDateString();
                             }
@@ -1596,7 +1596,7 @@ namespace BookCollector.ViewModels.Main
                             {
                                 book.BookEndDate = book.BookEndDate.Trim()[..4];
 
-                                DateTime.TryParse($"{book.BookEndDate}-01", out endDate);
+                                var parsed = DateTime.TryParse($"{book.BookEndDate}-01", out endDate);
 
                                 book.BookEndDate = endDate.ToShortDateString();
                             }
@@ -2812,8 +2812,8 @@ namespace BookCollector.ViewModels.Main
                             var author = new AuthorModel()
                             {
                                 AuthorGuid = ParseGuid(parsedValues[0]),
-                                FirstName = parsedValues[1]!,
-                                LastName = parsedValues[2]!,
+                                FirstName = parsedValues[1] !,
+                                LastName = parsedValues[2] !,
                                 HideAuthor = ParseBool(parsedValues[3]),
                             };
 

@@ -36,19 +36,25 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <Grid Grid.ColumnSpan="2"
+                              Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
                         <Label Text="{x:Static localization:AppStringResources.BookSettings}"
                                VerticalTextAlignment="Center"
-                               Grid.Row="0" Grid.Column="0"
                                HorizontalOptions="Center"
                                Style="{DynamicResource Header}"
-                               Grid.ColumnSpan="2"/>
+                                   Grid.Column="1" Grid.Row="0"/>
 
                         <!-- Comments -->
                         <Label Text="{x:Static localization:AppStringResources.ShowComments}"
                                VerticalTextAlignment="Center"
                                Grid.Row="1" Grid.Column="0"/>
                         <Switch IsToggled="{Binding CommentsOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -61,7 +67,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="2" Grid.Column="0"/>
                         <Switch IsToggled="{Binding ChaptersOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -74,7 +79,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="3" Grid.Column="0"/>
                         <Switch IsToggled="{Binding FavoritesOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,5,0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -87,7 +91,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="4" Grid.Column="0"/>
                         <Switch IsToggled="{Binding RatingsOn, Mode=TwoWay}"
-                                IsEnabled="True" 
                                 Margin="0,5,0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -114,20 +117,43 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <Grid Grid.ColumnSpan="2"
+                              Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
                         <Label Text="{x:Static localization:AppStringResources.ListSettings}"
                                VerticalTextAlignment="Center"
-                               Grid.Row="0" Grid.Column="0"
                                HorizontalOptions="Center"
                                Style="{DynamicResource Header}"
                                Margin="10,5"
-                               Grid.ColumnSpan="2"/>
+                                   Grid.Column="1" Grid.Row="0"/>
+
+                            <!-- Reset -->
+                            <ImageButton Padding="10"
+                                         Clicked="OnListSettingsResetButton_Clicked"
+                                         HorizontalOptions="End"
+                                         Margin="10,0"
+                                         Grid.Column="2" Grid.Row="0">
+                                <ImageButton.Source>
+                                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                                     Glyph="&#xF099B;"
+                                                     Size="20"
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                            <!-- Reset -->
+
+                        </Grid>
 
                         <!-- Hidden Books -->
                         <Label Text="{x:Static localization:AppStringResources.ShowHiddenBooks}"
                                VerticalTextAlignment="Center"
                                Grid.Row="1" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenBooksOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -140,7 +166,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="2" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenCollectionsOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -153,7 +178,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="3" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenGenresOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -166,7 +190,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="4" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenSeriesOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -179,7 +202,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="5" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenAuthorsOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -192,7 +214,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="6" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenLocationsOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -205,7 +226,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="7" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HiddenWishlistBooksOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -229,20 +249,43 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <Grid Grid.ColumnSpan="2"
+                              Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
                         <Label Text="{x:Static localization:AppStringResources.BookFormatSettings}"
                                VerticalTextAlignment="Center"
-                               Grid.Row="0" Grid.Column="0"
                                HorizontalOptions="Center"
                                Style="{DynamicResource Header}"
                                Margin="10,5"
-                               Grid.ColumnSpan="2"/>
+                                   Grid.Column="1" Grid.Row="0"/>
+
+                            <!-- Reset -->
+                            <ImageButton Padding="10"
+                                         Clicked="OnBookFormatSettingsResetButton_Clicked"
+                                         HorizontalOptions="End"
+                                         Margin="10,0"
+                                         Grid.Column="2" Grid.Row="0">
+                                <ImageButton.Source>
+                                    <FontImageSource FontFamily="MaterialDesignIcons"
+                                                     Glyph="&#xF099B;"
+                                                     Size="20"
+                                                     Color="{DynamicResource TextOnPrimaryColor}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                            <!-- Reset -->
+
+                        </Grid>
 
                         <!-- Audiobook -->
                         <Label Text="{x:Static localization:AppStringResources.ShowAudiobook}"
                                VerticalTextAlignment="Center"
                                Grid.Row="1" Grid.Column="0"/>
                         <Switch IsToggled="{Binding AudiobookOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -255,7 +298,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="2" Grid.Column="0"/>
                         <Switch IsToggled="{Binding eBookOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -268,7 +310,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="3" Grid.Column="0"/>
                         <Switch IsToggled="{Binding HardcoverOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -281,7 +322,6 @@
                                VerticalTextAlignment="Center"
                                Grid.Row="4" Grid.Column="0"/>
                         <Switch IsToggled="{Binding PaperbackOn, Mode=TwoWay}"
-                                IsEnabled="True"
                                 Margin="0,-5"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
@@ -290,21 +330,6 @@
                         <!-- Paperback -->
 
                     </Grid>
-
-                    <!-- Reset -->
-                    <ImageButton Padding="10"
-                                 Clicked="OnResetButton_Clicked"
-                                 HorizontalOptions="Center"
-                                 Grid.Row="3" Grid.Column="0"
-                                 Grid.ColumnSpan="2">
-                        <ImageButton.Source>
-                            <FontImageSource FontFamily="MaterialDesignIcons"
-                                         Glyph="&#xF099B;"
-                                         Size="28"
-                                         Color="{DynamicResource TextOnPrimaryColor}" />
-                        </ImageButton.Source>
-                    </ImageButton>
-                    <!-- Reset -->
 
                 </Grid>
 
@@ -316,4 +341,5 @@
             
         </VerticalStackLayout>
     </ScrollView>
+    
 </ContentPage>

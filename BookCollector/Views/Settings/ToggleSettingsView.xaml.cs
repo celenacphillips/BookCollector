@@ -4,7 +4,7 @@
 
 namespace BookCollector.Views.Settings;
 
-using BookCollector.ViewModels.BaseViewModels;
+using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
 using BookCollector.ViewModels.Main;
@@ -554,7 +554,7 @@ public partial class ToggleSettingsView : ContentPage
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The event.</param>
-    public void OnResetButton_Clicked(object sender, EventArgs e)
+    public void OnBookSettingsResetButton_Clicked(object sender, EventArgs e)
     {
         this.CommentsOn = this.commentsDefault;
         Preferences.Set("CommentsOn", this.commentsDefault);
@@ -564,7 +564,15 @@ public partial class ToggleSettingsView : ContentPage
         Preferences.Set("FavoritesOn", this.favoritesDefault);
         this.RatingsOn = this.favoritesDefault;
         Preferences.Set("RatingsOn", this.favoritesDefault);
+    }
 
+    /// <summary>
+    /// Resets the toggles values.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnListSettingsResetButton_Clicked(object sender, EventArgs e)
+    {
         this.HiddenBooksOn = this.hiddenDefault;
         Preferences.Set("HiddenBooksOn", this.hiddenDefault);
         this.HiddenCollectionsOn = this.hiddenDefault;
@@ -579,15 +587,6 @@ public partial class ToggleSettingsView : ContentPage
         Preferences.Set("HiddenLocationsOn", this.hiddenDefault);
         this.HiddenWishlistBooksOn = this.hiddenDefault;
         Preferences.Set("HiddenWishlistBooksOn", this.hiddenDefault);
-
-        this.AudiobookOn = this.audiobookDefault;
-        Preferences.Set("AudiobookOn", this.audiobookDefault);
-        this.eBookOn = this.eBookDefault;
-        Preferences.Set("eBookOn", this.eBookDefault);
-        this.HardcoverOn = this.hardcoverDefault;
-        Preferences.Set("HardcoverOn", this.hardcoverDefault);
-        this.PaperbackOn = this.paperbackDefault;
-        Preferences.Set("PaperbackOn", this.paperbackDefault);
 
         ReadingViewModel.RefreshView = true;
         ToBeReadViewModel.RefreshView = true;
@@ -610,6 +609,23 @@ public partial class ToggleSettingsView : ContentPage
         AuthorsViewModel.filteredAuthorList = null;
         LocationsViewModel.filteredLocationList = null;
         WishListViewModel.filteredWishlistBookList = null;
+    }
+
+    /// <summary>
+    /// Resets the toggles values.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnBookFormatSettingsResetButton_Clicked(object sender, EventArgs e)
+    {
+        this.AudiobookOn = this.audiobookDefault;
+        Preferences.Set("AudiobookOn", this.audiobookDefault);
+        this.eBookOn = this.eBookDefault;
+        Preferences.Set("eBookOn", this.eBookDefault);
+        this.HardcoverOn = this.hardcoverDefault;
+        Preferences.Set("HardcoverOn", this.hardcoverDefault);
+        this.PaperbackOn = this.paperbackDefault;
+        Preferences.Set("PaperbackOn", this.paperbackDefault);
     }
 
     /// <summary>

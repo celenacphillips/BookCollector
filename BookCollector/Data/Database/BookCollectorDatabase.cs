@@ -78,7 +78,7 @@ namespace BookCollector.Data.Database
                 await this.database.DropTableAsync<LocationDatabaseModel>();
                 await this.database.DropTableAsync<SeriesDatabaseModel>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
             }
 

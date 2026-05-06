@@ -314,6 +314,9 @@
 		<MauiXaml Update="Views\Controls\Collection\CollectionCollectionList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Controls\DragAndDropContainer.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\Controls\Favorite.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -423,6 +426,9 @@
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Series\SeriesMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Settings\PageSettingsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Support\ChangeLogView.xaml">

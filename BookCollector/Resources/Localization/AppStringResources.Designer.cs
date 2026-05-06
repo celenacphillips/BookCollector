@@ -1257,6 +1257,7 @@ namespace BookCollector.Resources.Localization {
         ///• BUG FIX: Add Up Next value to Export for books.
         ///• NEW FEATURE: Add ability to Favorite groupings.
         ///• NEW FEATURE: Add Filter for groupings.
+        ///• NEW FEATURE: Add [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -2375,6 +2376,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grouping Tab.
+        /// </summary>
+        internal static string GroupingTab {
+            get {
+                return ResourceManager.GetString("GroupingTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hardcover.
         /// </summary>
         internal static string Hardcover {
@@ -2623,6 +2633,15 @@ namespace BookCollector.Resources.Localization {
         internal static string LibraryBookCovers {
             get {
                 return ResourceManager.GetString("LibraryBookCovers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Library Tab.
+        /// </summary>
+        internal static string LibraryTab {
+            get {
+                return ResourceManager.GetString("LibraryTab", resourceCulture);
             }
         }
         
@@ -3037,6 +3056,15 @@ namespace BookCollector.Resources.Localization {
         internal static string Pages {
             get {
                 return ResourceManager.GetString("Pages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page Settings.
+        /// </summary>
+        internal static string PageSettings {
+            get {
+                return ResourceManager.GetString("PageSettings", resourceCulture);
             }
         }
         
@@ -4241,14 +4269,6 @@ namespace BookCollector.Resources.Localization {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Up Next.
-        /// </summary>
-        internal static string UpNext {
-            get {
-                return ResourceManager.GetString("UpNext", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to (This will put the book on the Reading View for easy access.).
