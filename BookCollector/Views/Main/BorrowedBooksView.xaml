@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="BookCollector.Views.Main.BorrowedBooksView"
+             xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
+             xmlns:viewModel="clr-namespace:BookCollector.ViewModels.Main"
+             xmlns:controls="clr-namespace:BookCollector.Views.Controls.Book"
+             xmlns:activityControls="clr-namespace:BookCollector.Views.Controls"
+             x:DataType="viewModel:BorrowedBooksViewModel"
+             x:Name="BorrowedBooksPage"
+             Title="{x:Static localization:AppStringResources.BooksBorrowed}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding FilterPopupCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF0236;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding SortPopupCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF04BA;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding InfoPopupCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF02FC;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+
+        <ToolbarItem Command="{Binding AddBookCommand}"
+                     IsEnabled="{Binding IsEnabled}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="MaterialDesignIcons" 
+                                 Glyph="&#xF05DB;" 
+                                 Size="26" 
+                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <Grid>
+
+        <!-- Main Content -->
+        <StackLayout>
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <VerticalStackLayout IsVisible="{Binding IsVisible}"
+                                     x:Name="rootLayout">
+                    <Label Text="{Binding TotalBooksString}"
+                           HorizontalOptions="End"
+                           Margin="0,0,20,0"
+                           TextColor="{DynamicResource Primary}"
+                           Style="{StaticResource SubTitle}"
+                           x:Name="totalString"/>
+
+                    <ScrollView IsEnabled="{Binding IsEnabled}">
+                        <!-- This is needed to allow the refresh view to work. -->
+
+                        <VerticalStackLayout Padding="10">
+                            <SearchBar Placeholder="{x:Static localization:AppStringResources.SearchBooks}"
+                                       Text="{Binding SearchString}"
+                                       IsReadOnly="{Binding IsBusy}"
+                                       x:Name="searchBar">
+                                <SearchBar.Behaviors>
+                                    <toolkit:EventToCommandBehavior Command="{Binding BookSearchOnTitleCommand}"
+                                                                    CommandParameter="{Binding SearchString}"
+                                                                    EventName="TextChanged"
+                                                                    BindingContext="{Binding BindingContext, Source={x:Reference BorrowedBooksPage}}"/>
+                                </SearchBar.Behaviors>
+                            </SearchBar>
+
+                            <controls:BookCollectionList x:Name="bookCollectionList"/>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </RefreshView>
+        </StackLayout>
+        <!-- Main Content -->
+
+        <!-- Activity Indicator -->
+        <activityControls:LoadingControl/>
+        <!-- Activity Indicator -->
+    </Grid>
+</ContentPage>

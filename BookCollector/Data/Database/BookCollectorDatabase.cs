@@ -9,6 +9,7 @@ namespace BookCollector.Data.Database
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.Library;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using SQLite;
@@ -68,15 +69,15 @@ namespace BookCollector.Data.Database
 
             try
             {
-                await this.database.DropTableAsync<AuthorDatabaseModel>();
-                await this.database.DropTableAsync<BookAuthorModel>();
-                await this.database.DropTableAsync<BookDatabaseModel>();
-                await this.database.DropTableAsync<WishlistBookDatabaseModel>();
-                await this.database.DropTableAsync<ChapterDatabaseModel>();
-                await this.database.DropTableAsync<CollectionDatabaseModel>();
-                await this.database.DropTableAsync<GenreDatabaseModel>();
-                await this.database.DropTableAsync<LocationDatabaseModel>();
-                await this.database.DropTableAsync<SeriesDatabaseModel>();
+                await this.database.DeleteAllAsync<AuthorDatabaseModel>();
+                await this.database.DeleteAllAsync<BookAuthorModel>();
+                await this.database.DeleteAllAsync<BookDatabaseModel>();
+                await this.database.DeleteAllAsync<WishlistBookDatabaseModel>();
+                await this.database.DeleteAllAsync<ChapterDatabaseModel>();
+                await this.database.DeleteAllAsync<CollectionDatabaseModel>();
+                await this.database.DeleteAllAsync<GenreDatabaseModel>();
+                await this.database.DeleteAllAsync<LocationDatabaseModel>();
+                await this.database.DeleteAllAsync<SeriesDatabaseModel>();
             }
             catch (Exception ex)
             {
@@ -171,6 +172,56 @@ namespace BookCollector.Data.Database
                     .Where(x => (x.BookPageRead == x.BookPageTotal && x.BookPageRead != 0) ||
                     (x.BookHourListened == x.BookHoursTotal && x.BookMinuteListened == x.BookMinutesTotal && x.BookHourListened != 0 && x.BookMinuteListened != 0) ||
                     (!string.IsNullOrEmpty(x.BookStartDate) && !string.IsNullOrEmpty(x.BookEndDate)))
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new BookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                return booksList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get a list of all books that have been loaned out.
+        /// </summary>
+        /// <returns>A list of all books that have have been loaned out.</returns>
+        public async Task<List<BookModel>> GetAllLoanedOutBooksAsync()
+        {
+            try
+            {
+                var books = await this.database.Table<BookDatabaseModel>()
+                    .Where(x => !string.IsNullOrEmpty(x.BookLoanedOutOn) || !string.IsNullOrEmpty(x.LoanedTo))
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new BookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                return booksList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get a list of all books that have been borrowed.
+        /// </summary>
+        /// <returns>A list of all books that have have been borrowed.</returns>
+        public async Task<List<BookModel>> GetAllBorrowedBooksAsync()
+        {
+            try
+            {
+                var books = await this.database.Table<BookDatabaseModel>()
+                    .Where(x => !string.IsNullOrEmpty(x.BookBorrowedOn) || !string.IsNullOrEmpty(x.BorrowedFrom))
                     .ToListAsync();
 
                 var booksList = books
@@ -797,18 +848,39 @@ namespace BookCollector.Data.Database
         {
             try
             {
-                var bookAuthors = await this.database.Table<BookAuthorModel>()
-                    .Where(x => x.AuthorGuid == authorGuid)
-                    .OrderBy(x => x.BookGuid)
-                    .ToListAsync();
+                List<BookAuthorModel> bookAuthors;
+
+                if (AuthorsViewModel.fullBookAuthorList == null)
+                {
+                    bookAuthors = await this.database.Table<BookAuthorModel>()
+                        .Where(x => x.AuthorGuid == authorGuid)
+                        .OrderBy(x => x.BookGuid)
+                        .ToListAsync();
+                }
+                else
+                {
+                    bookAuthors = [.. AuthorsViewModel.fullBookAuthorList
+                        .Where(x => x.AuthorGuid == authorGuid)
+                        .OrderBy(x => x.BookGuid)];
+                }
 
                 var books = new List<BookDatabaseModel>();
 
                 foreach (var bookAuthor in bookAuthors)
                 {
-                    var book = await this.database.Table<BookDatabaseModel>()
-                        .Where(x => x.BookGuid == bookAuthor.BookGuid)
-                        .FirstOrDefaultAsync();
+                    BookDatabaseModel? book;
+
+                    if (AllBooksViewModel.fullBookList == null)
+                    {
+                        book = await this.database.Table<BookDatabaseModel>()
+                            .Where(x => x.BookGuid == bookAuthor.BookGuid)
+                            .FirstOrDefaultAsync();
+                    }
+                    else
+                    {
+                        book = AllBooksViewModel.fullBookList
+                            .FirstOrDefault(x => x.BookGuid == bookAuthor.BookGuid);
+                    }
 
                     if (book != null)
                     {

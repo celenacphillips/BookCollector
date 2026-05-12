@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.WishListBook
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -101,10 +102,10 @@ namespace BookCollector.ViewModels.WishListBook
         /// </summary>
         public override void GetPreferences()
         {
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            DevicePreferences.ShowAudiobooksValue = DevicePreferences.ShowAudiobooksValue;
+            DevicePreferences.ShoweBooksValue = DevicePreferences.ShoweBooksValue;
+            DevicePreferences.ShowHardcoversValue = DevicePreferences.ShowHardcoversValue;
+            DevicePreferences.ShowPaperbacksValue = DevicePreferences.ShowPaperbacksValue;
         }
 
         /// <summary>

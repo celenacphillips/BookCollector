@@ -553,12 +553,12 @@
                                     <!-- Book Language -->
 
                                     <!-- Book Price -->
-                                    <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                    <Label Text="{x:Static localization:AppStringResources.OriginalBookPrice}"
                                            Style="{DynamicResource Header}"
                                            Grid.Row="0" Grid.Column="1"/>
                                     
                                     <Editor Text="{Binding EditedWishlistBook.BookPrice}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookPrice}"
+                                            Placeholder="{x:Static localization:AppStringResources.OriginalBookPrice}"
                                             HorizontalTextAlignment="Center"
                                             VerticalOptions="End"
                                             Keyboard="Numeric"

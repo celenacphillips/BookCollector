@@ -412,7 +412,7 @@
                                     <!-- Book Price -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                        <Label Text="{x:Static localization:AppStringResources.OriginalBookPrice}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>

@@ -4,6 +4,8 @@
 
 namespace BookCollector.Views.Settings;
 
+using BookCollector.Data;
+using BookCollector.Data.Enums;
 using BookCollector.Resources.Localization;
 using BookCollector.Views.Controls;
 using System.Collections.ObjectModel;
@@ -14,29 +16,6 @@ using System.Collections.ObjectModel;
 public partial class PageSettingsView : ContentPage
 {
     private readonly AppShell appShell;
-
-    /********************************************************/
-    private readonly string libraryTabViewsDefault = $"{AppStringResources.Reading},{AppStringResources.ToBeRead},{AppStringResources.Read},{AppStringResources.AllBooks}";
-
-    private readonly bool readingDefault = true;
-
-    private readonly bool toBeReadDefault = true;
-
-    private readonly bool readDefault = true;
-
-    private readonly bool allBooksDefault = true;
-
-    private readonly string groupingsTabViewsDefault = $"{AppStringResources.Collections},{AppStringResources.Genres},{AppStringResources.Series},{AppStringResources.Authors},{AppStringResources.Locations}";
-
-    private readonly bool collectionsDefault = true;
-
-    private readonly bool genresDefault = true;
-
-    private readonly bool seriesDefault = true;
-
-    private readonly bool authorsDefault = true;
-
-    private readonly bool locationsDefault = true;
 
     /********************************************************/
 
@@ -65,16 +44,16 @@ public partial class PageSettingsView : ContentPage
     /// </summary>
     public PageSettingsView()
     {
-        this.ReadingOn = Preferences.Get("ReadingOn", this.readingDefault /* Default */);
-        this.ToBeReadOn = Preferences.Get("ToBeReadOn", this.toBeReadDefault /* Default */);
-        this.ReadOn = Preferences.Get("ReadOn", this.readDefault /* Default */);
-        this.AllBooksOn = Preferences.Get("AllBooksOn", this.allBooksDefault /* Default */);
+        this.ReadingOn = DevicePreferences.ReadingViewShowValue;
+        this.ToBeReadOn = DevicePreferences.ToBeReadViewShowValue;
+        this.ReadOn = DevicePreferences.ReadViewShowValue;
+        this.AllBooksOn = DevicePreferences.AllBooksViewShowValue;
 
-        this.CollectionsOn = Preferences.Get("CollectionsOn", this.collectionsDefault /* Default */);
-        this.GenresOn = Preferences.Get("GenresOn", this.genresDefault /* Default */);
-        this.SeriesOn = Preferences.Get("SeriesOn", this.seriesDefault /* Default */);
-        this.AuthorsOn = Preferences.Get("AuthorsOn", this.authorsDefault /* Default */);
-        this.LocationsOn = Preferences.Get("LocationsOn", this.locationsDefault /* Default */);
+        this.CollectionsOn = DevicePreferences.CollectionsViewShowValue;
+        this.GenresOn = DevicePreferences.GenresViewShowValue;
+        this.SeriesOn = DevicePreferences.SeriesViewShowValue;
+        this.AuthorsOn = DevicePreferences.AuthorsViewShowValue;
+        this.LocationsOn = DevicePreferences.LocationsViewShowValue;
 
         this.appShell = (AppShell)Application.Current?.Windows[0].Page!;
 
@@ -252,7 +231,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("ReadingOn", e.Value);
+            Preferences.Set(DevicePreferences.ReadingViewShow, e.Value);
+            DevicePreferences.ReadingViewShowValue = e.Value;
             this.appShell.ResetLibraryTab();
         }
     }
@@ -266,7 +246,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("ToBeReadOn", e.Value);
+            Preferences.Set(DevicePreferences.ToBeReadViewShow, e.Value);
+            DevicePreferences.ToBeReadViewShowValue = e.Value;
             this.appShell.ResetLibraryTab();
         }
     }
@@ -280,7 +261,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("ReadOn", e.Value);
+            Preferences.Set(DevicePreferences.ReadViewShow, e.Value);
+            DevicePreferences.ReadViewShowValue = e.Value;
             this.appShell.ResetLibraryTab();
         }
     }
@@ -294,7 +276,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("AllBooksOn", e.Value);
+            Preferences.Set(DevicePreferences.AllBooksViewShow, e.Value);
+            DevicePreferences.AllBooksViewShowValue = e.Value;
             this.appShell.ResetLibraryTab();
         }
     }
@@ -308,7 +291,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("CollectionsOn", e.Value);
+            Preferences.Set(DevicePreferences.CollectionsViewShow, e.Value);
+            DevicePreferences.CollectionsViewShowValue = e.Value;
             this.appShell.ResetGroupingsTab();
         }
     }
@@ -322,7 +306,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("GenresOn", e.Value);
+            Preferences.Set(DevicePreferences.GenresViewShow, e.Value);
+            DevicePreferences.GenresViewShowValue = e.Value;
             this.appShell.ResetGroupingsTab();
         }
     }
@@ -336,7 +321,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("SeriesOn", e.Value);
+            Preferences.Set(DevicePreferences.SeriesViewShow, e.Value);
+            DevicePreferences.SeriesViewShowValue = e.Value;
             this.appShell.ResetGroupingsTab();
         }
     }
@@ -350,7 +336,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("AuthorsOn", e.Value);
+            Preferences.Set(DevicePreferences.AuthorsViewShow, e.Value);
+            DevicePreferences.AuthorsViewShowValue = e.Value;
             this.appShell.ResetGroupingsTab();
         }
     }
@@ -364,7 +351,8 @@ public partial class PageSettingsView : ContentPage
     {
         if (e != null)
         {
-            Preferences.Set("LocationsOn", e.Value);
+            Preferences.Set(DevicePreferences.LocationsViewShow, e.Value);
+            DevicePreferences.LocationsViewShowValue = e.Value;
             this.appShell.ResetGroupingsTab();
         }
     }
@@ -376,16 +364,25 @@ public partial class PageSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnLibraryTabResetButton_Clicked(object sender, EventArgs e)
     {
-        this.ReadingOn = this.readingDefault;
-        Preferences.Set("ReadingOn", this.readingDefault);
-        this.ToBeReadOn = this.toBeReadDefault;
-        Preferences.Set("ToBeReadOn", this.toBeReadDefault);
-        this.ReadOn = this.readDefault;
-        Preferences.Set("ReadOn", this.readDefault);
-        this.AllBooksOn = this.allBooksDefault;
-        Preferences.Set("AllBooksOn", this.allBooksDefault);
+        this.ReadingOn = DevicePreferenceDefaults.ReadingViewShowDefault;
+        Preferences.Set(DevicePreferences.ReadingViewShow, DevicePreferenceDefaults.ReadingViewShowDefault);
+        DevicePreferences.ReadingViewShowValue = DevicePreferenceDefaults.ReadingViewShowDefault;
 
-        Preferences.Set("LibraryTabViewsOrder", this.libraryTabViewsDefault);
+        this.ToBeReadOn = DevicePreferenceDefaults.ToBeReadViewShowDefault;
+        Preferences.Set(DevicePreferences.ToBeReadViewShow, DevicePreferenceDefaults.ToBeReadViewShowDefault);
+        DevicePreferences.ToBeReadViewShowValue = DevicePreferenceDefaults.ToBeReadViewShowDefault;
+
+        this.ReadOn = DevicePreferenceDefaults.ReadViewShowDefault;
+        Preferences.Set(DevicePreferences.ReadViewShow, DevicePreferenceDefaults.ReadViewShowDefault);
+        DevicePreferences.ReadViewShowValue = DevicePreferenceDefaults.ReadViewShowDefault;
+
+        this.AllBooksOn = DevicePreferenceDefaults.AllBooksViewShowDefault;
+        Preferences.Set(DevicePreferences.AllBooksViewShow, DevicePreferenceDefaults.AllBooksViewShowDefault);
+        DevicePreferences.AllBooksViewShowValue = DevicePreferenceDefaults.AllBooksViewShowDefault;
+
+        Preferences.Set(DevicePreferences.LibraryTabViewsOrder, DevicePreferenceDefaults.LibraryTabViewsOrderDefault);
+        DevicePreferences.LibraryTabViewsOrderValue = DevicePreferenceDefaults.LibraryTabViewsOrderDefault;
+
         this.LibraryTabViews.Clear();
         this.AddLibraryTabViews();
         this.appShell.ResetLibraryTab();
@@ -398,18 +395,29 @@ public partial class PageSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnGroupingsTabResetButton_Clicked(object sender, EventArgs e)
     {
-        this.CollectionsOn = this.collectionsDefault;
-        Preferences.Set("CollectionsOn", this.collectionsDefault);
-        this.GenresOn = this.genresDefault;
-        Preferences.Set("GenresOn", this.genresDefault);
-        this.SeriesOn = this.seriesDefault;
-        Preferences.Set("SeriesOn", this.seriesDefault);
-        this.AuthorsOn = this.authorsDefault;
-        Preferences.Set("AuthorsOn", this.authorsDefault);
-        this.LocationsOn = this.locationsDefault;
-        Preferences.Set("LocationOn", this.locationsDefault);
+        this.CollectionsOn = DevicePreferenceDefaults.CollectionsViewShowDefault;
+        Preferences.Set(DevicePreferences.CollectionsViewShow, DevicePreferenceDefaults.CollectionsViewShowDefault);
+        DevicePreferences.CollectionsViewShowValue = DevicePreferenceDefaults.CollectionsViewShowDefault;
 
-        Preferences.Set("GroupingsTabViewsOrder", this.groupingsTabViewsDefault);
+        this.GenresOn = DevicePreferenceDefaults.GenresViewShowDefault;
+        Preferences.Set(DevicePreferences.GenresViewShow, DevicePreferenceDefaults.GenresViewShowDefault);
+        DevicePreferences.GenresViewShowValue = DevicePreferenceDefaults.GenresViewShowDefault;
+
+        this.SeriesOn = DevicePreferenceDefaults.SeriesViewShowDefault;
+        Preferences.Set(DevicePreferences.SeriesViewShow, DevicePreferenceDefaults.SeriesViewShowDefault);
+        DevicePreferences.SeriesViewShowValue = DevicePreferenceDefaults.SeriesViewShowDefault;
+
+        this.AuthorsOn = DevicePreferenceDefaults.AuthorsViewShowDefault;
+        Preferences.Set(DevicePreferences.AuthorsViewShow, DevicePreferenceDefaults.AuthorsViewShowDefault);
+        DevicePreferences.AuthorsViewShowValue = DevicePreferenceDefaults.AuthorsViewShowDefault;
+
+        this.LocationsOn = DevicePreferenceDefaults.LocationsViewShowDefault;
+        Preferences.Set(DevicePreferences.LocationsViewShow, DevicePreferenceDefaults.LocationsViewShowDefault);
+        DevicePreferences.LocationsViewShowValue = DevicePreferenceDefaults.LocationsViewShowDefault;
+
+        Preferences.Set(DevicePreferences.GroupingsTabViewsOrder, DevicePreferenceDefaults.GroupingsTabViewsOrderDefault);
+        DevicePreferences.GroupingsTabViewOrderValue = DevicePreferenceDefaults.GroupingsTabViewsOrderDefault;
+
         this.GroupingTabViews.Clear();
         this.AddGroupingTabViews();
         this.appShell.ResetGroupingsTab();
@@ -432,7 +440,9 @@ public partial class PageSettingsView : ContentPage
             tabOrder += $"{label.Text},";
         }
 
-        Preferences.Set("LibraryTabViewsOrder", tabOrder);
+        Preferences.Set(DevicePreferences.LibraryTabViewsOrder, tabOrder);
+        DevicePreferences.LibraryTabViewsOrderValue = tabOrder;
+
         this.appShell.ResetLibraryTab();
     }
 
@@ -453,7 +463,9 @@ public partial class PageSettingsView : ContentPage
             tabOrder += $"{label.Text},";
         }
 
-        Preferences.Set("GroupingsTabViewsOrder", tabOrder);
+        Preferences.Set(DevicePreferences.GroupingsTabViewsOrder, tabOrder);
+        DevicePreferences.GroupingsTabViewOrderValue = tabOrder;
+
         this.appShell.ResetGroupingsTab();
     }
 
@@ -491,11 +503,7 @@ public partial class PageSettingsView : ContentPage
     {
         this.LibraryTabViews ??= [];
 
-        var libraryTabViewsOrder = Preferences.Get(
-            "LibraryTabViewsOrder",
-            this.libraryTabViewsDefault /* Default */);
-
-        var libraryTabViews = libraryTabViewsOrder.Split(",");
+        var libraryTabViews = DevicePreferences.LibraryTabViewsOrderValue.Split(",");
 
         foreach (var libraryTabView in libraryTabViews)
         {
@@ -539,11 +547,7 @@ public partial class PageSettingsView : ContentPage
     {
         this.GroupingTabViews ??= [];
 
-        var groupingsTabViewsOrder = Preferences.Get(
-            "GroupingsTabViewsOrder",
-            this.groupingsTabViewsDefault /* Default */);
-
-        var groupingsTabViews = groupingsTabViewsOrder.Split(",");
+        var groupingsTabViews = DevicePreferences.GroupingsTabViewOrderValue.Split(",");
 
         foreach (var groupingsTabView in groupingsTabViews)
         {

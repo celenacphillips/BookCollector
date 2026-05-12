@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.Book
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -59,7 +60,8 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         public override void GetPreferences()
         {
-            this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", true /* Default */);
+            this.LoanOutBooks = DevicePreferences.LoanedOutBooksShowValue;
+            this.BorrowBooks = DevicePreferences.BorrowedBooksShowValue;
         }
 
         /// <summary>
@@ -157,6 +159,7 @@ namespace BookCollector.ViewModels.Book
                 Task.Run(() => this.SelectedBook!.SetPartOfSeries()),
                 Task.Run(() => this.SelectedBook!.SetPartOfCollection()),
                 Task.Run(() => this.SelectedBook!.SetBookPrice()),
+                Task.Run(() => this.SelectedBook!.SetBookPricePaid()),
                 Task.Run(() => this.SelectedBook!.TotalTimeSpan = SetTime(this.SelectedBook.BookHoursTotal, this.SelectedBook.BookMinutesTotal)),
                 Task.Run(() => this.SelectedBook!.ListenTimeSpan = SetTime(this.SelectedBook.BookHourListened, this.SelectedBook.BookMinuteListened)),
             };

@@ -1,25 +1,23 @@
-// <copyright file="ReadingView.xaml.cs" company="Castle Software">
+// <copyright file="BorrowedBooksView.xaml.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-namespace BookCollector.Views.Library;
+namespace BookCollector.Views.Main;
 
-using BookCollector.Data;
-using BookCollector.Data.Enums;
 using BookCollector.ViewModels.BaseViewModels;
-using BookCollector.ViewModels.Library;
+using BookCollector.ViewModels.Main;
 
 /// <summary>
-/// ReadingView class.
+/// BorrowedBooksView class.
 /// </summary>
-public partial class ReadingView : ContentPage
+public partial class BorrowedBooksView : ContentPage
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ReadingView"/> class.
+    /// Initializes a new instance of the <see cref="BorrowedBooksView"/> class.
     /// </summary>
-    public ReadingView()
+    public BorrowedBooksView()
     {
-        this.ViewModel = new ReadingViewModel(this);
+        this.ViewModel = new BorrowedBooksViewModel(this);
         this.BindingContext = this.ViewModel;
 
         this.InitializeComponent();
@@ -27,7 +25,7 @@ public partial class ReadingView : ContentPage
         this.rootLayout.SizeChanged += this.OnLayoutMeasured;
     }
 
-    private ReadingViewModel ViewModel { get; set; }
+    private BorrowedBooksViewModel ViewModel { get; set; }
 
     /// <summary>
     /// Called when the view becomes visible.

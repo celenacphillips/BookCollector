@@ -6,6 +6,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
     using BookCollector.CustomPermissions;
+    using BookCollector.Data;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.Views.Book;
@@ -144,7 +145,10 @@ namespace BookCollector.ViewModels.BaseViewModels
             catch (Exception ex)
             {
                 await this.ViewModelCatch(ex);
+                this.SetRefreshView(false);
             }
+
+            this.SetIsBusyFalse();
         }
 
         /********************************************************/
@@ -245,22 +249,22 @@ namespace BookCollector.ViewModels.BaseViewModels
 
                 bookFormats.AddRange(this.BookFormats!);
 
-                if (!this.AudiobookShow)
+                if (!DevicePreferences.ShowAudiobooksValue)
                 {
                     bookFormats?.Remove(AppStringResources.Audiobook);
                 }
 
-                if (!this.eBookShow)
+                if (!DevicePreferences.ShoweBooksValue)
                 {
                     bookFormats?.Remove(AppStringResources.eBook);
                 }
 
-                if (!this.HardcoverShow)
+                if (!DevicePreferences.ShowHardcoversValue)
                 {
                     bookFormats?.Remove(AppStringResources.Hardcover);
                 }
 
-                if (!this.PaperbackShow)
+                if (!DevicePreferences.ShowPaperbacksValue)
                 {
                     bookFormats?.Remove(AppStringResources.Paperback);
                 }

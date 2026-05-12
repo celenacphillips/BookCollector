@@ -6,6 +6,7 @@ namespace BookCollector.Data
 {
     using System.Collections.ObjectModel;
     using System.Globalization;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -605,7 +606,7 @@ namespace BookCollector.Data
         /// <returns>The total price, formatted with currency symbol.</returns>
         public static async Task<string> GetPriceOfAllBooks()
         {
-            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+            var cultureCode = DevicePreferences.AppCultureCodeValue;
             var cultureInfo = new CultureInfo(cultureCode);
 
             ObservableCollection<BookModel>? filteredList = null;
@@ -629,7 +630,7 @@ namespace BookCollector.Data
         /// <returns>The total price, formatted with currency symbol.</returns>
         public static async Task<string> GetPriceOfAllWishListBooks()
         {
-            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+            var cultureCode = DevicePreferences.AppCultureCodeValue;
             var cultureInfo = new CultureInfo(cultureCode);
 
             ObservableCollection<WishlistBookModel>? filteredList = null;
@@ -665,7 +666,7 @@ namespace BookCollector.Data
             bool showHardcovers,
             bool showPaperbacks)
         {
-            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+            var cultureCode = DevicePreferences.AppCultureCodeValue;
             var cultureInfo = new CultureInfo(cultureCode);
 
             var filteredList = new ObservableCollection<BookModel>();

@@ -5,6 +5,8 @@
 namespace BookCollector.ViewModels.Popups
 {
     using System.Collections.ObjectModel;
+    using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.Views.Controls;
@@ -330,6 +332,32 @@ namespace BookCollector.ViewModels.Popups
         /********************************************************/
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show borrowed books or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool borrowedBooksVisible;
+
+        /// <summary>
+        /// Gets or sets the borrowed books list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public List<string>? borrowedBooksPicker;
+
+        /// <summary>
+        /// Gets or sets the borrowed books option.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? borrowedBooksOption;
+
+        /********************************************************/
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FilterPopupViewModel"/> class.
         /// </summary>
         /// <param name="popup">Popup related to the view model.</param>
@@ -414,6 +442,11 @@ namespace BookCollector.ViewModels.Popups
         /// Gets or sets the default loaned out books option.
         /// </summary>
         internal string LoanedOutBooksOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default borrowed books option.
+        /// </summary>
+        internal string BorrowedBooksOptionDefault { get; set; }
 
         /********************************************************/
 
@@ -682,6 +715,24 @@ namespace BookCollector.ViewModels.Popups
             this.OverlaySection.Add(filterablePickerOverlay);
         }
 
+        /// <summary>
+        /// Displays filter overlay with picker list and selected option.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task BorrowedBooksChanged()
+        {
+            var filterablePickerOverlay = new FilterablePickerOverlay(
+                this,
+                AppStringResources.BooksBorrowed,
+                this.BorrowedBooksPicker,
+                this.BorrowedBooksOption,
+                false,
+                true);
+
+            this.OverlaySection.Add(filterablePickerOverlay);
+        }
+
         /********************************************************/
 
         /// <summary>
@@ -699,6 +750,7 @@ namespace BookCollector.ViewModels.Popups
         /// <param name="bookCoverOptionDefault">Book cover option default.</param>
         /// <param name="readingStatusOptionDefault">Reading status option default.</param>
         /// <param name="loanedOutBooksOptionDefault">Loaned out books option default.</param>
+        /// <param name="borrowedBooksOptionDefault">Borrowed books option default.</param>
         public void SetDefaults(
             string? favoriteOptionDefault,
             string? bookFormatOptionDefault,
@@ -711,7 +763,8 @@ namespace BookCollector.ViewModels.Popups
             string? bookSeriesOptionDefault,
             string? bookCoverOptionDefault,
             string? readingStatusOptionDefault,
-            string? loanedOutBooksOptionDefault)
+            string? loanedOutBooksOptionDefault,
+            string? borrowedBooksOptionDefault)
         {
             if (!string.IsNullOrEmpty(favoriteOptionDefault))
             {
@@ -771,6 +824,11 @@ namespace BookCollector.ViewModels.Popups
             if (!string.IsNullOrEmpty(loanedOutBooksOptionDefault))
             {
                 this.LoanedOutBooksOptionDefault = loanedOutBooksOptionDefault;
+            }
+
+            if (!string.IsNullOrEmpty(borrowedBooksOptionDefault))
+            {
+                this.BorrowedBooksOptionDefault = borrowedBooksOptionDefault;
             }
         }
 
@@ -961,6 +1019,19 @@ namespace BookCollector.ViewModels.Popups
             ];
         }
 
+        /// <summary>
+        /// Set values of borrowed books picker.
+        /// </summary>
+        public void SetBorrowedBooksPicker()
+        {
+            this.BorrowedBooksPicker =
+            [
+                AppStringResources.AllBooks,
+                AppStringResources.Borrowed,
+                AppStringResources.NotBorrowed,
+            ];
+        }
+
         /********************************************************/
 
         private void ResetDefaults()
@@ -977,68 +1048,74 @@ namespace BookCollector.ViewModels.Popups
             this.BookCoverOption = this.BookCoverOptionDefault;
             this.ReadingStatusOption = this.ReadingStatusOptionDefault;
             this.LoanedOutBooksOption = this.LoanedOutBooksOptionDefault;
+            this.BorrowedBooksOption = this.BorrowedBooksOptionDefault;
         }
 
         private void SetPreferences()
         {
             if (this.FavoriteVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.FavoriteFilterSelection}", this.FavoriteOption);
             }
 
             if (this.FormatVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_FormatSelection", this.FormatOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.FormatFilterSelection}", this.FormatOption);
             }
 
             if (this.AuthorVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_AuthorSelection", this.AuthorOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.AuthorFilterSelection}", this.AuthorOption);
             }
 
             if (this.PublisherVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_PublisherSelection", this.PublisherOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.PublisherFilterSelection}", this.PublisherOption);
             }
 
             if (this.PublishYearVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_PublishYearSelection", this.PublishYearOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.PublishYearFilterSelection}", this.PublishYearOption);
             }
 
             if (this.LanguageVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_LanguageSelection", this.LanguageOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.LanguageFilterSelection}", this.LanguageOption);
             }
 
             if (this.RatingVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_RatingSelection", this.RatingOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.RatingFilterSelection}", this.RatingOption);
             }
 
             if (this.LocationVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_LocationSelection", this.LocationOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.LocationFilterSelection}", this.LocationOption);
             }
 
             if (this.SeriesVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_SeriesSelection", this.SeriesOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.SeriesFilterSelection}", this.SeriesOption);
             }
 
             if (this.BookCoverVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookCoverFilterSelection}", this.BookCoverOption);
             }
 
             if (this.ReadingStatusVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_ReadingStatusSelection", this.ReadingStatusOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.ReadingStatusFilterSelection}", this.ReadingStatusOption);
             }
 
             if (this.LoanedOutBooksVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_LoanedOutBooksSelection", this.LoanedOutBooksOption);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.LoanedOutBooksFilterSelection}", this.LoanedOutBooksOption);
+            }
+
+            if (this.BorrowedBooksVisible)
+            {
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BorrowedBooksFilterSelection}", this.BorrowedBooksOption);
             }
         }
     }

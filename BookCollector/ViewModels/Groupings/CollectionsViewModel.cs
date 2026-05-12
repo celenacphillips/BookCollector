@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.Groupings
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -106,11 +107,6 @@ namespace BookCollector.ViewModels.Groupings
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
         public static bool RefreshView { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden collections or not.
-        /// </summary>
-        private bool ShowHiddenCollections { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether collection name is checked or not.
@@ -234,7 +230,7 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.GetPreferences();
 
-                await SetList(this.ShowHiddenCollections);
+                await SetList(DevicePreferences.ShowHiddenCollectionsValue);
 
                 (this.TotalCollectionsCount,
                     this.FilteredCollectionsCount,
@@ -256,25 +252,16 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>The list show hidden preference.</returns>
         public override bool GetPreferences()
         {
-            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
+            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.FavoriteFilterSelection}", this.FavoriteOptionDefault /* Default */);
 
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.CollectionNameSortSelection}", (bool)this.CollectionNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.TotalBooksSortSelection}", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.TotalPriceSortSelection}", (bool)this.TotalPriceCheckedDefault! /* Default */);
 
-            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOptionDefault /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AscendingSortSelection}", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.DescendingSortSelection}", this.DescendingCheckedDefault /* Default */);
 
-            this.CollectionNameChecked = Preferences.Get($"{this.ViewTitle}_CollectionNameSelection", (bool)this.CollectionNameCheckedDefault! /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
-
-            return this.ShowHiddenCollections;
+            return DevicePreferences.ShowHiddenCollectionsValue;
         }
 
         /// <summary>
@@ -284,7 +271,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>The updated viewmodel.</returns>
         public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
         {
-            viewModel.FavoriteVisible = this.ShowFavorites;
+            viewModel.FavoriteVisible = DevicePreferences.FavoritesShowValue;
             viewModel.FavoriteOption = this.FavoritesOption;
             /******************************/
 

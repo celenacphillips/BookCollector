@@ -137,6 +137,10 @@ namespace BookCollector.Data.Models
             this.BookAuthors = dbModel.BookAuthors;
             this.BookSeries = dbModel.BookSeries;
             this.BookIdentifier = dbModel.BookIdentifier;
+            this.ObtainedDate = dbModel.ObtainedDate;
+            this.BookPricePaid = dbModel.BookPricePaid;
+            this.BorrowedFrom = dbModel.BorrowedFrom;
+            this.BookBorrowedOn = dbModel.BookBorrowedOn;
         }
 
         /// <summary>
@@ -169,6 +173,14 @@ namespace BookCollector.Data.Models
         }
 
         /// <summary>
+        /// Gets the book price paid as a double.
+        /// </summary>
+        public double BookPricePaidValue
+        {
+            get => BookBaseViewModel.SetBookPriceValue(this.BookPricePaid);
+        }
+
+        /// <summary>
         /// Gets the book start date value.
         /// </summary>
         public DateTime? StartDateValue
@@ -190,6 +202,22 @@ namespace BookCollector.Data.Models
         public DateTime? LoanedOutOnValue
         {
             get => !string.IsNullOrEmpty(this.BookLoanedOutOn) ? DateTime.Parse(this.BookLoanedOutOn) : null;
+        }
+
+        /// <summary>
+        /// Gets the borrowed date value.
+        /// </summary>
+        public DateTime? BorrowedOnValue
+        {
+            get => !string.IsNullOrEmpty(this.BookBorrowedOn) ? DateTime.Parse(this.BookBorrowedOn) : null;
+        }
+
+        /// <summary>
+        /// Gets the obtained date value.
+        /// </summary>
+        public DateTime? ObtainedDateValue
+        {
+            get => !string.IsNullOrEmpty(this.ObtainedDate) ? DateTime.Parse(this.ObtainedDate) : null;
         }
 
         /// <summary>
@@ -389,6 +417,14 @@ namespace BookCollector.Data.Models
         public void SetBookPrice()
         {
             this.BookPrice = StringManipulation.SetBookPrice(this.BookPrice);
+        }
+
+        /// <summary>
+        /// Set book price Paid, formatted with currency symbol.
+        /// </summary>
+        public void SetBookPricePaid()
+        {
+            this.BookPricePaid = StringManipulation.SetBookPrice(this.BookPricePaid);
         }
 
         /// <summary>

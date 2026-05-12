@@ -1,24 +1,24 @@
-﻿// <copyright file="GenreMainViewModel.cs" company="Castle Software">
+﻿// <copyright file="LoanedOutBooksViewModel.cs" company="Castle Software">
 // Copyright (c) Castle Software. All rights reserved.
 // </copyright>
 
-namespace BookCollector.ViewModels.Genre
+namespace BookCollector.ViewModels.Main
 {
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
-    using BookCollector.ViewModels.Groupings;
+    using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Popups;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
 
     /// <summary>
-    /// GenreMainViewModel class.
+    /// LoanedOutBooksViewModel class.
     /// </summary>
-    public partial class GenreMainViewModel : GenresViewModel
+    public partial class LoanedOutBooksViewModel : BookListBaseViewModel
     {
         /// <summary>
         /// Gets or sets the full book list.
@@ -26,7 +26,8 @@ namespace BookCollector.ViewModels.Genre
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<BookModel>? fullBookList;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<BookModel>? fullBookList;
 
         /// <summary>
         /// Gets or sets the first filtered list.
@@ -34,7 +35,8 @@ namespace BookCollector.ViewModels.Genre
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public ObservableCollection<BookModel>? hiddenFilteredBookList;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<BookModel>? hiddenFilteredBookList;
 
         /// <summary>
         /// Gets or sets the second filtered list.
@@ -42,7 +44,8 @@ namespace BookCollector.ViewModels.Genre
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
-        public new ObservableCollection<BookModel>? filteredBookList;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static new ObservableCollection<BookModel>? filteredBookList;
 
         /// <summary>
         /// Gets or sets the total count of books, based on the first filtered list.
@@ -79,17 +82,15 @@ namespace BookCollector.ViewModels.Genre
         /********************************************************/
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenreMainViewModel"/> class.
+        /// Initializes a new instance of the <see cref="LoanedOutBooksViewModel"/> class.
         /// </summary>
-        /// <param name="genre">Genre to view.</param>
         /// <param name="view">View related to view model.</param>
-        public GenreMainViewModel(GenreModel genre, ContentPage view)
-            : base(view)
+        public LoanedOutBooksViewModel(ContentPage view)
         {
             this.View = view;
-            this.SelectedGenre = genre;
             this.CollectionViewHeight = DeviceHeight;
-            this.InfoText = $"{AppStringResources.GenreMainView_InfoText.Replace("genre", $"{this.SelectedGenre.GenreName}")}";
+            this.InfoText = $"{AppStringResources.LoanedOutBooksView_InfoText}";
+            this.ViewTitle = AppStringResources.BooksLoanedOut;
             this.SetRefreshView(true);
 
             this.SetFilterPopupDefaults();
@@ -101,7 +102,7 @@ namespace BookCollector.ViewModels.Genre
         /// <summary>
         /// Gets or sets a value indicating whether to refresh the view or not.
         /// </summary>
-        public static new bool RefreshView { get; set; }
+        public static bool RefreshView { get; set; }
 
         /********************************************************/
 
@@ -114,16 +115,24 @@ namespace BookCollector.ViewModels.Genre
         /// <param name="showHardcovers">Show hardcovers.</param>
         /// <param name="showPaperbacks">Show paperbacks.</param>
         /// <returns>A task.</returns>
-        public async Task SetList(
+        public static async Task SetList(
             bool showHiddenBooks,
             bool showAudiobooks,
             bool showEbooks,
             bool showHardcovers,
             bool showPaperbacks)
         {
-            this.FullBookList ??= await FillLists.GetAllBooksInGenreList(this.SelectedGenre?.GenreGuid, showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            fullBookList ??= await FillLists.GetLoanedOutBooksList();
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+            hiddenFilteredBookList = showHiddenBooks ? fullBookList : fullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            hiddenFilteredBookList = showAudiobooks ? hiddenFilteredBookList : hiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            hiddenFilteredBookList = showEbooks ? hiddenFilteredBookList : hiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            hiddenFilteredBookList = showHardcovers ? hiddenFilteredBookList : hiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            hiddenFilteredBookList = showPaperbacks ? hiddenFilteredBookList : hiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         /********************************************************/
@@ -139,31 +148,6 @@ namespace BookCollector.ViewModels.Genre
             this.SearchString = input;
 
             (this.FilteredBookList, this.FilteredBooksCount, this.TotalBooksString) = await this.BookSearch(this.HiddenFilteredBookList, this.TotalBooksCount);
-        }
-
-        /// <summary>
-        /// Create a new book and navigate to the book edit view.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task AddNewBook()
-        {
-            var newBook = new BookModel()
-            {
-                BookGenreGuid = this.SelectedGenre!.GenreGuid,
-            };
-
-            await this.ShowBookEditView(newBook);
-        }
-
-        /// <summary>
-        /// Show the existing books view to add an existing book to the genre.
-        /// </summary>
-        /// <returns>A task.</returns>
-        [RelayCommand]
-        public async Task AddExistingBook()
-        {
-            await this.ShowExistingBookView(this.SelectedGenre!);
         }
 
         /********************************************************/
@@ -187,7 +171,7 @@ namespace BookCollector.ViewModels.Genre
             {
                 this.GetPreferences();
 
-                await this.SetList(
+                await SetList(
                     DevicePreferences.ShowHiddenBooksValue,
                     DevicePreferences.ShowAudiobooksValue,
                     DevicePreferences.ShoweBooksValue,
@@ -227,7 +211,6 @@ namespace BookCollector.ViewModels.Genre
             this.BookRatingOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.RatingFilterSelection}", this.BookRatingOptionDefault /* Default */);
             this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookCoverFilterSelection}", this.BookCoverOptionDefault /* Default */);
             this.ReadingStatusOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.ReadingStatusFilterSelection}", this.ReadingStatusOptionDefault /* Default */);
-            this.LoanedOutBooksOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.LoanedOutBooksFilterSelection}", this.LoanedOutBooksOptionDefault /* Default */);
             this.BorrowedBooksOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BorrowedBooksFilterSelection}", this.BorrowedBooksOptionDefault /* Default */);
 
             this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookTitleSortSelection}", (bool)this.BookTitleCheckedDefault! /* Default */);
@@ -280,9 +263,6 @@ namespace BookCollector.ViewModels.Genre
             viewModel.ReadingStatusVisible = true;
             viewModel.ReadingStatusOption = this.ReadingStatusOption;
             /******************************/
-            viewModel.LoanedOutBooksVisible = DevicePreferences.LoanedOutBooksShowValue;
-            viewModel.LoanedOutBooksOption = this.LoanedOutBooksOption;
-            /******************************/
             viewModel.BorrowedBooksVisible = DevicePreferences.BorrowedBooksShowValue;
             viewModel.BorrowedBooksOption = this.BorrowedBooksOption;
 
@@ -310,7 +290,6 @@ namespace BookCollector.ViewModels.Genre
             viewModel.SetRatingPicker();
             viewModel.SetBookCoverPicker();
             viewModel.SetReadingStatusPicker();
-            viewModel.SetLoanedOutBooksPicker();
             viewModel.SetBorrowedBooksPicker();
 
             return viewModel;
@@ -378,7 +357,6 @@ namespace BookCollector.ViewModels.Genre
             this.BookRatingOptionDefault = AppStringResources.AllRatings;
             this.BookCoverOptionDefault = AppStringResources.Both;
             this.ReadingStatusOptionDefault = AppStringResources.AllReadingStatuses;
-            this.LoanedOutBooksOptionDefault = AppStringResources.AllBooks;
             this.BorrowedBooksOptionDefault = AppStringResources.AllBooks;
         }
 

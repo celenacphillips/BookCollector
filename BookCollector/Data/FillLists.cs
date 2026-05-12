@@ -110,6 +110,52 @@ namespace BookCollector.Data
         }
 
         /// <summary>
+        /// Get a list of all books that have been loaned out.
+        /// </summary>
+        /// <returns>A list of all books that have have been loaned out.</returns>
+        public static async Task<ObservableCollection<BookModel>?> GetLoanedOutBooksList()
+        {
+            ObservableCollection<BookModel>? filteredList = null;
+
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => !string.IsNullOrEmpty(x.BookLoanedOutOn) || !string.IsNullOrEmpty(x.LoanedTo))
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllLoanedOutBooksAsync();
+                filteredList = list.ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Get a list of all books that have been borrowed.
+        /// </summary>
+        /// <returns>A list of all books that have have been borrowed.</returns>
+        public static async Task<ObservableCollection<BookModel>?> GetBorrowedBooksList()
+        {
+            ObservableCollection<BookModel>? filteredList = null;
+
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => !string.IsNullOrEmpty(x.BookBorrowedOn) || !string.IsNullOrEmpty(x.BorrowedFrom))
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBorrowedBooksAsync();
+                filteredList = list.ToObservableCollection();
+            }
+
+            return filteredList;
+        }
+
+        /// <summary>
         /// Get a list of all books in the database, regardless of their reading status.
         /// </summary>
         /// <returns>A list of all books.</returns>

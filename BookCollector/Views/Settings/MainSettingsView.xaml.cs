@@ -4,6 +4,7 @@
 
 namespace BookCollector.Views.Settings;
 
+using BookCollector.Data;
 using BookCollector.Data.Enums;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.BaseViewModels;
@@ -17,16 +18,6 @@ using CommunityToolkit.Maui.Storage;
 public partial class MainSettingsView : ContentPage
 {
     private readonly string appThemeDefault = Application.Current?.PlatformAppTheme == AppTheme.Dark ? AppStringResources.Dark : AppStringResources.Light;
-
-    private readonly string appColorDefault = "#336699";
-
-    private readonly string exportLocationDefault = AppStringResources.DefaultExportLocation;
-
-    private readonly string appLanguageDefault = AppStringResources.English;
-
-    private readonly string appCurrencyDefault = "$ USD";
-
-    private readonly string cultureCodeDefault = "en-US";
 
     private string selectedAppThemeField;
 
@@ -42,18 +33,18 @@ public partial class MainSettingsView : ContentPage
     public MainSettingsView()
     {
         this.AppThemeList = [AppStringResources.Light, AppStringResources.Dark];
-        this.SelectedAppTheme = Application.Current?.UserAppTheme == AppTheme.Dark ? this.AppThemeList[1] : this.AppThemeList[0];
+        this.SelectedAppTheme = DevicePreferences.AppThemeValue;
 
-        this.SelectedColor = Preferences.Get("AppColor", this.appColorDefault /* Default */);
+        this.SelectedColor = DevicePreferences.AppColorValue;
 
         this.LanguageList = [AppStringResources.English];
-        this.SelectedLanguage = Preferences.Get("Language", this.appLanguageDefault /* Default */);
+        this.SelectedLanguage = DevicePreferences.AppLanguageValue;
 
         this.CurrencyList = ["$ USD"];
-        this.SelectedCurrency = Preferences.Get("Currency", this.appCurrencyDefault /* Default */);
+        this.SelectedCurrency = DevicePreferences.AppCurrencyValue;
 
-        var exportLocation = Preferences.Get("ExportLocation", this.exportLocationDefault /* Default */);
-        this.SelectedExportLocation = exportLocation.Equals("Not Set") ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2) ..];
+        var exportLocation = DevicePreferences.AppExportLocationValue;
+        this.SelectedExportLocation = exportLocation.Equals(AppStringResources.DefaultExportLocation) ? exportLocation : exportLocation[(exportLocation.IndexOf('0') + 2) ..];
 
         this.InitializeComponent();
         this.BindingContext = this;
@@ -153,7 +144,9 @@ public partial class MainSettingsView : ContentPage
         {
             this.SelectedExportLocation = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
             this.SelectedExportLocationLabel.Text = folder.Path[(folder.Path.IndexOf('0') + 2) ..];
-            Preferences.Set("ExportLocation", folder.Path);
+
+            Preferences.Set(DevicePreferences.AppExportLocation.ToString(), folder.Path);
+            DevicePreferences.AppExportLocationValue = folder.Path;
         }
     }
 
@@ -199,7 +192,9 @@ public partial class MainSettingsView : ContentPage
             {
                 this.SelectedAppTheme = result.Result;
                 Application.Current?.UserAppTheme = result.Result.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
-                Preferences.Set("AppTheme", result.Result.ToString());
+
+                Preferences.Set(DevicePreferences.AppTheme, result.Result.ToString());
+                DevicePreferences.AppThemeValue = result.Result.ToString();
             }
         }
         catch (Exception ex)
@@ -211,7 +206,7 @@ public partial class MainSettingsView : ContentPage
     {
         var color = Color.FromArgb(this.SelectedColor);
 
-        Data.Colors.SetPreviewColors(this.SelectedColor);
+        Colors.SetPreviewColors(this.SelectedColor);
 
         var colorPickerResult = await this.ShowPopupAsync<string>(new ColorPickerPopup(color));
 
@@ -219,10 +214,11 @@ public partial class MainSettingsView : ContentPage
         {
             var hexCode = colorPickerResult.Result;
             this.SelectedColor = hexCode!;
-            Data.Colors.SetColors(hexCode!);
+            Colors.SetColors(hexCode!);
 
             // https://developer.android.com/about/versions/15/behavior-changes-15#custom-background-protection
-            Preferences.Set("AppColor", hexCode!);
+            Preferences.Set(DevicePreferences.AppColor, hexCode!);
+            DevicePreferences.AppColorValue = hexCode!;
         }
     }
 
@@ -240,7 +236,9 @@ public partial class MainSettingsView : ContentPage
             if (!string.IsNullOrEmpty(result.Result))
             {
                 this.SelectedLanguage = result.Result;
-                Preferences.Set("Language", this.SelectedLanguage);
+
+                Preferences.Set(DevicePreferences.AppLanguage, this.SelectedLanguage);
+                DevicePreferences.AppLanguageValue = this.SelectedLanguage;
             }
         }
         catch (Exception ex)
@@ -262,11 +260,14 @@ public partial class MainSettingsView : ContentPage
             if (!string.IsNullOrEmpty(result.Result))
             {
                 this.SelectedCurrency = result.Result;
-                Preferences.Set("Currency", this.SelectedCurrency);
+
+                Preferences.Set(DevicePreferences.AppCurrency, this.SelectedCurrency);
+                DevicePreferences.AppCurrencyValue = this.SelectedCurrency;
 
                 if (this.SelectedCurrency.Equals("$ USD"))
                 {
-                    Preferences.Set("CultureCode", "en-US");
+                    Preferences.Set(DevicePreferences.AppCultureCode, DevicePreferenceDefaults.CultureCodeDefault);
+                    DevicePreferences.AppCurrencyValue = DevicePreferenceDefaults.CultureCodeDefault;
                 }
             }
         }
@@ -279,35 +280,47 @@ public partial class MainSettingsView : ContentPage
     {
         this.SelectedAppTheme = this.appThemeDefault;
         Application.Current?.UserAppTheme = this.appThemeDefault.Equals(AppStringResources.Light) ? AppTheme.Light : AppTheme.Dark;
-        Preferences.Set("AppTheme", this.appThemeDefault);
+
+        Preferences.Set(DevicePreferences.AppTheme, this.appThemeDefault);
+        DevicePreferences.AppThemeValue = this.appThemeDefault;
     }
 
     private void OnColorResetButton_Clicked(object sender, EventArgs e)
     {
-        this.SelectedColor = this.appColorDefault;
-        Data.Colors.SetColors(this.appColorDefault);
-        Data.Colors.SetPreviewColors(this.appColorDefault);
-        Preferences.Set("AppColor", this.appColorDefault);
+        this.SelectedColor = DevicePreferenceDefaults.AppColorDefault;
+        Colors.SetColors(DevicePreferenceDefaults.AppColorDefault);
+        Colors.SetPreviewColors(DevicePreferenceDefaults.AppColorDefault);
+
+        Preferences.Set(DevicePreferences.AppColor, DevicePreferenceDefaults.AppColorDefault);
+        DevicePreferences.AppColorValue = DevicePreferenceDefaults.AppColorDefault;
     }
 
     private void OnExportLocationResetButton_Clicked(object sender, EventArgs e)
     {
-        this.SelectedExportLocation = this.exportLocationDefault;
-        this.SelectedExportLocationLabel.Text = this.exportLocationDefault;
-        Preferences.Set("ExportLocation", this.exportLocationDefault);
+        this.SelectedExportLocation = AppStringResources.DefaultExportLocation;
+        this.SelectedExportLocationLabel.Text = AppStringResources.DefaultExportLocation;
+
+        Preferences.Set(DevicePreferences.AppExportLocation.ToString(), AppStringResources.DefaultExportLocation);
+        DevicePreferences.AppExportLocationValue = AppStringResources.DefaultExportLocation;
     }
 
     private void OnLanguageResetButton_Clicked(object sender, EventArgs e)
     {
-        this.SelectedLanguage = this.appLanguageDefault;
-        this.SelectedCurrency = this.appCurrencyDefault;
-        Preferences.Set("Language", this.appLanguageDefault);
+        this.SelectedLanguage = DevicePreferenceDefaults.AppLanguageDefault;
+        this.SelectedCurrency = DevicePreferenceDefaults.AppLanguageDefault;
+
+        Preferences.Set(DevicePreferences.AppLanguage, DevicePreferenceDefaults.AppLanguageDefault);
+        DevicePreferences.AppLanguageValue = DevicePreferenceDefaults.AppLanguageDefault;
     }
 
     private void OnCurrencyResetButton_Clicked(object sender, EventArgs e)
     {
-        this.SelectedCurrency = this.appCurrencyDefault;
-        Preferences.Set("Currency", this.appCurrencyDefault);
-        Preferences.Set("CultureCode", this.cultureCodeDefault);
+        this.SelectedCurrency = DevicePreferenceDefaults.AppCurrencyDefault;
+
+        Preferences.Set(DevicePreferences.AppCurrency, DevicePreferenceDefaults.AppCurrencyDefault);
+        DevicePreferences.AppCurrencyValue = DevicePreferenceDefaults.AppCurrencyDefault;
+
+        Preferences.Set(DevicePreferences.AppCultureCode, DevicePreferenceDefaults.CultureCodeDefault);
+        DevicePreferences.AppCultureCodeValue = DevicePreferenceDefaults.CultureCodeDefault;
     }
 }

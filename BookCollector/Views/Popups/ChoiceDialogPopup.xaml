@@ -22,10 +22,13 @@
                LineBreakMode="TailTruncation"
                Margin="10,20,10,0"/>
 
-        <Label Text="{Binding Message}"
-               HorizontalOptions="Center"
-               Margin="20"
-               IsVisible="{Binding CommandsVisible}"/>
+        <ScrollView HeightRequest="{Binding ScrollViewHeight}"
+                    Margin="20">
+            <Label Text="{Binding Message}"
+                   HorizontalOptions="Center"
+                   Margin="5"
+                   IsVisible="{Binding CommandsVisible}"/>
+        </ScrollView>
 
         <CollectionView ItemsSource="{Binding Choices}"
                         IsVisible="{Binding OptionsVisible}"

@@ -4,6 +4,7 @@
 
 namespace BookCollector.Views.Settings;
 
+using BookCollector.Data;
 using BookCollector.Resources.Localization;
 using BookCollector.ViewModels.Groupings;
 using BookCollector.ViewModels.Library;
@@ -14,26 +15,6 @@ using BookCollector.ViewModels.Main;
 /// </summary>
 public partial class ToggleSettingsView : ContentPage
 {
-    private readonly bool commentsDefault = true;
-
-    private readonly bool chaptersDefault = true;
-
-    private readonly bool favoritesDefault = true;
-
-    private readonly bool ratingsDefault = true;
-
-    private readonly bool hiddenDefault = true;
-
-    private readonly bool audiobookDefault = true;
-
-    private readonly bool eBookDefault = true;
-
-    private readonly bool hardcoverDefault = true;
-
-    private readonly bool paperbackDefault = true;
-
-    /********************************************************/
-
     private bool commentsOnField;
 
     private bool chaptersOnField;
@@ -41,6 +22,10 @@ public partial class ToggleSettingsView : ContentPage
     private bool favoritesOnField;
 
     private bool ratingsOnField;
+
+    private bool loanOutBooksField;
+
+    private bool borrowBooksField;
 
     private bool hiddenBooksOnField;
 
@@ -71,26 +56,31 @@ public partial class ToggleSettingsView : ContentPage
     /// </summary>
     public ToggleSettingsView()
     {
-        this.CommentsOn = Preferences.Get("CommentsOn", this.commentsDefault /* Default */);
-        this.ChaptersOn = Preferences.Get("ChaptersOn", this.chaptersDefault /* Default */);
-        this.FavoritesOn = Preferences.Get("FavoritesOn", this.favoritesDefault /* Default */);
-        this.RatingsOn = Preferences.Get("RatingsOn", this.ratingsDefault /* Default */);
+        this.CommentsOn = DevicePreferences.CommentsShowValue;
+        this.ChaptersOn = DevicePreferences.ChaptersShowValue;
+        this.FavoritesOn = DevicePreferences.FavoritesShowValue;
+        this.RatingsOn = DevicePreferences.RatingsShowValue;
+        this.LoanOutBooks = DevicePreferences.LoanedOutBooksShowValue;
+        this.BorrowBooks = DevicePreferences.BorrowedBooksShowValue;
 
-        this.HiddenBooksOn = Preferences.Get("HiddenBooksOn", this.hiddenDefault /* Default */);
-        this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", this.hiddenDefault /* Default */);
-        this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", this.hiddenDefault /* Default */);
-        this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", this.hiddenDefault /* Default */);
-        this.HiddenAuthorsOn = Preferences.Get("HiddenAuthorsOn", this.hiddenDefault /* Default */);
-        this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", this.hiddenDefault /* Default */);
-        this.HiddenWishlistBooksOn = Preferences.Get("HiddenWishlistBooksOn", this.hiddenDefault /* Default */);
+        this.HiddenBooksOn = DevicePreferences.ShowHiddenBooksValue;
+        this.HiddenCollectionsOn = DevicePreferences.ShowHiddenCollectionsValue;
+        this.HiddenGenresOn = DevicePreferences.ShowHiddenGenresValue;
+        this.HiddenSeriesOn = DevicePreferences.ShowHiddenSeriesValue;
+        this.HiddenAuthorsOn = DevicePreferences.ShowHiddenAuthorsValue;
+        this.HiddenLocationsOn = DevicePreferences.ShowHiddenLocationsValue;
+        this.HiddenWishlistBooksOn = DevicePreferences.ShowHiddenWishlistBooksValue;
 
-        this.AudiobookOn = Preferences.Get("AudiobookOn", this.audiobookDefault /* Default */);
-        this.eBookOn = Preferences.Get("eBookOn", this.eBookDefault /* Default */);
-        this.HardcoverOn = Preferences.Get("HardcoverOn", this.hardcoverDefault /* Default */);
-        this.PaperbackOn = Preferences.Get("PaperbackOn", this.paperbackDefault /* Default */);
+        this.AudiobookOn = DevicePreferences.ShowAudiobooksValue;
+        this.eBookOn = DevicePreferences.ShoweBooksValue;
+        this.HardcoverOn = DevicePreferences.ShowHardcoversValue;
+        this.PaperbackOn = DevicePreferences.ShowPaperbacksValue;
 
         this.InitializeComponent();
         this.BindingContext = this;
+
+        this.loanOutBooksAnswer.Text = this.LoanOutBooks ? AppStringResources.Yes : AppStringResources.No;
+        this.borrowBooksAnswer.Text = this.BorrowBooks ? AppStringResources.Yes : AppStringResources.No;
     }
 
     /********************************************************/
@@ -154,6 +144,38 @@ public partial class ToggleSettingsView : ContentPage
             if (this.ratingsOnField != value)
             {
                 this.ratingsOnField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the loan out books toggle is on.
+    /// </summary>
+    public bool LoanOutBooks
+    {
+        get => this.loanOutBooksField;
+        set
+        {
+            if (this.loanOutBooksField != value)
+            {
+                this.loanOutBooksField = value;
+                this.OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the borrow books toggle is on.
+    /// </summary>
+    public bool BorrowBooks
+    {
+        get => this.borrowBooksField;
+        set
+        {
+            if (this.borrowBooksField != value)
+            {
+                this.borrowBooksField = value;
                 this.OnPropertyChanged();
             }
         }
@@ -344,7 +366,8 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnCommentsToggled(object sender, ToggledEventArgs e)
     {
-        Preferences.Set("CommentsOn", e.Value);
+        Preferences.Set(DevicePreferences.CommentsFeatureShow, e.Value);
+        DevicePreferences.CommentsShowValue = e.Value;
     }
 
     /// <summary>
@@ -354,7 +377,8 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnChaptersToggled(object sender, ToggledEventArgs e)
     {
-        Preferences.Set("ChaptersOn", e.Value);
+        Preferences.Set(DevicePreferences.ChaptersFeatureShow, e.Value);
+        DevicePreferences.ChaptersShowValue = e.Value;
     }
 
     /// <summary>
@@ -364,7 +388,8 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnFavoritesToggled(object sender, ToggledEventArgs e)
     {
-        Preferences.Set("FavoritesOn", e.Value);
+        Preferences.Set(DevicePreferences.FavoriteFeatureShow, e.Value);
+        DevicePreferences.FavoritesShowValue = e.Value;
     }
 
     /// <summary>
@@ -374,7 +399,40 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnRatingsToggled(object sender, ToggledEventArgs e)
     {
-        Preferences.Set("RatingsOn", e.Value);
+        Preferences.Set(DevicePreferences.RatingFeatureShow, e.Value);
+        DevicePreferences.RatingsShowValue = e.Value;
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnLoanOutBooksToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set(DevicePreferences.LoanedOutBooksShow, e.Value);
+
+        this.loanOutBooksAnswer.Text = e.Value ? AppStringResources.Yes : AppStringResources.No;
+
+        var appshell = (AppShell)Application.Current?.Windows[0].Page!;
+        appshell.ShowBooksLoanedOut = e.Value;
+        DevicePreferences.LoanedOutBooksShowValue = e.Value;
+    }
+
+    /// <summary>
+    /// Saves the value of the toggle to preferences.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event.</param>
+    public void OnBorrowBooksToggled(object sender, ToggledEventArgs e)
+    {
+        Preferences.Set(DevicePreferences.BorrowedBooksShow, e.Value);
+
+        this.borrowBooksAnswer.Text = e.Value ? AppStringResources.Yes : AppStringResources.No;
+
+        var appshell = (AppShell)Application.Current?.Windows[0].Page!;
+        appshell.ShowBorrowedBooks = e.Value;
+        DevicePreferences.BorrowedBooksShowValue = e.Value;
     }
 
     /// <summary>
@@ -427,7 +485,8 @@ public partial class ToggleSettingsView : ContentPage
             }
         }
 
-        Preferences.Set("HiddenBooksOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenBooksShow, e.Value);
+        DevicePreferences.ShowHiddenBooksValue = e.Value;
     }
 
     /// <summary>
@@ -448,7 +507,8 @@ public partial class ToggleSettingsView : ContentPage
             this.HiddenBooksOn = false;
         }
 
-        Preferences.Set("HiddenCollectionsOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenCollectionsShow, e.Value);
+        DevicePreferences.ShowHiddenCollectionsValue = e.Value;
     }
 
     /// <summary>
@@ -469,7 +529,8 @@ public partial class ToggleSettingsView : ContentPage
             this.HiddenBooksOn = e.Value;
         }
 
-        Preferences.Set("HiddenGenresOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenGenresShow, e.Value);
+        DevicePreferences.ShowHiddenGenresValue = e.Value;
     }
 
     /// <summary>
@@ -490,7 +551,8 @@ public partial class ToggleSettingsView : ContentPage
             this.HiddenBooksOn = e.Value;
         }
 
-        Preferences.Set("HiddenSeriesOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenSeriesShow, e.Value);
+        DevicePreferences.ShowHiddenSeriesValue = e.Value;
     }
 
     /// <summary>
@@ -511,7 +573,8 @@ public partial class ToggleSettingsView : ContentPage
             this.HiddenBooksOn = e.Value;
         }
 
-        Preferences.Set("HiddenAuthorsOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenAuthorsShow, e.Value);
+        DevicePreferences.ShowHiddenAuthorsValue = e.Value;
     }
 
     /// <summary>
@@ -532,7 +595,8 @@ public partial class ToggleSettingsView : ContentPage
             this.HiddenBooksOn = e.Value;
         }
 
-        Preferences.Set("HiddenLocationsOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenLocationsShow, e.Value);
+        DevicePreferences.ShowHiddenLocationsValue = e.Value;
     }
 
     /// <summary>
@@ -546,7 +610,8 @@ public partial class ToggleSettingsView : ContentPage
 
         WishListViewModel.filteredWishlistBookList = null;
 
-        Preferences.Set("HiddenWishlistBooksOn", e.Value);
+        Preferences.Set(DevicePreferences.HiddenWishlistBooksShow, e.Value);
+        DevicePreferences.ShowHiddenWishlistBooksValue = e.Value;
     }
 
     /// <summary>
@@ -556,14 +621,21 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnBookSettingsResetButton_Clicked(object sender, EventArgs e)
     {
-        this.CommentsOn = this.commentsDefault;
-        Preferences.Set("CommentsOn", this.commentsDefault);
-        this.ChaptersOn = this.chaptersDefault;
-        Preferences.Set("ChaptersOn", this.chaptersDefault);
-        this.FavoritesOn = this.favoritesDefault;
-        Preferences.Set("FavoritesOn", this.favoritesDefault);
-        this.RatingsOn = this.favoritesDefault;
-        Preferences.Set("RatingsOn", this.favoritesDefault);
+        this.CommentsOn = DevicePreferenceDefaults.CommentsShowDefault;
+        Preferences.Set(DevicePreferences.CommentsFeatureShow, DevicePreferenceDefaults.CommentsShowDefault);
+        DevicePreferences.CommentsShowValue = DevicePreferenceDefaults.CommentsShowDefault;
+
+        this.ChaptersOn = DevicePreferenceDefaults.ChaptersShowDefault;
+        Preferences.Set(DevicePreferences.ChaptersFeatureShow, DevicePreferenceDefaults.ChaptersShowDefault);
+        DevicePreferences.ChaptersShowValue = DevicePreferenceDefaults.ChaptersShowDefault;
+
+        this.FavoritesOn = DevicePreferenceDefaults.FavoritesShowDefault;
+        Preferences.Set(DevicePreferences.FavoriteFeatureShow, DevicePreferenceDefaults.FavoritesShowDefault);
+        DevicePreferences.FavoritesShowValue = DevicePreferenceDefaults.FavoritesShowDefault;
+
+        this.RatingsOn = DevicePreferenceDefaults.RatingsShowDefault;
+        Preferences.Set(DevicePreferences.RatingFeatureShow, DevicePreferenceDefaults.RatingsShowDefault);
+        DevicePreferences.RatingsShowValue = DevicePreferenceDefaults.RatingsShowDefault;
     }
 
     /// <summary>
@@ -573,20 +645,33 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnListSettingsResetButton_Clicked(object sender, EventArgs e)
     {
-        this.HiddenBooksOn = this.hiddenDefault;
-        Preferences.Set("HiddenBooksOn", this.hiddenDefault);
-        this.HiddenCollectionsOn = this.hiddenDefault;
-        Preferences.Set("HiddenCollectionsOn", this.hiddenDefault);
-        this.HiddenGenresOn = this.hiddenDefault;
-        Preferences.Set("HiddenGenresOn", this.hiddenDefault);
-        this.HiddenSeriesOn = this.hiddenDefault;
-        Preferences.Set("HiddenSeriesOn", this.hiddenDefault);
-        this.HiddenAuthorsOn = this.hiddenDefault;
-        Preferences.Set("HiddenAuthorsOn", this.hiddenDefault);
-        this.HiddenLocationsOn = this.hiddenDefault;
-        Preferences.Set("HiddenLocationsOn", this.hiddenDefault);
-        this.HiddenWishlistBooksOn = this.hiddenDefault;
-        Preferences.Set("HiddenWishlistBooksOn", this.hiddenDefault);
+        this.HiddenBooksOn = DevicePreferenceDefaults.HiddenBookShowDefault;
+        Preferences.Set(DevicePreferences.HiddenBooksShow, DevicePreferenceDefaults.HiddenBookShowDefault);
+        DevicePreferences.ShowHiddenBooksValue = DevicePreferenceDefaults.HiddenBookShowDefault;
+
+        this.HiddenCollectionsOn = DevicePreferenceDefaults.HiddenCollectionShowDefault;
+        Preferences.Set(DevicePreferences.HiddenCollectionsShow, DevicePreferenceDefaults.HiddenCollectionShowDefault);
+        DevicePreferences.ShowHiddenCollectionsValue = DevicePreferenceDefaults.HiddenCollectionShowDefault;
+
+        this.HiddenGenresOn = DevicePreferenceDefaults.HiddenGenresShowDefault;
+        Preferences.Set(DevicePreferences.HiddenGenresShow, DevicePreferenceDefaults.HiddenGenresShowDefault);
+        DevicePreferences.ShowHiddenGenresValue = DevicePreferenceDefaults.HiddenGenresShowDefault;
+
+        this.HiddenSeriesOn = DevicePreferenceDefaults.HiddenSeriesShowDefault;
+        Preferences.Set(DevicePreferences.HiddenSeriesShow, DevicePreferenceDefaults.HiddenSeriesShowDefault);
+        DevicePreferences.ShowHiddenSeriesValue = DevicePreferenceDefaults.HiddenSeriesShowDefault;
+
+        this.HiddenAuthorsOn = DevicePreferenceDefaults.HiddenAuthorsShowDefault;
+        Preferences.Set(DevicePreferences.HiddenAuthorsShow, DevicePreferenceDefaults.HiddenAuthorsShowDefault);
+        DevicePreferences.ShowHiddenAuthorsValue = DevicePreferenceDefaults.HiddenAuthorsShowDefault;
+
+        this.HiddenLocationsOn = DevicePreferenceDefaults.HiddenLocationsShowDefault;
+        Preferences.Set(DevicePreferences.HiddenLocationsShow, DevicePreferenceDefaults.HiddenLocationsShowDefault);
+        DevicePreferences.ShowHiddenLocationsValue = DevicePreferenceDefaults.HiddenLocationsShowDefault;
+
+        this.HiddenWishlistBooksOn = DevicePreferenceDefaults.HiddenWishlistBooksShowDefault;
+        Preferences.Set(DevicePreferences.HiddenWishlistBooksShow, DevicePreferenceDefaults.HiddenWishlistBooksShowDefault);
+        DevicePreferences.ShowHiddenWishlistBooksValue = DevicePreferenceDefaults.HiddenWishlistBooksShowDefault;
 
         ReadingViewModel.RefreshView = true;
         ToBeReadViewModel.RefreshView = true;
@@ -618,14 +703,21 @@ public partial class ToggleSettingsView : ContentPage
     /// <param name="e">The event.</param>
     public void OnBookFormatSettingsResetButton_Clicked(object sender, EventArgs e)
     {
-        this.AudiobookOn = this.audiobookDefault;
-        Preferences.Set("AudiobookOn", this.audiobookDefault);
-        this.eBookOn = this.eBookDefault;
-        Preferences.Set("eBookOn", this.eBookDefault);
-        this.HardcoverOn = this.hardcoverDefault;
-        Preferences.Set("HardcoverOn", this.hardcoverDefault);
-        this.PaperbackOn = this.paperbackDefault;
-        Preferences.Set("PaperbackOn", this.paperbackDefault);
+        this.AudiobookOn = DevicePreferenceDefaults.AudiobookShowDefault;
+        Preferences.Set(DevicePreferences.AudiobookShow, DevicePreferenceDefaults.AudiobookShowDefault);
+        DevicePreferences.ShowAudiobooksValue = DevicePreferenceDefaults.AudiobookShowDefault;
+
+        this.eBookOn = DevicePreferenceDefaults.EbookShowDefault;
+        Preferences.Set(DevicePreferences.eBookShow, DevicePreferenceDefaults.EbookShowDefault);
+        DevicePreferences.ShoweBooksValue = DevicePreferenceDefaults.EbookShowDefault;
+
+        this.HardcoverOn = DevicePreferenceDefaults.HardcoverShowDefault;
+        Preferences.Set(DevicePreferences.HardcoverShow, DevicePreferenceDefaults.HardcoverShowDefault);
+        DevicePreferences.ShowHardcoversValue = DevicePreferenceDefaults.HardcoverShowDefault;
+
+        this.PaperbackOn = DevicePreferenceDefaults.PaperbackShowDefault;
+        Preferences.Set(DevicePreferences.PaperbackShow, DevicePreferenceDefaults.PaperbackShowDefault);
+        DevicePreferences.ShowPaperbacksValue = DevicePreferenceDefaults.PaperbackShowDefault;
     }
 
     /// <summary>
@@ -652,7 +744,8 @@ public partial class ToggleSettingsView : ContentPage
         AllBooksViewModel.filteredBookList = null;
         WishListViewModel.filteredWishlistBookList = null;
 
-        Preferences.Set("AudiobookOn", e.Value);
+        Preferences.Set(DevicePreferences.AudiobookShow, e.Value);
+        DevicePreferences.ShowAudiobooksValue = e.Value;
     }
 
     /// <summary>
@@ -679,7 +772,8 @@ public partial class ToggleSettingsView : ContentPage
         AllBooksViewModel.filteredBookList = null;
         WishListViewModel.filteredWishlistBookList = null;
 
-        Preferences.Set("eBookOn", e.Value);
+        Preferences.Set(DevicePreferences.eBookShow, e.Value);
+        DevicePreferences.ShoweBooksValue = e.Value;
     }
 
     /// <summary>
@@ -706,7 +800,8 @@ public partial class ToggleSettingsView : ContentPage
         AllBooksViewModel.filteredBookList = null;
         WishListViewModel.filteredWishlistBookList = null;
 
-        Preferences.Set("HardcoverOn", e.Value);
+        Preferences.Set(DevicePreferences.HardcoverShow, e.Value);
+        DevicePreferences.ShowHardcoversValue = e.Value;
     }
 
     /// <summary>
@@ -733,6 +828,7 @@ public partial class ToggleSettingsView : ContentPage
         AllBooksViewModel.filteredBookList = null;
         WishListViewModel.filteredWishlistBookList = null;
 
-        Preferences.Set("PaperbackOn", e.Value);
+        Preferences.Set(DevicePreferences.PaperbackShow, e.Value);
+        DevicePreferences.ShowPaperbacksValue = e.Value;
     }
 }

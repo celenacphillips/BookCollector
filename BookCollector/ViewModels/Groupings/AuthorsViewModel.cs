@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.Groupings
     using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -30,6 +31,15 @@ namespace BookCollector.ViewModels.Groupings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
         public static ObservableCollection<AuthorModel>? fullAuthorList;
+
+        /// <summary>
+        /// Gets or sets the full author list.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "Observable Property")]
+        public static ObservableCollection<BookAuthorModel>? fullBookAuthorList;
 
         /// <summary>
         /// Gets or sets the first filtered list.
@@ -106,11 +116,6 @@ namespace BookCollector.ViewModels.Groupings
         /// </summary>
         public static bool RefreshView { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden authors or not.
-        /// </summary>
-        private bool ShowHiddenAuthors { get; set; }
-
         /********************************************************/
 
         /// <summary>
@@ -123,6 +128,15 @@ namespace BookCollector.ViewModels.Groupings
             fullAuthorList ??= await FillLists.GetAllAuthorsList();
 
             hiddenFilteredAuthorList = showHiddenAuthors ? fullAuthorList : fullAuthorList!.Where(x => !x.HideAuthor).ToObservableCollection();
+        }
+
+        /// <summary>
+        /// Set the full book author list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public static async Task SetBookAuthorList()
+        {
+            fullBookAuthorList ??= await FillLists.GetAllBookAuthors();
         }
 
         /// <summary>
@@ -237,7 +251,7 @@ namespace BookCollector.ViewModels.Groupings
             {
                 this.GetPreferences();
 
-                await SetList(this.ShowHiddenAuthors);
+                await SetList(DevicePreferences.ShowHiddenAuthorsValue);
 
                 (this.TotalAuthorsCount,
                     this.FilteredAuthorsCount,
@@ -259,25 +273,16 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>The list show hidden preference.</returns>
         public override bool GetPreferences()
         {
-            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-            ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
+            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.FavoriteFilterSelection}", this.FavoriteOptionDefault /* Default */);
 
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AuthorLastNameSortSelection}", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.TotalBooksSortSelection}", (bool)this.TotalBooksCheckedDefault! /* Default */);
+            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.TotalPriceSortSelection}", (bool)this.TotalPriceCheckedDefault! /* Default */);
 
-            this.FavoritesOption = Preferences.Get($"{this.ViewTitle}_FavoriteSelection", this.FavoriteOptionDefault /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AscendingSortSelection}", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.DescendingSortSelection}", this.DescendingCheckedDefault /* Default */);
 
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
-            this.TotalBooksChecked = Preferences.Get($"{this.ViewTitle}_TotalBooksSelection", (bool)this.TotalBooksCheckedDefault! /* Default */);
-            this.TotalPriceChecked = Preferences.Get($"{this.ViewTitle}_TotalPriceSelection", (bool)this.TotalPriceCheckedDefault! /* Default */);
-
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
-
-            return this.ShowHiddenAuthors;
+            return DevicePreferences.ShowHiddenAuthorsValue;
         }
 
         /// <summary>
@@ -287,7 +292,7 @@ namespace BookCollector.ViewModels.Groupings
         /// <returns>The updated viewmodel.</returns>
         public override FilterPopupViewModel SetFilterPopupValues(FilterPopupViewModel viewModel)
         {
-            viewModel.FavoriteVisible = this.ShowFavorites;
+            viewModel.FavoriteVisible = DevicePreferences.FavoritesShowValue;
             viewModel.FavoriteOption = this.FavoritesOption;
             /******************************/
 

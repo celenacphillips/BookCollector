@@ -4,6 +4,8 @@
 
 namespace BookCollector.ViewModels.Popups
 {
+    using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.ViewModels.BaseViewModels;
     using CommunityToolkit.Maui.Views;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -692,86 +694,86 @@ namespace BookCollector.ViewModels.Popups
         {
             if (this.BookTitleVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookTitleSelection", this.BookTitleChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookTitleSortSelection}", this.BookTitleChecked);
             }
 
             if (this.CollectionNameVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_CollectionNameSelection", this.CollectionNameChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.CollectionNameSortSelection}", this.CollectionNameChecked);
             }
 
             if (this.GenreNameVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_GenreNameSelection", this.GenreNameChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.GenreNameSortSelection}", this.GenreNameChecked);
             }
 
             if (this.SeriesNameVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_SeriesNameSelection", this.SeriesNameChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.SeriesNameSortSelection}", this.SeriesNameChecked);
             }
 
             if (this.AuthorLastNameVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_AuthorLastNameSelection", this.AuthorLastNameChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.AuthorLastNameSortSelection}", this.AuthorLastNameChecked);
             }
 
             if (this.LocationNameVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_LocationNameSelection", this.LocationNameChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.LocationNameSortSelection}", this.LocationNameChecked);
             }
 
             if (this.BookReadingDateVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookReadingDateSelection", this.BookReadingDateChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookReadingDateSortSelection}", this.BookReadingDateChecked);
             }
 
             if (this.TotalBooksVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_TotalBooksSelection", this.TotalBooksChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.TotalBooksSortSelection}", this.TotalBooksChecked);
             }
 
             if (this.BookReadPercentageVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookReadPercentageSelection", this.BookReadPercentageChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookReadPercentageSortSelection}", this.BookReadPercentageChecked);
             }
 
             if (this.BookPublisherVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookPublisherSelection", this.BookPublisherChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookPublisherSortSelection}", this.BookPublisherChecked);
             }
 
             if (this.BookPublishYearVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookPublishYearSelection", this.BookPublishYearChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookPublishYearSortSelection}", this.BookPublishYearChecked);
             }
 
             if (this.BookFormatVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookFormatSelection", this.BookFormatChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookFormatSortSelection}", this.BookFormatChecked);
             }
 
             if (this.PageCountTimeVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_PageCountBookTimeSelection", this.PageCountTimeChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.PageCountBookTimeSortSelection}", this.PageCountTimeChecked);
             }
 
             if (this.TotalPriceVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_TotalPriceSelection", this.TotalPriceChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.TotalPriceSortSelection}", this.TotalPriceChecked);
             }
 
             if (this.BookPriceVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_BookPriceSelection", this.BookPriceChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.BookPriceSortSelection}", this.BookPriceChecked);
             }
 
             if (this.SeriesOrderVisible)
             {
-                Preferences.Set($"{this.ViewTitle}_SeriesOrderSelection", this.SeriesOrderChecked);
+                Preferences.Set($"{this.ViewTitle}_{DevicePreferences.SeriesOrderSortSelection}", this.SeriesOrderChecked);
             }
 
-            Preferences.Set($"{this.ViewTitle}_AscendingSelection", this.AscendingChecked);
-            Preferences.Set($"{this.ViewTitle}_DescendingSelection", this.DescendingChecked);
+            Preferences.Set($"{this.ViewTitle}_{DevicePreferences.AscendingSortSelection}", this.AscendingChecked);
+            Preferences.Set($"{this.ViewTitle}_{DevicePreferences.DescendingSortSelection}", this.DescendingChecked);
         }
     }
 }

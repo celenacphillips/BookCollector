@@ -29,6 +29,7 @@ namespace BookCollector.Data
         /// <param name="bookCoverOption">Book cover option to find.</param>
         /// <param name="readingStatusOption">Reading status option to find.</param>
         /// <param name="loanedOutOption">Loaned out option to find.</param>
+        /// <param name="borrowedOption">Borrowed option to find.</param>
         /// <param name="searchString">Book title search string to find.</param>
         /// <returns>A filtered book list.</returns>
         public static async Task<ObservableCollection<BookModel>?> FilterList(
@@ -43,6 +44,7 @@ namespace BookCollector.Data
             string? bookCoverOption,
             string? readingStatusOption,
             string? loanedOutOption,
+            string? borrowedOption,
             string? searchString)
         {
             var filteredList = bookList;
@@ -85,6 +87,11 @@ namespace BookCollector.Data
             if (!string.IsNullOrEmpty(loanedOutOption))
             {
                 filteredList = FilterBooksOnLoanedOutStatus(filteredList, loanedOutOption);
+            }
+
+            if (!string.IsNullOrEmpty(borrowedOption))
+            {
+                filteredList = FilterBooksOnBorrowedStatus(filteredList, borrowedOption);
             }
 
             return filteredList;
@@ -844,6 +851,23 @@ namespace BookCollector.Data
             if (loanedOutStatus.Equals(AppStringResources.NotLoanedOut))
             {
                 filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookLoanedOutOn) && string.IsNullOrEmpty(x.LoanedTo)).ToObservableCollection();
+            }
+
+            return filterList;
+        }
+
+        private static ObservableCollection<BookModel>? FilterBooksOnBorrowedStatus(ObservableCollection<BookModel>? bookList, string borrowedStatus)
+        {
+            var filterList = bookList;
+
+            if (borrowedStatus.Equals(AppStringResources.Borrowed))
+            {
+                filterList = bookList?.Where(x => !string.IsNullOrEmpty(x.BookBorrowedOn) || !string.IsNullOrEmpty(x.BorrowedFrom)).ToObservableCollection();
+            }
+
+            if (borrowedStatus.Equals(AppStringResources.NotBorrowed))
+            {
+                filterList = bookList?.Where(x => string.IsNullOrEmpty(x.BookBorrowedOn) && string.IsNullOrEmpty(x.BorrowedFrom)).ToObservableCollection();
             }
 
             return filterList;

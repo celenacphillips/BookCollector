@@ -6,6 +6,7 @@ namespace BookCollector.ViewModels.Main
 {
     using System.Collections.ObjectModel;
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -257,7 +258,7 @@ namespace BookCollector.ViewModels.Main
             {
                 this.GetPreferences();
 
-                await SetList(this.ShowHiddenWishlistBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                await SetList(this.ShowHiddenWishlistBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
 
                 (this.TotalBooksCount,
                     this.FilteredBooksCount,
@@ -285,32 +286,32 @@ namespace BookCollector.ViewModels.Main
         /// <returns>The list show hidden preference.</returns>
         public override bool GetPreferences()
         {
-            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
+            this.ShowHiddenWishlistBooks = DevicePreferences.ShowHiddenWishlistBooksValue;
 
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            DevicePreferences.ShowAudiobooksValue = DevicePreferences.ShowAudiobooksValue;
+            DevicePreferences.ShoweBooksValue = DevicePreferences.ShoweBooksValue;
+            DevicePreferences.ShowHardcoversValue = DevicePreferences.ShowHardcoversValue;
+            DevicePreferences.ShowPaperbacksValue = DevicePreferences.ShowPaperbacksValue;
 
-            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_FormatSelection", this.BookFormatOptionDefault /* Default */);
-            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_PublisherSelection", this.BookPublisherOptionDefault /* Default */);
-            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_PublishYearSelection", this.BookPublishYearOptionDefault /* Default */);
-            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_LanguageSelection", this.BookLanguageOptionDefault /* Default */);
-            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_AuthorSelection", this.BookAuthorOptionDefault /* Default */);
-            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_SeriesSelection", this.BookSeriesOptionDefault /* Default */);
-            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_LocationSelection", this.BookLocationOptionDefault /* Default */);
-            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_BookCoverSelection", this.BookCoverOptionDefault /* Default */);
+            this.BookFormatOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.FormatFilterSelection}", this.BookFormatOptionDefault /* Default */);
+            this.BookPublisherOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.PublisherFilterSelection}", this.BookPublisherOptionDefault /* Default */);
+            this.BookPublishYearOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.PublishYearFilterSelection}", this.BookPublishYearOptionDefault /* Default */);
+            this.BookLanguageOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.LanguageFilterSelection}", this.BookLanguageOptionDefault /* Default */);
+            this.BookAuthorOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AuthorFilterSelection}", this.BookAuthorOptionDefault /* Default */);
+            this.BookSeriesOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.SeriesFilterSelection}", this.BookSeriesOptionDefault /* Default */);
+            this.BookLocationOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.LocationFilterSelection}", this.BookLocationOptionDefault /* Default */);
+            this.BookCoverOption = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookCoverFilterSelection}", this.BookCoverOptionDefault /* Default */);
 
-            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_BookTitleSelection", (bool)this.BookTitleCheckedDefault! /* Default */);
-            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_BookPublisherSelection", (bool)this.BookPublisherCheckedDefault! /* Default */);
-            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_BookPublishYearSelection", (bool)this.BookPublishYearCheckedDefault! /* Default */);
-            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_AuthorLastNameSelection", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
-            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_BookFormatSelection", (bool)this.BookFormatCheckedDefault! /* Default */);
-            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_PageCountBookTimeSelection", (bool)this.PageCountBookTimeCheckedDefault! /* Default */);
-            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_BookPriceSelection", (bool)this.BookPriceCheckedDefault! /* Default */);
+            this.BookTitleChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookTitleSortSelection}", (bool)this.BookTitleCheckedDefault! /* Default */);
+            this.BookPublisherChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookPublisherSortSelection}", (bool)this.BookPublisherCheckedDefault! /* Default */);
+            this.BookPublishYearChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookPublishYearSortSelection}", (bool)this.BookPublishYearCheckedDefault! /* Default */);
+            this.AuthorLastNameChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AuthorLastNameSortSelection}", (bool)this.AuthorLastNameCheckedDefault! /* Default */);
+            this.BookFormatChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookFormatSortSelection}", (bool)this.BookFormatCheckedDefault! /* Default */);
+            this.PageCountBookTimeChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.PageCountBookTimeSortSelection}", (bool)this.PageCountBookTimeCheckedDefault! /* Default */);
+            this.BookPriceChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.BookPriceSortSelection}", (bool)this.BookPriceCheckedDefault! /* Default */);
 
-            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_AscendingSelection", this.AscendingCheckedDefault /* Default */);
-            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_DescendingSelection", this.DescendingCheckedDefault /* Default */);
+            this.AscendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.AscendingSortSelection}", this.AscendingCheckedDefault /* Default */);
+            this.DescendingChecked = Preferences.Get($"{this.ViewTitle}_{DevicePreferences.DescendingSortSelection}", this.DescendingCheckedDefault /* Default */);
 
             return this.ShowHiddenWishlistBooks;
         }
@@ -357,7 +358,7 @@ namespace BookCollector.ViewModels.Main
         public override FilterPopupViewModel SetFilterPopupLists(FilterPopupViewModel viewModel)
         {
             viewModel.SetFavoritePicker();
-            viewModel.SetFormatPicker(this.BookFormats, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+            viewModel.SetFormatPicker(this.BookFormats, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
             viewModel.SetPublisherPicker(this.BookPublisherList);
             viewModel.SetPublishYearPicker(this.BookPublishYearList);
             viewModel.SetLanguagePicker(this.BookLanguageList);

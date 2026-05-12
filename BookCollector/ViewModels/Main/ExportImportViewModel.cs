@@ -7,6 +7,7 @@ namespace BookCollector.ViewModels.Main
     using BookCollector.CustomPermissions;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Data.Spreadsheet;
     using BookCollector.Resources.Localization;
@@ -340,7 +341,7 @@ namespace BookCollector.ViewModels.Main
             {
                 try
                 {
-                    var exportLocation = Preferences.Get("ExportLocation", AppStringResources.DefaultExportLocation /* Default */);
+                    var exportLocation = DevicePreferences.AppExportLocationValue;
 
                     if (exportLocation == null || exportLocation.Equals(AppStringResources.DefaultExportLocation))
                     {
@@ -349,7 +350,8 @@ namespace BookCollector.ViewModels.Main
                         if (result != null && result.Folder != null)
                         {
                             exportLocation = result.Folder.Path;
-                            Preferences.Set("ExportLocation", result.Folder.Path);
+                            Preferences.Set(DevicePreferences.AppExportLocation.ToString(), exportLocation);
+                            DevicePreferences.AppExportLocationValue = exportLocation;
                         }
                         else
                         {
@@ -415,7 +417,8 @@ namespace BookCollector.ViewModels.Main
                 catch (UnauthorizedAccessException ex)
                 {
                     await this.CanceledAction();
-                    Preferences.Set("ExportLocation", AppStringResources.DefaultExportLocation);
+                    Preferences.Set(DevicePreferences.AppExportLocation.ToString(), AppStringResources.DefaultExportLocation);
+                    DevicePreferences.AppExportLocationValue = AppStringResources.DefaultExportLocation;
 #if DEBUG
                     await this.DisplayMessage("Error!", ex.Message);
 #endif
@@ -623,6 +626,18 @@ namespace BookCollector.ViewModels.Main
             return boolParse;
         }
 
+        private static string? ParseString(string? input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return null;
+            }
+            else
+            {
+                return input;
+            }
+        }
+
         private static async Task DataCleanup(bool booksChecked, bool authorsChecked, bool bookAuthorsChecked)
         {
             if (booksChecked && authorsChecked && bookAuthorsChecked)
@@ -797,7 +812,7 @@ namespace BookCollector.ViewModels.Main
                 }
 
                 // Try to get the book price
-                if (columnName.Equals($"{AppStringResources.BookPrice.Replace(" ", string.Empty)}"))
+                if (columnName.Equals($"{AppStringResources.OriginalBookPrice.Replace(" ", string.Empty)}"))
                 {
                     values.TryGetValue("listprice", out stringValue);
 
@@ -840,6 +855,17 @@ namespace BookCollector.ViewModels.Main
                 if (columnName.Equals($"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}"))
                 {
                     values.TryGetValue("imageurl", out stringValue);
+                }
+
+                // Try to get the date the book was obtained
+                if (columnName.Equals($"{AppStringResources.DateBookObtained.Replace(" ", string.Empty)}"))
+                {
+                    values.TryGetValue("acquired", out stringValue);
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("addeddate", out stringValue);
+                    }
                 }
 
                 // Try to get the book location
@@ -973,7 +999,9 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.OriginalBookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.PaidBookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.DateBookObtained.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
                 $"{AppStringResources.PagesRead.Replace(" ", string.Empty)}",
                 $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
@@ -993,6 +1021,8 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.UpNext.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLoanedTo.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLoanedOutOn.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookBorrowedFrom.Replace(" ", string.Empty)}",
+                $"{AppStringResources.BookBorrowedOn.Replace(" ", string.Empty)}",
                 $"{AppStringResources.Hide_Question}",
                 $"{AppStringResources.BookCoverUrl.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookCoverFileName.Replace(" ", string.Empty)}",
@@ -1013,7 +1043,7 @@ namespace BookCollector.ViewModels.Main
                 $"{AppStringResources.BookIdentifier.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookFormat.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookLanguage.Replace(" ", string.Empty)}",
-                $"{AppStringResources.BookPrice.Replace(" ", string.Empty)}",
+                $"{AppStringResources.OriginalBookPrice.Replace(" ", string.Empty)}",
                 $"{AppStringResources.BookSummary.Replace(" ", string.Empty)}",
                 $"{AppStringResources.TotalPages.Replace(" ", string.Empty)}",
                 $"{AppStringResources.TotalHours.Replace(" ", string.Empty)}",
@@ -1359,6 +1389,8 @@ namespace BookCollector.ViewModels.Main
                             book.BookFormat,
                             book.BookLanguage,
                             book.BookPrice,
+                            book.BookPricePaid,
+                            book.ObtainedDate,
                             book.BookSummary,
                             book.BookPageRead.ToString(),
                             book.BookPageTotal.ToString(),
@@ -1378,6 +1410,8 @@ namespace BookCollector.ViewModels.Main
                             book.UpNext.ToString(),
                             book.LoanedTo,
                             book.BookLoanedOutOn,
+                            book.BorrowedFrom,
+                            book.BookBorrowedOn,
                             book.HideBook.ToString(),
                             book.BookCoverUrl,
                             book.BookCoverFileName,
@@ -1524,27 +1558,32 @@ namespace BookCollector.ViewModels.Main
                                 BookFormat = parsedValues[7],
                                 BookLanguage = parsedValues[8],
                                 BookPrice = parsedValues[9],
-                                BookSummary = parsedValues[10],
-                                BookPageRead = ParseInt(parsedValues[11]),
-                                BookPageTotal = ParseInt(parsedValues[12]),
-                                BookHourListened = ParseInt(parsedValues[13]),
-                                BookMinuteListened = ParseInt(parsedValues[14]),
-                                BookHoursTotal = ParseInt(parsedValues[15]),
-                                BookMinutesTotal = ParseInt(parsedValues[16]),
-                                BookStartDate = parsedValues[17],
-                                BookEndDate = parsedValues[18],
-                                BookLocationGuid = ParseGuid(parsedValues[19]),
-                                BookComments = parsedValues[20],
-                                BookCollectionGuid = ParseGuid(parsedValues[21]),
-                                BookGenreGuid = ParseGuid(parsedValues[22]),
-                                BookURL = parsedValues[23],
-                                Rating = ParseInt(parsedValues[24]),
-                                IsFavorite = ParseBool(parsedValues[25]),
-                                LoanedTo = parsedValues[26],
-                                BookLoanedOutOn = parsedValues[27],
-                                HideBook = ParseBool(parsedValues[28]),
-                                BookCoverUrl = parsedValues[29],
-                                BookCoverFileName = parsedValues[30],
+                                BookPricePaid = parsedValues[10],
+                                ObtainedDate = ParseString(parsedValues[11]),
+                                BookSummary = parsedValues[12],
+                                BookPageRead = ParseInt(parsedValues[13]),
+                                BookPageTotal = ParseInt(parsedValues[14]),
+                                BookHourListened = ParseInt(parsedValues[15]),
+                                BookMinuteListened = ParseInt(parsedValues[16]),
+                                BookHoursTotal = ParseInt(parsedValues[17]),
+                                BookMinutesTotal = ParseInt(parsedValues[18]),
+                                BookStartDate = ParseString(parsedValues[19]),
+                                BookEndDate = ParseString(parsedValues[20]),
+                                BookLocationGuid = ParseGuid(parsedValues[21]),
+                                BookComments = parsedValues[22],
+                                BookCollectionGuid = ParseGuid(parsedValues[23]),
+                                BookGenreGuid = ParseGuid(parsedValues[24]),
+                                BookURL = parsedValues[25],
+                                Rating = ParseInt(parsedValues[26]),
+                                IsFavorite = ParseBool(parsedValues[27]),
+                                UpNext = ParseBool(parsedValues[28]),
+                                LoanedTo = parsedValues[29],
+                                BookLoanedOutOn = ParseString(parsedValues[30]),
+                                BorrowedFrom = parsedValues[31],
+                                BookBorrowedOn = ParseString(parsedValues[32]),
+                                HideBook = ParseBool(parsedValues[33]),
+                                BookCoverUrl = parsedValues[34],
+                                BookCoverFileName = parsedValues[35],
                             };
 
                             if (singleSpreadsheetValues != null)
@@ -2187,6 +2226,7 @@ namespace BookCollector.ViewModels.Main
                                 CollectionGuid = ParseGuid(parsedValues[0]),
                                 CollectionName = parsedValues[1],
                                 HideCollection = ParseBool(parsedValues[2]),
+                                IsFavorite = ParseBool(parsedValues[3]),
                             };
 
                             collection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
@@ -2339,6 +2379,7 @@ namespace BookCollector.ViewModels.Main
                                 GenreGuid = ParseGuid(parsedValues[0]),
                                 GenreName = parsedValues[1],
                                 HideGenre = ParseBool(parsedValues[2]),
+                                IsFavorite = ParseBool(parsedValues[3]),
                             };
 
                             genre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
@@ -2493,6 +2534,7 @@ namespace BookCollector.ViewModels.Main
                                 SeriesName = parsedValues[1],
                                 TotalBooksInSeries = parsedValues[2],
                                 HideSeries = ParseBool(parsedValues[3]),
+                                IsFavorite = ParseBool(parsedValues[4]),
                             };
 
                             series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
@@ -2815,6 +2857,7 @@ namespace BookCollector.ViewModels.Main
                                 FirstName = parsedValues[1] !,
                                 LastName = parsedValues[2] !,
                                 HideAuthor = ParseBool(parsedValues[3]),
+                                IsFavorite = ParseBool(parsedValues[4]),
                             };
 
                             author = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
@@ -2967,6 +3010,7 @@ namespace BookCollector.ViewModels.Main
                                 LocationGuid = ParseGuid(parsedValues[0]),
                                 LocationName = parsedValues[1],
                                 HideLocation = ParseBool(parsedValues[2]),
+                                IsFavorite = ParseBool(parsedValues[3]),
                             };
 
                             location = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));

@@ -4,10 +4,11 @@
 
 namespace BookCollector.Data
 {
-    using System.Globalization;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
+    using System.Globalization;
 
     /// <summary>
     /// StringManipulation class.
@@ -167,17 +168,26 @@ namespace BookCollector.Data
         /// <returns>Parsed string.</returns>
         public static string? SetBookPrice(string? bookPrice)
         {
-            var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+            var cultureCode = DevicePreferences.AppCultureCodeValue;
             var cultureInfo = new CultureInfo(cultureCode);
 
-            if (bookPrice == null || !bookPrice.Contains(cultureInfo.NumberFormat.CurrencySymbol))
+            if (string.IsNullOrEmpty(bookPrice))
             {
-                var parsed = double.TryParse(bookPrice, out double price);
-
-                return string.Format(cultureInfo, "{0:C}", parsed ? price : 0);
+                bookPrice = $"{0}";
             }
 
-            return bookPrice;
+            bookPrice = bookPrice.Trim();
+
+            var firstCharacter = bookPrice[0];
+
+            if (!char.IsDigit(firstCharacter))
+            {
+                bookPrice = bookPrice[1..].Trim();
+            }
+
+            double.TryParse(bookPrice, out double price);
+
+            return string.Format(cultureInfo, "{0:C}", price);
         }
 
         /// <summary>

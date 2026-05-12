@@ -4,9 +4,9 @@
 
 namespace BookCollector.ViewModels.Book
 {
-    using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.DatabaseModels;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.Author;
@@ -15,6 +15,7 @@ namespace BookCollector.ViewModels.Book
     using BookCollector.Views.Author;
     using BookCollector.Views.Book;
     using BookCollector.Views.Collection;
+    using BookCollector.Views.Controls;
     using BookCollector.Views.Genre;
     using BookCollector.Views.Location;
     using BookCollector.Views.Popups;
@@ -23,6 +24,7 @@ namespace BookCollector.ViewModels.Book
     using CommunityToolkit.Maui.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// BookEditViewModel class.
@@ -164,26 +166,6 @@ namespace BookCollector.ViewModels.Book
         }
 
         /********************************************************/
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden collections or not.
-        /// </summary>
-        private bool HiddenCollectionsOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden genres or not.
-        /// </summary>
-        private bool HiddenGenresOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden series or not.
-        /// </summary>
-        private bool HiddenSeriesOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden locations or not.
-        /// </summary>
-        private bool HiddenLocationsOn { get; set; }
 
         /// <summary>
         /// Gets or sets a list of chapters to delete from the BaseViewModel.Database.
@@ -638,15 +620,8 @@ namespace BookCollector.ViewModels.Book
         /// </summary>
         public override void GetPreferences()
         {
-            this.HiddenCollectionsOn = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            this.HiddenGenresOn = Preferences.Get("HiddenGenresOn", true /* Default */);
-            this.HiddenSeriesOn = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            this.HiddenLocationsOn = Preferences.Get("HiddenLocationsOn", true /* Default */);
-
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            this.LoanOutBooks = DevicePreferences.LoanedOutBooksShowValue;
+            this.BorrowBooks = DevicePreferences.BorrowedBooksShowValue;
         }
 
         /// <summary>
@@ -656,11 +631,11 @@ namespace BookCollector.ViewModels.Book
         public override async Task SetLists()
         {
             var chapters = FillLists.GetAllChaptersInBook(this.EditedBook.BookGuid);
-            var series = SeriesViewModel.SetList(this.HiddenSeriesOn);
-            var collections = CollectionsViewModel.SetList(this.HiddenCollectionsOn);
-            var genres = GenresViewModel.SetList(this.HiddenGenresOn);
-            var locations = LocationsViewModel.SetList(this.HiddenLocationsOn);
-            var authors = AuthorsViewModel.SetList(this.HiddenAuthorsOn);
+            var series = SeriesViewModel.SetList(DevicePreferences.ShowHiddenSeriesValue);
+            var collections = CollectionsViewModel.SetList(DevicePreferences.ShowHiddenCollectionsValue);
+            var genres = GenresViewModel.SetList(DevicePreferences.ShowHiddenGenresValue);
+            var locations = LocationsViewModel.SetList(DevicePreferences.ShowHiddenLocationsValue);
+            var authors = AuthorsViewModel.SetList(DevicePreferences.ShowHiddenAuthorsValue);
 
             this.ChaptersToDelete ??= [];
             this.AuthorsToDelete ??= [];
@@ -721,8 +696,8 @@ namespace BookCollector.ViewModels.Book
 
             if (returnData == Data.Enums.ReturnType.Book)
             {
-            return this.EditedBook;
-        }
+                return this.EditedBook;
+            }
 
             return returnData;
         }
@@ -764,11 +739,14 @@ namespace BookCollector.ViewModels.Book
             {
                 Task.Run(() => this.ValidateEntry()),
                 Task.Run(() => this.EditedBook.SetBookPrice()),
+                Task.Run(() => this.EditedBook.SetBookPricePaid()),
                 Task.Run(() => this.EditedBook.SetBookCheckpoints(this.ShowCheckpoints)),
                 Task.Run(() => this.EditedBook.SetCoverDisplay()),
                 Task.Run(() => BookModel.SetDate(this.EditedBook.BookStartDate)),
                 Task.Run(() => BookModel.SetDate(this.EditedBook.BookEndDate)),
                 Task.Run(() => BookModel.SetDate(this.EditedBook.BookLoanedOutOn)),
+                Task.Run(() => BookModel.SetDate(this.EditedBook.BookBorrowedOn)),
+                Task.Run(() => BookModel.SetDate(this.EditedBook.ObtainedDate)),
                 Task.Run(() => this.BookInfo1Changed()),
                 Task.Run(() => this.ReadingDataChanged()),
                 Task.Run(() => this.ChapterListChanged()),
@@ -812,12 +790,15 @@ namespace BookCollector.ViewModels.Book
 
                             author ??= AuthorsViewModel.fullAuthorList?.FirstOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
 
-                            this.AuthorPickers.Add(new AuthorPicker()
+                            if (author != null)
                             {
-                                AuthorList = this.AuthorList,
-                                SelectedAuthor = author,
-                                SelectedAuthorString = author?.FullName ?? AppStringResources.SelectAnAuthor,
-                            });
+                                this.AuthorPickers.Add(new AuthorPicker()
+                                {
+                                    AuthorList = this.AuthorList,
+                                    SelectedAuthor = author,
+                                    SelectedAuthorString = author?.FullName ?? AppStringResources.SelectAnAuthor,
+                                });
+                            }
                         }
                     }
                 }
@@ -960,7 +941,7 @@ namespace BookCollector.ViewModels.Book
             {
                 foreach (var author in this.AuthorsToDelete)
                 {
-                    await BaseViewModel.Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid!, (Guid)this.EditedBook.BookGuid!);
+                    await Database.DeleteBookAuthorAsync((Guid)author.AuthorGuid!, (Guid)this.EditedBook.BookGuid!);
                 }
             }
 

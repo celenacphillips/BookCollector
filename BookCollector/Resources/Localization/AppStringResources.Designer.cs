@@ -691,6 +691,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Book Borrowed From.
+        /// </summary>
+        internal static string BookBorrowedFrom {
+            get {
+                return ResourceManager.GetString("BookBorrowedFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Borrowed On.
+        /// </summary>
+        internal static string BookBorrowedOn {
+            get {
+                return ResourceManager.GetString("BookBorrowedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Collection.
         /// </summary>
         internal static string BookCollection {
@@ -998,15 +1016,6 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Book Price.
-        /// </summary>
-        internal static string BookPrice {
-            get {
-                return ResourceManager.GetString("BookPrice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Book Publisher.
         /// </summary>
         internal static string BookPublisher {
@@ -1061,6 +1070,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Books Borrowed.
+        /// </summary>
+        internal static string BooksBorrowed {
+            get {
+                return ResourceManager.GetString("BooksBorrowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Book Search.
         /// </summary>
         internal static string BookSearch {
@@ -1093,6 +1111,15 @@ namespace BookCollector.Resources.Localization {
         internal static string BookSettings {
             get {
                 return ResourceManager.GetString("BookSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Books Loaned Out.
+        /// </summary>
+        internal static string BooksLoanedOut {
+            get {
+                return ResourceManager.GetString("BooksLoanedOut", resourceCulture);
             }
         }
         
@@ -1196,6 +1223,42 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you borrow books?.
+        /// </summary>
+        internal static string BorrowBooks_Question {
+            get {
+                return ResourceManager.GetString("BorrowBooks_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borrowed.
+        /// </summary>
+        internal static string Borrowed {
+            get {
+                return ResourceManager.GetString("Borrowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borrowed Books.
+        /// </summary>
+        internal static string BorrowedBooks {
+            get {
+                return ResourceManager.GetString("BorrowedBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a list of all the books you have borrowed from others..
+        /// </summary>
+        internal static string BorrowedBooksView_InfoText {
+            get {
+                return ResourceManager.GetString("BorrowedBooksView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Both.
         /// </summary>
         internal static string Both {
@@ -1254,10 +1317,10 @@ namespace BookCollector.Resources.Localization {
         ///• MODIFIED FEATURE: Changed what qualifies a book as &quot;Reading,&quot; &quot;To Be Read,&quot; and &quot;Read.&quot;
         ///• NEW FEATURE: Added Reading Status filter for certain book list pages
         ///• NEW FEATURE: Added Loaned Out filter for all book list pages
-        ///• BUG FIX: Add Up Next value to Export for books.
-        ///• NEW FEATURE: Add ability to Favorite groupings.
-        ///• NEW FEATURE: Add Filter for groupings.
-        ///• NEW FEATURE: Add [rest of string was truncated]&quot;;.
+        ///• BUG FIX: Added Up Next value to Export for books.
+        ///• NEW FEATURE: Added ability to Favorite groupings.
+        ///• NEW FEATURE: Added Filter for groupings lists.
+        ///• NEW  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -1519,6 +1582,15 @@ namespace BookCollector.Resources.Localization {
         internal static string DataStorageInfoText {
             get {
                 return ResourceManager.GetString("DataStorageInfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Book Obtained.
+        /// </summary>
+        internal static string DateBookObtained {
+            get {
+                return ResourceManager.GetString("DateBookObtained", resourceCulture);
             }
         }
         
@@ -2700,6 +2772,33 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you loan out your books?.
+        /// </summary>
+        internal static string LoanBooks_Question {
+            get {
+                return ResourceManager.GetString("LoanBooks_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loaned Out.
+        /// </summary>
+        internal static string LoanedOut {
+            get {
+                return ResourceManager.GetString("LoanedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a list of books you have loaned out to others..
+        /// </summary>
+        internal static string LoanedOutBooksView_InfoText {
+            get {
+                return ResourceManager.GetString("LoanedOutBooksView_InfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Location.
         /// </summary>
         internal static string Location {
@@ -2988,6 +3087,24 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Borrowed.
+        /// </summary>
+        internal static string NotBorrowed {
+            get {
+                return ResourceManager.GetString("NotBorrowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Loaned Out.
+        /// </summary>
+        internal static string NotLoanedOut {
+            get {
+                return ResourceManager.GetString("NotLoanedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of Books.
         /// </summary>
         internal static string NumberOfBooks {
@@ -3020,6 +3137,15 @@ namespace BookCollector.Resources.Localization {
         internal static string OneStar {
             get {
                 return ResourceManager.GetString("OneStar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original Book Price.
+        /// </summary>
+        internal static string OriginalBookPrice {
+            get {
+                return ResourceManager.GetString("OriginalBookPrice", resourceCulture);
             }
         }
         
@@ -3074,6 +3200,15 @@ namespace BookCollector.Resources.Localization {
         internal static string PagesRead {
             get {
                 return ResourceManager.GetString("PagesRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paid Book Price.
+        /// </summary>
+        internal static string PaidBookPrice {
+            get {
+                return ResourceManager.GetString("PaidBookPrice", resourceCulture);
             }
         }
         
@@ -4268,7 +4403,6 @@ namespace BookCollector.Resources.Localization {
                 return ResourceManager.GetString("UpNext", resourceCulture);
             }
         }
-        
         
         /// <summary>
         ///   Looks up a localized string similar to (This will put the book on the Reading View for easy access.).

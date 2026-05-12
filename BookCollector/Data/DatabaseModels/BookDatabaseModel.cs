@@ -77,6 +77,14 @@ namespace BookCollector.Data.DatabaseModels
         public string? bookPrice;
 
         /// <summary>
+        /// Gets or sets the book price paid.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? bookPricePaid;
+
+        /// <summary>
         /// Gets or sets the book summary.
         /// </summary>
         [ObservableProperty]
@@ -245,12 +253,36 @@ namespace BookCollector.Data.DatabaseModels
         public string? loanedTo;
 
         /// <summary>
-        /// Gets or sets the date the book was loaned out to.
+        /// Gets or sets the date the book was loaned out on.
         /// </summary>
         [ObservableProperty]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public string? bookLoanedOutOn;
+
+        /// <summary>
+        /// Gets or sets who the book has been borrowed from.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? borrowedFrom;
+
+        /// <summary>
+        /// Gets or sets the date the book was borrowed on.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? bookBorrowedOn;
+
+        /// <summary>
+        /// Gets or sets the date the book was obtained.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public string? obtainedDate;
 
         /// <summary>
         /// Gets or sets a value indicating whether the book is queued up to read next.

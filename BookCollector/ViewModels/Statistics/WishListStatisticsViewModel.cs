@@ -6,6 +6,7 @@ namespace BookCollector.ViewModels.Statistics
 {
     using System.Globalization;
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Main;
 
@@ -36,7 +37,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (string.IsNullOrEmpty(this.CostBooks))
                 {
-                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureCode = DevicePreferences.AppCultureCodeValue;
                     var cultureInfo = new CultureInfo(cultureCode);
                     this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
                 }
@@ -45,15 +46,15 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (WishListViewModel.hiddenFilteredWishlistBookList == null || WishListViewModel.RefreshView)
                 {
-                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                    await WishListViewModel.SetList(this.ShowHiddenWishlistBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
                 }
 
                 var cost = GetCounts.GetPriceOfAllWishListBooks();
                 var series = GetCounts.GetAllWishListBooksAndSeriesList(this.MaxListNumber);
                 var authors = GetCounts.GetAllWishListBooksAndAuthorList(this.MaxListNumber);
                 var locations = GetCounts.GetAllWishListBooksAndLocationList(this.MaxListNumber);
-                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
-                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                var formats = GetCounts.GetAllWishListBooksAndBookFormatsList(DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
+                var formatPrices = GetCounts.GetPriceOfWishListBooksAndBookFormatsList(DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
 
                 this.GetColors();
 

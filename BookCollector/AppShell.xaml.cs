@@ -4,6 +4,8 @@
 
 namespace BookCollector
 {
+    using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Resources.Localization;
     using BookCollector.Views.Groupings;
     using BookCollector.Views.Library;
@@ -13,13 +15,16 @@ namespace BookCollector
     /// </summary>
     public partial class AppShell : Shell
     {
+        private bool showBooksLoanedOutField;
+
+        private bool showBorrowedBooksField;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AppShell"/> class.
         /// </summary>
         public AppShell()
         {
             this.VersionString = $"v {AppInfo.VersionString}";
-            this.ApplicationTitleString = $"{AppInfo.Current.Name}, {DateTime.Now.Year}";
 
             this.InitializeComponent();
 
@@ -41,6 +46,37 @@ namespace BookCollector
         public string VersionString { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show the Books Loaned Out view or not.
+        /// </summary>
+        public bool ShowBooksLoanedOut
+        {
+            get => this.showBooksLoanedOutField;
+            set
+            {
+                if (this.showBooksLoanedOutField != value)
+                {
+                    this.showBooksLoanedOutField = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the Borrowed Books view or not.
+        /// </summary>
+        public bool ShowBorrowedBooks
+        {
+            get => this.showBorrowedBooksField;
+            set
+            {
+                if (this.showBorrowedBooksField != value)
+                {
+                    this.showBorrowedBooksField = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// Resets the order and visibility of the tabs in the Library tab based on user preferences.
         /// </summary>
@@ -67,41 +103,32 @@ namespace BookCollector
 
         private void CreateLibraryTab()
         {
-            var libraryTabViewsOrder = Preferences.Get(
-                "LibraryTabViewsOrder",
-                $"{AppStringResources.Reading},{AppStringResources.ToBeRead},{AppStringResources.Read},{AppStringResources.AllBooks}" /* Default */);
-
-            var readingOn = Preferences.Get("ReadingOn", true /* Default */);
-            var toBeReadOn = Preferences.Get("ToBeReadOn", true /* Default */);
-            var readOn = Preferences.Get("ReadOn", true /* Default */);
-            var allBooksOn = Preferences.Get("AllBooksOn", true /* Default */);
-
-            var libraryTabViews = libraryTabViewsOrder.Split(",");
+            var libraryTabViews = DevicePreferences.LibraryTabViewsOrderValue.Split(",");
 
             foreach (var libraryTabView in libraryTabViews)
             {
                 DataTemplate template = new ();
                 var createTab = false;
 
-                if (readingOn && libraryTabView.Equals(AppStringResources.Reading))
+                if (DevicePreferences.ReadingViewShowValue && libraryTabView.Equals(AppStringResources.Reading))
                 {
                     template = new DataTemplate(() => new ReadingView());
                     createTab = true;
                 }
 
-                if (toBeReadOn && libraryTabView.Equals(AppStringResources.ToBeRead))
+                if (DevicePreferences.ToBeReadViewShowValue && libraryTabView.Equals(AppStringResources.ToBeRead))
                 {
                     template = new DataTemplate(() => new ToBeReadView());
                     createTab = true;
                 }
 
-                if (readOn && libraryTabView.Equals(AppStringResources.Read))
+                if (DevicePreferences.ReadViewShowValue && libraryTabView.Equals(AppStringResources.Read))
                 {
                     template = new DataTemplate(() => new ReadView());
                     createTab = true;
                 }
 
-                if (allBooksOn && libraryTabView.Equals(AppStringResources.AllBooks))
+                if (DevicePreferences.AllBooksViewShowValue && libraryTabView.Equals(AppStringResources.AllBooks))
                 {
                     template = new DataTemplate(() => new AllBooksView());
                     createTab = true;
@@ -120,48 +147,38 @@ namespace BookCollector
 
         private void CreateGroupingsTab()
         {
-            var groupingsTabViewsOrder = Preferences.Get(
-                "GroupingsTabViewsOrder",
-                $"{AppStringResources.Collections},{AppStringResources.Genres},{AppStringResources.Series},{AppStringResources.Authors},{AppStringResources.Locations}" /* Default */);
-
-            var collectionsOn = Preferences.Get("CollectionsOn", true /* Default */);
-            var genresOn = Preferences.Get("GenresOn", true /* Default */);
-            var seriesOn = Preferences.Get("SeriesOn", true /* Default */);
-            var authorsOn = Preferences.Get("AuthorsOn", true /* Default */);
-            var locationsOn = Preferences.Get("LocationsOn", true /* Default */);
-
-            var groupingsTabViews = groupingsTabViewsOrder.Split(",");
+            var groupingsTabViews = DevicePreferences.GroupingsTabViewOrderValue.Split(",");
 
             foreach (var groupingsTabView in groupingsTabViews)
             {
                 DataTemplate template = new ();
                 var createTab = false;
 
-                if (collectionsOn && groupingsTabView.Equals(AppStringResources.Collections))
+                if (DevicePreferences.CollectionsViewShowValue && groupingsTabView.Equals(AppStringResources.Collections))
                 {
                     template = new DataTemplate(() => new CollectionsView());
                     createTab = true;
                 }
 
-                if (genresOn && groupingsTabView.Equals(AppStringResources.Genres))
+                if (DevicePreferences.GenresViewShowValue && groupingsTabView.Equals(AppStringResources.Genres))
                 {
                     template = new DataTemplate(() => new GenresView());
                     createTab = true;
                 }
 
-                if (seriesOn && groupingsTabView.Equals(AppStringResources.Series))
+                if (DevicePreferences.SeriesViewShowValue && groupingsTabView.Equals(AppStringResources.Series))
                 {
                     template = new DataTemplate(() => new SeriesView());
                     createTab = true;
                 }
 
-                if (authorsOn && groupingsTabView.Equals(AppStringResources.Authors))
+                if (DevicePreferences.AuthorsViewShowValue && groupingsTabView.Equals(AppStringResources.Authors))
                 {
                     template = new DataTemplate(() => new AuthorsView());
                     createTab = true;
                 }
 
-                if (locationsOn && groupingsTabView.Equals(AppStringResources.Locations))
+                if (DevicePreferences.LocationsViewShowValue && groupingsTabView.Equals(AppStringResources.Locations))
                 {
                     template = new DataTemplate(() => new LocationsView());
                     createTab = true;
@@ -182,6 +199,11 @@ namespace BookCollector
         {
             if (Shell.Current?.CurrentItem != null)
             {
+                this.ApplicationTitleString = $"{AppInfo.Current.Name}, {DateTime.Now.Year}";
+
+                // Set these values on load to reset the visibility of these tabs.
+                this.ShowBorrowedBooks = DevicePreferences.BorrowedBooksShowValue;
+                this.ShowBooksLoanedOut = DevicePreferences.LoanedOutBooksShowValue;
                 this.CreateLibraryTab();
                 this.CreateGroupingsTab();
 

@@ -4,6 +4,7 @@
 
 namespace BookCollector
 {
+    using BookCollector.Data;
     using BookCollector.Data.Database;
     using BookCollector.Data.Enums;
     using BookCollector.Resources.Localization;
@@ -25,7 +26,7 @@ namespace BookCollector
         /// </summary>
         public FakeSplashScreen()
         {
-            this.BackgroundColor = Color.FromArgb("#336699");
+            this.BackgroundColor = Color.FromArgb(DevicePreferenceDefaults.AppColorDefault);
 
             var grid = new Grid
             {
@@ -47,7 +48,7 @@ namespace BookCollector
 
             var indicator = new ActivityIndicator
             {
-                Color = Colors.White,
+                Color = Microsoft.Maui.Graphics.Colors.White,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start,
                 IsRunning = true,
@@ -72,7 +73,7 @@ namespace BookCollector
             await Task.WhenAll(preload);
 
             GetAppTheme();
-            GetColor();
+            Colors.SetColors(DevicePreferences.AppColorValue);
 
             Application.Current?.Windows[0].Page = new AppShell();
 
@@ -83,14 +84,15 @@ namespace BookCollector
 
         private static void GetAppTheme()
         {
-            var savedTheme = Preferences.Get("AppTheme", "System" /* Default */);
-
-            if (savedTheme.Equals("System"))
+            if (DevicePreferences.AppThemeValue.Equals(DevicePreferenceDefaults.AppThemeDefault))
             {
-                savedTheme = Application.Current?.UserAppTheme == AppTheme.Unspecified ? Application.Current?.PlatformAppTheme.ToString() : Application.Current?.UserAppTheme.ToString();
+                DevicePreferences.AppThemeValue =
+                    Application.Current!.UserAppTheme == AppTheme.Unspecified ?
+                    Application.Current!.PlatformAppTheme.ToString() :
+                    Application.Current!.UserAppTheme.ToString();
             }
 
-            Application.Current?.UserAppTheme = savedTheme switch
+            Application.Current?.UserAppTheme = DevicePreferences.AppThemeValue switch
             {
                 "Light" => AppTheme.Light,
                 "Dark" => AppTheme.Dark,
@@ -98,11 +100,53 @@ namespace BookCollector
             };
         }
 
-        private static void GetColor()
+        private static void PreLoadPreferences()
         {
-            var savedColorHexCode = Preferences.Get("AppColor", "#336699" /* Default */);
+            DevicePreferences.AppThemeValue = Preferences.Get(DevicePreferences.AppTheme, DevicePreferenceDefaults.AppThemeDefault /* Default */);
+            DevicePreferences.AppColorValue = Preferences.Get(DevicePreferences.AppColor, DevicePreferenceDefaults.AppColorDefault /* Default */);
+            DevicePreferences.AppLanguageValue = Preferences.Get(DevicePreferences.AppLanguage, DevicePreferenceDefaults.AppLanguageDefault /* Default */);
+            DevicePreferences.AppCurrencyValue = Preferences.Get(DevicePreferences.AppCurrency, DevicePreferenceDefaults.AppCurrencyDefault /* Default */);
+            DevicePreferences.AppExportLocationValue = Preferences.Get(DevicePreferences.AppExportLocation, AppStringResources.DefaultExportLocation /* Default */);
+            DevicePreferences.AppCultureCodeValue = Preferences.Get(DevicePreferences.AppCultureCode, DevicePreferenceDefaults.CultureCodeDefault /* Default */);
 
-            Data.Colors.SetColors(savedColorHexCode);
+            DevicePreferences.ShowHiddenCollectionsValue = Preferences.Get(DevicePreferences.HiddenCollectionsShow, DevicePreferenceDefaults.HiddenCollectionShowDefault /* Default */);
+            DevicePreferences.ShowHiddenGenresValue = Preferences.Get(DevicePreferences.HiddenGenresShow, DevicePreferenceDefaults.HiddenGenresShowDefault /* Default */);
+            DevicePreferences.ShowHiddenSeriesValue = Preferences.Get(DevicePreferences.HiddenSeriesShow, DevicePreferenceDefaults.HiddenSeriesShowDefault /* Default */);
+            DevicePreferences.ShowHiddenAuthorsValue = Preferences.Get(DevicePreferences.HiddenAuthorsShow, DevicePreferenceDefaults.HiddenAuthorsShowDefault /* Default */);
+            DevicePreferences.ShowHiddenLocationsValue = Preferences.Get(DevicePreferences.HiddenLocationsShow, DevicePreferenceDefaults.HiddenLocationsShowDefault /* Default */);
+            DevicePreferences.ShowHiddenBooksValue = Preferences.Get(DevicePreferences.HiddenBooksShow, DevicePreferenceDefaults.HiddenBookShowDefault /* Default */);
+            DevicePreferences.ShowHiddenWishlistBooksValue = Preferences.Get(DevicePreferences.HiddenWishlistBooksShow, DevicePreferenceDefaults.HiddenWishlistBooksShowDefault /* Default */);
+
+            DevicePreferences.ShowAudiobooksValue = Preferences.Get(DevicePreferences.AudiobookShow, DevicePreferenceDefaults.AudiobookShowDefault /* Default */);
+            DevicePreferences.ShoweBooksValue = Preferences.Get(DevicePreferences.eBookShow, DevicePreferenceDefaults.EbookShowDefault /* Default */);
+            DevicePreferences.ShowHardcoversValue = Preferences.Get(DevicePreferences.HardcoverShow, DevicePreferenceDefaults.HardcoverShowDefault /* Default */);
+            DevicePreferences.ShowPaperbacksValue = Preferences.Get(DevicePreferences.PaperbackShow, DevicePreferenceDefaults.PaperbackShowDefault /* Default */);
+
+            DevicePreferences.CommentsShowValue = Preferences.Get(DevicePreferences.CommentsFeatureShow, DevicePreferenceDefaults.CommentsShowDefault /* Default */);
+            DevicePreferences.ChaptersShowValue = Preferences.Get(DevicePreferences.ChaptersFeatureShow, DevicePreferenceDefaults.ChaptersShowDefault /* Default */);
+            DevicePreferences.FavoritesShowValue = Preferences.Get(DevicePreferences.FavoriteFeatureShow, DevicePreferenceDefaults.FavoritesShowDefault /* Default */);
+            DevicePreferences.RatingsShowValue = Preferences.Get(DevicePreferences.RatingFeatureShow, DevicePreferenceDefaults.RatingsShowDefault /* Default */);
+            DevicePreferences.LoanedOutBooksShowValue = Preferences.Get(DevicePreferences.LoanedOutBooksShow, DevicePreferenceDefaults.LoanedOutBooksShowDefault /* Default */);
+            DevicePreferences.BorrowedBooksShowValue = Preferences.Get(DevicePreferences.BorrowedBooksShow, DevicePreferenceDefaults.BorrowedBooksShowDefault /* Default */);
+
+            DevicePreferences.ReadingViewShowValue = Preferences.Get(DevicePreferences.ReadingViewShow, DevicePreferenceDefaults.ReadingViewShowDefault /* Default */);
+            DevicePreferences.ToBeReadViewShowValue = Preferences.Get(DevicePreferences.ToBeReadViewShow, DevicePreferenceDefaults.ToBeReadViewShowDefault /* Default */);
+            DevicePreferences.ReadViewShowValue = Preferences.Get(DevicePreferences.ReadViewShow, DevicePreferenceDefaults.ReadViewShowDefault /* Default */);
+            DevicePreferences.AllBooksViewShowValue = Preferences.Get(DevicePreferences.AllBooksViewShow, DevicePreferenceDefaults.AllBooksViewShowDefault /* Default */);
+
+            DevicePreferences.CollectionsViewShowValue = Preferences.Get(DevicePreferences.CollectionsViewShow, DevicePreferenceDefaults.CollectionsViewShowDefault /* Default */);
+            DevicePreferences.GenresViewShowValue = Preferences.Get(DevicePreferences.GenresViewShow, DevicePreferenceDefaults.GenresViewShowDefault /* Default */);
+            DevicePreferences.SeriesViewShowValue = Preferences.Get(DevicePreferences.SeriesViewShow, DevicePreferenceDefaults.SeriesViewShowDefault /* Default */);
+            DevicePreferences.AuthorsViewShowValue = Preferences.Get(DevicePreferences.AuthorsViewShow, DevicePreferenceDefaults.AuthorsViewShowDefault /* Default */);
+            DevicePreferences.LocationsViewShowValue = Preferences.Get(DevicePreferences.LocationsViewShow, DevicePreferenceDefaults.LocationsViewShowDefault /* Default */);
+
+            DevicePreferences.LibraryTabViewsOrderValue = Preferences.Get(
+                DevicePreferences.LibraryTabViewsOrder,
+                DevicePreferenceDefaults.LibraryTabViewsOrderDefault /* Default */);
+
+            DevicePreferences.GroupingsTabViewOrderValue = Preferences.Get(
+                DevicePreferences.GroupingsTabViewsOrder,
+                DevicePreferenceDefaults.GroupingsTabViewsOrderDefault /* Default */);
         }
 
         private static async Task PreLoadData()
@@ -121,32 +165,48 @@ namespace BookCollector
             var minimumSeconds = 5;
             var start = DateTime.Now;
 
-            var showHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            var showHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
-            var showHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            var showHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-            var showHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            var showHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-            var showHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
+            PreLoadPreferences();
 
-            var audiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            var eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            var hardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            var paperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
-
-            await AllBooksViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow);
+            await AllBooksViewModel.SetList(
+                DevicePreferences.ShowHiddenBooksValue,
+                DevicePreferences.ShowAudiobooksValue,
+                DevicePreferences.ShoweBooksValue,
+                DevicePreferences.ShowHardcoversValue,
+                DevicePreferences.ShowPaperbacksValue);
 
             List<Task> taskList =
             [
-                CollectionsViewModel.SetList(showHiddenCollections),
-                GenresViewModel.SetList(showHiddenGenres),
-                SeriesViewModel.SetList(showHiddenSeries),
-                AuthorsViewModel.SetList(showHiddenAuthors),
-                LocationsViewModel.SetList(showHiddenLocations),
-                ToBeReadViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
-                ReadViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
-                ReadingViewModel.SetList(showHiddenBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
-                WishListViewModel.SetList(showHiddenWishlistBooks, audiobookShow, eBookShow, hardcoverShow, paperbackShow),
+                CollectionsViewModel.SetList(DevicePreferences.ShowHiddenCollectionsValue),
+                GenresViewModel.SetList(DevicePreferences.ShowHiddenGenresValue),
+                SeriesViewModel.SetList(DevicePreferences.ShowHiddenSeriesValue),
+                AuthorsViewModel.SetList(DevicePreferences.ShowHiddenAuthorsValue),
+                AuthorsViewModel.SetBookAuthorList(),
+                LocationsViewModel.SetList(DevicePreferences.ShowHiddenLocationsValue),
+
+                ToBeReadViewModel.SetList(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
+                ReadViewModel.SetList(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
+                ReadingViewModel.SetList(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
+                WishListViewModel.SetList(
+                    DevicePreferences.ShowHiddenWishlistBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
             ];
 
             await Task.WhenAll(taskList);

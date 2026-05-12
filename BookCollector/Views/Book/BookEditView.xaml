@@ -843,7 +843,7 @@
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
-                                
+
                                 <Grid Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -1085,21 +1085,80 @@
                                     </Editor>
                                     <!-- Book Language -->
 
-                                    <!-- Book Price -->
-                                    <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                    <!-- Book Obtained Date -->
+                                    <Label Text="{x:Static localization:AppStringResources.DateBookObtained}"
                                            Style="{DynamicResource Header}"
                                            Grid.Row="0" Grid.Column="1"/>
-                                    
+
+                                    <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.ObtainedDate}"
+                                                                 Placeholder="{x:Static localization:AppStringResources.EnterDate}"
+                                                                 Mode="Date"
+                                                                 BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 HorizontalTextAlignment="Center"
+                                                                 HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                 CloseOnOutsideClick="True"
+                                                                 ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                 SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                 ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                 YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 SelectedYearMonthBackgroundColor="{DynamicResource Primary}"
+                                                                 Grid.Row="1" Grid.Column="1"
+                                                                 VerticalOptions="End">
+                                        <ndtp:NullableDateTimePicker.Icon>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF00EE;"
+                                                             Size="34"
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                                        </ndtp:NullableDateTimePicker.Icon>
+                                    </ndtp:NullableDateTimePicker>
+                                    <!-- Book Obtained Date -->
+
+                                </Grid>
+
+                                <Grid Margin="10">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Original Book Price -->
+                                    <Label Text="{x:Static localization:AppStringResources.OriginalBookPrice}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
                                     <Editor Text="{Binding EditedBook.BookPrice}"
-                                            Placeholder="{x:Static localization:AppStringResources.BookPrice}"
+                                            Placeholder="{x:Static localization:AppStringResources.OriginalBookPrice}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            Keyboard="Numeric"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0"/>
+                                    <!-- Original Book Price -->
+
+                                    <!-- Paid Book Price -->
+                                    <Label Text="{x:Static localization:AppStringResources.PaidBookPrice}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <Editor Text="{Binding EditedBook.BookPricePaid}"
+                                            Placeholder="{x:Static localization:AppStringResources.PaidBookPrice}"
                                             HorizontalTextAlignment="Center"
                                             VerticalOptions="End"
                                             Keyboard="Numeric"
                                             AutoSize="TextChanges"
                                             Grid.Row="1" Grid.Column="1"/>
-                                    <!-- Book Price -->
-                                    
+                                    <!-- Paid Book Price -->
+
                                 </Grid>
+
 
                                 <!-- Book URL -->
                                 <VerticalStackLayout Margin="10">
@@ -1112,7 +1171,8 @@
                                 </VerticalStackLayout>
                                 <!-- Book URL -->
 
-                                <Grid Margin="10">
+                                <Grid Margin="10"
+                                      IsVisible="{Binding LoanOutBooks}">
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -1167,6 +1227,64 @@
                                     </ndtp:NullableDateTimePicker>
                                     <!-- Book Loaned Out On -->
                                     
+                                </Grid>
+
+                                <Grid Margin="10"
+                                      IsVisible="{Binding BorrowBooks}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Book Borrowed From -->
+                                    <Label Text="{x:Static localization:AppStringResources.BookBorrowedFrom}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="0"/>
+
+                                    <Editor Text="{Binding EditedBook.BorrowedFrom}"
+                                            Placeholder="{x:Static localization:AppStringResources.EnterName}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalOptions="End"
+                                            AutoSize="TextChanges"
+                                            Grid.Row="1" Grid.Column="0"/>
+                                    <!-- Book Borrowed From -->
+
+                                    <!-- Book Borrowed On -->
+                                    <Label Text="{x:Static localization:AppStringResources.BookBorrowedOn}"
+                                           Style="{DynamicResource Header}"
+                                           Grid.Row="0" Grid.Column="1"/>
+
+                                    <ndtp:NullableDateTimePicker SelectedDateTime="{Binding EditedBook.BookBorrowedOn}"
+                                                                 Placeholder="{x:Static localization:AppStringResources.EnterDate}"
+                                                                 Mode="Date"
+                                                                 BackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 TextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 HorizontalTextAlignment="Center"
+                                                                 HeaderBackgroundColor="{DynamicResource Primary}"
+                                                                 CloseOnOutsideClick="True"
+                                                                 ForeColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Tertiary}}"
+                                                                 SelectedDayStyle="{DynamicResource DatePicker_SelectedDayButton}"
+                                                                 ToolButtonsStyle="{DynamicResource DatePicker_ToolButtons}"
+                                                                 YearMonthBackgroundColor="{AppThemeBinding Light={DynamicResource SecondaryBackgroundLight}, Dark={DynamicResource SecondaryBackgroundDark}}"
+                                                                 YearMonthTextColor="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}"
+                                                                 SelectedYearMonthBackgroundColor="{DynamicResource Primary}"
+                                                                 Grid.Row="1" Grid.Column="1"
+                                                                 VerticalOptions="End">
+                                        <ndtp:NullableDateTimePicker.Icon>
+                                            <FontImageSource FontFamily="MaterialDesignIcons"
+                                                             Glyph="&#xF00EE;"
+                                                             Size="34"
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
+                                        </ndtp:NullableDateTimePicker.Icon>
+                                    </ndtp:NullableDateTimePicker>
+                                    <!-- Book Borrowed On -->
+
                                 </Grid>
 
                                 <!-- Hide Book -->

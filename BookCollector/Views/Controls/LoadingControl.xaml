@@ -5,7 +5,7 @@
              xmlns:localization="clr-namespace:BookCollector.Resources.Localization"
              xmlns:viewModel="clr-namespace:BookCollector.ViewModels.BaseViewModels"
              x:DataType="viewModel:BaseViewModel">
-    
+
     <Grid IsVisible="{Binding IsBusy}"
           BackgroundColor="{AppThemeBinding Dark={DynamicResource SecondaryBackgroundDark}, Light={DynamicResource SecondaryBackgroundLight}}"
           Opacity="0.8">

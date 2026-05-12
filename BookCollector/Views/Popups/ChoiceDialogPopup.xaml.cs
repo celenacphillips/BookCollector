@@ -23,6 +23,10 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// <param name="state">Type of popup to display: Commands or Options.</param>
     public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, string confirm, string? deny, DialogState state)
     {
+        var deviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
+        this.PopupHeight = deviceHeight - 200;
+        this.ScrollViewHeight = this.PopupHeight - 400;
+
         this.PopupWidth = popupWidth;
         this.Title = dialogTitle;
         this.Message = dialogMessage;
@@ -48,6 +52,10 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// <param name="state">Type of popup to display: Commands or Options.</param>
     public ChoiceDialogPopup(double popupWidth, string dialogTitle, string dialogMessage, List<string> actions, DialogState state)
     {
+        var deviceHeight = DeviceDisplay.Current.MainDisplayInfo.Height / DeviceDisplay.Current.MainDisplayInfo.Density;
+        this.PopupHeight = deviceHeight - 200;
+        this.ScrollViewHeight = this.PopupHeight - 400;
+
         this.PopupWidth = popupWidth;
         this.Title = dialogTitle;
         this.Message = dialogMessage;
@@ -62,9 +70,19 @@ public partial class ChoiceDialogPopup : Popup<string>
     }
 
     /// <summary>
+    /// Gets or sets the popup height.
+    /// </summary>
+    public double PopupHeight { get; set; }
+
+    /// <summary>
     /// Gets or sets the popup width.
     /// </summary>
     public double PopupWidth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the scroll view height.
+    /// </summary>
+    public double ScrollViewHeight { get; set; }
 
     /// <summary>
     /// Gets or sets the popup title.

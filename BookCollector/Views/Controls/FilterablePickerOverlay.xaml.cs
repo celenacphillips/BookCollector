@@ -132,6 +132,11 @@ public partial class FilterablePickerOverlay : ContentView
                 this.ViewModel.LoanedOutBooksOption = current;
             }
 
+            if (this.Title.Equals(AppStringResources.BooksBorrowed))
+            {
+                this.ViewModel.BorrowedBooksOption = current;
+            }
+
             this.OnOverlayTapped(null, null);
         }
     }

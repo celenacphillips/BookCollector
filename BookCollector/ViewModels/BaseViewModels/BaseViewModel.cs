@@ -169,26 +169,6 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public double PopupHeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show audiobooks or not.
-        /// </summary>
-        public bool AudiobookShow { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show eBooks or not.
-        /// </summary>
-        public bool eBookShow { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hardcovers or not.
-        /// </summary>
-        public bool HardcoverShow { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show paperbacks or not.
-        /// </summary>
-        public bool PaperbackShow { get; set; }
-
         /********************************************************/
 
         /// <summary>
@@ -242,6 +222,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         [RelayCommand]
         public static async Task Tap(object input)
         {
+            if (input == null)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(input.ToString()))
             {
                 await Clipboard.SetTextAsync(input.ToString());
@@ -292,6 +277,7 @@ namespace BookCollector.ViewModels.BaseViewModels
             AuthorsViewModel.fullAuthorList?.Clear();
             AuthorsViewModel.hiddenFilteredAuthorList?.Clear();
             AuthorsViewModel.filteredAuthorList?.Clear();
+            AuthorsViewModel.fullBookAuthorList?.Clear();
             AuthorsViewModel.RefreshView = true;
 
             LocationsViewModel.fullLocationList?.Clear();

@@ -286,6 +286,22 @@ namespace BookCollector.ViewModels.BaseViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
         public bool showTime;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to show loan out books option or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool loanOutBooks;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show borrow books option or not.
+        /// </summary>
+        [ObservableProperty]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "Observable Property")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Observable Property")]
+        public bool borrowBooks;
+
         /********************************************************/
 
         /// <summary>
@@ -293,18 +309,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public BookBaseViewModel()
         {
-            this.ShowComments = Preferences.Get("CommentsOn", true /* Default */);
-            this.ShowChapters = Preferences.Get("ChaptersOn", true /* Default */);
-            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
-            this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+            this.ShowComments = DevicePreferences.CommentsShowValue;
+            this.ShowChapters = DevicePreferences.ChaptersShowValue;
+            this.ShowFavorites = DevicePreferences.FavoritesShowValue;
+            this.ShowRatings = DevicePreferences.RatingsShowValue;
         }
-
-        /********************************************************/
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden authors or not.
-        /// </summary>
-        public bool HiddenAuthorsOn { get; set; }
 
         /********************************************************/
 
@@ -333,19 +342,21 @@ namespace BookCollector.ViewModels.BaseViewModels
                 return 0;
             }
 
-            if (bookPrice.StartsWith(new CultureInfo(Preferences.Get("CultureCode", "en-US" /* Default */)).NumberFormat.CurrencySymbol))
+            bookPrice = bookPrice.Trim();
+
+            var firstCharacter = bookPrice[0];
+
+            if (!char.IsDigit(firstCharacter))
             {
-                bookPrice = bookPrice[1..];
+                bookPrice = bookPrice[1..].Trim();
             }
 
-            if (bookPrice.Contains(' '))
+            if (double.TryParse(bookPrice, out double price))
             {
-                bookPrice = bookPrice.Split(' ')[0];
+                return price;
             }
 
-            double.TryParse(bookPrice, out double price);
-
-            return price;
+            return 0;
         }
 
         /// <summary>

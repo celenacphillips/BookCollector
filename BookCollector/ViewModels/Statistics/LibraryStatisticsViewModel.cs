@@ -6,6 +6,7 @@ namespace BookCollector.ViewModels.Statistics
 {
     using System.Globalization;
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
@@ -96,7 +97,7 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (string.IsNullOrEmpty(this.CostBooks))
                 {
-                    var cultureCode = Preferences.Get("CultureCode", "en-US" /* Default */);
+                    var cultureCode = DevicePreferences.AppCultureCodeValue;
                     var cultureInfo = new CultureInfo(cultureCode);
                     this.CostBooks = string.Format(cultureInfo, "{0:C}", 0);
                 }
@@ -108,17 +109,17 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (ToBeReadViewModel.hiddenFilteredBookList == null || ToBeReadViewModel.RefreshView)
                 {
-                    taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow));
+                    taskList.Add(ToBeReadViewModel.SetList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue));
                 }
 
                 if (ReadViewModel.hiddenFilteredBookList == null || ReadViewModel.RefreshView)
                 {
-                    taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow));
+                    taskList.Add(ReadViewModel.SetList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue));
                 }
 
                 if (ReadingViewModel.hiddenFilteredBookList == null || ReadingViewModel.RefreshView)
                 {
-                    taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow));
+                    taskList.Add(ReadingViewModel.SetList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue));
                 }
 
                 if (CollectionsViewModel.hiddenFilteredCollectionList == null || CollectionsViewModel.RefreshView)
@@ -148,12 +149,12 @@ namespace BookCollector.ViewModels.Statistics
 
                 if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
-                    await AllBooksViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                    await AllBooksViewModel.SetList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
                 }
 
                 var cost = GetCounts.GetPriceOfAllBooks();
-                var formats = GetCounts.GetAllBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
-                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                var formats = GetCounts.GetAllBooksAndBookFormatsList(DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
+                var formatPrices = GetCounts.GetPriceOfBooksAndBookFormatsList(DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
 
                 Task<int>? favoriteCount = null;
                 Task<int>? nonFavoriteCount = null;
@@ -193,11 +194,11 @@ namespace BookCollector.ViewModels.Statistics
 
                 await Task.WhenAll(taskList);
 
-                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow, this.MaxListNumber);
-                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow, this.MaxListNumber);
-                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow, this.MaxListNumber);
-                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow, this.MaxListNumber);
-                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow, this.MaxListNumber);
+                var collections = GetCounts.GetAllBooksInAllCollectionsList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue, this.MaxListNumber);
+                var genres = GetCounts.GetAllBooksInAllGenresList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue, this.MaxListNumber);
+                var series = GetCounts.GetAllBooksInAllSeriesList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue, this.MaxListNumber);
+                var authors = GetCounts.GetAllBooksInAllAuthorsList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue, this.MaxListNumber);
+                var locations = GetCounts.GetAllBooksInAllLocationsList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue, this.MaxListNumber);
 
                 this.GetColors();
 

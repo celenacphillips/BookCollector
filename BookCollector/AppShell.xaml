@@ -83,7 +83,7 @@
     </FlyoutItem>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems"
-                IsVisible="False">
+                IsVisible="{Binding ShowBooksLoanedOut}">
         <Tab Title="{x:Static localization:AppStringResources.BooksLoanedOut}">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialDesignIcons"
@@ -92,13 +92,13 @@
             </Tab.Icon>
 
             <ShellContent Title="{x:Static localization:AppStringResources.BooksLoanedOut}"
-                          ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
+                          ContentTemplate="{DataTemplate mainViews:LoanedOutBooksView}"/>
 
         </Tab>
     </FlyoutItem>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems"
-                IsVisible="False">
+                IsVisible="{Binding ShowBorrowedBooks}">
         <Tab Title="{x:Static localization:AppStringResources.BorrowedBooks}">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialDesignIcons"
@@ -107,7 +107,7 @@
             </Tab.Icon>
 
             <ShellContent Title="{x:Static localization:AppStringResources.BorrowedBooks}"
-                          ContentTemplate="{DataTemplate statisticsViews:LibraryStatisticsView}"/>
+                          ContentTemplate="{DataTemplate mainViews:BorrowedBooksView}"/>
 
         </Tab>
     </FlyoutItem>
@@ -138,12 +138,12 @@
                                  Glyph="&#xF0E44;"
                                  Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
             </Tab.Icon>
-            
+
             <ShellContent Title="{x:Static localization:AppStringResources.Wishlist}"
                           ContentTemplate="{DataTemplate mainViews:WishListView}"/>
         </Tab>
     </FlyoutItem>
-
+    
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="{x:Static localization:AppStringResources.Export_Import}">
             <Tab.Icon>

@@ -720,7 +720,7 @@
                                 </VerticalStackLayout>
                                 <!-- Book Location -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
@@ -786,7 +786,7 @@
                                 </VerticalStackLayout>
                                 <!-- Book Identifier -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid>
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -813,10 +813,38 @@
                                     </VerticalStackLayout>
                                     <!-- Book Language -->
 
-                                    <!-- Book Price -->
+                                    <!-- Book Obtained Date -->
                                     <VerticalStackLayout Margin="10"
                                                          Grid.Row="0" Grid.Column="1">
-                                        <Label Text="{x:Static localization:AppStringResources.BookPrice}"
+                                        <Label Text="{x:Static localization:AppStringResources.DateBookObtained}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.ObtainedDateValue, StringFormat='{0:MM/dd/yyyy}'}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.ObtainedDateValue, StringFormat='{0:MM/dd/yyyy}'}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Obtained Date -->
+                                </Grid>
+
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Original Book Price -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.OriginalBookPrice}"
                                                Style="{DynamicResource Header}"/>
                                         <Label>
                                             <Label.FormattedText>
@@ -831,7 +859,27 @@
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
-                                    <!-- Book Price -->
+                                    <!-- Original Book Price -->
+
+                                    <!-- Paid Book Price -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.PaidBookPrice}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BookPricePaid}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BookPricePaid}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Paid Book Price -->
                                 </Grid>
 
                                 <!-- Book URL -->
@@ -853,7 +901,7 @@
                                 </VerticalStackLayout>
                                 <!-- Book URL -->
 
-                                <Grid Margin="0,0,0,10">
+                                <Grid IsVisible="{Binding LoanOutBooks}">
 
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -899,6 +947,54 @@
                                         </Label>
                                     </VerticalStackLayout>
                                     <!-- Book Loaned Out On -->
+                                </Grid>
+
+                                <Grid IsVisible="{Binding BorrowBooks}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Book Borrowed From -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{x:Static localization:AppStringResources.BookBorrowedFrom}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BorrowedFrom}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BorrowedFrom}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Borrowed From -->
+
+                                    <!-- Book Borrowed On -->
+                                    <VerticalStackLayout Margin="10"
+                                                         Grid.Row="0" Grid.Column="1">
+                                        <Label Text="{x:Static localization:AppStringResources.BookBorrowedOn}"
+                                               Style="{DynamicResource Header}"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding SelectedBook.BorrowedOnValue, StringFormat='{0:MM/dd/yyyy}'}">
+                                                        <Span.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                                                  CommandParameter="{Binding SelectedBook.BorrowedOnValue, StringFormat='{0:MM/dd/yyyy}'}"/>
+                                                        </Span.GestureRecognizers>
+                                                    </Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Book Borrowed On -->
                                 </Grid>
 
                                 <!-- Hide Book -->

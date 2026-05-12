@@ -5,6 +5,7 @@
 namespace BookCollector.ViewModels.BaseViewModels
 {
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using CommunityToolkit.Mvvm.ComponentModel;
@@ -286,20 +287,20 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// <returns>The list show hidden preference.</returns>
         public bool GetPreferences()
         {
-            this.ShowHiddenBooks = Preferences.Get("HiddenBooksOn", true /* Default */);
-            this.ShowHiddenCollections = Preferences.Get("HiddenCollectionsOn", true /* Default */);
-            this.ShowHiddenSeries = Preferences.Get("HiddenSeriesOn", true /* Default */);
-            this.ShowHiddenLocations = Preferences.Get("HiddenLocationsOn", true /* Default */);
-            this.ShowHiddenGenres = Preferences.Get("HiddenGenresOn", true /* Default */);
-            this.ShowHiddenAuthors = Preferences.Get("HiddenAuthorsOn", true /* Default */);
-            this.ShowHiddenWishlistBooks = Preferences.Get("HiddenWishlistBooksOn", true /* Default */);
-            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
-            this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+            this.ShowHiddenBooks = DevicePreferences.ShowHiddenBooksValue;
+            this.ShowHiddenCollections = DevicePreferences.ShowHiddenCollectionsValue;
+            this.ShowHiddenSeries = DevicePreferences.ShowHiddenSeriesValue;
+            this.ShowHiddenLocations = DevicePreferences.ShowHiddenLocationsValue;
+            this.ShowHiddenGenres = DevicePreferences.ShowHiddenGenresValue;
+            this.ShowHiddenAuthors = DevicePreferences.ShowHiddenAuthorsValue;
+            this.ShowHiddenWishlistBooks = DevicePreferences.ShowHiddenWishlistBooksValue;
+            this.ShowFavorites = DevicePreferences.FavoritesShowValue;
+            this.ShowRatings = DevicePreferences.RatingsShowValue;
 
-            this.AudiobookShow = Preferences.Get("AudiobookOn", true /* Default */);
-            this.eBookShow = Preferences.Get("eBookOn", true /* Default */);
-            this.HardcoverShow = Preferences.Get("HardcoverOn", true /* Default */);
-            this.PaperbackShow = Preferences.Get("PaperbackOn", true /* Default */);
+            DevicePreferences.ShowAudiobooksValue = DevicePreferences.ShowAudiobooksValue;
+            DevicePreferences.ShoweBooksValue = DevicePreferences.ShoweBooksValue;
+            DevicePreferences.ShowHardcoversValue = DevicePreferences.ShowHardcoversValue;
+            DevicePreferences.ShowPaperbacksValue = DevicePreferences.ShowPaperbacksValue;
 
             return true;
         }

@@ -210,6 +210,12 @@
 		<Compile Update="Views\Genre\GenreMetricView.xaml.cs">
 		  <DependentUpon>GenreMetricView.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\Main\BorrowedBooksView.xaml.cs">
+		  <DependentUpon>BorrowedBooksView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Main\LoanedOutBooksView.xaml.cs">
+		  <DependentUpon>LoanedOutBooksView.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\Popups\ChoiceDialogPopup.xaml.cs">
 		  <DependentUpon>ChoiceDialogPopup.xaml</DependentUpon>
 		</Compile>
@@ -402,6 +408,12 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Location\LocationMetricView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Main\BorrowedBooksView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Main\LoanedOutBooksView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Main\ExportImportView.xaml">

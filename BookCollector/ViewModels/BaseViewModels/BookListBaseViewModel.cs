@@ -6,6 +6,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 {
     using System.Collections.ObjectModel;
     using BookCollector.Data;
+    using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.ViewModels.Popups;
     using BookCollector.Views.Book;
@@ -59,18 +60,13 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public BookListBaseViewModel()
         {
-            this.ShowComments = Preferences.Get("CommentsOn", true /* Default */);
-            this.ShowChapters = Preferences.Get("ChaptersOn", true /* Default */);
-            this.ShowFavorites = Preferences.Get("FavoritesOn", true /* Default */);
-            this.ShowRatings = Preferences.Get("RatingsOn", true /* Default */);
+            this.ShowComments = DevicePreferences.CommentsShowValue;
+            this.ShowChapters = DevicePreferences.ChaptersShowValue;
+            this.ShowFavorites = DevicePreferences.FavoritesShowValue;
+            this.ShowRatings = DevicePreferences.RatingsShowValue;
         }
 
         /********************************************************/
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show hidden books or not.
-        /// </summary>
-        public static bool ShowHiddenBooks { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show favorite books or not.
@@ -148,6 +144,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the saved loaned out books filter option.
         /// </summary>
         public string? LoanedOutBooksOption { get; set; }
+
+        /// <summary>
+        /// Gets or sets the saved borrowed books filter option.
+        /// </summary>
+        public string? BorrowedBooksOption { get; set; }
 
         /********************************************************/
 
@@ -262,6 +263,11 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// Gets or sets the default saved loaned out books filter option.
         /// </summary>
         internal string? LoanedOutBooksOptionDefault { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default saved borrowed books filter option.
+        /// </summary>
+        internal string? BorrowedBooksOptionDefault { get; set; }
 
         /********************************************************/
 
@@ -407,6 +413,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                         this.BookCoverOption,
                         this.ReadingStatusOption,
                         this.LoanedOutBooksOption,
+                        this.BorrowedBooksOption,
                         this.SearchString);
 
                 await Task.WhenAll(filteredList);
@@ -588,6 +595,7 @@ namespace BookCollector.ViewModels.BaseViewModels
                             this.BookCoverOption,
                             this.ReadingStatusOption,
                             this.LoanedOutBooksOption,
+                            this.BorrowedBooksOption,
                             this.SearchString);
 
             var filteredBooksCount = filteredBookList?.Count ?? 0;
@@ -712,7 +720,8 @@ namespace BookCollector.ViewModels.BaseViewModels
                     this.BookSeriesOptionDefault,
                     this.BookCoverOptionDefault,
                     this.ReadingStatusOptionDefault,
-                    this.LoanedOutBooksOptionDefault);
+                    this.LoanedOutBooksOptionDefault,
+                    this.BorrowedBooksOptionDefault);
 
                 popup.BindingContext = viewModel;
 

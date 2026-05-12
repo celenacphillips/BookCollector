@@ -288,7 +288,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var filteredCount = filteredList?.Count ?? 0;
 
-            var totalString = StringManipulation.SetTotalBooksString(filteredCount, totalCount);
+            var totalString = StringManipulation.SetTotalAuthorsString(filteredCount, totalCount);
 
             filteredList = await SortLists.SortList(
                                 filteredList!,
@@ -320,7 +320,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var filteredCount = filteredList?.Count ?? 0;
 
-            var totalString = StringManipulation.SetTotalBooksString(filteredCount, totalCount);
+            var totalString = StringManipulation.SetTotalCollectionsString(filteredCount, totalCount);
 
             filteredList = await SortLists.SortList(
                                 filteredList!,
@@ -352,7 +352,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var filteredCount = filteredList?.Count ?? 0;
 
-            var totalString = StringManipulation.SetTotalBooksString(filteredCount, totalCount);
+            var totalString = StringManipulation.SetTotalGenresString(filteredCount, totalCount);
 
             filteredList = await SortLists.SortList(
                                 filteredList!,
@@ -384,7 +384,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var filteredCount = filteredList?.Count ?? 0;
 
-            var totalString = StringManipulation.SetTotalBooksString(filteredCount, totalCount);
+            var totalString = StringManipulation.SetTotalLocationsString(filteredCount, totalCount);
 
             filteredList = await SortLists.SortList(
                                 filteredList!,
@@ -416,7 +416,7 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             var filteredCount = filteredList?.Count ?? 0;
 
-            var totalString = StringManipulation.SetTotalBooksString(filteredCount, totalCount);
+            var totalString = StringManipulation.SetTotalSeriesString(filteredCount, totalCount);
 
             filteredList = await SortLists.SortList(
                                 filteredList!,
@@ -455,8 +455,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -511,8 +521,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -567,8 +587,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -623,8 +653,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(
@@ -679,8 +719,18 @@ namespace BookCollector.ViewModels.BaseViewModels
             {
                 totalCount = hiddenList.Count;
 
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
-                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
+                await Task.WhenAll(hiddenList.Select(x => x.SetTotalCostOfBooks(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue)));
 
                 // List filter calls
                 filteredList = await FilterLists.FilterList(

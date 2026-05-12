@@ -77,15 +77,15 @@ namespace BookCollector.ViewModels.Statistics
 
                 this.GetPreferences();
 
-                this.PageBooksShow = this.eBookShow || this.HardcoverShow || this.PaperbackShow;
+                this.PageBooksShow = DevicePreferences.ShoweBooksValue || DevicePreferences.ShowHardcoversValue || DevicePreferences.ShowPaperbacksValue;
 
-                this.ShowAudiobooks = this.AudiobookShow;
+                this.ShowAudiobooks = DevicePreferences.ShowAudiobooksValue;
 
                 this.ReadingDataList = [];
 
                 if (AllBooksViewModel.hiddenFilteredBookList == null || AllBooksViewModel.RefreshView)
                 {
-                    await AllBooksViewModel.SetList(this.ShowHiddenBooks, this.AudiobookShow, this.eBookShow, this.HardcoverShow, this.PaperbackShow);
+                    await AllBooksViewModel.SetList(this.ShowHiddenBooks, DevicePreferences.ShowAudiobooksValue, DevicePreferences.ShoweBooksValue, DevicePreferences.ShowHardcoversValue, DevicePreferences.ShowPaperbacksValue);
                 }
 
                 for (int i = 0; i < int.Parse(this.YearCount); i++)
