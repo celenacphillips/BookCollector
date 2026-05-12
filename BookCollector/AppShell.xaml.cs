@@ -25,6 +25,7 @@ namespace BookCollector
         public AppShell()
         {
             this.VersionString = $"v {AppInfo.VersionString}";
+            this.ApplicationTitleString = $"{AppInfo.Current.Name}, {DateTime.Now.Year}";
 
             this.InitializeComponent();
 
