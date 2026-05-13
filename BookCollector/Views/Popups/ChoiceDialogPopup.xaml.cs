@@ -34,6 +34,7 @@ public partial class ChoiceDialogPopup : Popup<string>
         this.Deny = !string.IsNullOrEmpty(deny) ? deny : string.Empty;
         this.DenyVisible = !string.IsNullOrEmpty(deny);
 
+        this.MessageVisible = !string.IsNullOrEmpty(dialogMessage);
         this.OptionsVisible = state == DialogState.Options;
         this.CommandsVisible = state == DialogState.Choice;
 
@@ -61,6 +62,7 @@ public partial class ChoiceDialogPopup : Popup<string>
         this.Message = dialogMessage;
         this.Choices = actions;
 
+        this.MessageVisible = !string.IsNullOrEmpty(dialogMessage);
         this.OptionsVisible = state == DialogState.Options;
         this.CommandsVisible = state == DialogState.Choice;
 
@@ -103,6 +105,11 @@ public partial class ChoiceDialogPopup : Popup<string>
     /// Gets or sets the deny button text.
     /// </summary>
     public string Deny { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the message is visible or not.
+    /// </summary>
+    public bool MessageVisible { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the deny button is visible or not.

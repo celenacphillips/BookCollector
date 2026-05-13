@@ -17,6 +17,7 @@ namespace BookCollector.ViewModels.BaseViewModels
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
     using BookCollector.ViewModels.Location;
+    using BookCollector.ViewModels.Main;
     using BookCollector.ViewModels.Series;
     using BookCollector.Views.Book;
     using BookCollector.Views.Popups;
@@ -420,6 +421,10 @@ namespace BookCollector.ViewModels.BaseViewModels
 
             await SetReadViewModelList(book, ActionState.Add);
 
+            await SetLoanedOutBooksViewModelList(book, ActionState.Add);
+
+            await SetBorrowedBooksViewModelList(book, ActionState.Add);
+
             await SetCollectionsViewModelBookList(book, ActionState.Add, previousViewModel);
 
             await SetGenresViewModelBookList(book, ActionState.Add, previousViewModel);
@@ -452,6 +457,10 @@ namespace BookCollector.ViewModels.BaseViewModels
             await SetToBeReadViewModelList(book, ActionState.Remove);
 
             await SetReadViewModelList(book, ActionState.Remove);
+
+            await SetLoanedOutBooksViewModelList(book, ActionState.Remove);
+
+            await SetBorrowedBooksViewModelList(book, ActionState.Remove);
 
             await SetCollectionsViewModelBookList(book, ActionState.Remove, previousViewModel);
 
@@ -808,6 +817,46 @@ namespace BookCollector.ViewModels.BaseViewModels
                     {
                         ReadViewModel.RefreshView = await RemoveBookFromStaticList(book, ReadViewModel.fullBookList, ReadViewModel.filteredBookList);
                     }
+                }
+            }
+        }
+
+        private static async Task SetLoanedOutBooksViewModelList(BookModel book, ActionState action)
+        {
+            if (LoanedOutBooksViewModel.fullBookList != null)
+            {
+                if (action == ActionState.Add)
+                {
+                    if (!string.IsNullOrEmpty(book.LoanedTo) || !string.IsNullOrEmpty(book.BookLoanedOutOn))
+                    {
+                        LoanedOutBooksViewModel.RefreshView = await AddBookToStaticList(book, LoanedOutBooksViewModel.fullBookList, LoanedOutBooksViewModel.filteredBookList);
+                    }
+                }
+
+                if (action == ActionState.Remove ||
+                    (string.IsNullOrEmpty(book.LoanedTo) && string.IsNullOrEmpty(book.BookLoanedOutOn)))
+                {
+                    LoanedOutBooksViewModel.RefreshView = await RemoveBookFromStaticList(book, LoanedOutBooksViewModel.fullBookList, LoanedOutBooksViewModel.filteredBookList);
+                }
+            }
+        }
+
+        private static async Task SetBorrowedBooksViewModelList(BookModel book, ActionState action)
+        {
+            if (BorrowedBooksViewModel.fullBookList != null)
+            {
+                if (action == ActionState.Add)
+                {
+                    if (!string.IsNullOrEmpty(book.BorrowedFrom) || !string.IsNullOrEmpty(book.BookBorrowedOn))
+                    {
+                        BorrowedBooksViewModel.RefreshView = await AddBookToStaticList(book, BorrowedBooksViewModel.fullBookList, BorrowedBooksViewModel.filteredBookList);
+                    }
+                }
+
+                if (action == ActionState.Remove ||
+                    (string.IsNullOrEmpty(book.BorrowedFrom) && string.IsNullOrEmpty(book.BookBorrowedOn)))
+                {
+                    BorrowedBooksViewModel.RefreshView = await RemoveBookFromStaticList(book, BorrowedBooksViewModel.fullBookList, BorrowedBooksViewModel.filteredBookList);
                 }
             }
         }

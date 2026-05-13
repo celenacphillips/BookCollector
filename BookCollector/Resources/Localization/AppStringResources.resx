@@ -1661,10 +1661,10 @@ The Import feature works best with a spreadsheet workbook specifically formatted
     <value>Book Borrowed On</value>
   </data>
   <data name="BorrowedBooksView_InfoText" xml:space="preserve">
-    <value>This is a list of all the books you have borrowed from others.</value>
+    <value>This is a list of all the books you have borrowed from others. To add a book to this list, go to the book and add a name and/or date the book was borrowed.</value>
   </data>
   <data name="LoanedOutBooksView_InfoText" xml:space="preserve">
-    <value>This is a list of books you have loaned out to others.</value>
+    <value>This is a list of books you have loaned out to others. To add a book to this list, go to the book and add a name and/or date the book was loaned out.</value>
   </data>
   <data name="DateBookObtained" xml:space="preserve">
     <value>Date Book Obtained</value>

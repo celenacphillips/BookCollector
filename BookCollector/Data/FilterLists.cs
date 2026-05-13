@@ -297,14 +297,14 @@ namespace BookCollector.Data
         /// <returns>A filtered book list.</returns>
         public static ObservableCollection<WishlistBookModel>? FilterOnSearchString(ObservableCollection<WishlistBookModel>? bookList, string? searchString)
         {
-            var filterList = bookList;
-
             if (!string.IsNullOrEmpty(searchString))
             {
-                filterList = filterList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
+                return bookList?.Where(x => !string.IsNullOrEmpty(x.BookTitle) && x.BookTitle.ToLower().Contains(searchString.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection();
             }
-
-            return filterList;
+            else
+            {
+                return bookList;
+            }
         }
 
         /// <summary>

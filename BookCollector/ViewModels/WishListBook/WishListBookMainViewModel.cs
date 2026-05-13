@@ -307,6 +307,16 @@ namespace BookCollector.ViewModels.WishListBook
                     await AuthorEditViewModel.AddToStaticList(addAuthor);
                     AuthorsViewModel.RefreshView = true;
                 }
+
+                // Add book author record to cached list.
+                if (!AuthorsViewModel.fullBookAuthorList?.Any(x => x.AuthorGuid == addAuthor.AuthorGuid && x.BookGuid == this.SelectedWishlistBook.BookGuid) ?? false)
+                {
+                    AuthorsViewModel.fullBookAuthorList?.Add(new BookAuthorModel()
+                    {
+                        AuthorGuid = (Guid)addAuthor.AuthorGuid!,
+                        BookGuid = (Guid)this.SelectedWishlistBook.BookGuid!,
+                    });
+                }
             }
         }
 

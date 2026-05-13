@@ -633,13 +633,13 @@ namespace BookCollector.ViewModels.BaseViewModels
         {
             var filteredBookList = await FilterLists.FilterList(
                             hiddenFilteredBookList,
-                            this.FavoritesOption,
                             this.BookFormatOption,
                             this.BookPublisherOption,
                             this.BookLanguageOption,
-                            this.BookRatingOption,
                             this.BookPublishYearOption,
                             this.BookAuthorOption,
+                            this.BookLocationOption,
+                            this.BookSeriesOption,
                             this.BookCoverOption,
                             this.SearchString);
 

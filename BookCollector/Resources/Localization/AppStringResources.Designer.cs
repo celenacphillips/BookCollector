@@ -1250,7 +1250,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of all the books you have borrowed from others..
+        ///   Looks up a localized string similar to This is a list of all the books you have borrowed from others. To add a book to this list, go to the book and add a name and/or date the book was borrowed..
         /// </summary>
         internal static string BorrowedBooksView_InfoText {
             get {
@@ -2790,7 +2790,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a list of books you have loaned out to others..
+        ///   Looks up a localized string similar to This is a list of books you have loaned out to others. To add a book to this list, go to the book and add a name and/or date the book was loaned out..
         /// </summary>
         internal static string LoanedOutBooksView_InfoText {
             get {

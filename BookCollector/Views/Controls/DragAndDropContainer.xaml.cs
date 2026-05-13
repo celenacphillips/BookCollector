@@ -84,17 +84,31 @@ public partial class DragAndDropContainer : ContentView
 
                 var dragImage = new Image
                 {
-                    Source = new FontImageSource
+                    WidthRequest = 24,
+                    HeightRequest = 24,
+                    HorizontalOptions = LayoutOptions.End,
+                };
+
+                if (Application.Current?.UserAppTheme == AppTheme.Dark)
+                {
+                    dragImage.Source = new FontImageSource
                     {
                         FontFamily = "MaterialDesignIcons",
                         Glyph = char.ConvertFromUtf32(0xF12F0),
                         Color = Colors.White,
                         Size = 24,
-                    },
-                    WidthRequest = 24,
-                    HeightRequest = 24,
-                    HorizontalOptions = LayoutOptions.End,
-                };
+                    };
+                }
+                else
+                {
+                    dragImage.Source = new FontImageSource
+                    {
+                        FontFamily = "MaterialDesignIcons",
+                        Glyph = char.ConvertFromUtf32(0xF12F0),
+                        Color = Colors.Black,
+                        Size = 24,
+                    };
+                }
 
                 var grid = new Grid();
 

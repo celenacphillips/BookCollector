@@ -22,8 +22,9 @@
                LineBreakMode="TailTruncation"
                Margin="10,20,10,0"/>
 
-        <ScrollView HeightRequest="{Binding ScrollViewHeight}"
-                    Margin="20">
+        <ScrollView MaximumHeightRequest="{Binding ScrollViewHeight}"
+                    Margin="20,10,20,0"
+                    IsVisible="{Binding MessageVisible}">
             <Label Text="{Binding Message}"
                    HorizontalOptions="Center"
                    Margin="5"
@@ -57,14 +58,14 @@
             <Button Text="{Binding Deny}"
                     Clicked="OnDenyButton_Clicked"
                     Style="{StaticResource PickerButton}"
-                    Margin="10"
+                    Margin="10,10,10,20"
                     Padding="40,0"
                     IsVisible="{Binding DenyVisible}"
                     MinimumWidthRequest="44"/>
             
             <Button Text="{Binding Confirm}"
                     Clicked="OnConfirmButton_Clicked"
-                    Margin="10"
+                    Margin="10,10,10,20"
                     Padding="40,0"
                     Style="{StaticResource PickerButton}"
                     MinimumWidthRequest="44"/>

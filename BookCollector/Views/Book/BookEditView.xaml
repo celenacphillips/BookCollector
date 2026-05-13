@@ -1188,13 +1188,21 @@
                                     <Label Text="{x:Static localization:AppStringResources.BookLoanedTo}"
                                            Style="{DynamicResource Header}"
                                            Grid.Row="0" Grid.Column="0"/>
-                                    
+
                                     <Editor Text="{Binding EditedBook.LoanedTo}"
                                             Placeholder="{x:Static localization:AppStringResources.EnterName}"
                                             HorizontalTextAlignment="Center"
                                             VerticalOptions="End"
                                             AutoSize="TextChanges"
-                                            Grid.Row="1" Grid.Column="0"/>
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Loaned To -->
 
                                     <!-- Book Loaned Out On -->
@@ -1252,7 +1260,15 @@
                                             HorizontalTextAlignment="Center"
                                             VerticalOptions="End"
                                             AutoSize="TextChanges"
-                                            Grid.Row="1" Grid.Column="0"/>
+                                            Grid.Row="1" Grid.Column="0">
+                                        <Editor.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Spellcheck,Suggestions,CapitalizeWord</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Editor.Keyboard>
+                                    </Editor>
                                     <!-- Book Borrowed From -->
 
                                     <!-- Book Borrowed On -->

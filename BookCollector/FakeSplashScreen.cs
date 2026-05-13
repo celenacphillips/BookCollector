@@ -207,6 +207,18 @@ namespace BookCollector
                     DevicePreferences.ShoweBooksValue,
                     DevicePreferences.ShowHardcoversValue,
                     DevicePreferences.ShowPaperbacksValue),
+                LoanedOutBooksViewModel.SetList(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
+                BorrowedBooksViewModel.SetList(
+                    DevicePreferences.ShowHiddenBooksValue,
+                    DevicePreferences.ShowAudiobooksValue,
+                    DevicePreferences.ShoweBooksValue,
+                    DevicePreferences.ShowHardcoversValue,
+                    DevicePreferences.ShowPaperbacksValue),
             ];
 
             await Task.WhenAll(taskList);

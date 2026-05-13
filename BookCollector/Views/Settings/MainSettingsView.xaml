@@ -240,7 +240,8 @@
                 <Label Text="{x:Static localization:AppStringResources.DeleteAllData_Question}"
                        VerticalTextAlignment="Center"
                        Margin="10,0"
-                       Grid.Row="5" Grid.Column="1"/>
+                       Grid.Row="5" Grid.Column="1"
+                       Grid.ColumnSpan="3"/>
                 <!-- Delete -->
             </Grid>
 

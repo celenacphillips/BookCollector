@@ -42,7 +42,8 @@
             </Grid>
 
             <controls:DragAndDropContainer DragAndDropItems="{Binding LibraryTabViews}"
-                                           OnDragAndDropItemsUpdated="OnLibraryTabViewsUpdated"/>
+                                           OnDragAndDropItemsUpdated="OnLibraryTabViewsUpdated"
+                                           x:Name="libraryViewsDragAndDropContainer"/>
 
             <Label Style="{DynamicResource ShortSeparator}" />
 
@@ -78,7 +79,8 @@
             
 
             <controls:DragAndDropContainer DragAndDropItems="{Binding GroupingTabViews}"
-                                           OnDragAndDropItemsUpdated="OnGroupingsTabViewsUpdated"/>
+                                           OnDragAndDropItemsUpdated="OnGroupingsTabViewsUpdated"
+                                           x:Name="groupingsViewsDragAndDropContainer"/>
 
             <Label Background="{DynamicResource Primary}"></Label>
             <Label Background="{DynamicResource Secondary}"></Label>

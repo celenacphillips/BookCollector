@@ -70,13 +70,69 @@ namespace BookCollector.Data.Database
             try
             {
                 await this.database.DeleteAllAsync<AuthorDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<BookAuthorModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<BookDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<WishlistBookDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<ChapterDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<CollectionDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<GenreDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<LocationDatabaseModel>();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
                 await this.database.DeleteAllAsync<SeriesDatabaseModel>();
             }
             catch (Exception ex)

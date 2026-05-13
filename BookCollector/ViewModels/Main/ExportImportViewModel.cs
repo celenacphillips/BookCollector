@@ -388,7 +388,7 @@ namespace BookCollector.ViewModels.Main
                     this.OutputVisible = true;
                     this.CheckboxesVisible = false;
 
-                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}Export.xlsx");
+                    var filePath = await ReadWriteSpreadsheet.CreateSpreadsheet(exportLocation!, $"{GetDate()}-{AppInfo.Current.Name.Replace(" ", string.Empty)}{AppStringResources.Export}");
                     this.mainFilePath = filePath;
 
                     this.StartOutput = AppStringResources.ExportResultsStart;
@@ -819,6 +819,11 @@ namespace BookCollector.ViewModels.Main
                     if (string.IsNullOrEmpty(stringValue))
                     {
                         values.TryGetValue("price", out stringValue);
+                    }
+
+                    if (string.IsNullOrEmpty(stringValue))
+                    {
+                        values.TryGetValue("bookprice", out stringValue);
                     }
                 }
 
@@ -2706,6 +2711,7 @@ namespace BookCollector.ViewModels.Main
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);
+                            AuthorsViewModel.fullBookAuthorList?.Add(bookAuthor);
 
                             importCount++;
                             this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");

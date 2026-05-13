@@ -40,16 +40,6 @@
                                  Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
-
-        <ToolbarItem Command="{Binding AddBookCommand}"
-                     IsEnabled="{Binding IsEnabled}">
-            <ToolbarItem.IconImageSource>
-                <FontImageSource FontFamily="MaterialDesignIcons" 
-                                 Glyph="&#xF05DB;" 
-                                 Size="26" 
-                                 Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid>

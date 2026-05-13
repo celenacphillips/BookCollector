@@ -173,7 +173,7 @@ public partial class MainSettingsView : ContentPage
         }
         else
         {
-            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, inputConfirm, null, DialogState.Choice));
+            await this.ShowPopupAsync<string>(new ChoiceDialogPopup(deviceWidth - 50, AppStringResources.ActionCanceled, AppStringResources.ActionCanceled, AppStringResources.OK, null, DialogState.Choice));
         }
     }
 

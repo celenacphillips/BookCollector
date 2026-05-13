@@ -385,6 +385,7 @@ public partial class PageSettingsView : ContentPage
 
         this.LibraryTabViews.Clear();
         this.AddLibraryTabViews();
+        this.libraryViewsDragAndDropContainer.DragAndDropItems = this.LibraryTabViews;
         this.appShell.ResetLibraryTab();
     }
 
@@ -420,6 +421,7 @@ public partial class PageSettingsView : ContentPage
 
         this.GroupingTabViews.Clear();
         this.AddGroupingTabViews();
+        this.groupingsViewsDragAndDropContainer.DragAndDropItems = this.GroupingTabViews;
         this.appShell.ResetGroupingsTab();
     }
 
@@ -509,7 +511,7 @@ public partial class PageSettingsView : ContentPage
         {
             if (string.IsNullOrEmpty(libraryTabView))
             {
-                return;
+                continue;
             }
 
             bool isToggled = false;
@@ -553,7 +555,7 @@ public partial class PageSettingsView : ContentPage
         {
             if (string.IsNullOrEmpty(groupingsTabView))
             {
-                return;
+                continue;
             }
 
             bool isToggled = false;
