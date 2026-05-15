@@ -1615,7 +1615,7 @@ namespace BookCollector.ViewModels.Main
                                 BookComments = comments,
                                 BookCollectionGuid = ParseGuid(collectionGuid),
                                 BookGenreGuid = ParseGuid(genreGuid),
-                                BookURL = bookCoverUrl,
+                                BookURL = bookUrl,
                                 Rating = ParseInt(rating),
                                 IsFavorite = ParseBool(favorite),
                                 UpNext = ParseBool(upNext),
@@ -1674,7 +1674,14 @@ namespace BookCollector.ViewModels.Main
 
                                 var parsed = DateTime.TryParse($"{book.BookStartDate}-01", out startDateValue);
 
-                                book.BookStartDate = startDateValue.ToShortDateString();
+                                if (parsed)
+                                {
+                                    book.BookStartDate = startDateValue.ToShortDateString();
+                                }
+                                else
+                                {
+                                    book.BookStartDate = null;
+                                }
                             }
 
                             if (!string.IsNullOrEmpty(book.BookEndDate) &&
@@ -1684,7 +1691,31 @@ namespace BookCollector.ViewModels.Main
 
                                 var parsed = DateTime.TryParse($"{book.BookEndDate}-01", out endDateValue);
 
-                                book.BookEndDate = endDateValue.ToShortDateString();
+                                if (parsed)
+                                {
+                                    book.BookEndDate = endDateValue.ToShortDateString();
+                                }
+                                else
+                                {
+                                    book.BookEndDate = null;
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(book.ObtainedDate) &&
+                                !DateTime.TryParse(book.ObtainedDate, out var obtainedDateValue))
+                            {
+                                book.ObtainedDate = book.ObtainedDate.Trim()[..4];
+
+                                var parsed = DateTime.TryParse($"{book.ObtainedDate}-01", out obtainedDateValue);
+
+                                if (parsed)
+                                {
+                                    book.ObtainedDate = obtainedDateValue.ToShortDateString();
+                                }
+                                else
+                                {
+                                    book.ObtainedDate = null;
+                                }
                             }
 
                             if (book.BookPageRead > 0 && book.BookPageTotal <= 0)

@@ -273,7 +273,7 @@
                                         <ImageButton.Source>
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF02FC;"
-                                                             Color="{DynamicResource TextOnPrimaryColor}" />
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                                         </ImageButton.Source>
                                     </ImageButton>
                                     
@@ -338,7 +338,7 @@
                                         <ImageButton.Source>
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF02FC;"
-                                                             Color="{DynamicResource TextOnPrimaryColor}" />
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                                         </ImageButton.Source>
                                     </ImageButton>
 
@@ -969,7 +969,7 @@
                                         <ImageButton.Source>
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF02FC;"
-                                                             Color="{DynamicResource TextOnPrimaryColor}" />
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                                         </ImageButton.Source>
                                     </ImageButton>
 
@@ -1024,7 +1024,7 @@
                                         <ImageButton.Source>
                                             <FontImageSource FontFamily="MaterialDesignIcons"
                                                              Glyph="&#xF02FC;"
-                                                             Color="{DynamicResource TextOnPrimaryColor}" />
+                                                             Color="{AppThemeBinding Light={DynamicResource TextLight}, Dark={DynamicResource TextDark}}" />
                                         </ImageButton.Source>
                                     </ImageButton>
 

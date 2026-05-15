@@ -110,6 +110,7 @@
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource UnselectedText}, Dark={DynamicResource UnselectedText}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="VerticalTextAlignment" Value="End"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
