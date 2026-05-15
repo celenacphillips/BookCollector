@@ -656,9 +656,9 @@ namespace BookCollector.ViewModels.Main
             LocationsViewModel.RefreshView = true;
         }
 
-        private static List<string?> GetValues(List<string?> columnNames, Dictionary<string, string>? values)
+        private static Dictionary<string, string?> GetValues(List<string?> columnNames, Dictionary<string, string>? values)
         {
-            var stringValues = new List<string?>();
+            var stringValues = new Dictionary<string, string?>();
 
             if (values != null)
             {
@@ -671,7 +671,7 @@ namespace BookCollector.ViewModels.Main
                         stringValue = CheckOtherAppColumns(columnNames[i] !, values);
                     }
 
-                    stringValues.Add(stringValue?.Trim());
+                    stringValues.Add(columnNames[i] !, stringValue?.Trim());
                 }
             }
 
@@ -1545,50 +1545,87 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1] !, out var title);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((AllBooksViewModel.fullBookList != null &&
-                            !AllBooksViewModel.fullBookList.Any(b => b.BookTitle!.Equals(parsedValues[1]))) ||
-                            AllBooksViewModel.fullBookList == null))
+                            !string.IsNullOrEmpty(title))
                         {
+                            parsedValues.TryGetValue(columnNames[0] !, out var guid);
+                            parsedValues.TryGetValue(columnNames[2] !, out var seriesGuid);
+                            parsedValues.TryGetValue(columnNames[3] !, out var bookNumber);
+                            parsedValues.TryGetValue(columnNames[4] !, out var publisher);
+                            parsedValues.TryGetValue(columnNames[5] !, out var publishYear);
+                            parsedValues.TryGetValue(columnNames[6] !, out var identifier);
+                            parsedValues.TryGetValue(columnNames[7] !, out var format);
+                            parsedValues.TryGetValue(columnNames[8] !, out var language);
+                            parsedValues.TryGetValue(columnNames[9] !, out var originalPrice);
+                            parsedValues.TryGetValue(columnNames[10] !, out var paidPrice);
+                            parsedValues.TryGetValue(columnNames[11] !, out var obtainedDate);
+                            parsedValues.TryGetValue(columnNames[12] !, out var summary);
+                            parsedValues.TryGetValue(columnNames[13] !, out var pagesRead);
+                            parsedValues.TryGetValue(columnNames[14] !, out var totalPages);
+                            parsedValues.TryGetValue(columnNames[15] !, out var listenHours);
+                            parsedValues.TryGetValue(columnNames[16] !, out var listenMinutes);
+                            parsedValues.TryGetValue(columnNames[17] !, out var totalHours);
+                            parsedValues.TryGetValue(columnNames[18] !, out var totalMinutes);
+                            parsedValues.TryGetValue(columnNames[19] !, out var startDate);
+                            parsedValues.TryGetValue(columnNames[20] !, out var endDate);
+                            parsedValues.TryGetValue(columnNames[21] !, out var locationGuid);
+                            parsedValues.TryGetValue(columnNames[22] !, out var comments);
+                            parsedValues.TryGetValue(columnNames[23] !, out var collectionGuid);
+                            parsedValues.TryGetValue(columnNames[24] !, out var genreGuid);
+                            parsedValues.TryGetValue(columnNames[25] !, out var bookUrl);
+                            parsedValues.TryGetValue(columnNames[26] !, out var rating);
+                            parsedValues.TryGetValue(columnNames[27] !, out var favorite);
+                            parsedValues.TryGetValue(columnNames[28] !, out var upNext);
+                            parsedValues.TryGetValue(columnNames[29] !, out var loanedTo);
+                            parsedValues.TryGetValue(columnNames[30] !, out var loanedOn);
+                            parsedValues.TryGetValue(columnNames[31] !, out var borrowedFrom);
+                            parsedValues.TryGetValue(columnNames[32] !, out var borrowedOn);
+                            parsedValues.TryGetValue(columnNames[33] !, out var hide);
+                            parsedValues.TryGetValue(columnNames[34] !, out var bookCoverUrl);
+                            parsedValues.TryGetValue(columnNames[35] !, out var bookFileName);
+
                             var book = new BookModel()
                             {
-                                BookGuid = ParseGuid(parsedValues[0]),
-                                BookTitle = parsedValues[1],
-                                BookSeriesGuid = ParseGuid(parsedValues[2]),
-                                BookNumberInSeries = parsedValues[3],
-                                BookPublisher = parsedValues[4],
-                                BookPublishYear = parsedValues[5],
-                                BookIdentifier = parsedValues[6],
-                                BookFormat = parsedValues[7],
-                                BookLanguage = parsedValues[8],
-                                BookPrice = parsedValues[9],
-                                BookPricePaid = parsedValues[10],
-                                ObtainedDate = ParseString(parsedValues[11]),
-                                BookSummary = parsedValues[12],
-                                BookPageRead = ParseInt(parsedValues[13]),
-                                BookPageTotal = ParseInt(parsedValues[14]),
-                                BookHourListened = ParseInt(parsedValues[15]),
-                                BookMinuteListened = ParseInt(parsedValues[16]),
-                                BookHoursTotal = ParseInt(parsedValues[17]),
-                                BookMinutesTotal = ParseInt(parsedValues[18]),
-                                BookStartDate = ParseString(parsedValues[19]),
-                                BookEndDate = ParseString(parsedValues[20]),
-                                BookLocationGuid = ParseGuid(parsedValues[21]),
-                                BookComments = parsedValues[22],
-                                BookCollectionGuid = ParseGuid(parsedValues[23]),
-                                BookGenreGuid = ParseGuid(parsedValues[24]),
-                                BookURL = parsedValues[25],
-                                Rating = ParseInt(parsedValues[26]),
-                                IsFavorite = ParseBool(parsedValues[27]),
-                                UpNext = ParseBool(parsedValues[28]),
-                                LoanedTo = parsedValues[29],
-                                BookLoanedOutOn = ParseString(parsedValues[30]),
-                                BorrowedFrom = parsedValues[31],
-                                BookBorrowedOn = ParseString(parsedValues[32]),
-                                HideBook = ParseBool(parsedValues[33]),
-                                BookCoverUrl = parsedValues[34],
-                                BookCoverFileName = parsedValues[35],
+                                BookGuid = ParseGuid(guid),
+                                BookTitle = title,
+                                BookSeriesGuid = ParseGuid(seriesGuid),
+                                BookNumberInSeries = bookNumber,
+                                BookPublisher = publisher,
+                                BookPublishYear = publishYear,
+                                BookIdentifier = identifier,
+                                BookFormat = format,
+                                BookLanguage = language,
+                                BookPrice = originalPrice,
+                                BookPricePaid = paidPrice,
+                                ObtainedDate = ParseString(obtainedDate),
+                                BookSummary = summary,
+                                BookPageRead = ParseInt(pagesRead),
+                                BookPageTotal = ParseInt(totalPages),
+                                BookHourListened = ParseInt(listenHours),
+                                BookMinuteListened = ParseInt(listenMinutes),
+                                BookHoursTotal = ParseInt(totalHours),
+                                BookMinutesTotal = ParseInt(totalMinutes),
+                                BookStartDate = ParseString(startDate),
+                                BookEndDate = ParseString(endDate),
+                                BookLocationGuid = ParseGuid(locationGuid),
+                                BookComments = comments,
+                                BookCollectionGuid = ParseGuid(collectionGuid),
+                                BookGenreGuid = ParseGuid(genreGuid),
+                                BookURL = bookCoverUrl,
+                                Rating = ParseInt(rating),
+                                IsFavorite = ParseBool(favorite),
+                                UpNext = ParseBool(upNext),
+                                LoanedTo = loanedTo,
+                                BookLoanedOutOn = ParseString(loanedOn),
+                                BorrowedFrom = borrowedFrom,
+                                BookBorrowedOn = ParseString(borrowedOn),
+                                HideBook = ParseBool(hide),
+                                BookCoverUrl = bookCoverUrl,
+                                BookCoverFileName = bookFileName,
                             };
 
                             if (singleSpreadsheetValues != null)
@@ -1600,49 +1637,54 @@ namespace BookCollector.ViewModels.Main
                                     AppStringResources.SeriesName.Replace(" ", string.Empty),
                                     ], values);
 
-                                if (!string.IsNullOrEmpty(newValues[0]))
+                                newValues.TryGetValue(AppStringResources.CollectionName.Replace(" ", string.Empty), out var collectionName);
+                                newValues.TryGetValue(AppStringResources.LocationName.Replace(" ", string.Empty), out var locationName);
+                                newValues.TryGetValue(AppStringResources.GenreName.Replace(" ", string.Empty), out var genreName);
+                                newValues.TryGetValue(AppStringResources.SeriesName.Replace(" ", string.Empty), out var seriesName);
+
+                                if (!string.IsNullOrEmpty(collectionName))
                                 {
-                                    var collection = CollectionsViewModel.fullCollectionList?.FirstOrDefault(c => c.CollectionName!.Equals(newValues[0]));
+                                    var collection = CollectionsViewModel.fullCollectionList?.FirstOrDefault(c => c.CollectionName!.Equals(collectionName));
                                     book.BookCollectionGuid = collection?.CollectionGuid;
                                 }
 
-                                if (!string.IsNullOrEmpty(newValues[1]))
+                                if (!string.IsNullOrEmpty(locationName))
                                 {
-                                    var location = LocationsViewModel.fullLocationList?.FirstOrDefault(l => l.LocationName!.Equals(newValues[1]));
+                                    var location = LocationsViewModel.fullLocationList?.FirstOrDefault(l => l.LocationName!.Equals(locationName));
                                     book.BookLocationGuid = location?.LocationGuid;
                                 }
 
-                                if (!string.IsNullOrEmpty(newValues[2]))
+                                if (!string.IsNullOrEmpty(genreName))
                                 {
-                                    var genre = GenresViewModel.fullGenreList?.FirstOrDefault(g => g.GenreName!.Equals(newValues[2]));
+                                    var genre = GenresViewModel.fullGenreList?.FirstOrDefault(g => g.GenreName!.Equals(genreName));
                                     book.BookGenreGuid = genre?.GenreGuid;
                                 }
 
-                                if (!string.IsNullOrEmpty(newValues[3]))
+                                if (!string.IsNullOrEmpty(seriesName))
                                 {
-                                    var series = SeriesViewModel.fullSeriesList?.FirstOrDefault(s => s.SeriesName!.Equals(newValues[3]));
+                                    var series = SeriesViewModel.fullSeriesList?.FirstOrDefault(s => s.SeriesName!.Equals(seriesName));
                                     book.BookSeriesGuid = series?.SeriesGuid;
                                 }
                             }
 
                             if (!string.IsNullOrEmpty(book.BookStartDate) &&
-                                !DateTime.TryParse(book.BookStartDate, out var startDate))
+                                !DateTime.TryParse(book.BookStartDate, out var startDateValue))
                             {
                                 book.BookStartDate = book.BookStartDate.Trim()[..4];
 
-                                var parsed = DateTime.TryParse($"{book.BookStartDate}-01", out startDate);
+                                var parsed = DateTime.TryParse($"{book.BookStartDate}-01", out startDateValue);
 
-                                book.BookStartDate = startDate.ToShortDateString();
+                                book.BookStartDate = startDateValue.ToShortDateString();
                             }
 
                             if (!string.IsNullOrEmpty(book.BookEndDate) &&
-                                !DateTime.TryParse(book.BookEndDate, out var endDate))
+                                !DateTime.TryParse(book.BookEndDate, out var endDateValue))
                             {
                                 book.BookEndDate = book.BookEndDate.Trim()[..4];
 
-                                var parsed = DateTime.TryParse($"{book.BookEndDate}-01", out endDate);
+                                var parsed = DateTime.TryParse($"{book.BookEndDate}-01", out endDateValue);
 
-                                book.BookEndDate = endDate.ToShortDateString();
+                                book.BookEndDate = endDateValue.ToShortDateString();
                             }
 
                             if (book.BookPageRead > 0 && book.BookPageTotal <= 0)
@@ -1680,6 +1722,12 @@ namespace BookCollector.ViewModels.Main
                             {
                                 await this.ManuallySetBookCover(book, this.ImagesChecked);
                                 book.HasNoBookCover = !book.HasBookCover;
+                            }
+
+                            if (string.IsNullOrEmpty(book.BookCoverUrl) && string.IsNullOrEmpty(book.BookCoverFileName))
+                            {
+                                book.HasBookCover = false;
+                                book.HasNoBookCover = true;
                             }
 
                             if (book.BookPublishYear != null && book.BookPublishYear.Trim().Length > 4)
@@ -1866,7 +1914,7 @@ namespace BookCollector.ViewModels.Main
 
                 await Task.Delay(1);
 
-                (var valuesList, var message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, true);
+                (var valuesList, var message) = ReadWriteSpreadsheet.ReadSpreadSheet(this.mainFilePath, tableName, this.WishListChecked && this.BooksChecked);
 
                 var importCount = 0;
 
@@ -1889,35 +1937,57 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var title);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((WishListViewModel.fullWishlistBookList != null &&
-                            !WishListViewModel.fullWishlistBookList.Any(b => b.BookTitle!.Equals(parsedValues[1]))) ||
-                            WishListViewModel.fullWishlistBookList == null))
+                            !string.IsNullOrEmpty(title))
                         {
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[2]!, out var authors);
+                            parsedValues.TryGetValue(columnNames[3]!, out var seriesName);
+                            parsedValues.TryGetValue(columnNames[4]!, out var bookNumber);
+                            parsedValues.TryGetValue(columnNames[5]!, out var publisher);
+                            parsedValues.TryGetValue(columnNames[6]!, out var publishYear);
+                            parsedValues.TryGetValue(columnNames[7]!, out var identifier);
+                            parsedValues.TryGetValue(columnNames[8]!, out var format);
+                            parsedValues.TryGetValue(columnNames[9]!, out var language);
+                            parsedValues.TryGetValue(columnNames[10]!, out var originalPrice);
+                            parsedValues.TryGetValue(columnNames[11]!, out var summary);
+                            parsedValues.TryGetValue(columnNames[12]!, out var totalPages);
+                            parsedValues.TryGetValue(columnNames[13]!, out var totalHours);
+                            parsedValues.TryGetValue(columnNames[14]!, out var totalMinutes);
+                            parsedValues.TryGetValue(columnNames[15]!, out var comments);
+                            parsedValues.TryGetValue(columnNames[16]!, out var locationName);
+                            parsedValues.TryGetValue(columnNames[17]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[18]!, out var bookUrl);
+                            parsedValues.TryGetValue(columnNames[19]!, out var bookCoverUrl);
+                            parsedValues.TryGetValue(columnNames[20]!, out var bookFileName);
+
                             var book = new WishlistBookModel()
                             {
-                                BookGuid = ParseGuid(parsedValues[0]),
-                                BookTitle = parsedValues[1],
-                                AuthorListString = parsedValues[2],
-                                BookSeries = parsedValues[3],
-                                BookNumberInSeries = parsedValues[4],
-                                BookPublisher = parsedValues[5],
-                                BookPublishYear = parsedValues[6],
-                                BookIdentifier = parsedValues[7],
-                                BookFormat = parsedValues[8],
-                                BookLanguage = parsedValues[9],
-                                BookPrice = parsedValues[10],
-                                BookSummary = parsedValues[11],
-                                BookPageTotal = ParseInt(parsedValues[12]),
-                                BookHoursTotal = ParseInt(parsedValues[13]),
-                                BookMinutesTotal = ParseInt(parsedValues[14]),
-                                BookComments = parsedValues[15],
-                                BookWhereToBuy = parsedValues[16],
-                                HideBook = ParseBool(parsedValues[17]),
-                                BookURL = parsedValues[18],
-                                BookCoverUrl = parsedValues[19],
-                                BookCoverFileName = parsedValues[20],
+                                BookGuid = ParseGuid(guid),
+                                BookTitle = title,
+                                AuthorListString = authors,
+                                BookSeries = seriesName,
+                                BookNumberInSeries = bookNumber,
+                                BookPublisher = publisher,
+                                BookPublishYear = publishYear,
+                                BookIdentifier = identifier,
+                                BookFormat = format,
+                                BookLanguage = language,
+                                BookPrice = originalPrice,
+                                BookSummary = summary,
+                                BookPageTotal = ParseInt(totalPages),
+                                BookHoursTotal = ParseInt(totalHours),
+                                BookMinutesTotal = ParseInt(totalMinutes),
+                                BookComments = comments,
+                                BookWhereToBuy = locationName,
+                                HideBook = ParseBool(hide),
+                                BookURL = bookUrl,
+                                BookCoverUrl = bookCoverUrl,
+                                BookCoverFileName = bookFileName,
                             };
 
                             if (!string.IsNullOrEmpty(book.BookCoverUrl))
@@ -2073,13 +2143,19 @@ namespace BookCollector.ViewModels.Main
 
                         if (parsedValues.Count > 0)
                         {
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[1]!, out var name);
+                            parsedValues.TryGetValue(columnNames[2]!, out var pageRange);
+                            parsedValues.TryGetValue(columnNames[3]!, out var chapterOrder);
+                            parsedValues.TryGetValue(columnNames[4]!, out var bookGuid);
+
                             var chapter = new ChapterModel()
                             {
-                                ChapterGuid = ParseGuid(parsedValues[0]),
-                                ChapterName = parsedValues[1],
-                                PageRange = parsedValues[2],
-                                ChapterOrder = ParseInt(parsedValues[3]),
-                                BookGuid = ParseGuid(parsedValues[4]) !.Value,
+                                ChapterGuid = ParseGuid(guid),
+                                ChapterName = name,
+                                PageRange = pageRange,
+                                ChapterOrder = ParseInt(chapterOrder),
+                                BookGuid = ParseGuid(bookGuid) !.Value,
                             };
 
                             await Database.SaveChapterAsync(ConvertTo<ChapterDatabaseModel>(chapter));
@@ -2220,18 +2296,29 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var name);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((CollectionsViewModel.fullCollectionList != null &&
-                            !CollectionsViewModel.fullCollectionList.Any(c => c.CollectionName!.Equals(parsedValues[1]))) ||
-                            CollectionsViewModel.fullCollectionList == null))
+                            !string.IsNullOrEmpty(name))
                         {
+                            if (CollectionsViewModel.fullCollectionList != null &&
+                                CollectionsViewModel.fullCollectionList.Any(x => x.CollectionName!.Equals(name)))
+                            {
+                                continue;
+                            }
+
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[2]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[3]!, out var favorite);
+
                             var collection = new CollectionModel()
                             {
-                                CollectionGuid = ParseGuid(parsedValues[0]),
-                                CollectionName = parsedValues[1],
-                                HideCollection = ParseBool(parsedValues[2]),
-                                IsFavorite = ParseBool(parsedValues[3]),
+                                CollectionGuid = ParseGuid(guid),
+                                CollectionName = name,
+                                HideCollection = ParseBool(hide),
+                                IsFavorite = ParseBool(favorite),
                             };
 
                             collection = await Database.SaveCollectionAsync(ConvertTo<CollectionDatabaseModel>(collection));
@@ -2373,18 +2460,29 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var name);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((GenresViewModel.fullGenreList != null &&
-                            !GenresViewModel.fullGenreList.Any(g => g.GenreName!.Equals(parsedValues[1]))) ||
-                            GenresViewModel.fullGenreList == null))
+                            !string.IsNullOrEmpty(name))
                         {
+                            if (GenresViewModel.fullGenreList != null &&
+                                GenresViewModel.fullGenreList.Any(x => x.GenreName!.Equals(name)))
+                            {
+                                continue;
+                            }
+
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[2]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[3]!, out var favorite);
+
                             var genre = new GenreModel()
                             {
-                                GenreGuid = ParseGuid(parsedValues[0]),
-                                GenreName = parsedValues[1],
-                                HideGenre = ParseBool(parsedValues[2]),
-                                IsFavorite = ParseBool(parsedValues[3]),
+                                GenreGuid = ParseGuid(guid),
+                                GenreName = name,
+                                HideGenre = ParseBool(hide),
+                                IsFavorite = ParseBool(favorite),
                             };
 
                             genre = await Database.SaveGenreAsync(ConvertTo<GenreDatabaseModel>(genre));
@@ -2527,19 +2625,31 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var name);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((SeriesViewModel.fullSeriesList != null &&
-                            !SeriesViewModel.fullSeriesList.Any(s => s.SeriesName!.Equals(parsedValues[1]))) ||
-                            SeriesViewModel.fullSeriesList == null))
+                            !string.IsNullOrEmpty(name))
                         {
+                            if (SeriesViewModel.fullSeriesList != null &&
+                                SeriesViewModel.fullSeriesList.Any(x => x.SeriesName!.Equals(name)))
+                            {
+                                continue;
+                            }
+
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[2]!, out var totalBooks);
+                            parsedValues.TryGetValue(columnNames[3]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[4]!, out var favorite);
+
                             var series = new SeriesModel()
                             {
-                                SeriesGuid = ParseGuid(parsedValues[0]),
-                                SeriesName = parsedValues[1],
-                                TotalBooksInSeries = parsedValues[2],
-                                HideSeries = ParseBool(parsedValues[3]),
-                                IsFavorite = ParseBool(parsedValues[4]),
+                                SeriesGuid = ParseGuid(guid),
+                                SeriesName = name,
+                                TotalBooksInSeries = totalBooks,
+                                HideSeries = ParseBool(hide),
+                                IsFavorite = ParseBool(favorite),
                             };
 
                             series = await Database.SaveSeriesAsync(ConvertTo<SeriesDatabaseModel>(series));
@@ -2680,6 +2790,10 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues.TryGetValue(columnNames[0] !, out var guid);
+                        parsedValues.TryGetValue(columnNames[1] !, out var authorGuid);
+                        parsedValues.TryGetValue(columnNames[2] !, out var bookGuid);
+
                         if (singleSpreadsheetValues != null)
                         {
                             var newValues = GetValues(
@@ -2688,30 +2802,36 @@ namespace BookCollector.ViewModels.Main
                                 AppStringResources.LastName.Replace(" ", string.Empty)
                                 ], values);
 
-                            if (newValues != null &&
-                                parsedValues.Any(n => n != null && n.Equals(string.Empty)))
-                            {
-                                var book = AllBooksViewModel.fullBookList?.FirstOrDefault(b => b.BookTitle!.Equals(newValues[0]));
-                                var author = AuthorsViewModel.fullAuthorList?.FirstOrDefault(a => a.FirstName!.Equals(newValues[1]) && a.LastName!.Equals(newValues[2]));
+                            newValues.TryGetValue(AppStringResources.BookTitle.Replace(" ", string.Empty), out var bookTitle);
+                            newValues.TryGetValue(AppStringResources.FirstName.Replace(" ", string.Empty), out var firstName);
+                            newValues.TryGetValue(AppStringResources.LastName.Replace(" ", string.Empty), out var lastName);
 
-                                parsedValues[1] = author?.AuthorGuid.ToString();
-                                parsedValues[2] = book?.BookGuid.ToString();
+                            if (newValues != null &&
+                                !string.IsNullOrEmpty(bookTitle) &&
+                                !string.IsNullOrEmpty(firstName) &&
+                                !string.IsNullOrEmpty(lastName))
+                            {
+                                var book = AllBooksViewModel.fullBookList?.FirstOrDefault(b => b.BookTitle!.Equals(bookTitle));
+                                var author = AuthorsViewModel.fullAuthorList?.FirstOrDefault(a => a.FirstName!.Equals(firstName) && a.LastName!.Equals(lastName));
+
+                                authorGuid = author?.AuthorGuid.ToString();
+                                bookGuid = book?.BookGuid.ToString();
                             }
                         }
 
                         if (parsedValues.Count > 0 &&
-                            parsedValues[1] != null &&
-                            parsedValues[2] != null)
+                            !string.IsNullOrEmpty(authorGuid) &&
+                            !string.IsNullOrEmpty(bookGuid))
                         {
                             var bookAuthor = new BookAuthorModel()
                             {
-                                BookAuthorGuid = ParseGuid(parsedValues[0]),
-                                AuthorGuid = ParseGuid(parsedValues[1]) !.Value,
-                                BookGuid = ParseGuid(parsedValues[2]) !.Value,
+                                BookAuthorGuid = ParseGuid(guid),
+                                AuthorGuid = ParseGuid(authorGuid) !.Value,
+                                BookGuid = ParseGuid(bookGuid) !.Value,
                             };
 
                             await Database.SaveBookAuthorAsync(bookAuthor);
-                            AuthorsViewModel.fullBookAuthorList?.Add(bookAuthor);
+                            await AuthorEditViewModel.AddToStaticList(bookAuthor);
 
                             importCount++;
                             this.BookAuthorsOutput = AppStringResources.Table_XImported.Replace("Table", tableName).Replace("x", $"{importCount}").Replace("z", $"{valuesList.Count}");
@@ -2850,20 +2970,26 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var firstName);
+                        parsedValues.TryGetValue(columnNames[2]!, out var lastName);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            !string.IsNullOrEmpty(parsedValues[2]) &&
-                            ((AuthorsViewModel.fullAuthorList != null &&
-                            !AuthorsViewModel.fullAuthorList.Any(a => a.FirstName!.Equals(parsedValues[1]) && a.LastName!.Equals(parsedValues[2]))) ||
-                            AuthorsViewModel.fullAuthorList == null))
+                            !string.IsNullOrEmpty(firstName) &&
+                            !string.IsNullOrEmpty(lastName))
                         {
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[3]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[4]!, out var favorite);
+
                             var author = new AuthorModel()
                             {
-                                AuthorGuid = ParseGuid(parsedValues[0]),
-                                FirstName = parsedValues[1] !,
-                                LastName = parsedValues[2] !,
-                                HideAuthor = ParseBool(parsedValues[3]),
-                                IsFavorite = ParseBool(parsedValues[4]),
+                                AuthorGuid = ParseGuid(guid),
+                                FirstName = firstName !,
+                                LastName = lastName !,
+                                HideAuthor = ParseBool(hide),
+                                IsFavorite = ParseBool(favorite),
                             };
 
                             author = await Database.SaveAuthorAsync(ConvertTo<AuthorDatabaseModel>(author));
@@ -3005,18 +3131,29 @@ namespace BookCollector.ViewModels.Main
                     {
                         var parsedValues = GetValues(columnNames, values);
 
+                        parsedValues = parsedValues.Distinct().ToDictionary();
+
+                        parsedValues.TryGetValue(columnNames[1]!, out var name);
+
                         if (parsedValues.Count > 0 &&
-                            !string.IsNullOrEmpty(parsedValues[1]) &&
-                            ((LocationsViewModel.fullLocationList != null &&
-                            !LocationsViewModel.fullLocationList.Any(l => l.LocationName!.Equals(parsedValues[1]))) ||
-                            LocationsViewModel.fullLocationList == null))
+                            !string.IsNullOrEmpty(name))
                         {
+                            if (LocationsViewModel.fullLocationList != null &&
+                                LocationsViewModel.fullLocationList.Any(x => x.LocationName!.Equals(name)))
+                            {
+                                continue;
+                            }
+
+                            parsedValues.TryGetValue(columnNames[0]!, out var guid);
+                            parsedValues.TryGetValue(columnNames[2]!, out var hide);
+                            parsedValues.TryGetValue(columnNames[3]!, out var favorite);
+
                             var location = new LocationModel()
                             {
-                                LocationGuid = ParseGuid(parsedValues[0]),
-                                LocationName = parsedValues[1],
-                                HideLocation = ParseBool(parsedValues[2]),
-                                IsFavorite = ParseBool(parsedValues[3]),
+                                LocationGuid = ParseGuid(guid),
+                                LocationName = name,
+                                HideLocation = ParseBool(hide),
+                                IsFavorite = ParseBool(favorite),
                             };
 
                             location = await Database.SaveLocationAsync(ConvertTo<LocationDatabaseModel>(location));

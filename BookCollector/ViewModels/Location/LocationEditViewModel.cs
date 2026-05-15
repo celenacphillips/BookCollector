@@ -54,10 +54,9 @@ namespace BookCollector.ViewModels.Location
         /// <returns>A task.</returns>
         public static async Task AddToStaticList(LocationModel location)
         {
-            if (LocationsViewModel.fullLocationList != null)
-            {
-                LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
-            }
+            LocationsViewModel.fullLocationList ??= [];
+            
+            LocationsViewModel.RefreshView = await AddLocationToStaticList(location, LocationsViewModel.fullLocationList, LocationsViewModel.filteredLocationList);
         }
 
         /// <summary>

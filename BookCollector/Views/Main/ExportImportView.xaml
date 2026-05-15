@@ -50,16 +50,14 @@
                                     Padding="50,0"
                                     Command="{Binding ExportCommand}"
                                     Grid.Row="0" Grid.Column="0"
-                                    IsEnabled="{Binding ExportEnabled}"
-                                    BackgroundColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}"/>
+                                    IsEnabled="{Binding ExportEnabled}"/>
 
                             <Button Text="{x:Static localization:AppStringResources.Import}"
                                     Margin="10"
                                     Padding="50,0"
                                     Command="{Binding ImportCommand}"
                                     Grid.Row="0" Grid.Column="1"
-                                    IsEnabled="{Binding ImportEnabled}"
-                                    BackgroundColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}"/>
+                                    IsEnabled="{Binding ImportEnabled}"/>
 
                         </Grid>
 

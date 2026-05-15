@@ -63,10 +63,21 @@ namespace BookCollector.ViewModels.Author
         /// <returns>A task.</returns>
         public static async Task AddToStaticList(AuthorModel author)
         {
-            if (AuthorsViewModel.fullAuthorList != null)
-            {
-                AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
-            }
+            AuthorsViewModel.fullAuthorList ??= [];
+
+            AuthorsViewModel.RefreshView = await AddAuthorToStaticList(author, AuthorsViewModel.fullAuthorList, AuthorsViewModel.filteredAuthorList);
+        }
+
+        /// <summary>
+        /// Add author to the static list in the list view model.
+        /// </summary>
+        /// <param name="bookAuthor">Book author to add.</param>
+        /// <returns>A task.</returns>
+        public static async Task AddToStaticList(BookAuthorModel bookAuthor)
+        {
+            AuthorsViewModel.fullBookAuthorList ??= [];
+
+            AuthorsViewModel.RefreshView = await AddBookAuthorToStaticList(bookAuthor, AuthorsViewModel.fullBookAuthorList);
         }
 
         /// <summary>
@@ -200,6 +211,34 @@ namespace BookCollector.ViewModels.Author
                         filteredAuthorList.Add(author);
                         refresh = true;
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return refresh;
+        }
+
+        private static async Task<bool> AddBookAuthorToStaticList(BookAuthorModel bookAuthor, ObservableCollection<BookAuthorModel> bookAuthorList)
+        {
+            var refresh = false;
+
+            try
+            {
+                var oldBookAuthor = bookAuthorList.FirstOrDefault(x => x.AuthorGuid == bookAuthor.AuthorGuid);
+
+                if (oldBookAuthor != null)
+                {
+                    var index = bookAuthorList.IndexOf(oldBookAuthor);
+                    bookAuthorList.Remove(oldBookAuthor);
+                    bookAuthorList.Insert(index, bookAuthor);
+                    refresh = true;
+                }
+                else
+                {
+                    bookAuthorList.Add(bookAuthor);
+                    refresh = true;
                 }
             }
             catch (Exception ex)

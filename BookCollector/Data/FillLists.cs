@@ -10,6 +10,7 @@ namespace BookCollector.Data
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Groupings;
     using BookCollector.ViewModels.Library;
+    using BookCollector.ViewModels.Main;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -163,8 +164,16 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksAsync();
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksAsync();
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -177,8 +186,16 @@ namespace BookCollector.Data
         {
             ObservableCollection<WishlistBookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllWishlistBooksAsync();
-            filteredList = list.ToObservableCollection();
+            if (WishListViewModel.hiddenFilteredWishlistBookList != null)
+            {
+                filteredList = WishListViewModel.hiddenFilteredWishlistBookList
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllWishlistBooksAsync();
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -640,8 +657,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksWithoutACollectionAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => x.BookCollectionGuid == null)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksWithoutACollectionAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -703,8 +729,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksWithoutAGenreAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => x.BookGenreGuid == null)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksWithoutAGenreAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -766,8 +801,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksWithoutASeriesAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => x.BookSeriesGuid == null)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksWithoutASeriesAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -829,8 +873,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksWithoutALocationAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => x.BookLocationGuid == null)
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksWithoutALocationAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -844,8 +897,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksNotLoanedOutAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => string.IsNullOrEmpty(x.BookLoanedOutOn) && string.IsNullOrEmpty(x.LoanedTo))
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksNotLoanedOutAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -859,8 +921,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksNotBorrowedAsync(showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => string.IsNullOrEmpty(x.BorrowedFrom) && string.IsNullOrEmpty(x.BookBorrowedOn))
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksNotBorrowedAsync(showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }
@@ -1000,8 +1071,17 @@ namespace BookCollector.Data
         {
             ObservableCollection<BookModel>? filteredList = null;
 
-            var list = await BaseViewModel.Database.GetAllBooksWithoutAuthorAsync(reverseAuthorName, showHiddenBooks);
-            filteredList = list.ToObservableCollection();
+            if (AllBooksViewModel.hiddenFilteredBookList != null)
+            {
+                filteredList = AllBooksViewModel.hiddenFilteredBookList
+                    .Where(x => string.IsNullOrEmpty(x.AuthorListString) || (!string.IsNullOrEmpty(x.AuthorListString) && !x.AuthorListString.Contains(reverseAuthorName)))
+                    .ToObservableCollection();
+            }
+            else
+            {
+                var list = await BaseViewModel.Database.GetAllBooksWithoutAuthorAsync(reverseAuthorName, showHiddenBooks);
+                filteredList = list.ToObservableCollection();
+            }
 
             return filteredList;
         }

@@ -55,10 +55,9 @@ namespace BookCollector.ViewModels.Genre
         /// <returns>A task.</returns>
         public static async Task AddToStaticList(GenreModel genre)
         {
-            if (GenresViewModel.fullGenreList != null)
-            {
-                GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
-            }
+            GenresViewModel.fullGenreList ??= [];
+
+            GenresViewModel.RefreshView = await AddGenreToStaticList(genre, GenresViewModel.fullGenreList, GenresViewModel.filteredGenreList);
         }
 
         /// <summary>

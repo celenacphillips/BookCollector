@@ -55,10 +55,9 @@ namespace BookCollector.ViewModels.Series
         /// <returns>A task.</returns>
         public static async Task AddToStaticList(SeriesModel series)
         {
-            if (SeriesViewModel.fullSeriesList != null)
-            {
-                SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
-            }
+            SeriesViewModel.fullSeriesList ??= [];
+
+            SeriesViewModel.RefreshView = await AddSeriesToStaticList(series, SeriesViewModel.fullSeriesList, SeriesViewModel.filteredSeriesList);
         }
 
         /// <summary>

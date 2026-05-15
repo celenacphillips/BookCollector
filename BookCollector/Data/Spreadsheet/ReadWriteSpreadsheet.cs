@@ -235,7 +235,11 @@ namespace BookCollector.Data.Spreadsheet
                                         }
                                     }
 
-                                    spreadsheetValues.Add(cellValues);
+                                    if (cellValues.Count > 0 &&
+                                        cellValues.Keys.Count(x => string.IsNullOrEmpty(x)) != columnNames.Count)
+                                    {
+                                        spreadsheetValues.Add(cellValues);
+                                    }
                                 }
                             }
                         }
