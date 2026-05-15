@@ -836,6 +836,36 @@ namespace BookCollector.Data
         }
 
         /// <summary>
+        /// Get all books not loaned out.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books not loaned out.</returns>
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksNotLoanedOutList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredList = null;
+
+            var list = await BaseViewModel.Database.GetAllBooksNotLoanedOutAsync(showHiddenBooks);
+            filteredList = list.ToObservableCollection();
+
+            return filteredList;
+        }
+
+        /// <summary>
+        /// Get all books not borrowed.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books not borrowed.</returns>
+        public static async Task<ObservableCollection<BookModel>?> GetAllBooksNotBorrowedList(bool showHiddenBooks)
+        {
+            ObservableCollection<BookModel>? filteredList = null;
+
+            var list = await BaseViewModel.Database.GetAllBooksNotBorrowedAsync(showHiddenBooks);
+            filteredList = list.ToObservableCollection();
+
+            return filteredList;
+        }
+
+        /// <summary>
         /// Get all collections.
         /// </summary>
         /// <returns>A list of collections.</returns>

@@ -361,6 +361,46 @@ namespace BookCollector.ViewModels.BaseViewModels
         }
 
         /// <summary>
+        /// Show popup to to display info about series.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ShowSeriesInfoPopup()
+        {
+            this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, AppStringResources.SeriesView_InfoText));
+        }
+
+        /// <summary>
+        /// Show popup to to display info about collection.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ShowCollectionInfoPopup()
+        {
+            this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, AppStringResources.CollectionView_InfoText));
+        }
+
+        /// <summary>
+        /// Show popup to to display info about genre.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ShowGenreInfoPopup()
+        {
+            this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, AppStringResources.GenreView_InfoText));
+        }
+
+        /// <summary>
+        /// Show popup to to display info about location.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task ShowLocationInfoPopup()
+        {
+            this.View.ShowPopup(new InformationPopup(DeviceWidth - 50, AppStringResources.LocationView_InfoText));
+        }
+
+        /// <summary>
         /// Sets the expander arrow boolean values on change.
         /// </summary>
         /// <returns>A task.</returns>

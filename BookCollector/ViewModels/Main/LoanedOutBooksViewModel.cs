@@ -4,16 +4,17 @@
 
 namespace BookCollector.ViewModels.Main
 {
-    using System.Collections.ObjectModel;
     using BookCollector.Data;
     using BookCollector.Data.Enums;
     using BookCollector.Data.Models;
     using BookCollector.Resources.Localization;
     using BookCollector.ViewModels.BaseViewModels;
     using BookCollector.ViewModels.Popups;
+    using BookCollector.Views.Groupings;
     using CommunityToolkit.Maui.Core.Extensions;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// LoanedOutBooksViewModel class.
@@ -148,6 +149,22 @@ namespace BookCollector.ViewModels.Main
             this.SearchString = input;
 
             (this.FilteredBookList, this.FilteredBooksCount, this.TotalBooksString) = await this.BookSearch(this.HiddenFilteredBookList, this.TotalBooksCount);
+        }
+
+        /// <summary>
+        /// Show the existing books view to add an existing book to the list.
+        /// </summary>
+        /// <returns>A task.</returns>
+        [RelayCommand]
+        public async Task AddExistingBook()
+        {
+            await this.SetIsBusyTrue();
+
+            var view = new ExistingBooksView(this.ViewTitle!, this.ViewTitle!, this);
+
+            await Shell.Current.Navigation.PushAsync(view);
+
+            this.SetIsBusyFalse();
         }
 
         /********************************************************/

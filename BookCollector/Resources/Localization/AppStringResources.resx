@@ -577,19 +577,19 @@
     <value>There are no locations.</value>
   </data>
   <data name="AuthorView_InfoText" xml:space="preserve">
-    <value>An author is the person who created the book. You can add an author here or in the book.</value>
+    <value>An author is the person who created the book.</value>
   </data>
   <data name="CollectionView_InfoText" xml:space="preserve">
-    <value>Collections are a unique way to group your books that don't fall into the other categories like if you are reading it or if it is in a specific series. You can add a collection here or in the book.</value>
+    <value>Collections are a unique way to group your books that don't fall into the other categories like if you are reading it or if it is in a specific series.</value>
   </data>
   <data name="GenreView_InfoText" xml:space="preserve">
-    <value>Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book.</value>
+    <value>Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books.</value>
   </data>
   <data name="SeriesView_InfoText" xml:space="preserve">
-    <value>A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book.</value>
+    <value>A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books.</value>
   </data>
   <data name="LocationView_InfoText" xml:space="preserve">
-    <value>Locations are a way to group and see where your books physically are. You can add a location here or in the book.</value>
+    <value>Locations are a way to group and see where your books physically are.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -699,6 +699,10 @@
   </data>
   <data name="ExistingBooksView_InfoText" xml:space="preserve">
     <value>This is a list of books that aren't associated to 'grouping.' Click a book to add it.</value>
+    <comment>grouping should not be translated.</comment>
+  </data>
+  <data name="ExistingBooksView_InfoText1" xml:space="preserve">
+    <value>This is a list of books that aren't  in the 'grouping' list. Click a book to add it.</value>
     <comment>grouping should not be translated.</comment>
   </data>
   <data name="ShowHiddenCollections" xml:space="preserve">
@@ -1529,22 +1533,25 @@ The Import feature works best with a spreadsheet workbook specifically formatted
     <comment>Blank1 and Blank2 should not be translated.</comment>
   </data>
   <data name="UpNext_Explainer" xml:space="preserve">
-    <value>(This will put the book on the Reading View for easy access.)</value>
+    <value>(This will put the book on the Reading Page for easy access.)</value>
   </data>
   <data name="TimeRange" xml:space="preserve">
     <value>Time Range</value>
   </data>
   <data name="ChangeLogEntry" xml:space="preserve">
-    <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
+    <value>• MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps. (PLEASE READ FAQ FOR MORE INFORMATION.)
 • MODIFIED FEATURE: Changed what qualifies a book as "Reading," "To Be Read," and "Read."
-• NEW FEATURE: Added Reading Status filter for certain book list pages
-• NEW FEATURE: Added Loaned Out filter for all book list pages
+• NEW FEATURE: Added Date Obtained, Borrowed From, Borrowed On, and Price Paid to books.
+• NEW FEATURE: Added Reading Status filter for certain book list pages.
+• NEW FEATURE: Added Loaned Out and Borrowed filter for all book list pages.
+• NEW FEATURE: Added Loaned Out and Borrowed list pages.
+• NEW FEATURE: Added toggles for Loaned Out and Borrowed features.
 • BUG FIX: Added Up Next value to Export for books.
 • NEW FEATURE: Added ability to Favorite groupings.
 • NEW FEATURE: Added Filter for groupings lists.
+• MODIFIED FEATURE: Updated Favorite toggle to include turning on/off groupings.
 • NEW FEATURE: Added ability to show/hide and reorganize pages on Library and Groupings tabs.
-• REGRESSION: Fixed UI bugs.
-• NEW FEATURE: Added Date Obtained, Borrowed From, Borrowed On, and Price Paid to books.</value>
+• REGRESSION: Fixed UI bugs.</value>
   </data>
   <data name="MajorChangeMessage" xml:space="preserve">
     <value>There has been a major update and a breaking change made.</value>

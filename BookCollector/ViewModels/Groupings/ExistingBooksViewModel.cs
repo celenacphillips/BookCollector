@@ -96,7 +96,7 @@ namespace BookCollector.ViewModels.Groupings
             this.PreviousViewModel = previousViewModel;
             this.SetSelectedObjectName();
             this.CollectionViewHeight = DeviceHeight;
-            this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
+            this.SetInfoText();
             this.ViewTitle = AppStringResources.ExistingBooks_Object.Replace("Object", this.SelectedObjectName);
             this.SetRefreshView(true);
 
@@ -179,6 +179,8 @@ namespace BookCollector.ViewModels.Groupings
             bool showHardcovers,
             bool showPaperbacks)
         {
+            this.FullBookList = null;
+
             if (this.SelectedObject is CollectionModel)
             {
                 await this.SetCollectionList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
@@ -202,6 +204,21 @@ namespace BookCollector.ViewModels.Groupings
             if (this.SelectedObject is LocationModel)
             {
                 await this.SetLocationList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+            }
+
+            if (this.SelectedObject is string)
+            {
+                if (!string.IsNullOrEmpty(this.SelectedObjectName) &&
+                    this.SelectedObjectName.Equals(AppStringResources.BooksLoanedOut))
+                {
+                    await this.SetLoanedOutList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+                }
+
+                if (!string.IsNullOrEmpty(this.SelectedObjectName) &&
+                    this.SelectedObjectName.Equals(AppStringResources.BooksBorrowed))
+                {
+                    await this.SetBorrowedList(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+                }
             }
         }
 
@@ -409,15 +426,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutACollectionList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
 
         /// <summary>
@@ -438,15 +447,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutAGenreList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
 
         /// <summary>
@@ -467,15 +468,7 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutASeriesList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
 
         /// <summary>
@@ -501,15 +494,7 @@ namespace BookCollector.ViewModels.Groupings
                 this.FullBookList = await FillLists.GetAllBooksWithoutAuthorList(author.ReverseFullName, showHiddenBooks);
             }
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
-
-            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
 
         /// <summary>
@@ -530,15 +515,49 @@ namespace BookCollector.ViewModels.Groupings
         {
             this.FullBookList ??= await FillLists.GetAllBooksWithoutALocationList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+        }
 
-            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+        /// <summary>
+        /// Set the first filtered list based on the full book list and the show hidden books preference.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
+        /// <returns>A task.</returns>
+        private async Task SetLoanedOutList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
+        {
+            this.FullBookList ??= await FillLists.GetAllBooksNotLoanedOutList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
+        }
 
-            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+        /// <summary>
+        /// Set the first filtered list based on the full book list and the show hidden books preference.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <param name="showAudiobooks">Show audiobooks.</param>
+        /// <param name="showEbooks">Show ebooks.</param>
+        /// <param name="showHardcovers">Show hardcovers.</param>
+        /// <param name="showPaperbacks">Show paperbacks.</param>
+        /// <returns>A task.</returns>
+        private async Task SetBorrowedList(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
+        {
+            this.FullBookList ??= await FillLists.GetAllBooksNotBorrowedList(showHiddenBooks);
 
-            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
+            this.FilterBooks(showHiddenBooks, showAudiobooks, showEbooks, showHardcovers, showPaperbacks);
         }
 
         private async Task AddBookToGrouping()
@@ -549,35 +568,44 @@ namespace BookCollector.ViewModels.Groupings
 
                 if (this.SelectedBook != null)
                 {
-                    this.SelectedBook.BookCollectionGuid = this.SelectedObject is CollectionModel ? ((CollectionModel?)this.SelectedObject)?.CollectionGuid : this.SelectedBook.BookCollectionGuid;
-
-                    this.SelectedBook.BookGenreGuid = this.SelectedObject is GenreModel ? ((GenreModel?)this.SelectedObject)?.GenreGuid : this.SelectedBook.BookGenreGuid;
-
-                    this.SelectedBook.BookSeriesGuid = this.SelectedObject is SeriesModel ? ((SeriesModel?)this.SelectedObject)?.SeriesGuid : this.SelectedBook.BookSeriesGuid;
-
-                    if (this.SelectedObject is AuthorModel)
+                    if (this.SelectedObject is string)
                     {
-                        var author = (AuthorModel?)this.SelectedObject;
-
-                        this.SelectedBook.SelectedAuthors ??= [];
-                        this.SelectedBook.SelectedAuthors.Add(author);
-
-                        await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
-
-                        await this.SelectedBook.SetAuthorListStringFromDatabase();
+                        var view = new BookEditView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", false, null, this.PreviousViewModel);
+                        await Shell.Current.Navigation.PushAsync(view);
+                        this.SetRefreshView(true);
                     }
+                    else
+                    {
+                        this.SelectedBook.BookCollectionGuid = this.SelectedObject is CollectionModel ? ((CollectionModel?)this.SelectedObject)?.CollectionGuid : this.SelectedBook.BookCollectionGuid;
 
-                    this.SelectedBook.BookLocationGuid = this.SelectedObject is LocationModel ? ((LocationModel?)this.SelectedObject)?.LocationGuid : this.SelectedBook.BookLocationGuid;
+                        this.SelectedBook.BookGenreGuid = this.SelectedObject is GenreModel ? ((GenreModel?)this.SelectedObject)?.GenreGuid : this.SelectedBook.BookGenreGuid;
 
-                    await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+                        this.SelectedBook.BookSeriesGuid = this.SelectedObject is SeriesModel ? ((SeriesModel?)this.SelectedObject)?.SeriesGuid : this.SelectedBook.BookSeriesGuid;
 
-                    await this.RemoveFromStaticList(this.SelectedBook);
-                    await AddToStaticList(this.SelectedBook, this.PreviousViewModel);
+                        if (this.SelectedObject is AuthorModel)
+                        {
+                            var author = (AuthorModel?)this.SelectedObject;
 
-                    var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
-                    await Shell.Current.Navigation.PushAsync(view);
+                            this.SelectedBook.SelectedAuthors ??= [];
+                            this.SelectedBook.SelectedAuthors.Add(author);
 
-                    await this.DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
+                            await Database.AddAuthorToBookAsync(author?.AuthorGuid, this.SelectedBook.BookGuid);
+
+                            await this.SelectedBook.SetAuthorListStringFromDatabase();
+                        }
+
+                        this.SelectedBook.BookLocationGuid = this.SelectedObject is LocationModel ? ((LocationModel?)this.SelectedObject)?.LocationGuid : this.SelectedBook.BookLocationGuid;
+
+                        await Database.SaveBookAsync(ConvertTo<BookDatabaseModel>(this.SelectedBook));
+
+                        await this.RemoveFromStaticList(this.SelectedBook);
+                        await AddToStaticList(this.SelectedBook, this.PreviousViewModel);
+
+                        var view = new BookMainView(this.SelectedBook, $"{this.SelectedBook.BookTitle}", this.PreviousViewModel);
+                        await Shell.Current.Navigation.PushAsync(view);
+
+                        await this.DisplayMessage($"{AppStringResources.BookHasBeenAddedToGrouping.Replace("Book", this.SelectedBook.BookTitle).Replace("grouping", this.SelectedObjectName)}", null);
+                    }
                 }
 
                 this.SetIsBusyFalse();
@@ -600,6 +628,41 @@ namespace BookCollector.ViewModels.Groupings
             this.SelectedObjectName = this.SelectedObject is AuthorModel ? ((AuthorModel?)this.SelectedObject)?.FullName : this.SelectedObjectName;
 
             this.SelectedObjectName = this.SelectedObject is LocationModel ? ((LocationModel?)this.SelectedObject)?.LocationName : this.SelectedObjectName;
+
+            if (this.SelectedObject is string name)
+            {
+                this.SelectedObjectName = name;
+            }
+        }
+
+        private void SetInfoText()
+        {
+            if (this.SelectedObject is string name)
+            {
+                this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText1.Replace("grouping", this.SelectedObjectName)}";
+            }
+            else
+            {
+                this.InfoText = $"{AppStringResources.ExistingBooksView_InfoText.Replace("grouping", this.SelectedObjectName)}";
+            }
+        }
+
+        private void FilterBooks(
+            bool showHiddenBooks,
+            bool showAudiobooks,
+            bool showEbooks,
+            bool showHardcovers,
+            bool showPaperbacks)
+        {
+            this.HiddenFilteredBookList = showHiddenBooks ? this.FullBookList : this.FullBookList!.Where(x => !x.HideBook).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showAudiobooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Audiobook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showEbooks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.eBook)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showHardcovers ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Hardcover)).ToObservableCollection();
+
+            this.HiddenFilteredBookList = showPaperbacks ? this.HiddenFilteredBookList : this.HiddenFilteredBookList!.Where(x => !x.BookFormat!.Equals(AppStringResources.Paperback)).ToObservableCollection();
         }
 
         private async Task RemoveFromStaticList(BookModel book)

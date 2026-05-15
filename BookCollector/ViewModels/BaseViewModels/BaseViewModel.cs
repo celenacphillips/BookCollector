@@ -239,55 +239,65 @@ namespace BookCollector.ViewModels.BaseViewModels
         /// </summary>
         public static void ClearAllLists()
         {
-            ReadingViewModel.fullBookList?.Clear();
-            ReadingViewModel.hiddenFilteredBookList?.Clear();
-            ReadingViewModel.filteredBookList?.Clear();
+            ReadingViewModel.fullBookList = null;
+            ReadingViewModel.hiddenFilteredBookList = null;
+            ReadingViewModel.filteredBookList = null;
             ReadingViewModel.RefreshView = true;
 
-            ToBeReadViewModel.fullBookList?.Clear();
-            ToBeReadViewModel.hiddenFilteredBookList?.Clear();
-            ToBeReadViewModel.filteredBookList?.Clear();
+            ToBeReadViewModel.fullBookList = null;
+            ToBeReadViewModel.hiddenFilteredBookList = null;
+            ToBeReadViewModel.filteredBookList = null;
             ToBeReadViewModel.RefreshView = true;
 
-            ReadViewModel.fullBookList?.Clear();
-            ReadViewModel.hiddenFilteredBookList?.Clear();
-            ReadViewModel.filteredBookList?.Clear();
+            ReadViewModel.fullBookList = null;
+            ReadViewModel.hiddenFilteredBookList = null;
+            ReadViewModel.filteredBookList = null;
             ReadViewModel.RefreshView = true;
 
-            AllBooksViewModel.fullBookList?.Clear();
-            AllBooksViewModel.hiddenFilteredBookList?.Clear();
-            AllBooksViewModel.filteredBookList?.Clear();
+            AllBooksViewModel.fullBookList = null;
+            AllBooksViewModel.hiddenFilteredBookList = null;
+            AllBooksViewModel.filteredBookList = null;
             AllBooksViewModel.RefreshView = true;
 
-            CollectionsViewModel.fullCollectionList?.Clear();
-            CollectionsViewModel.hiddenFilteredCollectionList?.Clear();
-            CollectionsViewModel.filteredCollectionList?.Clear();
+            LoanedOutBooksViewModel.fullBookList = null;
+            LoanedOutBooksViewModel.hiddenFilteredBookList = null;
+            LoanedOutBooksViewModel.filteredBookList = null;
+            LoanedOutBooksViewModel.RefreshView = true;
+
+            BorrowedBooksViewModel.fullBookList = null;
+            BorrowedBooksViewModel.hiddenFilteredBookList = null;
+            BorrowedBooksViewModel.filteredBookList = null;
+            BorrowedBooksViewModel.RefreshView = true;
+
+            CollectionsViewModel.fullCollectionList = null;
+            CollectionsViewModel.hiddenFilteredCollectionList = null;
+            CollectionsViewModel.filteredCollectionList = null;
             CollectionsViewModel.RefreshView = true;
 
-            GenresViewModel.fullGenreList?.Clear();
-            GenresViewModel.hiddenFilteredGenreList?.Clear();
-            GenresViewModel.filteredGenreList?.Clear();
+            GenresViewModel.fullGenreList = null;
+            GenresViewModel.hiddenFilteredGenreList = null;
+            GenresViewModel.filteredGenreList = null;
             GenresViewModel.RefreshView = true;
 
-            SeriesViewModel.fullSeriesList?.Clear();
-            SeriesViewModel.hiddenFilteredSeriesList?.Clear();
-            SeriesViewModel.filteredSeriesList?.Clear();
+            SeriesViewModel.fullSeriesList = null;
+            SeriesViewModel.hiddenFilteredSeriesList = null;
+            SeriesViewModel.filteredSeriesList = null;
             SeriesViewModel.RefreshView = true;
 
-            AuthorsViewModel.fullAuthorList?.Clear();
-            AuthorsViewModel.hiddenFilteredAuthorList?.Clear();
-            AuthorsViewModel.filteredAuthorList?.Clear();
-            AuthorsViewModel.fullBookAuthorList?.Clear();
+            AuthorsViewModel.fullAuthorList = null;
+            AuthorsViewModel.hiddenFilteredAuthorList = null;
+            AuthorsViewModel.filteredAuthorList = null;
+            AuthorsViewModel.fullBookAuthorList = null;
             AuthorsViewModel.RefreshView = true;
 
-            LocationsViewModel.fullLocationList?.Clear();
-            LocationsViewModel.hiddenFilteredLocationList?.Clear();
-            LocationsViewModel.filteredLocationList?.Clear();
+            LocationsViewModel.fullLocationList = null;
+            LocationsViewModel.hiddenFilteredLocationList = null;
+            LocationsViewModel.filteredLocationList = null;
             LocationsViewModel.RefreshView = true;
 
-            WishListViewModel.fullWishlistBookList?.Clear();
-            WishListViewModel.hiddenFilteredWishlistBookList?.Clear();
-            WishListViewModel.filteredWishlistBookList?.Clear();
+            WishListViewModel.fullWishlistBookList = null;
+            WishListViewModel.hiddenFilteredWishlistBookList = null;
+            WishListViewModel.filteredWishlistBookList = null;
             WishListViewModel.RefreshView = true;
         }
 

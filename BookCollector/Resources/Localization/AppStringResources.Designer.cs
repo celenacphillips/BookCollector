@@ -556,7 +556,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An author is the person who created the book. You can add an author here or in the book..
+        ///   Looks up a localized string similar to An author is the person who created the book..
         /// </summary>
         internal static string AuthorView_InfoText {
             get {
@@ -1313,14 +1313,12 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to • MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps (PLEASE READ FAQ FOR MORE INFORMATION.)
+        ///   Looks up a localized string similar to • MODIFIED FEATURE: Updated Import feature to accept spreadsheets from other apps. (PLEASE READ FAQ FOR MORE INFORMATION.)
         ///• MODIFIED FEATURE: Changed what qualifies a book as &quot;Reading,&quot; &quot;To Be Read,&quot; and &quot;Read.&quot;
-        ///• NEW FEATURE: Added Reading Status filter for certain book list pages
-        ///• NEW FEATURE: Added Loaned Out filter for all book list pages
-        ///• BUG FIX: Added Up Next value to Export for books.
-        ///• NEW FEATURE: Added ability to Favorite groupings.
-        ///• NEW FEATURE: Added Filter for groupings lists.
-        ///• NEW  [rest of string was truncated]&quot;;.
+        ///• NEW FEATURE: Added Date Obtained, Borrowed From, Borrowed On, and Price Paid to books.
+        ///• NEW FEATURE: Added Reading Status filter for certain book list pages.
+        ///• NEW FEATURE: Added Loaned Out and Borrowed filter for all book list pages.
+        ///• NEW FEATURE: Added Loaned Out and Borrowed list pages. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLogEntry {
             get {
@@ -1491,7 +1489,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Collections are a unique way to group your books that don&apos;t fall into the other categories like if you are reading it or if it is in a specific series. You can add a collection here or in the book..
+        ///   Looks up a localized string similar to Collections are a unique way to group your books that don&apos;t fall into the other categories like if you are reading it or if it is in a specific series..
         /// </summary>
         internal static string CollectionView_InfoText {
             get {
@@ -2126,6 +2124,15 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is a list of books that aren&apos;t  in the &apos;grouping&apos; list. Click a book to add it..
+        /// </summary>
+        internal static string ExistingBooksView_InfoText1 {
+            get {
+                return ResourceManager.GetString("ExistingBooksView_InfoText1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         internal static string Export {
@@ -2430,7 +2437,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books. You can add a genre here or in the book..
+        ///   Looks up a localized string similar to Genres are based on the stylized criteria to group books. You can create your own genres or research and use any existing genres to group your books..
         /// </summary>
         internal static string GenreView_InfoText {
             get {
@@ -2862,7 +2869,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Locations are a way to group and see where your books physically are. You can add a location here or in the book..
+        ///   Looks up a localized string similar to Locations are a way to group and see where your books physically are..
         /// </summary>
         internal static string LocationView_InfoText {
             get {
@@ -3773,7 +3780,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books. You can add a series here or in the book..
+        ///   Looks up a localized string similar to A series is a group of books that have common characteristics, like an author or a publisher. You can create your own series or research and use any existing series to group your books..
         /// </summary>
         internal static string SeriesView_InfoText {
             get {
@@ -4405,7 +4412,7 @@ namespace BookCollector.Resources.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (This will put the book on the Reading View for easy access.).
+        ///   Looks up a localized string similar to (This will put the book on the Reading Page for easy access.).
         /// </summary>
         internal static string UpNext_Explainer {
             get {

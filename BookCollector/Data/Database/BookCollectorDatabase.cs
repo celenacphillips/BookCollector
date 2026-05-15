@@ -554,6 +554,68 @@ namespace BookCollector.Data.Database
             }
         }
 
+        /// <summary>
+        /// Get all books not loaned out.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books not loaned out.</returns>
+        public async Task<List<BookModel>> GetAllBooksNotLoanedOutAsync(bool showHiddenBooks)
+        {
+            try
+            {
+                var books = await this.database.Table<BookDatabaseModel>()
+                    .Where(x => string.IsNullOrEmpty(x.LoanedTo) && string.IsNullOrEmpty(x.BookLoanedOutOn))
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new BookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                if (!showHiddenBooks)
+                {
+                    return [.. booksList.Where(x => !x.HideBook)];
+                }
+
+                return booksList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get all books not borrowed.
+        /// </summary>
+        /// <param name="showHiddenBooks">Show hidden books.</param>
+        /// <returns>A list of books not borrowed.</returns>
+        public async Task<List<BookModel>> GetAllBooksNotBorrowedAsync(bool showHiddenBooks)
+        {
+            try
+            {
+                var books = await this.database.Table<BookDatabaseModel>()
+                    .Where(x => string.IsNullOrEmpty(x.BorrowedFrom) && string.IsNullOrEmpty(x.BookBorrowedOn))
+                    .ToListAsync();
+
+                var booksList = books
+                        .Select(x => new BookModel(x))
+                        .OrderBy(x => x.ParsedTitle)
+                        .ToList();
+
+                if (!showHiddenBooks)
+                {
+                    return [.. booksList.Where(x => !x.HideBook)];
+                }
+
+                return booksList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         /*********************** Book Methods ***********************/
 
         /*********************** Wishlist Book Methods ***********************/
